@@ -1,0 +1,67 @@
+{
+	"name": "SourceDataset_opq",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "pufiles",
+			"type": "LinkedServiceReference"
+		},
+		"type": "FileShare",
+		"structure": [
+			{
+				"name": "ip",
+				"type": "String"
+			},
+			{
+				"name": "f1",
+				"type": "String"
+			},
+			{
+				"name": "f2",
+				"type": "String"
+			},
+			{
+				"name": "datetime",
+				"type": "String"
+			},
+			{
+				"name": "timeoffset",
+				"type": "String"
+			},
+			{
+				"name": "urlstring",
+				"type": "String"
+			},
+			{
+				"name": "response",
+				"type": "String"
+			},
+			{
+				"name": "rc",
+				"type": "String"
+			},
+			{
+				"name": "url2",
+				"type": "String"
+			},
+			{
+				"name": "appsettings",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": " ",
+				"rowDelimiter": "\n",
+				"quoteChar": "\"",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": false
+			},
+			"folderPath": ""
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,95 @@
+{
+	"name": "RUN_ALL_pip_platfrom_usage",
+	"properties": {
+		"activities": [
+			{
+				"name": "RUN - 02_platfromusage_unzip_zip_blob_files",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "RUN - 01_platfromusage_files_copy_to_blob",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "02_platfromusage_unzip_zip_blob_files",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "RUN - 03_PU_Load_ods_data",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "RUN - 02_platfromusage_unzip_zip_blob_files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "03_PU_Load_ods_data",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "RUN - Customers",
+				"type": "ExecutePipeline",
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Customers",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "RUN - 04_PU_ods_to_events",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "RUN - 03_PU_Load_ods_data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "04_PU_ods_to_events",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "RUN - 01_platfromusage_files_copy_to_blob",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "RUN - Customers",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "01_platfromusage_files_copy_to_blob",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

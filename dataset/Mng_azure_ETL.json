@@ -1,0 +1,14 @@
+{
+	"name": "Mng_azure_ETL",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "alldbdwh",
+			"type": "LinkedServiceReference"
+		},
+		"type": "SqlServerTable",
+		"typeProperties": {
+			"tableName": "[azure].[Mng_azure_ETL]"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

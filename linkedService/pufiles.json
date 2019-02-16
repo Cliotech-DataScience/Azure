@@ -1,0 +1,16 @@
+{
+	"name": "pufiles",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"type": "FileServer",
+		"typeProperties": {
+			"host": "D:\\\\pufiles",
+			"userId": "efix\\az_etl",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI0NmM3ODY1YS0yMzE0LTQ3MmUtYTFlMy0xMmZhN2U5YjkzMGMiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "alldbgateway",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

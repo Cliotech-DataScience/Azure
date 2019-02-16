@@ -1,0 +1,14 @@
+{
+	"name": "DestinationDataset_qai",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Events_Collector_PlatfromUsage_log",
+			"type": "LinkedServiceReference"
+		},
+		"type": "FileShare",
+		"typeProperties": {
+			"folderPath": "INprocessed"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

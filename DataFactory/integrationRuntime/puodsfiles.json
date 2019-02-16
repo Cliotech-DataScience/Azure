@@ -1,0 +1,11 @@
+{
+	"name": "puodsfiles",
+	"properties": {
+		"type": "Managed",
+		"typeProperties": {
+			"computeProperties": {
+				"location": "West Europe"
+			}
+		}
+	}
+}

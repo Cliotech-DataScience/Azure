@@ -1,0 +1,18 @@
+{
+	"name": "DestinationDataset_tau",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"type": "AzureBlob",
+		"typeProperties": {
+			"format": {
+				"type": "ParquetFormat"
+			},
+			"fileName": "events_2017",
+			"folderPath": "emerp-events/ods"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

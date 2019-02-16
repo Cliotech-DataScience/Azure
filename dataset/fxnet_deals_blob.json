@@ -1,0 +1,52 @@
+{
+	"name": "fxnet_deals_blob",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"folder_name": {
+				"type": "String",
+				"defaultValue": "EMERP_Events"
+			}
+		},
+		"type": "AzureBlob",
+		"structure": [
+			{
+				"name": "TransactionNumber",
+				"type": "String"
+			},
+			{
+				"name": "Trans_Details",
+				"type": "String"
+			},
+			{
+				"name": "ExecutionDay",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": "\t",
+				"rowDelimiter": "",
+				"quoteChar": "\"",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": false
+			},
+			"compression": {
+				"type": "BZip2"
+			},
+			"fileName": {
+				"value": "@CONCAT('FXNET_Deals', pipeline().RunId, '.csv')",
+				"type": "Expression"
+			},
+			"folderPath": "rawdata/FXNET_Deals/received=2018-01-01"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

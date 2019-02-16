@@ -1,0 +1,17 @@
+{
+	"name": "emerpdbpr",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "emerp-db-pr,2555",
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=True;data source=emerp-db-pr,2555;initial catalog=EmErp_CM",
+			"userName": "efix\\az_etl",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI2NTk0YmUxZS05ZTI4LTRjYTktOTk2NS1jYWFjNzVkZGY1OWEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "alldbgateway",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
