@@ -1,0 +1,56 @@
+{
+	"name": "fact events",
+	"properties": {
+		"activities": [
+			{
+				"name": "copy_to_sql",
+				"type": "Copy",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"source": {
+						"type": "BlobSource",
+						"recursive": true
+					},
+					"sink": {
+						"type": "SqlSink",
+						"writeBatchSize": 10000
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 0,
+					"translator": {
+						"type": "TabularTranslator",
+						"columnMappings": {
+							"Event_Date_day": "Event_Date_day",
+							"Source": "Source",
+							"Event_Name": "Event_Name",
+							"Event_Details": "Event_Details",
+							"Event_Count": "Event_Count"
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "BI_Events_blob",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "fact_events_dwh",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "BI"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

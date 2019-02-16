@@ -1,0 +1,14 @@
+{
+	"name": "SourceDataset_PlatfromUsagePROD",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Events_Collector_PlatfromUsage_log",
+			"type": "LinkedServiceReference"
+		},
+		"type": "FileShare",
+		"typeProperties": {
+			"folderPath": "processed"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

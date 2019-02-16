@@ -1,0 +1,232 @@
+{
+	"name": "Fact_Transactions",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "alldbdwh",
+			"type": "LinkedServiceReference"
+		},
+		"type": "SqlServerTable",
+		"structure": [
+			{
+				"name": "TransactionNumber",
+				"type": "Int32"
+			},
+			{
+				"name": "PositionNumber",
+				"type": "Int32"
+			},
+			{
+				"name": "AccountNumber",
+				"type": "Int32"
+			},
+			{
+				"name": "CustomerHistory_ID",
+				"type": "Int32"
+			},
+			{
+				"name": "CustomersExtendedHistory_ID",
+				"type": "Int32"
+			},
+			{
+				"name": "DealAttirbute_ID",
+				"type": "Int16"
+			},
+			{
+				"name": "Instrument_ID",
+				"type": "Int32"
+			},
+			{
+				"name": "TransactionType_ID",
+				"type": "Int16"
+			},
+			{
+				"name": "Direction_ID",
+				"type": "Int16"
+			},
+			{
+				"name": "Source_ID",
+				"type": "Int16"
+			},
+			{
+				"name": "DealType_ID",
+				"type": "Int16"
+			},
+			{
+				"name": "ExecutionDate",
+				"type": "DateTime"
+			},
+			{
+				"name": "ExecutionDay",
+				"type": "DateTime"
+			},
+			{
+				"name": "ExecutionTime",
+				"type": "TimeSpan"
+			},
+			{
+				"name": "TransactionCloseDate",
+				"type": "DateTime"
+			},
+			{
+				"name": "ValueDate",
+				"type": "DateTime"
+			},
+			{
+				"name": "ValueDay",
+				"type": "DateTime"
+			},
+			{
+				"name": "BaseAmount",
+				"type": "Decimal"
+			},
+			{
+				"name": "OtherAmount",
+				"type": "Decimal"
+			},
+			{
+				"name": "SpotRate",
+				"type": "Decimal"
+			},
+			{
+				"name": "ForwardPips",
+				"type": "Double"
+			},
+			{
+				"name": "TotRate",
+				"type": "Decimal"
+			},
+			{
+				"name": "Volume_USD",
+				"type": "Decimal"
+			},
+			{
+				"name": "ServerRate",
+				"type": "Decimal"
+			},
+			{
+				"name": "OtherServerRate",
+				"type": "Decimal"
+			},
+			{
+				"name": "ExecutedLimit",
+				"type": "Int16"
+			},
+			{
+				"name": "PL",
+				"type": "Decimal"
+			},
+			{
+				"name": "IsFirstBOP",
+				"type": "Boolean"
+			},
+			{
+				"name": "IsFirstForex",
+				"type": "Boolean"
+			},
+			{
+				"name": "IsFirstDeal",
+				"type": "Boolean"
+			},
+			{
+				"name": "Deleted",
+				"type": "Boolean"
+			},
+			{
+				"name": "PositionClosed",
+				"type": "Int16"
+			},
+			{
+				"name": "DealPL_USD",
+				"type": "Decimal"
+			},
+			{
+				"name": "PL_SymbolId",
+				"type": "Int16"
+			},
+			{
+				"name": "AccountBasesymbolId",
+				"type": "Int16"
+			},
+			{
+				"name": "EtlUpdatedDate",
+				"type": "DateTime"
+			},
+			{
+				"name": "SpreadCost",
+				"type": "Decimal"
+			},
+			{
+				"name": "Folder_ID",
+				"type": "Int16"
+			},
+			{
+				"name": "Broker_ID",
+				"type": "Int32"
+			},
+			{
+				"name": "AccountNumber_modo",
+				"type": "Int32"
+			},
+			{
+				"name": "PositionNumber_modo",
+				"type": "Int32"
+			},
+			{
+				"name": "PL_AccountBase",
+				"type": "Decimal"
+			},
+			{
+				"name": "Customer_Favor_Rate_diff",
+				"type": "Decimal"
+			},
+			{
+				"name": "Channel_Bucket_ID",
+				"type": "Int32"
+			},
+			{
+				"name": "Sessions_ID",
+				"type": "Int64"
+			},
+			{
+				"name": "DealCountTotal",
+				"type": "Int32"
+			},
+			{
+				"name": "Retention_ID",
+				"type": "Int16"
+			},
+			{
+				"name": "ConversionRate",
+				"type": "Decimal"
+			},
+			{
+				"name": "CommissionInAccountBase",
+				"type": "Decimal"
+			},
+			{
+				"name": "SpreadCostInAccountBase",
+				"type": "Decimal"
+			},
+			{
+				"name": "RolloverSpreadCostInAccountBase",
+				"type": "Decimal"
+			},
+			{
+				"name": "CommissionInOther",
+				"type": "Decimal"
+			},
+			{
+				"name": "SpreadCostInOther",
+				"type": "Decimal"
+			},
+			{
+				"name": "RolloverSpreadCostInOther",
+				"type": "Decimal"
+			}
+		],
+		"typeProperties": {
+			"tableName": "[azure].[AZ_Fact_Transactions]"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
