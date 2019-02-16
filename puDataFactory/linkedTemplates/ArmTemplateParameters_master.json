@@ -1,0 +1,225 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "puDataFactory"
+		},
+		"Analysis_accessToken": {
+			"value": ""
+		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorage2_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabase_dwh_connectionString": {
+			"value": ""
+		},
+		"DataLoadStorageAccount_connectionString": {
+			"value": ""
+		},
+		"DataloadStore_connectionString": {
+			"value": ""
+		},
+		"Dwhpr_connectionString": {
+			"value": ""
+		},
+		"Dwhpr_password": {
+			"value": ""
+		},
+		"Events_Collector_PlatfromUsage_log_password": {
+			"value": ""
+		},
+		"alldbdwh_connectionString": {
+			"value": ""
+		},
+		"alldbdwh_password": {
+			"value": ""
+		},
+		"cliotestingstore_connectionString": {
+			"value": ""
+		},
+		"destpufiles_connectionString": {
+			"value": ""
+		},
+		"dwhdb_blob_connectionString": {
+			"value": ""
+		},
+		"emerpdbpr_connectionString": {
+			"value": ""
+		},
+		"emerpdbpr_password": {
+			"value": ""
+		},
+		"fileserver1_password": {
+			"value": ""
+		},
+		"pufiles_password": {
+			"value": ""
+		},
+		"BI_Events_blob_properties_typeProperties_fileName": {
+			"value": "*.parquet"
+		},
+		"BI_Events_blob_properties_typeProperties_folderPath": {
+			"value": "bi-db/fact_events"
+		},
+		"BI_Serials_blob_properties_typeProperties_fileName": {
+			"value": "*.parquet"
+		},
+		"BI_Serials_blob_properties_typeProperties_folderPath": {
+			"value": "bi-db/dim_serials"
+		},
+		"Blob_Contacts_properties_typeProperties_fileName": {
+			"value": "@CONCAT('Contacts_', pipeline().RunId, '.csv')"
+		},
+		"Blob_Contacts_properties_typeProperties_folderPath": {
+			"value": "rawdata/Contacts"
+		},
+		"Blob_Serials_properties_typeProperties_fileName": {
+			"value": "@CONCAT('Serials', pipeline().RunId, '.csv')"
+		},
+		"Blob_Serials_properties_typeProperties_folderPath": {
+			"value": "rawdata/Serials"
+		},
+		"DestinationDataset_576_properties_typeProperties_fileName": {
+			"value": "dspsample.csv"
+		},
+		"DestinationDataset_576_properties_typeProperties_folderPath": {
+			"value": "testdata"
+		},
+		"DestinationDataset_bvj_properties_typeProperties_fileName": {
+			"value": "datadsp"
+		},
+		"DestinationDataset_bvj_properties_typeProperties_folderPath": {
+			"value": "testdata"
+		},
+		"DestinationDataset_gjq_properties_typeProperties_fileName": {
+			"value": "fact_account"
+		},
+		"DestinationDataset_gjq_properties_typeProperties_folderPath": {
+			"value": ""
+		},
+		"DestinationDataset_opq_properties_typeProperties_fileName": {
+			"value": "pulogfile"
+		},
+		"DestinationDataset_opq_properties_typeProperties_folderPath": {
+			"value": "puods"
+		},
+		"DestinationDataset_qai_properties_typeProperties_folderPath": {
+			"value": "INprocessed"
+		},
+		"DestinationDataset_tau_properties_typeProperties_fileName": {
+			"value": "events_2017"
+		},
+		"DestinationDataset_tau_properties_typeProperties_folderPath": {
+			"value": "emerp-events/ods"
+		},
+		"DestinationFilesBlobStore1_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"DestinationFilesBlobStore1_properties_typeProperties_folderPath": {
+			"value": "sinkdata/staged_sink"
+		},
+		"SourceAvailabilityBlobStore1_properties_typeProperties_fileName": {
+			"value": "_success"
+		},
+		"SourceAvailabilityBlobStore1_properties_typeProperties_folderPath": {
+			"value": "data/source"
+		},
+		"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
+			"value": "processed"
+		},
+		"SourceDataset_opq_properties_typeProperties_folderPath": {
+			"value": ""
+		},
+		"SourceFilesBlobStore1_properties_typeProperties_fileName": {
+			"value": "Product.csv"
+		},
+		"SourceFilesBlobStore1_properties_typeProperties_folderPath": {
+			"value": "data/source"
+		},
+		"Source_file_avi_properties_typeProperties_fileName": {
+			"value": "@dataset().file_name"
+		},
+		"Source_file_avi_properties_typeProperties_folderPath": {
+			"value": "@dataset().folder"
+		},
+		"blob_Customers_properties_typeProperties_fileName": {
+			"value": "@CONCAT('Customers_', pipeline().RunId, '.csv')"
+		},
+		"blob_Customers_properties_typeProperties_folderPath": {
+			"value": "rawdata/Customers"
+		},
+		"blob_EMERP_Events_properties_typeProperties_fileName": {
+			"value": "@CONCAT('EMERP_Events', pipeline().RunId, '.csv')"
+		},
+		"blob_EMERP_Events_properties_typeProperties_folderPath": {
+			"value": "rawdata/EMERP_Events"
+		},
+		"blob_Fact_Transactions_properties_typeProperties_fileName": {
+			"value": "@CONCAT('test_pu-', pipeline().RunId, '.txt')"
+		},
+		"blob_Fact_Transactions_properties_typeProperties_folderPath": {
+			"value": "rawdata/Fact_Transactions"
+		},
+		"blob_platfrom_merge_file_des_properties_typeProperties_fileName": {
+			"value": "@dataset().file_name"
+		},
+		"blob_platfrom_merge_file_des_properties_typeProperties_folderPath": {
+			"value": "rawdata/platfrom_merged_by_day"
+		},
+		"blob_platfrom_unzip_file_properties_typeProperties_folderPath": {
+			"value": "@dataset().folder_name"
+		},
+		"blob_platfrom_unzip_file_1_properties_typeProperties_fileName": {
+			"value": "@dataset().file_name"
+		},
+		"blob_platfrom_unzip_file_1_properties_typeProperties_folderPath": {
+			"value": "@dataset().folder_name"
+		},
+		"dwh_calls_blob_properties_typeProperties_fileName": {
+			"value": "@CONCAT('Calls_', pipeline().TriggerTime, '.csv.bz2')"
+		},
+		"dwh_calls_blob_properties_typeProperties_folderPath": {
+			"value": "@concat('rawdata/DWH_Calls/received=',utcnow())"
+		},
+		"fxnet_deals_blob_properties_typeProperties_fileName": {
+			"value": "@CONCAT('FXNET_Deals', pipeline().RunId, '.csv')"
+		},
+		"fxnet_deals_blob_properties_typeProperties_folderPath": {
+			"value": "rawdata/FXNET_Deals/received=2018-01-01"
+		},
+		"platformusage_blob_properties_typeProperties_fileName": {
+			"value": "@dataset().file_name"
+		},
+		"platformusage_blob_properties_typeProperties_folderPath": {
+			"value": "@dataset().folder_name"
+		},
+		"unzip_platfrom_file_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"unzip_platfrom_file_properties_typeProperties_folderPath": {
+			"value": "platformusage/rawdata/201810"
+		},
+		"Dwhpr_properties_typeProperties_userName": {
+			"value": "efix\\az_etl"
+		},
+		"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
+			"value": "efix\\az_etl"
+		},
+		"alldbdwh_properties_typeProperties_userName": {
+			"value": "efix\\az_etl"
+		},
+		"emerpdbpr_properties_typeProperties_userName": {
+			"value": "efix\\az_etl"
+		},
+		"fileserver1_properties_typeProperties_userId": {
+			"value": "efix\\az_etl"
+		},
+		"pufiles_properties_typeProperties_userId": {
+			"value": "efix\\az_etl"
+		}
+	}
+}
