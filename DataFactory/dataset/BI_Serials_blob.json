@@ -1,0 +1,155 @@
+{
+	"name": "BI_Serials_blob",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "dwhdb_blob",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "BI"
+		},
+		"type": "AzureBlob",
+		"structure": [
+			{
+				"name": "Serial",
+				"type": "Int64"
+			},
+			{
+				"name": "Client_Id",
+				"type": "String"
+			},
+			{
+				"name": "Client_Numerator",
+				"type": "Int32"
+			},
+			{
+				"name": "Client_Name",
+				"type": "String"
+			},
+			{
+				"name": "Product_Numerator",
+				"type": "Int32"
+			},
+			{
+				"name": "Product_Name",
+				"type": "String"
+			},
+			{
+				"name": "Product_Full_Name",
+				"type": "String"
+			},
+			{
+				"name": "Campaign_Numerator",
+				"type": "Int32"
+			},
+			{
+				"name": "Campaign_Name",
+				"type": "String"
+			},
+			{
+				"name": "Targetmarket_Id",
+				"type": "Int32"
+			},
+			{
+				"name": "Targetmarket",
+				"type": "String"
+			},
+			{
+				"name": "Supplier_Numerator",
+				"type": "Int32"
+			},
+			{
+				"name": "Supplier",
+				"type": "String"
+			},
+			{
+				"name": "Supplier_Group",
+				"type": "String"
+			},
+			{
+				"name": "Mediabuyer_Numerator",
+				"type": "Int32"
+			},
+			{
+				"name": "Mediabuyer",
+				"type": "String"
+			},
+			{
+				"name": "Format",
+				"type": "String"
+			},
+			{
+				"name": "Site_Numerator",
+				"type": "Int32"
+			},
+			{
+				"name": "Site_Name",
+				"type": "String"
+			},
+			{
+				"name": "Proposition_Id",
+				"type": "Int32"
+			},
+			{
+				"name": "Proposition",
+				"type": "String"
+			},
+			{
+				"name": "Banner_Name",
+				"type": "String"
+			},
+			{
+				"name": "Banner_Path",
+				"type": "String"
+			},
+			{
+				"name": "TypeExt",
+				"type": "String"
+			},
+			{
+				"name": "Landing_Page",
+				"type": "String"
+			},
+			{
+				"name": "Language",
+				"type": "String"
+			},
+			{
+				"name": "SelfActivation",
+				"type": "Int32"
+			},
+			{
+				"name": "Content",
+				"type": "String"
+			},
+			{
+				"name": "Charge_Unit_Id",
+				"type": "Int32"
+			},
+			{
+				"name": "Charge_Unit_Name",
+				"type": "String"
+			},
+			{
+				"name": "Landing_Page_Numerator",
+				"type": "Int32"
+			},
+			{
+				"name": "Creative_Logical_Name",
+				"type": "String"
+			},
+			{
+				"name": "serial_details",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "ParquetFormat"
+			},
+			"fileName": "*.parquet",
+			"folderPath": "bi-db/dim_serials"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

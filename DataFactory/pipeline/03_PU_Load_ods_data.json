@@ -1,0 +1,106 @@
+{
+	"name": "03_PU_Load_ods_data",
+	"properties": {
+		"activities": [
+			{
+				"name": "PU_Load_ods_data",
+				"description": "create one daily file from all daily files ",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Lookup_file_to_create",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"notebookPath": "/Load Data/Platform Usage/PU Load ods data",
+					"baseParameters": {
+						"input_file_path": {
+							"value": "@activity('Lookup_file_to_create').output.firstRow.file_name",
+							"type": "Expression"
+						},
+						"ods": "/mnt/dataloadestore/platformusage/ods/",
+						"zippath": "/mnt/dataloadestore/platformusage/unzip/",
+						"folder_name": {
+							"value": "@activity('Lookup_file_to_create').output.firstRow.folder",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "Analysis",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Lookup_file_to_create",
+				"type": "Lookup",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"source": {
+						"type": "SqlSource",
+						"sqlReaderQuery": "   SELECT file_name,\n        folder,daily_file\nFROM azure.platfrom_usage_log_file\nWHERE 1=1\nAND move_to_blob =1 \nAND unzip_file=1\nAND  ISNULL(daily_file,0)<>1\n"
+					},
+					"dataset": {
+						"referenceName": "DWH_pu_list_files",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Update_Create_Daily_File",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "PU_Load_ods_data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"storedProcedureName": "[azure].[SP_Update_platfrom_usage_log_file_create_daily_file]",
+					"storedProcedureParameters": {
+						"file_name": {
+							"value": {
+								"value": "@activity('Lookup_file_to_create').output.firstRow.file_name",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "Platfrom_Usage"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

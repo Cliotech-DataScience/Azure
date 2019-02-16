@@ -1,0 +1,33 @@
+{
+	"name": "blob_Customers",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"folder_name": {
+				"type": "String",
+				"defaultValue": "Dim_AccountContacts"
+			}
+		},
+		"type": "AzureBlob",
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"nullValue": "\\N",
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": true
+			},
+			"fileName": {
+				"value": "@CONCAT('Customers_', pipeline().RunId, '.csv')",
+				"type": "Expression"
+			},
+			"folderPath": "rawdata/Customers"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

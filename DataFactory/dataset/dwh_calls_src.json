@@ -1,0 +1,31 @@
+{
+	"name": "dwh_calls_src",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "alldbdwh",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DWH"
+		},
+		"type": "SqlServerTable",
+		"structure": [
+			{
+				"name": "Call_ID",
+				"type": "Int32"
+			},
+			{
+				"name": "Call_Details",
+				"type": "String"
+			},
+			{
+				"name": "CallDay",
+				"type": "DateTime"
+			}
+		],
+		"typeProperties": {
+			"tableName": "dwh.azure.calls"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
