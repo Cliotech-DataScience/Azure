@@ -95,12 +95,6 @@
 		"DestinationDataset_bvj_properties_typeProperties_folderPath": {
 			"value": "testdata"
 		},
-		"DestinationDataset_gjq_properties_typeProperties_fileName": {
-			"value": "fact_account"
-		},
-		"DestinationDataset_gjq_properties_typeProperties_folderPath": {
-			"value": ""
-		},
 		"DestinationDataset_opq_properties_typeProperties_fileName": {
 			"value": "pulogfile"
 		},

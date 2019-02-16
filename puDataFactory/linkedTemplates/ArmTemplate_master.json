@@ -127,14 +127,6 @@
 			"type": "string",
 			"defaultValue": "testdata"
 		},
-		"DestinationDataset_gjq_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "fact_account"
-		},
-		"DestinationDataset_gjq_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": ""
-		},
 		"DestinationDataset_opq_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "pulogfile"
@@ -548,12 +540,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"DestinationDataset_gjq_properties_typeProperties_fileName": {
-						"value": "[parameters('DestinationDataset_gjq_properties_typeProperties_fileName')]"
-					},
-					"DestinationDataset_gjq_properties_typeProperties_folderPath": {
-						"value": "[parameters('DestinationDataset_gjq_properties_typeProperties_folderPath')]"
 					},
 					"DestinationDataset_opq_properties_typeProperties_fileName": {
 						"value": "[parameters('DestinationDataset_opq_properties_typeProperties_fileName')]"

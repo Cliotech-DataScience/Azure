@@ -7,14 +7,6 @@
 			"metadata": "Data Factory Name",
 			"defaultValue": "puDataFactory"
 		},
-		"DestinationDataset_gjq_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "fact_account"
-		},
-		"DestinationDataset_gjq_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": ""
-		},
 		"DestinationDataset_opq_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "pulogfile"
@@ -490,37 +482,6 @@
 				],
 				"typeProperties": {
 					"tableName": "[concat('[', 'azure].[platfrom_usage_log_file]')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DestinationDataset_gjq')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "pufiles",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "FileShare",
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"nullValue": "\\N",
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"compression": {
-						"type": "GZip",
-						"level": "Optimal"
-					},
-					"fileName": "[parameters('DestinationDataset_gjq_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('DestinationDataset_gjq_properties_typeProperties_folderPath')]"
 				}
 			},
 			"dependsOn": []
@@ -1100,6 +1061,37 @@
 				],
 				"typeProperties": {
 					"tableName": "dwh.azure.calls"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/fxnet_deals_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "TransactionNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "Trans_Details",
+						"type": "String"
+					},
+					{
+						"name": "ExecutionDay",
+						"type": "DateTime"
+					}
+				],
+				"typeProperties": {
+					"tableName": "dwh.azure.deals"
 				}
 			},
 			"dependsOn": []
