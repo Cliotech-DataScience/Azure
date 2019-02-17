@@ -15,7 +15,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,65,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  [localdb].[azure].[Mng_azure_ETL]\n  WHERE TableName='Contacts'"
+						"sqlReaderQuery": "  SELECT  LastIncrementalDate=LastId \n  ---- remove to use incremental\n FROM  [localdb].[azure].[Mng_azure_ETL]\n  WHERE TableName='Contacts'"
 					},
 					"dataset": {
 						"referenceName": "Mng_azure_ETL",
@@ -29,12 +29,6 @@
 				"dependsOn": [
 					{
 						"activity": "LK_Last_Id_Mng_azure_ETL",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "LK_new_max_id",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -118,27 +112,6 @@
 				"linkedServiceName": {
 					"referenceName": "alldbdwh",
 					"type": "LinkedServiceReference"
-				}
-			},
-			{
-				"name": "LK_new_max_id",
-				"type": "Lookup",
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"typeProperties": {
-					"source": {
-						"type": "SqlSource",
-						"sqlReaderQuery": "   SELECT ExecutionDate=MAX(update_date)\n FROM EmErp_LM.azure.scmm_contacts"
-					},
-					"dataset": {
-						"referenceName": "Contacts",
-						"type": "DatasetReference"
-					}
 				}
 			}
 		],
