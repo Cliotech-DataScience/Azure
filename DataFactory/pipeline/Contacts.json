@@ -129,7 +129,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT  ExecutionDate=MAX(update_date)\n FROM EmErp_LM.azure.scmm_contacts\n"
+						"sqlReaderQuery": "SELECT last_id= MAX(timeStampINT)\nFROM EmErp_LM.azure.scmm_contacts\n"
 					},
 					"dataset": {
 						"referenceName": "Contacts",
