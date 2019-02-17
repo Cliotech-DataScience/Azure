@@ -99,10 +99,11 @@
 					"storedProcedureName": "[azure].[SP_Update_Mng_azure_ETL]",
 					"storedProcedureParameters": {
 						"LastId": {
-							"value": "-1",
+							"value": "  @{activity('LK_new_max_id').output.firstRow.last_id}",
 							"type": "Int64"
 						},
 						"LastIncrementalDate": {
+							"value": "1990-01-01",
 							"type": "DateTime"
 						},
 						"TableName": {
