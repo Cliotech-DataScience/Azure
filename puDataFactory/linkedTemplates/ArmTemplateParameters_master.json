@@ -3,7 +3,7 @@
 	"contentVersion": "1.0.0.0",
 	"parameters": {
 		"factoryName": {
-			"value": "puDataFactory"
+			"value": "pudatafactory"
 		},
 		"Analysis_accessToken": {
 			"value": ""
@@ -83,12 +83,6 @@
 		"Blob_Serials_properties_typeProperties_folderPath": {
 			"value": "rawdata/Serials"
 		},
-		"DestinationDataset_576_properties_typeProperties_fileName": {
-			"value": "dspsample.csv"
-		},
-		"DestinationDataset_576_properties_typeProperties_folderPath": {
-			"value": "testdata"
-		},
 		"DestinationDataset_bvj_properties_typeProperties_fileName": {
 			"value": "datadsp"
 		},
@@ -103,12 +97,6 @@
 		},
 		"DestinationDataset_qai_properties_typeProperties_folderPath": {
 			"value": "INprocessed"
-		},
-		"DestinationDataset_tau_properties_typeProperties_fileName": {
-			"value": "events_2017"
-		},
-		"DestinationDataset_tau_properties_typeProperties_folderPath": {
-			"value": "emerp-events/ods"
 		},
 		"DestinationFilesBlobStore1_properties_typeProperties_fileName": {
 			"value": ""
