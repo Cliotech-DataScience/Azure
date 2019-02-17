@@ -69,7 +69,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Blob_Serials",
+						"referenceName": "Blob_Contacts",
 						"type": "DatasetReference",
 						"parameters": {
 							"folder_name": "Contacts"
