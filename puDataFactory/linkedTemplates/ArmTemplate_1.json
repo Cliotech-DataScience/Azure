@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
 		},
 		"Dwhpr_connectionString": {
 			"type": "secureString",
@@ -83,6 +83,14 @@
 			"type": "string",
 			"defaultValue": "@dataset().folder_name"
 		},
+		"checkin_test_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "*.parquet"
+		},
+		"checkin_test_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "bi-db/fact_events"
+		},
 		"dwh_calls_blob_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "@CONCAT('Calls_', pipeline().TriggerTime, '.csv.bz2')"
@@ -138,14 +146,6 @@
 		"pufiles_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
-		},
-		"checkin_test_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "*.parquet"
-		},
-		"checkin_test_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "bi-db/fact_events"
 		}
 	},
 	"variables": {
@@ -419,6 +419,52 @@
 						"value": "[parameters('blob_platfrom_unzip_file_1_properties_typeProperties_folderPath')]",
 						"type": "Expression"
 					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/checkin_test')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "dwhdb_blob",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "BI"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "Event_Date_day",
+						"type": "DateTime"
+					},
+					{
+						"name": "Source",
+						"type": "String"
+					},
+					{
+						"name": "Event_Name",
+						"type": "String"
+					},
+					{
+						"name": "Event_Details",
+						"type": "String"
+					},
+					{
+						"name": "Event_Count",
+						"type": "Int64"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "ParquetFormat"
+					},
+					"fileName": "[parameters('checkin_test_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('checkin_test_properties_typeProperties_folderPath')]"
 				}
 			},
 			"dependsOn": []
@@ -921,52 +967,6 @@
 				"connectVia": {
 					"referenceName": "alldbgateway",
 					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/checkin_test')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "dwhdb_blob",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "BI"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "Event_Date_day",
-						"type": "DateTime"
-					},
-					{
-						"name": "Source",
-						"type": "String"
-					},
-					{
-						"name": "Event_Name",
-						"type": "String"
-					},
-					{
-						"name": "Event_Details",
-						"type": "String"
-					},
-					{
-						"name": "Event_Count",
-						"type": "Int64"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "ParquetFormat"
-					},
-					"fileName": "[parameters('checkin_test_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('checkin_test_properties_typeProperties_folderPath')]"
 				}
 			},
 			"dependsOn": []

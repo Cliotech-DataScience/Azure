@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -119,6 +119,14 @@
 			"type": "string",
 			"defaultValue": "testdata"
 		},
+		"DestinationDataset_gjq_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "fact_account"
+		},
+		"DestinationDataset_gjq_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": ""
+		},
 		"DestinationDataset_opq_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "pulogfile"
@@ -215,6 +223,14 @@
 			"type": "string",
 			"defaultValue": "@dataset().folder_name"
 		},
+		"checkin_test_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "*.parquet"
+		},
+		"checkin_test_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "bi-db/fact_events"
+		},
 		"dwh_calls_blob_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "@CONCAT('Calls_', pipeline().TriggerTime, '.csv.bz2')"
@@ -270,14 +286,6 @@
 		"pufiles_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
-		},
-		"checkin_test_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "*.parquet"
-		},
-		"checkin_test_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "bi-db/fact_events"
 		},
 		"containerUri": {
 			"type": "string",
@@ -459,6 +467,12 @@
 					"blob_platfrom_unzip_file_1_properties_typeProperties_folderPath": {
 						"value": "[parameters('blob_platfrom_unzip_file_1_properties_typeProperties_folderPath')]"
 					},
+					"checkin_test_properties_typeProperties_fileName": {
+						"value": "[parameters('checkin_test_properties_typeProperties_fileName')]"
+					},
+					"checkin_test_properties_typeProperties_folderPath": {
+						"value": "[parameters('checkin_test_properties_typeProperties_folderPath')]"
+					},
 					"dwh_calls_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('dwh_calls_blob_properties_typeProperties_fileName')]"
 					},
@@ -500,12 +514,6 @@
 					},
 					"pufiles_properties_typeProperties_userId": {
 						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
-					},
-					"checkin_test_properties_typeProperties_fileName": {
-						"value": "[parameters('checkin_test_properties_typeProperties_fileName')]"
-					},
-					"checkin_test_properties_typeProperties_folderPath": {
-						"value": "[parameters('checkin_test_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -526,6 +534,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"DestinationDataset_gjq_properties_typeProperties_fileName": {
+						"value": "[parameters('DestinationDataset_gjq_properties_typeProperties_fileName')]"
+					},
+					"DestinationDataset_gjq_properties_typeProperties_folderPath": {
+						"value": "[parameters('DestinationDataset_gjq_properties_typeProperties_folderPath')]"
 					},
 					"DestinationDataset_opq_properties_typeProperties_fileName": {
 						"value": "[parameters('DestinationDataset_opq_properties_typeProperties_fileName')]"
@@ -572,6 +586,26 @@
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_2')]"
+			]
+		},
+		{
+			"name": "ArmTemplate_4",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_4.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_3')]"
 			]
 		}
 	]

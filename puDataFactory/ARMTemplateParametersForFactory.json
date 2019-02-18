@@ -3,7 +3,7 @@
 	"contentVersion": "1.0.0.0",
 	"parameters": {
 		"factoryName": {
-			"value": "puDataFactory"
+			"value": "pudatafactory"
 		},
 		"Analysis_accessToken": {
 			"value": ""
@@ -89,6 +89,12 @@
 		"DestinationDataset_bvj_properties_typeProperties_folderPath": {
 			"value": "testdata"
 		},
+		"DestinationDataset_gjq_properties_typeProperties_fileName": {
+			"value": "fact_account"
+		},
+		"DestinationDataset_gjq_properties_typeProperties_folderPath": {
+			"value": ""
+		},
 		"DestinationDataset_opq_properties_typeProperties_fileName": {
 			"value": "pulogfile"
 		},
@@ -161,6 +167,12 @@
 		"blob_platfrom_unzip_file_1_properties_typeProperties_folderPath": {
 			"value": "@dataset().folder_name"
 		},
+		"checkin_test_properties_typeProperties_fileName": {
+			"value": "*.parquet"
+		},
+		"checkin_test_properties_typeProperties_folderPath": {
+			"value": "bi-db/fact_events"
+		},
 		"dwh_calls_blob_properties_typeProperties_fileName": {
 			"value": "@CONCAT('Calls_', pipeline().TriggerTime, '.csv.bz2')"
 		},
@@ -202,12 +214,6 @@
 		},
 		"pufiles_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
-		},
-		"checkin_test_properties_typeProperties_fileName": {
-			"value": "*.parquet"
-		},
-		"checkin_test_properties_typeProperties_folderPath": {
-			"value": "bi-db/fact_events"
 		}
 	}
 }

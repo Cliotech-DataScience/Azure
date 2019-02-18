@@ -5,13 +5,44 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/serials')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "emerpdbpr",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "Serial",
+						"type": "Int64"
+					},
+					{
+						"name": "serial_details",
+						"type": "String"
+					},
+					{
+						"name": "update_date",
+						"type": "DateTime"
+					}
+				],
+				"typeProperties": {
+					"tableName": "azure.az_serials"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/0000Incremental_SQL_DWH_Copy')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -1337,7 +1368,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"notebookPath": "/Users/mihaib@iforex.com/Load Calls"
+							"notebookPath": "/Load Data/Calls/Load Calls"
 						},
 						"linkedServiceName": {
 							"referenceName": "Analysis",
@@ -1503,6 +1534,33 @@
 						},
 						"linkedServiceName": {
 							"referenceName": "alldbdwh",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "EMERP_Events",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "update_mng_azure",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Load Data/Emerp Events/EMERP_Events_to_events_table"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
 							"type": "LinkedServiceReference"
 						}
 					}
@@ -1899,6 +1957,33 @@
 								"parameters": {}
 							}
 						}
+					},
+					{
+						"name": "Serials",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "update_mng_azure",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Load Data/Emerp Events/serials"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
 				"folder": {
@@ -1906,7 +1991,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/serials')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/copypufiles')]",
@@ -2058,12 +2145,31 @@
 								"dependencyConditions": [
 									"Succeeded"
 								]
+							},
+							{
+								"activity": "RUN - Serials",
+								"dependencyConditions": [
+									"Succeeded"
+								]
 							}
 						],
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
 								"referenceName": "01_platfromusage_files_copy_to_blob",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "RUN - Serials",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Serials",
 								"type": "PipelineReference"
 							},
 							"waitOnCompletion": true
@@ -2076,7 +2182,38 @@
 				"[concat(variables('factoryId'), '/pipelines/02_platfromusage_unzip_zip_blob_files')]",
 				"[concat(variables('factoryId'), '/pipelines/03_PU_Load_ods_data')]",
 				"[concat(variables('factoryId'), '/pipelines/Customers')]",
-				"[concat(variables('factoryId'), '/pipelines/01_platfromusage_files_copy_to_blob')]"
+				"[concat(variables('factoryId'), '/pipelines/01_platfromusage_files_copy_to_blob')]",
+				"[concat(variables('factoryId'), '/pipelines/Serials')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWH_Calls_Daily_Load')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "DWH_Calls",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 1,
+						"startTime": "2019-02-18T07:00:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/DWH_Calls')]"
 			]
 		},
 		{
@@ -2115,44 +2252,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/FXNET_Deals')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/every_day_run_all_piplines_to_platfrom_usage')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "RUN_ALL_pip_platfrom_usage",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-01-20T15:52:00Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								30
-							],
-							"hours": [
-								5
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/RUN_ALL_pip_platfrom_usage')]"
 			]
 		}
 	]
