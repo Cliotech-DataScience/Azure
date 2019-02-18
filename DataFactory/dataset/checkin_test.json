@@ -1,5 +1,5 @@
 {
-	"name": "chc",
+	"name": "checkin_test",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "dwhdb_blob",
