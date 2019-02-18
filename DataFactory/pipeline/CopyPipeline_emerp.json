@@ -37,7 +37,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "DestinationDataset_576",
+						"referenceName": "BI_Events_blob",
 						"type": "DatasetReference"
 					}
 				]

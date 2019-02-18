@@ -45,7 +45,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "DestinationDataset_tau",
+						"referenceName": "BI_Events_blob",
 						"type": "DatasetReference"
 					}
 				]
