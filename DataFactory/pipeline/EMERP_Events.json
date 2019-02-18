@@ -140,6 +140,32 @@
 					"referenceName": "alldbdwh",
 					"type": "LinkedServiceReference"
 				}
+			},
+			{
+				"name": "EMERP_Events",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "update_mng_azure",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"notebookPath": "/Load Data/Emerp Events/EMERP_Events_to_events_table"
+				},
+				"linkedServiceName": {
+					"referenceName": "Analysis",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"folder": {
