@@ -13,19 +13,17 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/every_day_run_all_piplines_to_platfrom_usage')]",
+			"name": "[concat(parameters('factoryName'), '/DWH_Calls_Daily_Load')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "RUN_ALL_pip_platfrom_usage",
+							"referenceName": "DWH_Calls",
 							"type": "PipelineReference"
-						},
-						"parameters": {}
+						}
 					}
 				],
 				"type": "ScheduleTrigger",
@@ -33,20 +31,19 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2019-01-20T15:52:00Z",
+						"startTime": "2019-02-18T07:00:00.000Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
-								30
+								0
 							],
 							"hours": [
-								5
+								7
 							]
 						}
 					}
 				}
-			},
-			"dependsOn": []
+			}
 		}
 	]
 }
