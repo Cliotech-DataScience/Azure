@@ -1,7 +1,7 @@
 {
 	"name": "DWH_Calls_Daily_Load",
 	"properties": {
-		"runtimeState": "Started",
+		"runtimeState": "Stopped",
 		"pipelines": [
 			{
 				"pipelineReference": {
