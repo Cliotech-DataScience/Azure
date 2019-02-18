@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "pudatafactory"
+			"defaultValue": "puDataFactory"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -270,6 +270,14 @@
 		"pufiles_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
+		},
+		"checkin_test_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "*.parquet"
+		},
+		"checkin_test_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "bi-db/fact_events"
 		}
 	},
 	"variables": {
@@ -919,7 +927,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,65,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  [localdb].[azure].[Mng_azure_ETL]\n  WHERE TableName='Contacts'"
+								"sqlReaderQuery": "SELECT  LastIncrementalDate=LastId \n  ---- remove to use incremental\n FROM  [localdb].[azure].[Mng_azure_ETL]\n  WHERE TableName='Contacts'"
 							},
 							"dataset": {
 								"referenceName": "Mng_azure_ETL",
@@ -957,7 +965,7 @@
 							"source": {
 								"type": "SqlSource",
 								"sqlReaderQuery": {
-									"value": "select * from   EmErp_LM.azure.scmm_contacts\n where update_date >'@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}'",
+									"value": "SELECT TOP 100 * from   EmErp_LM.azure.scmm_contacts\n where update_date > CAST(CAST('@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' AS bigint) AS VARBINARY(8)))\n",
 									"type": "Expression"
 								}
 							},
@@ -976,7 +984,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "Blob_Serials",
+								"referenceName": "Blob_Contacts",
 								"type": "DatasetReference",
 								"parameters": {
 									"folder_name": "Contacts"
@@ -1007,14 +1015,14 @@
 							"storedProcedureName": "[concat('[', 'azure].[SP_Update_Mng_azure_ETL]')]",
 							"storedProcedureParameters": {
 								"LastId": {
-									"value": "-1",
+									"value": {
+										"value": "  @{activity('LK_new_max_id').output.firstRow.last_id}",
+										"type": "Expression"
+									},
 									"type": "Int64"
 								},
 								"LastIncrementalDate": {
-									"value": {
-										"value": "@{activity('LK_new_max_id').output.firstRow.ExecutionDate}",
-										"type": "Expression"
-									},
+									"value": "1990-01-01",
 									"type": "DateTime"
 								},
 								"TableName": {
@@ -1043,7 +1051,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "   SELECT ExecutionDate=MAX(update_date)\n FROM EmErp_LM.azure.scmm_contacts"
+								"sqlReaderQuery": "SELECT last_id= MAX(timeStampINT)\nFROM EmErp_LM.azure.scmm_contacts\n"
 							},
 							"dataset": {
 								"referenceName": "Contacts",
@@ -1061,7 +1069,7 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Mng_azure_ETL')]",
 				"[concat(variables('factoryId'), '/datasets/Contacts')]",
-				"[concat(variables('factoryId'), '/datasets/Blob_Serials')]",
+				"[concat(variables('factoryId'), '/datasets/Blob_Contacts')]",
 				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
 			]
 		},
@@ -5022,6 +5030,54 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/checkin_test')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "dwhdb_blob",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "BI"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "Event_Date_day",
+						"type": "DateTime"
+					},
+					{
+						"name": "Source",
+						"type": "String"
+					},
+					{
+						"name": "Event_Name",
+						"type": "String"
+					},
+					{
+						"name": "Event_Details",
+						"type": "String"
+					},
+					{
+						"name": "Event_Count",
+						"type": "Int64"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "ParquetFormat"
+					},
+					"fileName": "[parameters('checkin_test_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('checkin_test_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/dwhdb_blob')]"
+			]
 		}
 	]
 }

@@ -3,7 +3,7 @@
 	"contentVersion": "1.0.0.0",
 	"parameters": {
 		"factoryName": {
-			"value": "pudatafactory"
+			"value": "puDataFactory"
 		},
 		"Analysis_accessToken": {
 			"value": ""
@@ -202,6 +202,12 @@
 		},
 		"pufiles_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
+		},
+		"checkin_test_properties_typeProperties_fileName": {
+			"value": "*.parquet"
+		},
+		"checkin_test_properties_typeProperties_folderPath": {
+			"value": "bi-db/fact_events"
 		}
 	}
 }

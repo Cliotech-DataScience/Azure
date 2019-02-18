@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "pudatafactory"
+			"defaultValue": "puDataFactory"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -271,6 +271,14 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"checkin_test_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "*.parquet"
+		},
+		"checkin_test_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "bi-db/fact_events"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -492,6 +500,12 @@
 					},
 					"pufiles_properties_typeProperties_userId": {
 						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
+					},
+					"checkin_test_properties_typeProperties_fileName": {
+						"value": "[parameters('checkin_test_properties_typeProperties_fileName')]"
+					},
+					"checkin_test_properties_typeProperties_folderPath": {
+						"value": "[parameters('checkin_test_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
