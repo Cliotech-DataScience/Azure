@@ -165,7 +165,7 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"notebookPath": "/Users/mihaib@iforex.com/Load Calls"
+					"notebookPath": "/Load Data/Calls/Load Calls"
 				},
 				"linkedServiceName": {
 					"referenceName": "Analysis",

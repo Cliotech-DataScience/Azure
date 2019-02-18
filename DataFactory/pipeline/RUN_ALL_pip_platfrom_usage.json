@@ -79,11 +79,28 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
+					},
+					{
+						"activity": "RUN - Serials",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
 				],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "01_platfromusage_files_copy_to_blob",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "RUN - Serials",
+				"type": "ExecutePipeline",
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Serials",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
