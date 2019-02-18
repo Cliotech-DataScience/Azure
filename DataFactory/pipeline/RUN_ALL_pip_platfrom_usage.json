@@ -105,6 +105,25 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "RUN - emerp_events",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "RUN - 04_PU_ods_to_events",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "EMERP_Events",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		]
 	},
