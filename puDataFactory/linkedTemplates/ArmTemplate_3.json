@@ -2174,6 +2174,26 @@
 							},
 							"waitOnCompletion": true
 						}
+					},
+					{
+						"name": "RUN - emerp_events",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - 04_PU_ods_to_events",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "EMERP_Events",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
 					}
 				],
 				"annotations": []
@@ -2183,7 +2203,8 @@
 				"[concat(variables('factoryId'), '/pipelines/03_PU_Load_ods_data')]",
 				"[concat(variables('factoryId'), '/pipelines/Customers')]",
 				"[concat(variables('factoryId'), '/pipelines/01_platfromusage_files_copy_to_blob')]",
-				"[concat(variables('factoryId'), '/pipelines/Serials')]"
+				"[concat(variables('factoryId'), '/pipelines/Serials')]",
+				"[concat(variables('factoryId'), '/pipelines/EMERP_Events')]"
 			]
 		},
 		{
@@ -2205,10 +2226,18 @@
 				"type": "ScheduleTrigger",
 				"typeProperties": {
 					"recurrence": {
-						"frequency": "Minute",
+						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2019-02-18T07:00:00Z",
-						"timeZone": "UTC"
+						"startTime": "2019-02-18T07:00:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								7
+							]
+						}
 					}
 				}
 			},
