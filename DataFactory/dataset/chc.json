@@ -1,0 +1,43 @@
+{
+	"name": "chc",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "dwhdb_blob",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "BI"
+		},
+		"type": "AzureBlob",
+		"structure": [
+			{
+				"name": "Event_Date_day",
+				"type": "DateTime"
+			},
+			{
+				"name": "Source",
+				"type": "String"
+			},
+			{
+				"name": "Event_Name",
+				"type": "String"
+			},
+			{
+				"name": "Event_Details",
+				"type": "String"
+			},
+			{
+				"name": "Event_Count",
+				"type": "Int64"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "ParquetFormat"
+			},
+			"fileName": "*.parquet",
+			"folderPath": "bi-db/fact_events"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
