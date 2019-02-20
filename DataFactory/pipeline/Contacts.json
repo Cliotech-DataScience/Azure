@@ -142,7 +142,7 @@
 				}
 			},
 			{
-				"name": "Notebook1",
+				"name": "Contacts",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
@@ -160,7 +160,7 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"notebookPath": "/Process/Infrastructure/Customers"
+					"notebookPath": "/Load Data/SCMM/contacts"
 				},
 				"linkedServiceName": {
 					"referenceName": "Analysis",
