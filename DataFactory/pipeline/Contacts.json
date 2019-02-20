@@ -100,7 +100,7 @@
 					"storedProcedureParameters": {
 						"LastId": {
 							"value": {
-								"value": "  @{activity('LK_new_max_id').output.firstRow.last_id}",
+								"value": "@{activity('LK_new_max_id').output.firstRow.last_id}",
 								"type": "Expression"
 							},
 							"type": "Int64"
@@ -139,6 +139,32 @@
 						"referenceName": "Contacts",
 						"type": "DatasetReference"
 					}
+				}
+			},
+			{
+				"name": "Notebook1",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "update_mng_azure",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"notebookPath": "/Process/Infrastructure/Customers"
+				},
+				"linkedServiceName": {
+					"referenceName": "Analysis",
+					"type": "LinkedServiceReference"
 				}
 			}
 		],
