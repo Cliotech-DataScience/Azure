@@ -136,7 +136,7 @@
 				"type": "ExecutePipeline",
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "Serials",
+						"referenceName": "Contacts",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
