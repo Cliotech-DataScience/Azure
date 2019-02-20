@@ -720,7 +720,7 @@
 							"storedProcedureParameters": {
 								"LastId": {
 									"value": {
-										"value": "  @{activity('LK_new_max_id').output.firstRow.last_id}",
+										"value": "@{activity('LK_new_max_id').output.firstRow.last_id}",
 										"type": "Expression"
 									},
 									"type": "Int64"
@@ -762,6 +762,33 @@
 								"type": "DatasetReference",
 								"parameters": {}
 							}
+						}
+					},
+					{
+						"name": "Contacts",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "update_mng_azure",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Load Data/SCMM/contacts"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
 						}
 					}
 				],
@@ -2213,7 +2240,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Stopped",
+				"runtimeState": "Started",
 				"pipelines": [
 					{
 						"pipelineReference": {
