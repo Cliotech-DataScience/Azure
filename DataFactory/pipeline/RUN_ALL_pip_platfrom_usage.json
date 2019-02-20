@@ -85,6 +85,12 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
+					},
+					{
+						"activity": "RUN - Contacts",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
 				],
 				"typeProperties": {
@@ -120,6 +126,17 @@
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "EMERP_Events",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "RUN - Contacts",
+				"type": "ExecutePipeline",
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Serials",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
