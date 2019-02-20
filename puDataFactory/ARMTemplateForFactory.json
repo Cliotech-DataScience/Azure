@@ -2278,6 +2278,12 @@
 								"dependencyConditions": [
 									"Succeeded"
 								]
+							},
+							{
+								"activity": "RUN - Contacts",
+								"dependencyConditions": [
+									"Succeeded"
+								]
 							}
 						],
 						"userProperties": [],
@@ -2321,6 +2327,19 @@
 							},
 							"waitOnCompletion": true
 						}
+					},
+					{
+						"name": "RUN - Contacts",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Contacts",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
 					}
 				],
 				"annotations": []
@@ -2332,7 +2351,8 @@
 				"[concat(variables('factoryId'), '/pipelines/04_PU_ods_to_events')]",
 				"[concat(variables('factoryId'), '/pipelines/01_platfromusage_files_copy_to_blob')]",
 				"[concat(variables('factoryId'), '/pipelines/Serials')]",
-				"[concat(variables('factoryId'), '/pipelines/EMERP_Events')]"
+				"[concat(variables('factoryId'), '/pipelines/EMERP_Events')]",
+				"[concat(variables('factoryId'), '/pipelines/Contacts')]"
 			]
 		},
 		{
