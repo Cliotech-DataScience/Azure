@@ -28,7 +28,6 @@
 				"type": "TextFormat",
 				"columnDelimiter": "\t",
 				"rowDelimiter": "",
-				"quoteChar": "\"",
 				"nullValue": "\\N",
 				"encodingName": null,
 				"treatEmptyAsNull": true,
