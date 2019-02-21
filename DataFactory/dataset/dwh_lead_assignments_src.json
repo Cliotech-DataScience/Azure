@@ -20,7 +20,7 @@
 			},
 			{
 				"name": "Assignment_Day",
-				"type": "Date"
+				"type": "DateTime"
 			}
 		],
 		"typeProperties": {
