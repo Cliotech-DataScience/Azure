@@ -179,6 +179,12 @@
 		"dwh_calls_blob_properties_typeProperties_folderPath": {
 			"value": "@concat('rawdata/DWH_Calls/received=',utcnow())"
 		},
+		"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
+			"value": "LeadAssignments_2019.csv.bz2"
+		},
+		"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
+			"value": "rawdata/DWH_LeadAssignments"
+		},
 		"fxnet_deals_blob_properties_typeProperties_fileName": {
 			"value": "@CONCAT('FXNET_Deals', pipeline().RunId, '.csv')"
 		},
@@ -214,12 +220,6 @@
 		},
 		"pufiles_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
-		},
-		"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
-			"value": "LeadAssignments_2019.csv.bz2"
-		},
-		"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
-			"value": "rawdata/DWH_LeadAssignments"
 		}
 	}
 }
