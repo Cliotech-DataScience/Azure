@@ -287,6 +287,14 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "LeadAssignments_2019.csv.bz2"
+		},
+		"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "rawdata/DWH_LeadAssignments"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -514,6 +522,12 @@
 					},
 					"pufiles_properties_typeProperties_userId": {
 						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
+					},
+					"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_fileName')]"
+					},
+					"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_folderPath')]"
 					}
 				}
 			},

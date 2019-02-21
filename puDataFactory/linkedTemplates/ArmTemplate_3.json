@@ -13,6 +13,37 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/fxnet_deals_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "TransactionNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "Trans_Details",
+						"type": "String"
+					},
+					{
+						"name": "ExecutionDay",
+						"type": "DateTime"
+					}
+				],
+				"typeProperties": {
+					"tableName": "dwh.azure.deals"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/serials')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -68,7 +99,7 @@
 					},
 					{
 						"name": "Assignment_Day",
-						"type": "Date"
+						"type": "DateTime"
 					}
 				],
 				"typeProperties": {
@@ -1801,7 +1832,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/fxnet_deals_src')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Platfrom_Usage_Log_Collector')]",
@@ -2286,44 +2319,6 @@
 				"[concat(variables('factoryId'), '/pipelines/Serials')]",
 				"[concat(variables('factoryId'), '/pipelines/EMERP_Events')]",
 				"[concat(variables('factoryId'), '/pipelines/Contacts')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DWH_Calls_Daily_Load')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "DWH_Calls",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-02-18T07:00:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								7
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/DWH_Calls')]"
 			]
 		}
 	]

@@ -214,6 +214,12 @@
 		},
 		"pufiles_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
+		},
+		"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
+			"value": "LeadAssignments_2019.csv.bz2"
+		},
+		"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
+			"value": "rawdata/DWH_LeadAssignments"
 		}
 	}
 }
