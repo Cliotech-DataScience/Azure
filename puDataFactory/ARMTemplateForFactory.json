@@ -1798,7 +1798,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT Assignment_day=DATEADD(DAY,-1,MAX(Assignment_day))\nFROM dwh.azure.Lead_Assignments"
+								"sqlReaderQuery": "SELECT Assignment_Day=DATEADD(DAY,-1,MAX(Assignment_day))\nFROM dwh.azure.Lead_Assignments"
 							},
 							"dataset": {
 								"referenceName": "Mng_azure_ETL",
@@ -1897,7 +1897,7 @@
 								},
 								"LastIncrementalDate": {
 									"value": {
-										"value": "@{activity('LK_new_max_id').output.firstRow.AssignmentDay}",
+										"value": "@{activity('LK_new_max_id').output.firstRow.Assignment_Day}",
 										"type": "Expression"
 									},
 									"type": "DateTime"
