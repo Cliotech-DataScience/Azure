@@ -32,7 +32,7 @@
 						"type": "Int32"
 					},
 					{
-						"name": "Assignments_Details",
+						"name": "Assignment_Details",
 						"type": "String"
 					},
 					{
