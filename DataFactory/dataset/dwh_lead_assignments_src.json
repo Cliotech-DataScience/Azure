@@ -1,0 +1,31 @@
+{
+	"name": "dwh_lead_assignments_src",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "alldbdwh",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DWH"
+		},
+		"type": "SqlServerTable",
+		"structure": [
+			{
+				"name": "Fact_Lead_Assignments_ID",
+				"type": "Int32"
+			},
+			{
+				"name": "Assignments_Details",
+				"type": "String"
+			},
+			{
+				"name": "Assignment_Day",
+				"type": "Date"
+			}
+		],
+		"typeProperties": {
+			"tableName": "dwh.azure.Lead_assignments "
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
