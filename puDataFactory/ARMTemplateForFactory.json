@@ -2282,6 +2282,33 @@
 							"referenceName": "alldbdwh",
 							"type": "LinkedServiceReference"
 						}
+					},
+					{
+						"name": "Load_Deals_To_Deals",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "update_mng_azure",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Load Data/FXNET/Load Deals"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
 				"folder": {
@@ -2293,7 +2320,8 @@
 				"[concat(variables('factoryId'), '/datasets/Mng_azure_ETL')]",
 				"[concat(variables('factoryId'), '/datasets/fxnet_deals_src')]",
 				"[concat(variables('factoryId'), '/datasets/fxnet_deals_blob')]",
-				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]",
+				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
 			]
 		},
 		{
