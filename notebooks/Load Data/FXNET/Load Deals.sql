@@ -68,7 +68,7 @@ as
 select 
     get_json_object(Trans_Details, "$.Event_Name") as Event_Name, 
     get_json_object(Trans_Details, "$.Event_Detaails") as Event_Details, 
-
+    cast(get_json_object(Trans_Details, "$.ExecutionDate") as timeStamp) as ExecutionDate,
     get_json_object(Trans_Details, "$.AccountNumber") as AccountNumber,
     get_json_object(Trans_Details, "$.Broker_ID") as Broker_ID,
     get_json_object(Trans_Details, "$.BrokerName") as BrokerName,
@@ -161,7 +161,7 @@ cache table ods.accountcontacts
 --as
 insert into dwhdb.Events
 select 
-  ExecutionDay    ,
+  ExecutionDate    ,
   'fxnet' as Source  ,
   lower(Event_Name) as Event_Name,
   Event_Details as Event_Details,

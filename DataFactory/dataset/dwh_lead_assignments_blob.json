@@ -1,0 +1,45 @@
+{
+	"name": "dwh_lead_assignments_blob",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DataloadStore",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DWH"
+		},
+		"type": "AzureBlob",
+		"structure": [
+			{
+				"name": "Fact_Lead_Assignments_ID",
+				"type": "Int32"
+			},
+			{
+				"name": "Assignment_Details",
+				"type": "String"
+			},
+			{
+				"name": "Assignment_Day",
+				"type": "DateTime"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": "\t",
+				"rowDelimiter": "",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": false
+			},
+			"compression": {
+				"type": "BZip2"
+			},
+			"fileName": "LeadAssignments_2019.csv.bz2",
+			"folderPath": "rawdata/DWH_LeadAssignments"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

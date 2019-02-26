@@ -1,5 +1,5 @@
 {
-	"name": "Contacts",
+	"name": "DWH_LeadAssignments",
 	"properties": {
 		"activities": [
 			{
@@ -15,7 +15,28 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT  LastIncrementalDate=LastId \n  ---- remove to use incremental\n FROM  [localdb].[azure].[Mng_azure_ETL]\n  WHERE TableName='Contacts'"
+						"sqlReaderQuery": "SELECT  LastIncrementalDate \n  ---- remove to use incremental\nFROM  localdb.azure.Mng_azure_ETL\nWHERE TableName='DWH_LeadAssignments'"
+					},
+					"dataset": {
+						"referenceName": "Mng_azure_ETL",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "LK_new_max_id",
+				"type": "Lookup",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"source": {
+						"type": "SqlSource",
+						"sqlReaderQuery": "SELECT Assignment_Day=DATEADD(DAY,-1,MAX(Assignment_day))\nFROM dwh.azure.Lead_Assignments"
 					},
 					"dataset": {
 						"referenceName": "Mng_azure_ETL",
@@ -51,7 +72,7 @@
 					"source": {
 						"type": "SqlSource",
 						"sqlReaderQuery": {
-							"value": "SELECT * from   EmErp_LM.azure.scmm_contacts\n where update_date > CAST(CAST('@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' AS bigint) AS VARBINARY(8))\n",
+							"value": "\nselect * \nFROM dwh.azure.Lead_Assignments\nwhere Assignment_Day> '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' and Assignment_Day<= '@{activity('LK_new_max_id').output.firstRow.Assignment_Day}'",
 							"type": "Expression"
 						}
 					},
@@ -59,21 +80,26 @@
 						"type": "BlobSink"
 					},
 					"enableStaging": false,
-					"dataIntegrationUnits": 0
+					"dataIntegrationUnits": 0,
+					"translator": {
+						"type": "TabularTranslator",
+						"columnMappings": {
+							"Call_ID": "Call_ID",
+							"Call_Details": "Call_Details",
+							"CallDay": "CallDay"
+						}
+					}
 				},
 				"inputs": [
 					{
-						"referenceName": "Contacts",
+						"referenceName": "dwh_calls_src",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Blob_Contacts",
-						"type": "DatasetReference",
-						"parameters": {
-							"folder_name": "Contacts"
-						}
+						"referenceName": "dwh_calls_blob",
+						"type": "DatasetReference"
 					}
 				]
 			},
@@ -99,71 +125,24 @@
 					"storedProcedureName": "[azure].[SP_Update_Mng_azure_ETL]",
 					"storedProcedureParameters": {
 						"LastId": {
-							"value": {
-								"value": "@{activity('LK_new_max_id').output.firstRow.last_id}",
-								"type": "Expression"
-							},
+							"value": "-1",
 							"type": "Int64"
 						},
 						"LastIncrementalDate": {
-							"value": "1990-01-01",
+							"value": {
+								"value": "@{activity('LK_new_max_id').output.firstRow.Assignment_Day}",
+								"type": "Expression"
+							},
 							"type": "DateTime"
 						},
 						"TableName": {
-							"value": "Contacts",
+							"value": "DWH_Calls",
 							"type": "String"
 						}
 					}
 				},
 				"linkedServiceName": {
 					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
-				"name": "LK_new_max_id",
-				"type": "Lookup",
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"typeProperties": {
-					"source": {
-						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT last_id= MAX(timeStampINT)\nFROM EmErp_LM.azure.scmm_contacts\n"
-					},
-					"dataset": {
-						"referenceName": "Contacts",
-						"type": "DatasetReference"
-					}
-				}
-			},
-			{
-				"name": "Contacts",
-				"type": "DatabricksNotebook",
-				"dependsOn": [
-					{
-						"activity": "update_mng_azure",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"typeProperties": {
-					"notebookPath": "/Load Data/SCMM/contacts"
-				},
-				"linkedServiceName": {
-					"referenceName": "Analysis",
 					"type": "LinkedServiceReference"
 				}
 			}

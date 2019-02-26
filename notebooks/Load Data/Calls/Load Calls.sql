@@ -86,7 +86,7 @@ as
 select 
     get_json_object(Call_details, "$.Event_Name") as Event_Name, 
     get_json_object(Call_details, "$.Event_Details") as Event_Details, 
-    cast(get_json_object(Call_details, "$.CallDate") as timeStamp) as ExecusionDate
+    cast(get_json_object(Call_details, "$.CallDate") as timeStamp) as ExecutionDate,
     get_json_object(Call_details, "$.AccountNumber") as AccountNumber,
     get_json_object(Call_details, "$.BrokerID") as Broker_ID,
     get_json_object(Call_details, "$.BrokerName") as BrokerName,
