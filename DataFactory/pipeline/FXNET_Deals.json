@@ -150,7 +150,7 @@
 				}
 			},
 			{
-				"name": "Load_Deals_To_Deals",
+				"name": "Load_Deals_To_Events",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
