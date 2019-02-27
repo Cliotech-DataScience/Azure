@@ -160,7 +160,7 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"notebookPath": "/Load Data/SCMM/contacts"
+					"notebookPath": "/Load Data/Dimensions/contacts"
 				},
 				"linkedServiceName": {
 					"referenceName": "Analysis",
