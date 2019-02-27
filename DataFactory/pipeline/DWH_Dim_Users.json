@@ -1,5 +1,5 @@
 {
-	"name": "Dim_Users_DWH",
+	"name": "DWH_Dim_Users",
 	"properties": {
 		"activities": [
 			{
