@@ -11,6 +11,9 @@
 				"defaultValue": "Dim_AccountContacts"
 			}
 		},
+		"folder": {
+			"name": "DWH"
+		},
 		"type": "AzureBlob",
 		"typeProperties": {
 			"format": {

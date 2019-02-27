@@ -5,6 +5,9 @@
 			"referenceName": "alldbdwh",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "DWH"
+		},
 		"type": "SqlServerTable",
 		"structure": [
 			{
