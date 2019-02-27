@@ -89,7 +89,7 @@
 		},
 		"dwh_Dim_Users_blob_properties_typeProperties_fileName": {
 			"type": "string",
-			"defaultValue": "@CONCAT('Users_', pipeline().TriggerTime, '.csv')"
+			"defaultValue": "Users.csv"
 		},
 		"dwh_Dim_Users_blob_properties_typeProperties_folderPath": {
 			"type": "string",
