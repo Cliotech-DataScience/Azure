@@ -30,7 +30,7 @@
 				"firstRowAsHeader": true
 			},
 			"fileName": {
-				"value": "@CONCAT('Users_', pipeline().TriggerTime, '.csv')",
+				"value": "Users.csv",
 				"type": "Expression"
 			},
 			"folderPath": "rawdata/DWH_Users"
