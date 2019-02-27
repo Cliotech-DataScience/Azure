@@ -86,6 +86,7 @@ as
 select 
     get_json_object(Call_details, "$.Event_Name") as Event_Name, 
     get_json_object(Call_details, "$.Event_Details") as Event_Details, 
+    
     cast(get_json_object(Call_details, "$.CallDate") as timeStamp) as ExecutionDate,
     get_json_object(Call_details, "$.AccountNumber") as AccountNumber,
     get_json_object(Call_details, "$.BrokerID") as Broker_ID,
@@ -94,6 +95,8 @@ select
   map(
 		"Call_ID", get_json_object(Call_details, "$.Call_ID"),
         "PBX_ID", get_json_object(Call_details, "$.PBX_ID"),
+        "User_ID", get_json_object(Call_details, "$.User_ID"),
+        "Extension", get_json_object(Call_details, "$.Extension"),
 		"PBX_Uniqueid", get_json_object(Call_details, "$.PBX_Uniqueid"),
         "CallDate", get_json_object(Call_details, "$.CallDate"),
         "CallDate_PBX", get_json_object(Call_details, "$.CallDate_PBX"),
