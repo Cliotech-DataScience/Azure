@@ -1096,7 +1096,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"notebookPath": "/Load Data/SCMM/contacts"
+							"notebookPath": "/Load Data/Dimensions/contacts"
 						},
 						"linkedServiceName": {
 							"referenceName": "Analysis",
@@ -2851,7 +2851,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"notebookPath": "/Load Data/Emerp Events/serials"
+							"notebookPath": "/Load Data/Dimensions/serials"
 						},
 						"linkedServiceName": {
 							"referenceName": "Analysis",
