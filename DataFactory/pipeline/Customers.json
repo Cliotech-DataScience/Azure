@@ -160,7 +160,7 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"notebookPath": "/Process/Infrastructure/Customers"
+					"notebookPath": "/Load Data/Dimensions/Customers"
 				},
 				"linkedServiceName": {
 					"referenceName": "Analysis",
