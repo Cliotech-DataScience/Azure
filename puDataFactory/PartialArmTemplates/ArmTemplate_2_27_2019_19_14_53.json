@@ -1,0 +1,85 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "puDataFactory"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/DWH_Dim_Customers_blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"folder_name": {
+						"type": "String",
+						"defaultValue": "Dim_AccountContacts"
+					}
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"type": "AzureBlob",
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"nullValue": "\\N",
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"fileName": {
+						"value": "@CONCAT('Customers_', pipeline().RunId, '.csv')",
+						"type": "Expression"
+					},
+					"folderPath": "rawdata/Customers"
+				}
+			}
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWH_Dim_Customers_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "AccountNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "datails",
+						"type": "String"
+					},
+					{
+						"name": "SsisUpdatedDate",
+						"type": "DateTime"
+					}
+				],
+				"typeProperties": {
+					"tableName": "dwh.azure.AZ_Customers"
+				}
+			}
+		}
+	]
+}

@@ -267,6 +267,9 @@
 					"referenceName": "alldbdwh",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "DWH"
+				},
 				"annotations": [],
 				"type": "SqlServerTable",
 				"structure": [

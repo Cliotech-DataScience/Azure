@@ -3429,6 +3429,9 @@
 						"defaultValue": "Dim_AccountContacts"
 					}
 				},
+				"folder": {
+					"name": "DWH"
+				},
 				"annotations": [],
 				"type": "AzureBlob",
 				"typeProperties": {
@@ -3460,6 +3463,9 @@
 				"linkedServiceName": {
 					"referenceName": "alldbdwh",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
 				},
 				"annotations": [],
 				"type": "SqlServerTable",

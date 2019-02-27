@@ -584,6 +584,9 @@
 						"defaultValue": "Dim_AccountContacts"
 					}
 				},
+				"folder": {
+					"name": "DWH"
+				},
 				"annotations": [],
 				"type": "AzureBlob",
 				"typeProperties": {
