@@ -111,6 +111,14 @@
 			"type": "string",
 			"defaultValue": "rawdata/Serials"
 		},
+		"DWH_Dim_Customers_blob_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@CONCAT('Customers_', pipeline().RunId, '.csv')"
+		},
+		"DWH_Dim_Customers_blob_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "rawdata/Customers"
+		},
 		"DestinationDataset_bvj_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "datadsp"
@@ -178,14 +186,6 @@
 		"Source_file_avi_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "@dataset().folder"
-		},
-		"blob_Customers_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('Customers_', pipeline().RunId, '.csv')"
-		},
-		"blob_Customers_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "rawdata/Customers"
 		},
 		"blob_EMERP_Events_properties_typeProperties_fileName": {
 			"type": "string",
@@ -1460,14 +1460,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "Customers",
+								"referenceName": "DWH_Dim_Customers_src",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "blob_Customers",
+								"referenceName": "DWH_Dim_Customers_blob",
 								"type": "DatasetReference",
 								"parameters": {
 									"folder_name": "Customers"
@@ -1554,8 +1554,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Mng_azure_ETL')]",
-				"[concat(variables('factoryId'), '/datasets/Customers')]",
-				"[concat(variables('factoryId'), '/datasets/blob_Customers')]",
+				"[concat(variables('factoryId'), '/datasets/DWH_Dim_Customers_src')]",
+				"[concat(variables('factoryId'), '/datasets/DWH_Dim_Customers_blob')]",
 				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]",
 				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
 			]
@@ -3415,7 +3415,45 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Customers')]",
+			"name": "[concat(parameters('factoryName'), '/DWH_Dim_Customers_blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"folder_name": {
+						"type": "String",
+						"defaultValue": "Dim_AccountContacts"
+					}
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"nullValue": "\\N",
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"fileName": {
+						"value": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWH_Dim_Customers_src')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -4388,44 +4426,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/fileserver1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/blob_Customers')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"folder_name": {
-						"type": "String",
-						"defaultValue": "Dim_AccountContacts"
-					}
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"nullValue": "\\N",
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": true
-					},
-					"fileName": {
-						"value": "[parameters('blob_Customers_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": "[parameters('blob_Customers_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
 			]
 		},
 		{

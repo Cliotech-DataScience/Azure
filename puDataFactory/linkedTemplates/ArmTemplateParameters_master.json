@@ -83,6 +83,12 @@
 		"Blob_Serials_properties_typeProperties_folderPath": {
 			"value": "rawdata/Serials"
 		},
+		"DWH_Dim_Customers_blob_properties_typeProperties_fileName": {
+			"value": "@CONCAT('Customers_', pipeline().RunId, '.csv')"
+		},
+		"DWH_Dim_Customers_blob_properties_typeProperties_folderPath": {
+			"value": "rawdata/Customers"
+		},
 		"DestinationDataset_bvj_properties_typeProperties_fileName": {
 			"value": "datadsp"
 		},
@@ -133,12 +139,6 @@
 		},
 		"Source_file_avi_properties_typeProperties_folderPath": {
 			"value": "@dataset().folder"
-		},
-		"blob_Customers_properties_typeProperties_fileName": {
-			"value": "@CONCAT('Customers_', pipeline().RunId, '.csv')"
-		},
-		"blob_Customers_properties_typeProperties_folderPath": {
-			"value": "rawdata/Customers"
 		},
 		"blob_EMERP_Events_properties_typeProperties_fileName": {
 			"value": "@CONCAT('EMERP_Events', pipeline().RunId, '.csv')"

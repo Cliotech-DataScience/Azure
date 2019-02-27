@@ -1250,14 +1250,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "Customers",
+								"referenceName": "DWH_Dim_Customers_src",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "blob_Customers",
+								"referenceName": "DWH_Dim_Customers_blob",
 								"type": "DatasetReference",
 								"parameters": {
 									"folder_name": "Customers"
