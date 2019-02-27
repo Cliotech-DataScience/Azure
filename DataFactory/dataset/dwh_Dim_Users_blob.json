@@ -33,7 +33,7 @@
 				"value": "@CONCAT('Users_', pipeline().RunId, '.csv')",
 				"type": "Expression"
 			},
-			"folderPath": "rawdata/Users"
+			"folderPath": "rawdata/DWH_Users"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
