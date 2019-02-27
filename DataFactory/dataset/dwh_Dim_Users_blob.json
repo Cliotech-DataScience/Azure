@@ -5,12 +5,6 @@
 			"referenceName": "DataloadStore",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"folder_name": {
-				"type": "String",
-				"defaultValue": "Dim_AccountContacts"
-			}
-		},
 		"folder": {
 			"name": "DWH"
 		},

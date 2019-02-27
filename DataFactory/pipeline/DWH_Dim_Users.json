@@ -28,17 +28,14 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Customers",
+						"referenceName": "dwh_Dim_Users_src",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "blob_Customers",
-						"type": "DatasetReference",
-						"parameters": {
-							"folder_name": "Customers"
-						}
+						"referenceName": "dwh_Dim_Users_blob",
+						"type": "DatasetReference"
 					}
 				]
 			},
@@ -61,7 +58,7 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"notebookPath": "/Load Data/Dimensions/Customers"
+					"notebookPath": "/Load Data/Dimensions/Users"
 				},
 				"linkedServiceName": {
 					"referenceName": "Analysis",
