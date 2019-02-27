@@ -93,7 +93,7 @@
 		},
 		"dwh_Dim_Users_blob_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "rawdata/Users"
+			"defaultValue": "rawdata/DWH_Users"
 		},
 		"dwh_calls_blob_properties_typeProperties_fileName": {
 			"type": "string",
