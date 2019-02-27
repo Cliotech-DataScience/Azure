@@ -1,0 +1,122 @@
+{
+	"name": "dwh_Dim_Users_blob",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DataloadStore",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"folder_name": {
+				"type": "String",
+				"defaultValue": "Dim_AccountContacts"
+			}
+		},
+		"folder": {
+			"name": "DWH"
+		},
+		"type": "AzureBlob",
+		"structure": [
+			{
+				"name": "User_ID",
+				"type": "Int16"
+			},
+			{
+				"name": "User_Name",
+				"type": "String"
+			},
+			{
+				"name": "User_Status",
+				"type": "String"
+			},
+			{
+				"name": "Manager_Name",
+				"type": "String"
+			},
+			{
+				"name": "User_Type",
+				"type": "String"
+			},
+			{
+				"name": "User_Category",
+				"type": "String"
+			},
+			{
+				"name": "Email",
+				"type": "String"
+			},
+			{
+				"name": "Last_Login_Date",
+				"type": "DateTime"
+			},
+			{
+				"name": "Salesman_Serial",
+				"type": "Int32"
+			},
+			{
+				"name": "Exentsion",
+				"type": "String"
+			},
+			{
+				"name": "Logon_Name",
+				"type": "String"
+			},
+			{
+				"name": "Team",
+				"type": "String"
+			},
+			{
+				"name": "AD_Name",
+				"type": "String"
+			},
+			{
+				"name": "AD_Display_Name",
+				"type": "String"
+			},
+			{
+				"name": "AD_OU_Path",
+				"type": "String"
+			},
+			{
+				"name": "AD_Extension",
+				"type": "String"
+			},
+			{
+				"name": "AD_Department",
+				"type": "String"
+			},
+			{
+				"name": "Language",
+				"type": "String"
+			},
+			{
+				"name": "Main_Broker",
+				"type": "String"
+			},
+			{
+				"name": "Main_Parent_Group",
+				"type": "String"
+			},
+			{
+				"name": "details",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"nullValue": "\\N",
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": true
+			},
+			"fileName": {
+				"value": "@CONCAT('Users_', pipeline().RunId, '.csv')",
+				"type": "Expression"
+			},
+			"folderPath": "rawdata/Users"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
