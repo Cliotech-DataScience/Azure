@@ -1575,18 +1575,16 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "Customers",
+								"referenceName": "dwh_Dim_Users_src",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "blob_Customers",
+								"referenceName": "dwh_Dim_Users_blob",
 								"type": "DatasetReference",
-								"parameters": {
-									"folder_name": "Customers"
-								}
+								"parameters": {}
 							}
 						]
 					},
@@ -1610,7 +1608,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"notebookPath": "/Load Data/Dimensions/Customers"
+							"notebookPath": "/Load Data/Dimensions/Users"
 						},
 						"linkedServiceName": {
 							"referenceName": "Analysis",
@@ -1623,7 +1621,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dwh_Dim_Users_src')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DWH_LeadAssignments')]",
