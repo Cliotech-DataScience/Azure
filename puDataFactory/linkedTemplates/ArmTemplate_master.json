@@ -249,7 +249,7 @@
 		},
 		"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
 			"type": "string",
-			"defaultValue": "LeadAssignments_2019.csv.bz2"
+			"defaultValue": "@CONCAT('LeadAssignments_', pipeline().TriggerTime, '.csv.bz2')"
 		},
 		"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
 			"type": "string",

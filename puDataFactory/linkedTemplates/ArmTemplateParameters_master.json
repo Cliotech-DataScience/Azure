@@ -186,7 +186,7 @@
 			"value": "@concat('rawdata/DWH_Calls/received=',utcnow())"
 		},
 		"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
-			"value": "LeadAssignments_2019.csv.bz2"
+			"value": "@CONCAT('LeadAssignments_', pipeline().TriggerTime, '.csv.bz2')"
 		},
 		"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
 			"value": "rawdata/DWH_LeadAssignments"
