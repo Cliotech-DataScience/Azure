@@ -173,6 +173,12 @@
 		"checkin_test_properties_typeProperties_folderPath": {
 			"value": "bi-db/fact_events"
 		},
+		"dwh_Dim_Users_blob_properties_typeProperties_fileName": {
+			"value": "@CONCAT('Users_', pipeline().RunId, '.csv')"
+		},
+		"dwh_Dim_Users_blob_properties_typeProperties_folderPath": {
+			"value": "rawdata/Users"
+		},
 		"dwh_calls_blob_properties_typeProperties_fileName": {
 			"value": "@CONCAT('Calls_', pipeline().TriggerTime, '.csv.bz2')"
 		},

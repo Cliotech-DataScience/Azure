@@ -43,10 +43,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'fileserver1'"
 		},
-		"pufiles_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'pufiles'"
-		},
 		"blob_EMERP_Events_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "@CONCAT('EMERP_Events', pipeline().RunId, '.csv')"
@@ -90,6 +86,14 @@
 		"checkin_test_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "bi-db/fact_events"
+		},
+		"dwh_Dim_Users_blob_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@CONCAT('Users_', pipeline().RunId, '.csv')"
+		},
+		"dwh_Dim_Users_blob_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "rawdata/Users"
 		},
 		"dwh_calls_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -148,10 +152,6 @@
 			"defaultValue": "efix\\az_etl"
 		},
 		"fileserver1_properties_typeProperties_userId": {
-			"type": "string",
-			"defaultValue": "efix\\az_etl"
-		},
-		"pufiles_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		}
@@ -473,6 +473,131 @@
 					},
 					"fileName": "[parameters('checkin_test_properties_typeProperties_fileName')]",
 					"folderPath": "[parameters('checkin_test_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dwh_Dim_Users_blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DataloadStore",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"folder_name": {
+						"type": "String",
+						"defaultValue": "Dim_AccountContacts"
+					}
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "User_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "User_Name",
+						"type": "String"
+					},
+					{
+						"name": "User_Status",
+						"type": "String"
+					},
+					{
+						"name": "Manager_Name",
+						"type": "String"
+					},
+					{
+						"name": "User_Type",
+						"type": "String"
+					},
+					{
+						"name": "User_Category",
+						"type": "String"
+					},
+					{
+						"name": "Email",
+						"type": "String"
+					},
+					{
+						"name": "Last_Login_Date",
+						"type": "DateTime"
+					},
+					{
+						"name": "Salesman_Serial",
+						"type": "Int32"
+					},
+					{
+						"name": "Exentsion",
+						"type": "String"
+					},
+					{
+						"name": "Logon_Name",
+						"type": "String"
+					},
+					{
+						"name": "Team",
+						"type": "String"
+					},
+					{
+						"name": "AD_Name",
+						"type": "String"
+					},
+					{
+						"name": "AD_Display_Name",
+						"type": "String"
+					},
+					{
+						"name": "AD_OU_Path",
+						"type": "String"
+					},
+					{
+						"name": "AD_Extension",
+						"type": "String"
+					},
+					{
+						"name": "AD_Department",
+						"type": "String"
+					},
+					{
+						"name": "Language",
+						"type": "String"
+					},
+					{
+						"name": "Main_Broker",
+						"type": "String"
+					},
+					{
+						"name": "Main_Parent_Group",
+						"type": "String"
+					},
+					{
+						"name": "details",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"nullValue": "\\N",
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"fileName": {
+						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_folderPath')]"
 				}
 			},
 			"dependsOn": []
@@ -996,28 +1121,6 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('fileserver1_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "alldbgateway",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pufiles')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "FileServer",
-				"typeProperties": {
-					"host": "D:\\\\pufiles",
-					"userId": "[parameters('pufiles_properties_typeProperties_userId')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('pufiles_password')]"
 					}
 				},
 				"connectVia": {

@@ -231,6 +231,14 @@
 			"type": "string",
 			"defaultValue": "bi-db/fact_events"
 		},
+		"dwh_Dim_Users_blob_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@CONCAT('Users_', pipeline().RunId, '.csv')"
+		},
+		"dwh_Dim_Users_blob_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "rawdata/Users"
+		},
 		"dwh_calls_blob_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "@CONCAT('Calls_', pipeline().TriggerTime, '.csv.bz2')"
@@ -445,9 +453,6 @@
 					"fileserver1_password": {
 						"value": "[parameters('fileserver1_password')]"
 					},
-					"pufiles_password": {
-						"value": "[parameters('pufiles_password')]"
-					},
 					"blob_EMERP_Events_properties_typeProperties_fileName": {
 						"value": "[parameters('blob_EMERP_Events_properties_typeProperties_fileName')]"
 					},
@@ -480,6 +485,12 @@
 					},
 					"checkin_test_properties_typeProperties_folderPath": {
 						"value": "[parameters('checkin_test_properties_typeProperties_folderPath')]"
+					},
+					"dwh_Dim_Users_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_fileName')]"
+					},
+					"dwh_Dim_Users_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_folderPath')]"
 					},
 					"dwh_calls_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('dwh_calls_blob_properties_typeProperties_fileName')]"
@@ -525,9 +536,6 @@
 					},
 					"fileserver1_properties_typeProperties_userId": {
 						"value": "[parameters('fileserver1_properties_typeProperties_userId')]"
-					},
-					"pufiles_properties_typeProperties_userId": {
-						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
 					}
 				}
 			},
@@ -548,6 +556,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"pufiles_password": {
+						"value": "[parameters('pufiles_password')]"
+					},
+					"pufiles_properties_typeProperties_userId": {
+						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
 					},
 					"DestinationDataset_gjq_properties_typeProperties_fileName": {
 						"value": "[parameters('DestinationDataset_gjq_properties_typeProperties_fileName')]"
