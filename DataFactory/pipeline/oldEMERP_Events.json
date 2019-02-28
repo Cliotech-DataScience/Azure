@@ -169,7 +169,7 @@
 			}
 		],
 		"folder": {
-			"name": "Data_from_SQL"
+			"name": "_old"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
