@@ -2,14 +2,6 @@
 	"name": "Load_Users_Daily",
 	"properties": {
 		"runtimeState": "Started",
-		"pipelines": [
-			{
-				"pipelineReference": {
-					"referenceName": "DWH_Dim_Users",
-					"type": "PipelineReference"
-				}
-			}
-		],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
