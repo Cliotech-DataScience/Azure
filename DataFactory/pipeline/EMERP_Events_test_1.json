@@ -97,6 +97,49 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Stored Procedure1",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "copy_to_blob",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"storedProcedureName": "[azure].[SP_Update_Mng_azure_ETL]",
+					"storedProcedureParameters": {
+						"LastId": {
+							"value": "-1",
+							"type": "Int64"
+						},
+						"LastIncrementalDate": {
+							"value": {
+								"value": "@{activity('LK_new_max_id').output.firstRow.ExecutionDate}",
+								"type": "Expression"
+							},
+							"type": "DateTime"
+						},
+						"TableName": {
+							"value": "EMERP_DB_Events",
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"folder": {
