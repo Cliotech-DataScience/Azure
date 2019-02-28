@@ -50,7 +50,10 @@
 					}
 				]
 			}
-		]
+		],
+		"folder": {
+			"name": "_old"
+		}
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
