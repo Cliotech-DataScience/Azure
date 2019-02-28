@@ -2,14 +2,6 @@
 	"name": "DWH_Calls_Daily_Load",
 	"properties": {
 		"runtimeState": "Started",
-		"pipelines": [
-			{
-				"pipelineReference": {
-					"referenceName": "DWH_Calls",
-					"type": "PipelineReference"
-				}
-			}
-		],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
