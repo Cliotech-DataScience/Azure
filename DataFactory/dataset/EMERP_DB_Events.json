@@ -2,7 +2,7 @@
 	"name": "EMERP_DB_Events",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "alldbdwh",
+			"referenceName": "Dwhpr",
 			"type": "LinkedServiceReference"
 		},
 		"type": "SqlServerTable",
