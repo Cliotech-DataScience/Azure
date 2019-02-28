@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -1175,6 +1175,9 @@
 						]
 					}
 				],
+				"folder": {
+					"name": "_old"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -1232,6 +1235,9 @@
 						]
 					}
 				],
+				"folder": {
+					"name": "_old"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -1357,6 +1363,9 @@
 						]
 					}
 				],
+				"folder": {
+					"name": "_old"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
@@ -2093,10 +2102,10 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": " SELECT ExecutionDate=MAX(Event_Date_day)\n FROM EmErp_DB.azure.AZ_EMERP_DB_Events"
+								"sqlReaderQuery": " SELECT ExecutionDate=MAX(Event_Date)\n FROM EmErp_DB.azure.AZ_EMERP_DB_Events"
 							},
 							"dataset": {
-								"referenceName": "Mng_azure_ETL",
+								"referenceName": "EMERP_DB_Events",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -2131,7 +2140,7 @@
 							"source": {
 								"type": "SqlSource",
 								"sqlReaderQuery": {
-									"value": "select * from  EmErp_DB.azure.AZ_EMERP_DB_Events\n where Event_Date_day > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' and Event_Date_day <= '@{activity('LK_new_max_id').output.firstRow.ExecutionDate}'",
+									"value": "select * from  EmErp_DB.azure.AZ_EMERP_DB_Events\n where Event_Date > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' \n AND Event_Date <= '@{activity('LK_new_max_id').output.firstRow.ExecutionDate}'",
 									"type": "Expression"
 								}
 							},
@@ -2159,7 +2168,7 @@
 						]
 					},
 					{
-						"name": "update_mng_azure",
+						"name": "Stored Procedure1",
 						"type": "SqlServerStoredProcedure",
 						"dependsOn": [
 							{
@@ -2203,11 +2212,11 @@
 						}
 					},
 					{
-						"name": "EMERP_Events",
+						"name": "Notebook1",
 						"type": "DatabricksNotebook",
 						"dependsOn": [
 							{
-								"activity": "update_mng_azure",
+								"activity": "Stored Procedure1",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -3098,6 +3107,201 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/oldEMERP_Events')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LK_Last_Id_Mng_azure_ETL",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,65,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  localdb.azure.Mng_azure_ETL\n  WHERE TableName='EMERP_DB_Events'"
+							},
+							"dataset": {
+								"referenceName": "Mng_azure_ETL",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "LK_new_max_id",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": " SELECT ExecutionDate=MAX(Event_Date)\n FROM EmErp_DB.azure.AZ_EMERP_DB_Events"
+							},
+							"dataset": {
+								"referenceName": "Mng_azure_ETL",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "copy_to_blob",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "LK_Last_Id_Mng_azure_ETL",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "LK_new_max_id",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "select * from  EmErp_DB.azure.AZ_EMERP_DB_Events\n where Event_Date > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' and Event_Date_day <= '@{activity('LK_new_max_id').output.firstRow.ExecutionDate}'",
+									"type": "Expression"
+								}
+							},
+							"sink": {
+								"type": "BlobSink"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0
+						},
+						"inputs": [
+							{
+								"referenceName": "EMERP_DB_Events",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "blob_EMERP_Events",
+								"type": "DatasetReference",
+								"parameters": {
+									"folder_name": "EMERP_Events"
+								}
+							}
+						]
+					},
+					{
+						"name": "update_mng_azure",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "copy_to_blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[concat('[', 'azure].[SP_Update_Mng_azure_ETL]')]",
+							"storedProcedureParameters": {
+								"LastId": {
+									"value": "-1",
+									"type": "Int64"
+								},
+								"LastIncrementalDate": {
+									"value": {
+										"value": "@{activity('LK_new_max_id').output.firstRow.ExecutionDate}",
+										"type": "Expression"
+									},
+									"type": "DateTime"
+								},
+								"TableName": {
+									"value": "EMERP_DB_Events",
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "alldbdwh",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "old_EMERP_Events",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "update_mng_azure",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Load Data/Emerp Events/EMERP_Events_to_events_table"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "_old"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Mng_azure_ETL')]",
+				"[concat(variables('factoryId'), '/datasets/EMERP_DB_Events')]",
+				"[concat(variables('factoryId'), '/datasets/blob_EMERP_Events')]",
+				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]",
+				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/BI_Events_blob')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -3903,7 +4107,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "alldbdwh",
+					"referenceName": "Dwhpr",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
@@ -3927,7 +4131,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+				"[concat(variables('factoryId'), '/linkedServices/Dwhpr')]"
 			]
 		},
 		{
@@ -5023,6 +5227,47 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/etl_manage')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DataLoadStorageAccount",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureTable",
+				"structure": [
+					{
+						"name": "PartitionKey",
+						"type": "String"
+					},
+					{
+						"name": "RowKey",
+						"type": "String"
+					},
+					{
+						"name": "Timestamp",
+						"type": "DateTimeOffset"
+					},
+					{
+						"name": "Last_Id",
+						"type": "Int64"
+					},
+					{
+						"name": "Next_Id",
+						"type": "Int64"
+					}
+				],
+				"typeProperties": {
+					"tableName": "etlManage"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/DataLoadStorageAccount')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/fact_events_dwh')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -5154,6 +5399,25 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/mng')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DataLoadStorageAccount",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureTable",
+				"typeProperties": {
+					"tableName": "etlManage"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/DataLoadStorageAccount')]"
 			]
 		},
 		{

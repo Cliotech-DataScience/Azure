@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
 		},
 		"Dwhpr_connectionString": {
 			"type": "secureString",
@@ -30,18 +30,6 @@
 		"destpufiles_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'destpufiles'"
-		},
-		"emerpdbpr_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'emerpdbpr'"
-		},
-		"emerpdbpr_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'emerpdbpr'"
-		},
-		"fileserver1_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'fileserver1'"
 		},
 		"blob_EMERP_Events_properties_typeProperties_fileName": {
 			"type": "string",
@@ -144,14 +132,6 @@
 			"defaultValue": "efix\\az_etl"
 		},
 		"alldbdwh_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "efix\\az_etl"
-		},
-		"emerpdbpr_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "efix\\az_etl"
-		},
-		"fileserver1_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		}
@@ -627,6 +607,45 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/etl_manage')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DataLoadStorageAccount",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureTable",
+				"structure": [
+					{
+						"name": "PartitionKey",
+						"type": "String"
+					},
+					{
+						"name": "RowKey",
+						"type": "String"
+					},
+					{
+						"name": "Timestamp",
+						"type": "DateTimeOffset"
+					},
+					{
+						"name": "Last_Id",
+						"type": "Int64"
+					},
+					{
+						"name": "Next_Id",
+						"type": "Int64"
+					}
+				],
+				"typeProperties": {
+					"tableName": "etlManage"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/fact_events_dwh')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -719,6 +738,23 @@
 						"type": "Expression"
 					},
 					"folderPath": "[parameters('fxnet_deals_blob_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/mng')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DataLoadStorageAccount",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureTable",
+				"typeProperties": {
+					"tableName": "etlManage"
 				}
 			},
 			"dependsOn": []
@@ -1001,51 +1037,6 @@
 				},
 				"connectVia": {
 					"referenceName": "puodsfiles",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/emerpdbpr')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "emerp-db-pr,2555",
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('emerpdbpr_connectionString')]",
-					"userName": "[parameters('emerpdbpr_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('emerpdbpr_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "alldbgateway",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/fileserver1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "FileServer",
-				"typeProperties": {
-					"host": "\\\\netapp-ams-cifs\\db\\Events_Collector\\Archived",
-					"userId": "[parameters('fileserver1_properties_typeProperties_userId')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('fileserver1_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "alldbgateway",
 					"type": "IntegrationRuntimeReference"
 				}
 			},

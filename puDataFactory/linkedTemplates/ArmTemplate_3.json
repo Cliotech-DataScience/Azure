@@ -5,13 +5,72 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
+		},
+		"Source_file_avi_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@dataset().file_name"
+		},
+		"Source_file_avi_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@dataset().folder"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_tau')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Source_file_avi')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "fileserver1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"file_name": {
+						"type": "String"
+					},
+					"folder": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "FileShare",
+				"typeProperties": {
+					"compression": {
+						"type": "ZipDeflate",
+						"level": "Optimal"
+					},
+					"fileName": {
+						"value": "[parameters('Source_file_avi_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": {
+						"value": "[parameters('Source_file_avi_properties_typeProperties_folderPath')]",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/dwh_Dim_Users_src')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -496,7 +555,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Source_file_avi')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/02_platfromusage_unzip_zip_blob_files')]",
@@ -978,6 +1039,9 @@
 						]
 					}
 				],
+				"folder": {
+					"name": "_old"
+				},
 				"annotations": []
 			},
 			"dependsOn": []
@@ -1032,6 +1096,9 @@
 						]
 					}
 				],
+				"folder": {
+					"name": "_old"
+				},
 				"annotations": []
 			},
 			"dependsOn": []
@@ -1151,9 +1218,14 @@
 						]
 					}
 				],
+				"folder": {
+					"name": "_old"
+				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SourceDataset_tau')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Customers')]",
@@ -1820,394 +1892,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/dwh_calls_src')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/EMERP_Events')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "LK_Last_Id_Mng_azure_ETL",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,65,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  localdb.azure.Mng_azure_ETL\n  WHERE TableName='EMERP_DB_Events'"
-							},
-							"dataset": {
-								"referenceName": "Mng_azure_ETL",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "LK_new_max_id",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": " SELECT ExecutionDate=MAX(Event_Date_day)\n FROM EmErp_DB.azure.AZ_EMERP_DB_Events"
-							},
-							"dataset": {
-								"referenceName": "Mng_azure_ETL",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "copy_to_blob",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "LK_Last_Id_Mng_azure_ETL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "LK_new_max_id",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "select * from  EmErp_DB.azure.AZ_EMERP_DB_Events\n where Event_Date_day > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' and Event_Date_day <= '@{activity('LK_new_max_id').output.firstRow.ExecutionDate}'",
-									"type": "Expression"
-								}
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0
-						},
-						"inputs": [
-							{
-								"referenceName": "EMERP_DB_Events",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "blob_EMERP_Events",
-								"type": "DatasetReference",
-								"parameters": {
-									"folder_name": "EMERP_Events"
-								}
-							}
-						]
-					},
-					{
-						"name": "update_mng_azure",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[concat('[', 'azure].[SP_Update_Mng_azure_ETL]')]",
-							"storedProcedureParameters": {
-								"LastId": {
-									"value": "-1",
-									"type": "Int64"
-								},
-								"LastIncrementalDate": {
-									"value": {
-										"value": "@{activity('LK_new_max_id').output.firstRow.ExecutionDate}",
-										"type": "Expression"
-									},
-									"type": "DateTime"
-								},
-								"TableName": {
-									"value": "EMERP_DB_Events",
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "alldbdwh",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "EMERP_Events",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "update_mng_azure",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/Emerp Events/EMERP_Events_to_events_table"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Data_from_SQL"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/FXNET_Deals')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "LK_Last_Id_Mng_azure_ETL",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT  LastIncrementalDate \n  ---- remove to use incremental\nFROM  localdb.azure.Mng_azure_ETL\nWHERE TableName='FXNET_Deals'"
-							},
-							"dataset": {
-								"referenceName": "Mng_azure_ETL",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "LK_new_max_id",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT executionDay=DATEADD(DAY,-1,MAX(executionday))\nFROM dwh.azure.deals"
-							},
-							"dataset": {
-								"referenceName": "Mng_azure_ETL",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "copy_to_blob",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "LK_Last_Id_Mng_azure_ETL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "LK_new_max_id",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "\nselect * \nFROM dwh.azure.deals\nwhere executionDay > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' and executionDay<= '@{activity('LK_new_max_id').output.firstRow.executionDay}'",
-									"type": "Expression"
-								}
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"TransactionNumber": "TransactionNumber",
-									"Trans_Details": "Trans_Details",
-									"ExecutionDay": "ExecutionDay"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "fxnet_deals_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "fxnet_deals_blob",
-								"type": "DatasetReference",
-								"parameters": {
-									"folder_name": "FXNET_Deals"
-								}
-							}
-						]
-					},
-					{
-						"name": "update_mng_azure",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[concat('[', 'azure].[SP_Update_Mng_azure_ETL]')]",
-							"storedProcedureParameters": {
-								"LastId": {
-									"value": "-1",
-									"type": "Int64"
-								},
-								"LastIncrementalDate": {
-									"value": {
-										"value": "@{activity('LK_new_max_id').output.firstRow.ExecutionDay}",
-										"type": "Expression"
-									},
-									"type": "DateTime"
-								},
-								"TableName": {
-									"value": "FXNET_Deals",
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "alldbdwh",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "Load_Deals_To_Events",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "update_mng_azure",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/FXNET/Load Deals"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Data_from_SQL"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/fxnet_deals_src')]"
 			]
 		}
 	]
