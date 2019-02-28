@@ -39,7 +39,7 @@
 						"sqlReaderQuery": " SELECT ExecutionDate=MAX(Event_Date)\n FROM EmErp_DB.azure.AZ_EMERP_DB_Events"
 					},
 					"dataset": {
-						"referenceName": "Mng_azure_ETL",
+						"referenceName": "EMERP_DB_Events",
 						"type": "DatasetReference"
 					}
 				}
