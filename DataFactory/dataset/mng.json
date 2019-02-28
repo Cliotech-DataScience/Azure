@@ -1,0 +1,13 @@
+{
+	"name": "mng",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DataLoadStorageAccount",
+			"type": "LinkedServiceReference"
+		},
+		"type": "AzureTable",
+		"typeProperties": {
+			"tableName": "etlManage"
+		}
+	}
+}
