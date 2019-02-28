@@ -142,7 +142,7 @@
 				}
 			},
 			{
-				"name": "EMERP_Events",
+				"name": "old_EMERP_Events",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
