@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "pudatafactory"
+			"defaultValue": "puDataFactory"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -1749,7 +1749,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"notebookPath": "/Load Data/Calls/Load Calls"
+							"notebookPath": "/Load Data/Calls/Load Calls_new_Table"
 						},
 						"linkedServiceName": {
 							"referenceName": "Analysis",

@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "pudatafactory"
+			"defaultValue": "puDataFactory"
 		},
 		"Source_file_avi_properties_typeProperties_fileName": {
 			"type": "string",
@@ -1596,7 +1596,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"notebookPath": "/Load Data/Calls/Load Calls"
+							"notebookPath": "/Load Data/Calls/Load Calls_new_Table"
 						},
 						"linkedServiceName": {
 							"referenceName": "Analysis",
