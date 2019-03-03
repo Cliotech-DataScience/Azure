@@ -168,7 +168,7 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"notebookPath": "/Load Data/FXNET/Load Deals"
+					"notebookPath": "/Load Data/FXNET/Load Deals_new_Table"
 				},
 				"linkedServiceName": {
 					"referenceName": "Analysis",
