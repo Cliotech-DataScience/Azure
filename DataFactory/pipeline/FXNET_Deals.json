@@ -99,10 +99,7 @@
 				"outputs": [
 					{
 						"referenceName": "fxnet_deals_blob",
-						"type": "DatasetReference",
-						"parameters": {
-							"folder_name": "FXNET_Deals"
-						}
+						"type": "DatasetReference"
 					}
 				]
 			},
@@ -133,7 +130,7 @@
 						},
 						"LastIncrementalDate": {
 							"value": {
-								"value": "@{activity('LK_new_max_id').output.firstRow.ExecutionDay}",
+								"value": "@{activity('LK_new_max_Date').output.firstRow.ExecutionDay}",
 								"type": "Expression"
 							},
 							"type": "DateTime"
