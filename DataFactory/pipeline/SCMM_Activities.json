@@ -73,7 +73,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderQuery": "\nselect * \nFROM EMERP_LM.azure.AZ_SCMM_Activities\nwhere Activity_Date > \ngetdate()"
+						"sqlReaderQuery": "select * \nFROM EMERP_LM.azure.AZ_SCMM_Activities\nwhere Activity_Date > \ngetdate()"
 					},
 					"sink": {
 						"type": "BlobSink"
