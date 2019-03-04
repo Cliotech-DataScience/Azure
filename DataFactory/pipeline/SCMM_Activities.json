@@ -126,7 +126,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderQuery": "select 1  as a"
+						"sqlReaderQuery": "select PartitionKey = 'Upload Data' and RowKey eq 'SCMM_Activities'"
 					},
 					"sink": {
 						"type": "AzureTableSink",
