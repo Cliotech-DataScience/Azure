@@ -1,5 +1,5 @@
 {
-	"name": "scmm_activities",
+	"name": "scmm_activities_src",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "alldbdwh",
