@@ -2,7 +2,7 @@
 	"name": "fxnet_deals_blob",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureBlobStorage1",
+			"referenceName": "DataloadStore",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {

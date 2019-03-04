@@ -20,12 +20,36 @@
 				"type": "DateTimeOffset"
 			},
 			{
-				"name": "Last_Id",
+				"name": "Last_Call_Date",
+				"type": "String"
+			},
+			{
+				"name": "Next_Call_Date",
+				"type": "String"
+			},
+			{
+				"name": "Last_PU_INT",
 				"type": "Int64"
 			},
 			{
-				"name": "Next_Id",
+				"name": "Next_PU_INT",
 				"type": "Int64"
+			},
+			{
+				"name": "Last_Assignment_Date",
+				"type": "String"
+			},
+			{
+				"name": "Next_Assignment_Date",
+				"type": "String"
+			},
+			{
+				"name": "Last_Deal_Date",
+				"type": "String"
+			},
+			{
+				"name": "Next_Deal_Date",
+				"type": "String"
 			}
 		],
 		"typeProperties": {
