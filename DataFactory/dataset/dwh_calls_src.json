@@ -24,7 +24,7 @@
 			}
 		],
 		"typeProperties": {
-			"tableName": "dwh.azure.calls"
+			"tableName": "dwh.azure.AZ_Calls"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
