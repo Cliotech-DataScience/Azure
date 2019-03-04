@@ -1914,7 +1914,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT Assignment_Day=DATEADD(DAY,-1,MAX(Assignment_day))\nFROM dwh.azure.Lead_Assignments"
+								"sqlReaderQuery": "SELECT Assignment_Day=DATEADD(DAY,-1,MAX(Assignment_day))\nFROM dwh.azure.AZ_Lead_Assignments"
 							},
 							"dataset": {
 								"referenceName": "Mng_azure_ETL",
@@ -1952,7 +1952,7 @@
 							"source": {
 								"type": "SqlSource",
 								"sqlReaderQuery": {
-									"value": "\nselect * \nFROM dwh.azure.Lead_Assignments\nwhere Assignment_Day> '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' and Assignment_Day<= '@{activity('LK_new_max_id').output.firstRow.Assignment_Day}'",
+									"value": "\nselect * \nFROM dwh.azure.AZ_Lead_Assignments\nwhere Assignment_Day> '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' and Assignment_Day<= '@{activity('LK_new_max_id').output.firstRow.Assignment_Day}'",
 									"type": "Expression"
 								}
 							},
@@ -1964,22 +1964,22 @@
 							"translator": {
 								"type": "TabularTranslator",
 								"columnMappings": {
-									"Call_ID": "Call_ID",
-									"Call_Details": "Call_Details",
-									"CallDay": "CallDay"
+									"Fact_Lead_Assignments_ID": "Fact_Lead_Assignments_ID",
+									"Assignment_Details": "Assignment_Details",
+									"Assignment_Day": "Assignment_Day"
 								}
 							}
 						},
 						"inputs": [
 							{
-								"referenceName": "dwh_calls_src",
+								"referenceName": "dwh_lead_assignments_src",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "dwh_calls_blob",
+								"referenceName": "dwh_lead_assignments_blob",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -2064,8 +2064,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Mng_azure_ETL')]",
-				"[concat(variables('factoryId'), '/datasets/dwh_calls_src')]",
-				"[concat(variables('factoryId'), '/datasets/dwh_calls_blob')]",
+				"[concat(variables('factoryId'), '/datasets/dwh_lead_assignments_src')]",
+				"[concat(variables('factoryId'), '/datasets/dwh_lead_assignments_blob')]",
 				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]",
 				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
 			]
