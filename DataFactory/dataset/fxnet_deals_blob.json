@@ -42,10 +42,10 @@
 				"type": "BZip2"
 			},
 			"fileName": {
-				"value": "@CONCAT('FXNET_Deals', pipeline().RunId, '.csv')",
+				"value": "@concat('received=',utcnow())",
 				"type": "Expression"
 			},
-			"folderPath": "rawdata/FXNET_Deals/received=2018-01-01"
+			"folderPath": "rawdata/FXNET_Deals"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
