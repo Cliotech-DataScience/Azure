@@ -3,28 +3,6 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "LK_Last_Date_Mng_azure_ETL",
-				"type": "Lookup",
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"typeProperties": {
-					"source": {
-						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT  Last_Call_Date= LastIncrementalDate \n  ---- remove to use incremental\nFROM  localdb.azure.Mng_azure_ETL\nWHERE TableName='DWH_Calls'"
-					},
-					"dataset": {
-						"referenceName": "Mng_azure_ETL",
-						"type": "DatasetReference"
-					},
-					"firstRowOnly": false
-				}
-			},
-			{
 				"name": "LK_new_max_Date",
 				"type": "Lookup",
 				"policy": {
@@ -50,13 +28,13 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "LK_Last_Date_Mng_azure_ETL",
+						"activity": "LK_new_max_Date",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					},
 					{
-						"activity": "LK_new_max_Date",
+						"activity": "LK_Last_Date_Mng_azure_ETL",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -73,7 +51,7 @@
 					"source": {
 						"type": "SqlSource",
 						"sqlReaderQuery": {
-							"value": "\nselect * \nFROM dwh.azure.AZ_calls\nwhere callday> '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Call_Date}' and callday<= '@{activity('LK_new_max_Date').output.firstRow.Next_Call_Day}'",
+							"value": "select * \nFROM dwh.azure.AZ_calls\nwhere callday> '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Call_Date}' and callday<= '@{activity('LK_new_max_Date').output.firstRow.Next_Call_Day}'",
 							"type": "Expression"
 						}
 					},
@@ -171,6 +149,27 @@
 				"linkedServiceName": {
 					"referenceName": "Analysis",
 					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "LK_Last_Date_Mng_azure_ETL",
+				"type": "Lookup",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"source": {
+						"type": "SqlSource",
+						"sqlReaderQuery": "SELECT  Last_Call_Date = LastIncrementalDate \n  ---- remove to use incremental\nFROM  localdb.azure.Mng_azure_ETL\nWHERE TableName='DWH_Calls'"
+					},
+					"dataset": {
+						"referenceName": "dwh_calls_src",
+						"type": "DatasetReference"
+					}
 				}
 			}
 		],
