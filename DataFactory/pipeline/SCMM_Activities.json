@@ -126,7 +126,6 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureTableSource",
-						"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq 'SCMM_Activities'",
 						"azureTableSourceIgnoreTableNotFound": false
 					},
 					"sink": {
@@ -143,7 +142,15 @@
 							"PartitionKey": "PartitionKey",
 							"RowKey": "RowKey",
 							"Timestamp": "Timestamp",
-							"Last_Incremental_Date": "Last_Incremental_Date"
+							"Last_Call_Date": "Last_Call_Date",
+							"Next_Call_Date": "Next_Call_Date",
+							"Last_PU_INT": "Last_PU_INT",
+							"Next_PU_INT": "Next_PU_INT",
+							"Last_Incremental_Date": "Last_Incremental_Date",
+							"Last_Assignment_Date": "Last_Assignment_Date",
+							"Next_Assignment_Date": "Next_Assignment_Date",
+							"Last_Deal_Date": "Last_Deal_Date",
+							"Next_Deal_Date": "Next_Deal_Date"
 						}
 					}
 				},
