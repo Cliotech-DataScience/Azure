@@ -45,6 +45,62 @@
 						"type": "DatasetReference"
 					}
 				}
+			},
+			{
+				"name": "copy_to_blob",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "LK_Last_Date_Mng_azure_ETL",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "LK_new_max_date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"source": {
+						"type": "SqlSource",
+						"sqlReaderQuery": "\nselect * \nFROM EMERP_LM.azure.AZ_SCMM_Activities\nwhere Activity_Date > \ngetdate()"
+					},
+					"sink": {
+						"type": "BlobSink"
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 0,
+					"translator": {
+						"type": "TabularTranslator",
+						"columnMappings": {
+							"PartitionKey": "Activity_Id",
+							"RowKey": "Activity_Date",
+							"Last_Incremental_Date": "details"
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "scmm_activities_src",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "scmm_activities_blob",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"folder": {
