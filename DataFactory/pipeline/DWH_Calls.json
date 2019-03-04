@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "LK_Last_Id_Mng_azure_ETL",
+				"name": "LK_Last_Date_Mng_azure_ETL",
 				"type": "Lookup",
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -15,6 +15,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureTableSource",
+						"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq 'Calls'",
 						"azureTableSourceIgnoreTableNotFound": false
 					},
 					"dataset": {
@@ -25,7 +26,7 @@
 				}
 			},
 			{
-				"name": "LK_new_max_id",
+				"name": "LK_new_max_Date",
 				"type": "Lookup",
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -37,10 +38,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT executionDay=DATEADD(DAY,-1,MAX(callday))\nFROM dwh.azure.AZ_Calls"
+						"sqlReaderQuery": "SELECT Last_Call_Day=DATEADD(DAY,-1,MAX(callday))\nFROM dwh.azure.AZ_Calls"
 					},
 					"dataset": {
-						"referenceName": "Mng_azure_ETL",
+						"referenceName": "dwh_calls_src",
 						"type": "DatasetReference"
 					}
 				}
@@ -50,13 +51,13 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "LK_Last_Id_Mng_azure_ETL",
+						"activity": "LK_Last_Date_Mng_azure_ETL",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					},
 					{
-						"activity": "LK_new_max_id",
+						"activity": "LK_new_max_Date",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -73,7 +74,7 @@
 					"source": {
 						"type": "SqlSource",
 						"sqlReaderQuery": {
-							"value": "\nselect * \nFROM dwh.azure.calls\nwhere callday> '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' and callday<= '@{activity('LK_new_max_id').output.firstRow.executionDay}'",
+							"value": "\nselect * \nFROM dwh.azure.calls\nwhere callday> '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Call_Date}' and callday<= '@{activity('LK_new_max_Date').output.firstRow.Last_Call_Day}'",
 							"type": "Expression"
 						}
 					},
