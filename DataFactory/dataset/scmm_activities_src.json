@@ -11,16 +11,16 @@
 		"type": "SqlServerTable",
 		"structure": [
 			{
-				"name": "PartitionKey",
-				"type": "String"
+				"name": "Activity_Id",
+				"type": "Int32"
 			},
 			{
-				"name": "RowKey",
-				"type": "String"
-			},
-			{
-				"name": "Last_Incremental_Date",
+				"name": "Activity_Date",
 				"type": "DateTime"
+			},
+			{
+				"name": "details",
+				"type": "String"
 			}
 		],
 		"typeProperties": {
