@@ -253,11 +253,11 @@
 		},
 		"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
 			"type": "string",
-			"defaultValue": "@CONCAT('LeadAssignments_', pipeline().TriggerTime, '.csv.bz2')"
+			"defaultValue": "@CONCAT('DWH_LeadAssignments_', pipeline().TriggerTime, '.csv.bz2')"
 		},
 		"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "rawdata/DWH_LeadAssignments"
+			"defaultValue": "@concat('rawdata/DWH_LeadAssignments/Received=',utcnow())"
 		},
 		"fxnet_deals_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -5429,7 +5429,10 @@
 						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_fileName')]",
 						"type": "Expression"
 					},
-					"folderPath": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_folderPath')]"
+					"folderPath": {
+						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_folderPath')]",
+						"type": "Expression"
+					}
 				}
 			},
 			"dependsOn": [
