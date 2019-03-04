@@ -101,7 +101,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "LK_Last_Id_Mng_azure_ETL",
+						"name": "LK_Last_Date_Mng_azure_ETL",
 						"type": "Lookup",
 						"dependsOn": [],
 						"policy": {
@@ -125,7 +125,7 @@
 						}
 					},
 					{
-						"name": "LK_new_max_id",
+						"name": "LK_new_max_Date",
 						"type": "Lookup",
 						"dependsOn": [],
 						"policy": {
@@ -153,13 +153,13 @@
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "LK_Last_Id_Mng_azure_ETL",
+								"activity": "LK_Last_Date_Mng_azure_ETL",
 								"dependencyConditions": [
 									"Succeeded"
 								]
 							},
 							{
-								"activity": "LK_new_max_id",
+								"activity": "LK_new_max_Date",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -177,7 +177,7 @@
 							"source": {
 								"type": "SqlSource",
 								"sqlReaderQuery": {
-									"value": "\nselect * \nFROM dwh.azure.AZ_Lead_Assignments\nwhere Assignment_Day> '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' and Assignment_Day<= '@{activity('LK_new_max_id').output.firstRow.Assignment_Day}'",
+									"value": "\nselect * \nFROM dwh.azure.AZ_Lead_Assignments\nwhere Assignment_Day> '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' and Assignment_Day<= '@{activity('LK_new_max_Date').output.firstRow.Assignment_Day}'",
 									"type": "Expression"
 								}
 							},
@@ -238,7 +238,7 @@
 								},
 								"LastIncrementalDate": {
 									"value": {
-										"value": "@{activity('LK_new_max_id').output.firstRow.Assignment_Day}",
+										"value": "@{activity('LK_new_max_Date').output.firstRow.Assignment_Day}",
 										"type": "Expression"
 									},
 									"type": "DateTime"
