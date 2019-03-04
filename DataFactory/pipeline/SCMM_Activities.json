@@ -86,9 +86,9 @@
 					"translator": {
 						"type": "TabularTranslator",
 						"columnMappings": {
-							"Activity_Id": "Call_ID",
-							"Activity_Date": "Call_Details",
-							"details": "CallDay"
+							"Activity_Id": "Activity_Id",
+							"Activity_Date": "Activity_Date",
+							"details": "details"
 						}
 					}
 				},
@@ -100,7 +100,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "dwh_calls_blob",
+						"referenceName": "scmm_activities_blob",
 						"type": "DatasetReference"
 					}
 				]
