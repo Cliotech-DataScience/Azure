@@ -86,9 +86,9 @@
 					"translator": {
 						"type": "TabularTranslator",
 						"columnMappings": {
-							"Call_ID": "Call_ID",
-							"Call_Details": "Call_Details",
-							"CallDay": "CallDay"
+							"Activity_Id": "Call_ID",
+							"Activity_Date": "Call_Details",
+							"details": "CallDay"
 						}
 					}
 				},
