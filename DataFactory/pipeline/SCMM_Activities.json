@@ -74,7 +74,7 @@
 					"source": {
 						"type": "SqlSource",
 						"sqlReaderQuery": {
-							"value": "select * \nFROM EMERP_LM.azure.AZ_SCMM_Activities\nwhere Activity_Date > '@{activity('LK_Last_activity('LK_Last_Id_Mng_azure_ETL').outputId_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' \n  and Activity_Date <= '@{activity('LK_new_max_id').output.firstRow.executionDay}'\n\n\n",
+							"value": "select * \nFROM EMERP_LM.azure.AZ_SCMM_Activities\nwhere Activity_Date > \n'@activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.LastIncrementalDate}'\n  and Activity_Date <= '@{activity('LK_new_max_date').output.firstRow.Last_Activity_Date}'\n\n\n",
 							"type": "Expression"
 						}
 					},
@@ -173,6 +173,52 @@
 					"referenceName": "Analysis",
 					"type": "LinkedServiceReference"
 				}
+			},
+			{
+				"name": "Update_Etl_Manage",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "copy_to_blob",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"source": {
+						"type": "AzureTableSource",
+						"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq 'SCMM_Activities'",
+						"azureTableSourceIgnoreTableNotFound": false
+					},
+					"sink": {
+						"type": "AzureTableSink",
+						"azureTableInsertType": "merge",
+						"azureTablePartitionKeyName": "PartitionKey",
+						"azureTableRowKeyName": "RowKey",
+						"writeBatchSize": 10000
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "etl_manage",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "etl_manage",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"folder": {
