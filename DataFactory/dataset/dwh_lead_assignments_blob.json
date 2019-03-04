@@ -37,8 +37,11 @@
 			"compression": {
 				"type": "BZip2"
 			},
-			"fileName": "@CONCAT('LeadAssignments_', pipeline().TriggerTime, '.csv.bz2')",
-			"folderPath": "rawdata/DWH_LeadAssignments"
+			"fileName": {
+				"value": "@CONCAT('DWH_LeadAssignments=', pipeline().TriggerTime, '.csv.bz2')",
+				"type": "Expression"
+			},
+			"folderPath": "@concat('rawdata/DWH_LeadAssignments/Received=',utcnow())"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
