@@ -1627,7 +1627,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT Last_Call_Day=DATEADD(DAY,-1,MAX(callday))\nFROM dwh.azure.AZ_Calls"
+								"sqlReaderQuery": "SELECT Next_Call_Day=DATEADD(DAY,-1,MAX(callday))\nFROM dwh.azure.AZ_Calls"
 							},
 							"dataset": {
 								"referenceName": "dwh_calls_src",
@@ -1665,7 +1665,7 @@
 							"source": {
 								"type": "SqlSource",
 								"sqlReaderQuery": {
-									"value": "\nselect * \nFROM dwh.azure.calls\nwhere callday> '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Call_Date}' and callday<= '@{activity('LK_new_max_Date').output.firstRow.Last_Call_Day}'",
+									"value": "\nselect * \nFROM dwh.azure.AZ_calls\nwhere callday> '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Call_Date}' and callday<= '@{activity('LK_new_max_Date').output.firstRow.Next_Call_Day}'",
 									"type": "Expression"
 								}
 							},
@@ -1726,7 +1726,7 @@
 								},
 								"LastIncrementalDate": {
 									"value": {
-										"value": "@{activity('LK_new_max_Date').output.firstRow.Last_Call_Day}",
+										"value": "@{activity('LK_new_max_Date').output.firstRow.Next_Call_Day}",
 										"type": "Expression"
 									},
 									"type": "DateTime"
