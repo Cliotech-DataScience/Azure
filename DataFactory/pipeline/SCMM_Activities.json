@@ -125,8 +125,8 @@
 				},
 				"typeProperties": {
 					"source": {
-						"type": "AzureTableSource",
-						"azureTableSourceIgnoreTableNotFound": false
+						"type": "SqlSource",
+						"sqlReaderQuery": "select 1  as a"
 					},
 					"sink": {
 						"type": "AzureTableSink",
@@ -139,24 +139,13 @@
 					"translator": {
 						"type": "TabularTranslator",
 						"columnMappings": {
-							"PartitionKey": "PartitionKey",
-							"RowKey": "RowKey",
-							"Timestamp": "Timestamp",
-							"Last_Call_Date": "Last_Call_Date",
-							"Next_Call_Date": "Next_Call_Date",
-							"Last_PU_INT": "Last_PU_INT",
-							"Next_PU_INT": "Next_PU_INT",
-							"Last_Incremental_Date": "Last_Incremental_Date",
-							"Last_Assignment_Date": "Last_Assignment_Date",
-							"Next_Assignment_Date": "Next_Assignment_Date",
-							"Last_Deal_Date": "Last_Deal_Date",
-							"Next_Deal_Date": "Next_Deal_Date"
+							"a": "PartitionKey"
 						}
 					}
 				},
 				"inputs": [
 					{
-						"referenceName": "etl_manage",
+						"referenceName": "scmm_activities_src",
 						"type": "DatasetReference"
 					}
 				],
