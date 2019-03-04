@@ -1589,14 +1589,16 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT  LastIncrementalDate \n  ---- remove to use incremental\nFROM  localdb.azure.Mng_azure_ETL\nWHERE TableName='DWH_Calls'"
+								"type": "AzureTableSource",
+								"azureTableSourceQuery": "select * from etl_manage ",
+								"azureTableSourceIgnoreTableNotFound": false
 							},
 							"dataset": {
-								"referenceName": "Mng_azure_ETL",
+								"referenceName": "etl_manage",
 								"type": "DatasetReference",
 								"parameters": {}
-							}
+							},
+							"firstRowOnly": false
 						}
 					},
 					{
@@ -1763,6 +1765,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/etl_manage')]",
 				"[concat(variables('factoryId'), '/datasets/Mng_azure_ETL')]",
 				"[concat(variables('factoryId'), '/datasets/dwh_calls_src')]",
 				"[concat(variables('factoryId'), '/datasets/dwh_calls_blob')]",
@@ -3299,6 +3302,116 @@
 				"[concat(variables('factoryId'), '/datasets/blob_EMERP_Events')]",
 				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]",
 				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/run_all_test')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "RUN - 02_platfromusage_unzip_zip_blob_files",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - 01_platfromusage_files_copy_to_blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "02_platfromusage_unzip_zip_blob_files",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "RUN - 03_PU_Load_ods_data",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - 02_platfromusage_unzip_zip_blob_files",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "03_PU_Load_ods_data",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "RUN - 04_PU_ods_to_events",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - 03_PU_Load_ods_data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "04_PU_ods_to_events",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "RUN - 01_platfromusage_files_copy_to_blob",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "01_platfromusage_files_copy_to_blob",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "RUN - emerp_events",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - 04_PU_ods_to_events",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "EMERP_Events",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/02_platfromusage_unzip_zip_blob_files')]",
+				"[concat(variables('factoryId'), '/pipelines/03_PU_Load_ods_data')]",
+				"[concat(variables('factoryId'), '/pipelines/04_PU_ods_to_events')]",
+				"[concat(variables('factoryId'), '/pipelines/01_platfromusage_files_copy_to_blob')]",
+				"[concat(variables('factoryId'), '/pipelines/EMERP_Events')]"
 			]
 		},
 		{
@@ -5251,12 +5364,36 @@
 						"type": "DateTimeOffset"
 					},
 					{
-						"name": "Last_Id",
+						"name": "Last_Call_Date",
+						"type": "String"
+					},
+					{
+						"name": "Next_Call_Date",
+						"type": "String"
+					},
+					{
+						"name": "Last_PU_INT",
 						"type": "Int64"
 					},
 					{
-						"name": "Next_Id",
+						"name": "Next_PU_INT",
 						"type": "Int64"
+					},
+					{
+						"name": "Last_Assignment_Date",
+						"type": "String"
+					},
+					{
+						"name": "Next_Assignment_Date",
+						"type": "String"
+					},
+					{
+						"name": "Last_Deal_Date",
+						"type": "String"
+					},
+					{
+						"name": "Next_Deal_Date",
+						"type": "String"
 					}
 				],
 				"typeProperties": {
@@ -5317,7 +5454,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
+					"referenceName": "DataloadStore",
 					"type": "LinkedServiceReference"
 				},
 				"parameters": {
@@ -5365,7 +5502,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+				"[concat(variables('factoryId'), '/linkedServices/DataloadStore')]"
 			]
 		},
 		{
