@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "run_all_test",
 	"properties": {
 		"activities": [
 			{
@@ -41,17 +41,6 @@
 				}
 			},
 			{
-				"name": "RUN - Customers",
-				"type": "ExecutePipeline",
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "Customers",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
 				"name": "RUN - 04_PU_ods_to_events",
 				"type": "ExecutePipeline",
 				"dependsOn": [
@@ -73,40 +62,9 @@
 			{
 				"name": "RUN - 01_platfromusage_files_copy_to_blob",
 				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "RUN - Customers",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "RUN - Serials",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "RUN - Contacts",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "01_platfromusage_files_copy_to_blob",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
-				"name": "RUN - Serials",
-				"type": "ExecutePipeline",
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "Serials",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
@@ -126,17 +84,6 @@
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "EMERP_Events",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
-				"name": "RUN - Contacts",
-				"type": "ExecutePipeline",
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "Contacts",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
