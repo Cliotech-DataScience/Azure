@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "LK_Last_Id_Mng_azure_ETL",
+				"name": "LK_Last_Date_Mng_azure_ETL",
 				"type": "Lookup",
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -24,7 +24,7 @@
 				}
 			},
 			{
-				"name": "LK_new_max_id",
+				"name": "LK_new_max_Date",
 				"type": "Lookup",
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -49,13 +49,13 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "LK_Last_Id_Mng_azure_ETL",
+						"activity": "LK_Last_Date_Mng_azure_ETL",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					},
 					{
-						"activity": "LK_new_max_id",
+						"activity": "LK_new_max_Date",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -72,7 +72,7 @@
 					"source": {
 						"type": "SqlSource",
 						"sqlReaderQuery": {
-							"value": "\nselect * \nFROM dwh.azure.deals\nwhere executionDay > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' and executionDay<= '@{activity('LK_new_max_id').output.firstRow.executionDay}'",
+							"value": "\nselect * \nFROM dwh.azure.deals\nwhere executionDay > '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' and executionDay<= '@{activity('LK_new_max_Date').output.firstRow.executionDay}'",
 							"type": "Expression"
 						}
 					},
