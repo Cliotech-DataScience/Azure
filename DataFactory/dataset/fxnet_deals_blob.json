@@ -35,10 +35,7 @@
 			"compression": {
 				"type": "BZip2"
 			},
-			"fileName": {
-				"value": "@CONCAT('FXNET_Deals_', pipeline().TriggerTime, '.csv.bz2')",
-				"type": "Expression"
-			},
+			"fileName": "@CONCAT('FXNET_Deals_', pipeline().TriggerTime, '.csv.bz2')",
 			"folderPath": "@concat('rawdata/FXNET_Deals/Received=',utcnow())"
 		}
 	},
