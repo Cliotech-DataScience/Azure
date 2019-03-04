@@ -36,6 +36,10 @@
 				"type": "Int64"
 			},
 			{
+				"name": "Last_Incremental_Date",
+				"type": "DateTimeOffset"
+			},
+			{
 				"name": "Last_Assignment_Date",
 				"type": "String"
 			},
