@@ -106,75 +106,6 @@
 				]
 			},
 			{
-				"name": "update_mng_azure",
-				"type": "SqlServerStoredProcedure",
-				"dependsOn": [
-					{
-						"activity": "copy_to_blob",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"typeProperties": {
-					"storedProcedureName": "[azure].[SP_Update_Mng_azure_ETL]",
-					"storedProcedureParameters": {
-						"LastId": {
-							"value": "-1",
-							"type": "Int64"
-						},
-						"LastIncrementalDate": {
-							"value": {
-								"value": "@{activity('LK_new_max_id').output.firstRow.ExecutionDay}",
-								"type": "Expression"
-							},
-							"type": "DateTime"
-						},
-						"TableName": {
-							"value": "DWH_Calls",
-							"type": "String"
-						}
-					}
-				},
-				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
-				"name": "Load_Calls_To_Events",
-				"type": "DatabricksNotebook",
-				"dependsOn": [
-					{
-						"activity": "update_mng_azure",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"typeProperties": {
-					"notebookPath": "/Load Data/Calls/Load Calls_new_Table"
-				},
-				"linkedServiceName": {
-					"referenceName": "Analysis",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
 				"name": "Update_Etl_Manage",
 				"type": "Copy",
 				"dependsOn": [
@@ -205,7 +136,16 @@
 						"azureTableRowKeyName": "RowKey",
 						"writeBatchSize": 10000
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"columnMappings": {
+							"PartitionKey": "PartitionKey",
+							"RowKey": "RowKey",
+							"Timestamp": "Timestamp",
+							"Last_Incremental_Date": "Last_Incremental_Date"
+						}
+					}
 				},
 				"inputs": [
 					{
