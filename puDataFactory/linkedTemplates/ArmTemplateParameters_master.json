@@ -192,10 +192,10 @@
 			"value": "rawdata/DWH_LeadAssignments"
 		},
 		"fxnet_deals_blob_properties_typeProperties_fileName": {
-			"value": "@CONCAT('FXNET_Deals', pipeline().RunId, '.csv')"
+			"value": "@concat('received=',utcnow())"
 		},
 		"fxnet_deals_blob_properties_typeProperties_folderPath": {
-			"value": "rawdata/FXNET_Deals/received=2018-01-01"
+			"value": "rawdata/FXNET_Deals"
 		},
 		"platformusage_blob_properties_typeProperties_fileName": {
 			"value": "@dataset().file_name"

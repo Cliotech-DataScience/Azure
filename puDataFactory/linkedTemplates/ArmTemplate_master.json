@@ -257,11 +257,11 @@
 		},
 		"fxnet_deals_blob_properties_typeProperties_fileName": {
 			"type": "string",
-			"defaultValue": "@CONCAT('FXNET_Deals', pipeline().RunId, '.csv')"
+			"defaultValue": "@concat('received=',utcnow())"
 		},
 		"fxnet_deals_blob_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "rawdata/FXNET_Deals/received=2018-01-01"
+			"defaultValue": "rawdata/FXNET_Deals"
 		},
 		"platformusage_blob_properties_typeProperties_fileName": {
 			"type": "string",
