@@ -38,7 +38,7 @@
 				"type": "BZip2"
 			},
 			"fileName": {
-				"value": "@CONCAT('DWH_LeadAssignments=', pipeline().TriggerTime, '.csv.bz2')",
+				"value": "@CONCAT('DWH_LeadAssignments_', pipeline().TriggerTime, '.csv.bz2')",
 				"type": "Expression"
 			},
 			"folderPath": "@concat('rawdata/DWH_LeadAssignments/Received=',utcnow())"
