@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "LK_Last_Id_Mng_azure_ETL",
+				"name": "LK_Last_Date_Mng_azure_ETL",
 				"type": "Lookup",
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -26,7 +26,7 @@
 				}
 			},
 			{
-				"name": "LK_new_max_id",
+				"name": "LK_new_max_date",
 				"type": "Lookup",
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -51,13 +51,13 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "LK_Last_Id_Mng_azure_ETL",
+						"activity": "LK_Last_Date_Mng_azure_ETL",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					},
 					{
-						"activity": "LK_new_max_id",
+						"activity": "LK_new_max_date",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -74,7 +74,7 @@
 					"source": {
 						"type": "SqlSource",
 						"sqlReaderQuery": {
-							"value": "\nselect * \nFROM dwh.azure.calls\nwhere callday> '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' and callday<= '@{activity('LK_new_max_id').output.firstRow.executionDay}'",
+							"value": "select * \nFROM EMERP_LM.azure.AZ_SCMM_Activities\nwhere Activity_Date > '@{activity('LK_Last_activity('LK_Last_Id_Mng_azure_ETL').outputId_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' \n  and Activity_Date <= '@{activity('LK_new_max_id').output.firstRow.executionDay}'\n\n\n",
 							"type": "Expression"
 						}
 					},
@@ -94,7 +94,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "dwh_calls_src",
+						"referenceName": "scmm_activities_src",
 						"type": "DatasetReference"
 					}
 				],
