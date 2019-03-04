@@ -19,6 +19,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage2'"
 		},
+		"AzureFunction1_functionKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'functionKey' of 'AzureFunction1'"
+		},
 		"AzureSqlDatabase_dwh_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase_dwh'"
@@ -347,6 +351,9 @@
 					"AzureBlobStorage2_connectionString": {
 						"value": "[parameters('AzureBlobStorage2_connectionString')]"
 					},
+					"AzureFunction1_functionKey": {
+						"value": "[parameters('AzureFunction1_functionKey')]"
+					},
 					"AzureSqlDatabase_dwh_connectionString": {
 						"value": "[parameters('AzureSqlDatabase_dwh_connectionString')]"
 					},
@@ -409,12 +416,6 @@
 					},
 					"SourceAvailabilityBlobStore1_properties_typeProperties_folderPath": {
 						"value": "[parameters('SourceAvailabilityBlobStore1_properties_typeProperties_folderPath')]"
-					},
-					"SourceFilesBlobStore1_properties_typeProperties_fileName": {
-						"value": "[parameters('SourceFilesBlobStore1_properties_typeProperties_fileName')]"
-					},
-					"SourceFilesBlobStore1_properties_typeProperties_folderPath": {
-						"value": "[parameters('SourceFilesBlobStore1_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -449,8 +450,11 @@
 					"alldbdwh_password": {
 						"value": "[parameters('alldbdwh_password')]"
 					},
-					"destpufiles_connectionString": {
-						"value": "[parameters('destpufiles_connectionString')]"
+					"SourceFilesBlobStore1_properties_typeProperties_fileName": {
+						"value": "[parameters('SourceFilesBlobStore1_properties_typeProperties_fileName')]"
+					},
+					"SourceFilesBlobStore1_properties_typeProperties_folderPath": {
+						"value": "[parameters('SourceFilesBlobStore1_properties_typeProperties_folderPath')]"
 					},
 					"blob_EMERP_Events_properties_typeProperties_fileName": {
 						"value": "[parameters('blob_EMERP_Events_properties_typeProperties_fileName')]"
@@ -556,6 +560,9 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"destpufiles_connectionString": {
+						"value": "[parameters('destpufiles_connectionString')]"
+					},
 					"emerpdbpr_connectionString": {
 						"value": "[parameters('emerpdbpr_connectionString')]"
 					},
@@ -594,9 +601,6 @@
 					},
 					"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 						"value": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"
-					},
-					"SourceDataset_opq_properties_typeProperties_folderPath": {
-						"value": "[parameters('SourceDataset_opq_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -617,6 +621,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"SourceDataset_opq_properties_typeProperties_folderPath": {
+						"value": "[parameters('SourceDataset_opq_properties_typeProperties_folderPath')]"
 					},
 					"Source_file_avi_properties_typeProperties_fileName": {
 						"value": "[parameters('Source_file_avi_properties_typeProperties_fileName')]"

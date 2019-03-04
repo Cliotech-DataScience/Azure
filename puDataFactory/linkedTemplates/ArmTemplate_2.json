@@ -7,6 +7,10 @@
 			"metadata": "Data Factory Name",
 			"defaultValue": "puDataFactory"
 		},
+		"destpufiles_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'destpufiles'"
+		},
 		"emerpdbpr_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'emerpdbpr'"
@@ -58,16 +62,29 @@
 		"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "processed"
-		},
-		"SourceDataset_opq_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": ""
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/destpufiles')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('destpufiles_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "puodsfiles",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/emerpdbpr')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -642,7 +659,9 @@
 					"folderPath": "[parameters('DestinationDataset_opq_properties_typeProperties_folderPath')]"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/destpufiles')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DestinationDataset_qai')]",
@@ -1040,78 +1059,6 @@
 				"typeProperties": {}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_opq')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "pufiles",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "FileShare",
-				"structure": [
-					{
-						"name": "ip",
-						"type": "String"
-					},
-					{
-						"name": "f1",
-						"type": "String"
-					},
-					{
-						"name": "f2",
-						"type": "String"
-					},
-					{
-						"name": "datetime",
-						"type": "String"
-					},
-					{
-						"name": "timeoffset",
-						"type": "String"
-					},
-					{
-						"name": "urlstring",
-						"type": "String"
-					},
-					{
-						"name": "response",
-						"type": "String"
-					},
-					{
-						"name": "rc",
-						"type": "String"
-					},
-					{
-						"name": "url2",
-						"type": "String"
-					},
-					{
-						"name": "appsettings",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": " ",
-						"rowDelimiter": "\n",
-						"quoteChar": "\"",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"folderPath": "[parameters('SourceDataset_opq_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/pufiles')]"
-			]
 		}
 	]
 }

@@ -7,6 +7,10 @@
 			"metadata": "Data Factory Name",
 			"defaultValue": "puDataFactory"
 		},
+		"SourceDataset_opq_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": ""
+		},
 		"Source_file_avi_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "@dataset().file_name"
@@ -20,6 +24,76 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_opq')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "pufiles",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "FileShare",
+				"structure": [
+					{
+						"name": "ip",
+						"type": "String"
+					},
+					{
+						"name": "f1",
+						"type": "String"
+					},
+					{
+						"name": "f2",
+						"type": "String"
+					},
+					{
+						"name": "datetime",
+						"type": "String"
+					},
+					{
+						"name": "timeoffset",
+						"type": "String"
+					},
+					{
+						"name": "urlstring",
+						"type": "String"
+					},
+					{
+						"name": "response",
+						"type": "String"
+					},
+					{
+						"name": "rc",
+						"type": "String"
+					},
+					{
+						"name": "url2",
+						"type": "String"
+					},
+					{
+						"name": "appsettings",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": " ",
+						"rowDelimiter": "\n",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"folderPath": "[parameters('SourceDataset_opq_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/SourceDataset_tau')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -1647,90 +1721,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/dwh_calls_src')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DWH_Dim_Users')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "copy_to_blob",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "select * from  dwh.azure.Dim_Users\n ",
-									"type": "Expression"
-								}
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0
-						},
-						"inputs": [
-							{
-								"referenceName": "dwh_Dim_Users_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "dwh_Dim_Users_blob",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Load_Users",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/Dimensions/Users"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Data_from_SQL"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dwh_Dim_Users_src')]"
 			]
 		}
 	]
