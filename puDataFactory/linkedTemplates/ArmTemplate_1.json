@@ -755,12 +755,6 @@
 					"referenceName": "DataloadStore",
 					"type": "LinkedServiceReference"
 				},
-				"parameters": {
-					"folder_name": {
-						"type": "String",
-						"defaultValue": "EMERP_Events"
-					}
-				},
 				"annotations": [],
 				"type": "AzureBlob",
 				"structure": [
