@@ -216,8 +216,16 @@
 				"type": "SqlServerTable",
 				"structure": [
 					{
-						"name": "a",
+						"name": "Activity_Id",
 						"type": "Int32"
+					},
+					{
+						"name": "Activity_Date",
+						"type": "DateTime"
+					},
+					{
+						"name": "details",
+						"type": "String"
 					}
 				],
 				"typeProperties": {
