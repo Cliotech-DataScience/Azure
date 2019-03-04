@@ -203,6 +203,12 @@
 		"platformusage_blob_properties_typeProperties_folderPath": {
 			"value": "@dataset().folder_name"
 		},
+		"scmm_activities_blob_properties_typeProperties_fileName": {
+			"value": "@CONCAT('SCMM_Activities_', pipeline().TriggerTime, '.csv.bz2')"
+		},
+		"scmm_activities_blob_properties_typeProperties_folderPath": {
+			"value": "@concat('rawdata/SCMM_Activities/Received=',utcnow())"
+		},
 		"unzip_platfrom_file_properties_typeProperties_fileName": {
 			"value": ""
 		},

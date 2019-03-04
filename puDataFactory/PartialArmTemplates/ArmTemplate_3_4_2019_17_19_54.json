@@ -1,0 +1,438 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "puDataFactory"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/DWH_Calls')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LK_Last_Date_Mng_azure_ETL",
+						"type": "Lookup",
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"source": {
+								"type": "AzureTableSource",
+								"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq 'Calls'",
+								"azureTableSourceIgnoreTableNotFound": false
+							},
+							"dataset": {
+								"referenceName": "etl_manage",
+								"type": "DatasetReference"
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "LK_new_max_Date",
+						"type": "Lookup",
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "SELECT Last_Call_Day=DATEADD(DAY,-1,MAX(callday))\nFROM dwh.azure.AZ_Calls"
+							},
+							"dataset": {
+								"referenceName": "dwh_calls_src",
+								"type": "DatasetReference"
+							}
+						}
+					},
+					{
+						"name": "copy_to_blob",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "LK_Last_Date_Mng_azure_ETL",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "LK_new_max_Date",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "\nselect * \nFROM dwh.azure.calls\nwhere callday> '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Call_Date}' and callday<= '@{activity('LK_new_max_Date').output.firstRow.Last_Call_Day}'",
+									"type": "Expression"
+								}
+							},
+							"sink": {
+								"type": "BlobSink"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Call_ID": "Call_ID",
+									"Call_Details": "Call_Details",
+									"CallDay": "CallDay"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "dwh_calls_src",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "dwh_calls_blob",
+								"type": "DatasetReference"
+							}
+						]
+					},
+					{
+						"name": "update_mng_azure",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "copy_to_blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"storedProcedureName": "[concat('[', 'azure].[SP_Update_Mng_azure_ETL]')]",
+							"storedProcedureParameters": {
+								"LastId": {
+									"value": "-1",
+									"type": "Int64"
+								},
+								"LastIncrementalDate": {
+									"value": {
+										"value": "@{activity('LK_new_max_id').output.firstRow.ExecutionDay}",
+										"type": "Expression"
+									},
+									"type": "DateTime"
+								},
+								"TableName": {
+									"value": "DWH_Calls",
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "alldbdwh",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Load_Calls_To_Events",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "update_mng_azure",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"notebookPath": "/Load Data/Calls/Load Calls_new_Table"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Data_from_SQL"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/etl_manage')]",
+				"[concat(variables('factoryId'), '/datasets/dwh_calls_src')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SCMM_Activities')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LK_Last_Date_Mng_azure_ETL",
+						"type": "Lookup",
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"source": {
+								"type": "AzureTableSource",
+								"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq 'SCMM_Activities'",
+								"azureTableSourceIgnoreTableNotFound": false
+							},
+							"dataset": {
+								"referenceName": "etl_manage",
+								"type": "DatasetReference"
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "LK_new_max_date",
+						"type": "Lookup",
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "SELECT Last_Activity_Date = MAX(Activity_Date)\nFROM EMERP_LM.azure.AZ_SCMM_Activities\n"
+							},
+							"dataset": {
+								"referenceName": "scmm_activities_src",
+								"type": "DatasetReference"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "Data_from_SQL"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/etl_manage')]",
+				"[concat(variables('factoryId'), '/datasets/scmm_activities_src')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dwh_calls_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "Call_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Call_Details",
+						"type": "String"
+					},
+					{
+						"name": "CallDay",
+						"type": "DateTime"
+					}
+				],
+				"typeProperties": {
+					"tableName": "dwh.azure.AZ_Calls"
+				}
+			}
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/etl_manage')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DataLoadStorageAccount",
+					"type": "LinkedServiceReference"
+				},
+				"type": "AzureTable",
+				"structure": [
+					{
+						"name": "PartitionKey",
+						"type": "String"
+					},
+					{
+						"name": "RowKey",
+						"type": "String"
+					},
+					{
+						"name": "Timestamp",
+						"type": "DateTimeOffset"
+					},
+					{
+						"name": "Last_Call_Date",
+						"type": "String"
+					},
+					{
+						"name": "Next_Call_Date",
+						"type": "String"
+					},
+					{
+						"name": "Last_PU_INT",
+						"type": "Int64"
+					},
+					{
+						"name": "Next_PU_INT",
+						"type": "Int64"
+					},
+					{
+						"name": "Last_Incremental_Date",
+						"type": "DateTimeOffset"
+					},
+					{
+						"name": "Last_Assignment_Date",
+						"type": "String"
+					},
+					{
+						"name": "Next_Assignment_Date",
+						"type": "String"
+					},
+					{
+						"name": "Last_Deal_Date",
+						"type": "String"
+					},
+					{
+						"name": "Next_Deal_Date",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": "etlManage"
+				}
+			}
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/scmm_activities_blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DataloadStore",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "Activity_Id",
+						"type": "Int32"
+					},
+					{
+						"name": "Activity_Date",
+						"type": "DateTime"
+					},
+					{
+						"name": "details",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": "\t",
+						"rowDelimiter": "",
+						"quoteChar": "",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"compression": {
+						"type": "BZip2"
+					},
+					"fileName": {
+						"value": "@CONCAT('SCMM_Activities_', pipeline().TriggerTime, '.csv.bz2')",
+						"type": "Expression"
+					},
+					"folderPath": {
+						"value": "@concat('rawdata/SCMM_Activities/Received=',utcnow())",
+						"type": "Expression"
+					}
+				}
+			}
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/scmm_activities_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "a",
+						"type": "Int32"
+					}
+				],
+				"typeProperties": {
+					"tableName": "emerp_lm.azure.AZ_SCMM_Activities"
+				}
+			}
+		}
+	]
+}

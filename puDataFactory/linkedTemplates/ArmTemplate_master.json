@@ -271,6 +271,14 @@
 			"type": "string",
 			"defaultValue": "@dataset().folder_name"
 		},
+		"scmm_activities_blob_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@CONCAT('SCMM_Activities_', pipeline().TriggerTime, '.csv.bz2')"
+		},
+		"scmm_activities_blob_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@concat('rawdata/SCMM_Activities/Received=',utcnow())"
+		},
 		"unzip_platfrom_file_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": ""
@@ -506,6 +514,12 @@
 					},
 					"platformusage_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('platformusage_blob_properties_typeProperties_folderPath')]"
+					},
+					"scmm_activities_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('scmm_activities_blob_properties_typeProperties_fileName')]"
+					},
+					"scmm_activities_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('scmm_activities_blob_properties_typeProperties_folderPath')]"
 					},
 					"unzip_platfrom_file_properties_typeProperties_fileName": {
 						"value": "[parameters('unzip_platfrom_file_properties_typeProperties_fileName')]"

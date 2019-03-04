@@ -115,6 +115,14 @@
 			"type": "string",
 			"defaultValue": "@dataset().folder_name"
 		},
+		"scmm_activities_blob_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@CONCAT('SCMM_Activities_', pipeline().TriggerTime, '.csv.bz2')"
+		},
+		"scmm_activities_blob_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@concat('rawdata/SCMM_Activities/Received=',utcnow())"
+		},
 		"unzip_platfrom_file_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": ""
@@ -647,6 +655,10 @@
 						"type": "Int64"
 					},
 					{
+						"name": "Last_Incremental_Date",
+						"type": "DateTimeOffset"
+					},
+					{
 						"name": "Last_Assignment_Date",
 						"type": "String"
 					},
@@ -767,23 +779,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/mng')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DataLoadStorageAccount",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureTable",
-				"typeProperties": {
-					"tableName": "etlManage"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/platformusage_blob')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -813,6 +808,61 @@
 					},
 					"folderPath": {
 						"value": "[parameters('platformusage_blob_properties_typeProperties_folderPath')]",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/scmm_activities_blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DataloadStore",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "Activity_Id",
+						"type": "Int32"
+					},
+					{
+						"name": "Activity_Date",
+						"type": "DateTime"
+					},
+					{
+						"name": "details",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": "\t",
+						"rowDelimiter": "",
+						"quoteChar": "",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"compression": {
+						"type": "BZip2"
+					},
+					"fileName": {
+						"value": "[parameters('scmm_activities_blob_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": {
+						"value": "[parameters('scmm_activities_blob_properties_typeProperties_folderPath')]",
 						"type": "Expression"
 					}
 				}
