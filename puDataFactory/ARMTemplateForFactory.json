@@ -261,11 +261,11 @@
 		},
 		"fxnet_deals_blob_properties_typeProperties_fileName": {
 			"type": "string",
-			"defaultValue": "@concat('received=',utcnow())"
+			"defaultValue": "@CONCAT('FXNET_Deals_', pipeline().TriggerTime, '.csv.bz2')"
 		},
 		"fxnet_deals_blob_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "rawdata/FXNET_Deals"
+			"defaultValue": "@concat('rawdata/FXNET_Deals/Received=',utcnow())"
 		},
 		"platformusage_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -2308,7 +2308,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT executionDay=DATEADD(DAY,-1,MAX(executionday))\nFROM dwh.azure.deals"
+								"sqlReaderQuery": "SELECT executionDay=DATEADD(DAY,-1,MAX(executionday))\nFROM dwh.azure.AZ_Deals"
 							},
 							"dataset": {
 								"referenceName": "Mng_azure_ETL",
@@ -2346,7 +2346,7 @@
 							"source": {
 								"type": "SqlSource",
 								"sqlReaderQuery": {
-									"value": "\nselect * \nFROM dwh.azure.deals\nwhere executionDay > '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' and executionDay<= '@{activity('LK_new_max_Date').output.firstRow.executionDay}'",
+									"value": "\nselect * \nFROM dwh.azure.AZ_Deals\nwhere executionDay > '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' and executionDay<= '@{activity('LK_new_max_Date').output.firstRow.executionDay}'",
 									"type": "Expression"
 								}
 							},
@@ -5632,7 +5632,10 @@
 						"value": "[parameters('fxnet_deals_blob_properties_typeProperties_fileName')]",
 						"type": "Expression"
 					},
-					"folderPath": "[parameters('fxnet_deals_blob_properties_typeProperties_folderPath')]"
+					"folderPath": {
+						"value": "[parameters('fxnet_deals_blob_properties_typeProperties_folderPath')]",
+						"type": "Expression"
+					}
 				}
 			},
 			"dependsOn": [
