@@ -1601,12 +1601,11 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "AzureTableSource",
-								"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq 'Calls'",
-								"azureTableSourceIgnoreTableNotFound": false
+								"type": "SqlSource",
+								"sqlReaderQuery": "SELECT  Last_Call_Date= LastIncrementalDate \n  ---- remove to use incremental\nFROM  localdb.azure.Mng_azure_ETL\nWHERE TableName='DWH_Calls'"
 							},
 							"dataset": {
-								"referenceName": "etl_manage",
+								"referenceName": "Mng_azure_ETL",
 								"type": "DatasetReference",
 								"parameters": {}
 							},
@@ -1727,7 +1726,7 @@
 								},
 								"LastIncrementalDate": {
 									"value": {
-										"value": "@{activity('LK_new_max_id').output.firstRow.ExecutionDay}",
+										"value": "@{activity('LK_new_max_Date').output.firstRow.Last_Call_Day}",
 										"type": "Expression"
 									},
 									"type": "DateTime"
@@ -1777,7 +1776,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/etl_manage')]",
+				"[concat(variables('factoryId'), '/datasets/Mng_azure_ETL')]",
 				"[concat(variables('factoryId'), '/datasets/dwh_calls_src')]",
 				"[concat(variables('factoryId'), '/datasets/dwh_calls_blob')]",
 				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]",
