@@ -36,7 +36,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT executionDay=DATEADD(DAY,-1,MAX(executionday))\nFROM dwh.azure.deals"
+						"sqlReaderQuery": "SELECT executionDay=DATEADD(DAY,-1,MAX(executionday))\nFROM dwh.azure.AZ_Deals"
 					},
 					"dataset": {
 						"referenceName": "Mng_azure_ETL",
@@ -72,7 +72,7 @@
 					"source": {
 						"type": "SqlSource",
 						"sqlReaderQuery": {
-							"value": "\nselect * \nFROM dwh.azure.deals\nwhere executionDay > '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' and executionDay<= '@{activity('LK_new_max_Date').output.firstRow.executionDay}'",
+							"value": "\nselect * \nFROM dwh.azure.AZ_Deals\nwhere executionDay > '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' and executionDay<= '@{activity('LK_new_max_Date').output.firstRow.executionDay}'",
 							"type": "Expression"
 						}
 					},
