@@ -15,7 +15,6 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureTableSource",
-						"azureTableSourceQuery": "select * from etl_manage ",
 						"azureTableSourceIgnoreTableNotFound": false
 					},
 					"dataset": {
@@ -38,7 +37,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT executionDay=DATEADD(DAY,-1,MAX(callday))\nFROM dwh.azure.calls"
+						"sqlReaderQuery": "SELECT executionDay=DATEADD(DAY,-1,MAX(callday))\nFROM dwh.azure.AZ_Calls"
 					},
 					"dataset": {
 						"referenceName": "Mng_azure_ETL",
