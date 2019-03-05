@@ -39,9 +39,6 @@
 				"type": "String",
 				"defaultValue": "PropertyValue"
 			}
-		},
-		"folder": {
-			"name": "Data_from_SQL"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
