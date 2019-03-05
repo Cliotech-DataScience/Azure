@@ -1,5 +1,5 @@
 {
-	"name": "test table store",
+	"name": "MergeTableStore",
 	"properties": {
 		"activities": [
 			{
