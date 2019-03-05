@@ -1,0 +1,423 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "puDataFactory"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/MergeTableStore')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "MergeTableStorage",
+						"type": "WebActivity",
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"url": "https://prod-19.westeurope.logic.azure.com:443/workflows/fdc08617ec204e91923afb154eb5e9d3/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=lmpuubOmGI-VjJ9ltwWrti0QZzF4gYY4HHKM_RfQCis",
+							"method": "POST",
+							"body": {
+								"value": "@concat('{ \"PartitionKey\":\"',pipeline().parameters.PartitionKey,'\",   \"RowKey\":\"',pipeline().parameters.RowKey,'\"  , \"PropertyName\":\"',pipeline().parameters.PropertyName,'\", \"PropertyValue\":\"',pipeline().parameters.PropertyValue,'\" }')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"parameters": {
+					"PartitionKey": {
+						"type": "String",
+						"defaultValue": "PartitionKey"
+					},
+					"RowKey": {
+						"type": "String",
+						"defaultValue": "RowKey"
+					},
+					"PropertyName": {
+						"type": "String",
+						"defaultValue": "PropertyName"
+					},
+					"PropertyValue": {
+						"type": "String",
+						"defaultValue": "PropertyValue"
+					}
+				}
+			}
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/RUN_ALL_pip_platfrom_usage')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "RUN - 02_platfromusage_unzip_zip_blob_files",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - 01_platfromusage_files_copy_to_blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "02_platfromusage_unzip_zip_blob_files",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "RUN - 03_PU_Load_ods_data",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - 02_platfromusage_unzip_zip_blob_files",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "03_PU_Load_ods_data",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "RUN - Customers",
+						"type": "ExecutePipeline",
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Customers",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "RUN - 04_PU_ods_to_events",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - 03_PU_Load_ods_data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "04_PU_ods_to_events",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "RUN - 01_platfromusage_files_copy_to_blob",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - Customers",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "RUN - Serials",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "RUN - Contacts",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "RUN - Users",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "01_platfromusage_files_copy_to_blob",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "RUN - Serials",
+						"type": "ExecutePipeline",
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Serials",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "RUN - emerp_events",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - 04_PU_ods_to_events",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "EMERP_Events",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "RUN - Contacts",
+						"type": "ExecutePipeline",
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Contacts",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "RUN - Users",
+						"type": "ExecutePipeline",
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "DWH_Dim_Users",
+								"type": "PipelineReference"
+							}
+						}
+					},
+					{
+						"name": "RUN - Calls",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - emerp_events",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "DWH_Calls",
+								"type": "PipelineReference"
+							}
+						}
+					},
+					{
+						"name": "RUN - Deals",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - Calls",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "FXNET_Deals",
+								"type": "PipelineReference"
+							}
+						}
+					},
+					{
+						"name": "RUN - LeadAssignments",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - Deals",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "DWH_LeadAssignments",
+								"type": "PipelineReference"
+							}
+						}
+					}
+				]
+			}
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SCMM_Activities')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LK_Last_Date_Mng_azure_ETL",
+						"type": "Lookup",
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"source": {
+								"type": "AzureTableSource",
+								"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq 'SCMM_Activities'",
+								"azureTableSourceIgnoreTableNotFound": false
+							},
+							"dataset": {
+								"referenceName": "etl_manage",
+								"type": "DatasetReference"
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "LK_new_max_date",
+						"type": "Lookup",
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "SELECT Last_Activity_Date = MAX(Activity_Date)\nFROM EMERP_LM.azure.AZ_SCMM_Activities\n"
+							},
+							"dataset": {
+								"referenceName": "scmm_activities_src",
+								"type": "DatasetReference"
+							}
+						}
+					},
+					{
+						"name": "copy_to_blob",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "LK_Last_Date_Mng_azure_ETL",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "LK_new_max_date",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "select * \nFROM EMERP_LM.azure.AZ_SCMM_Activities\nwhere Activity_Date > \ngetdate()"
+							},
+							"sink": {
+								"type": "BlobSink"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Activity_Id": "Activity_Id",
+									"Activity_Date": "Activity_Date",
+									"details": "details"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "scmm_activities_src",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "scmm_activities_blob",
+								"type": "DatasetReference"
+							}
+						]
+					},
+					{
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "copy_to_blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "MergeTableStore",
+								"type": "PipelineReference"
+							},
+							"parameters": {
+								"PartitionKey": "Upload Data",
+								"RowKey": "SCMM_Activities",
+								"PropertyName": "Last_Incremental_date",
+								"PropertyValue": {
+									"value": "@activity('LK_new_max_date').output",
+									"type": "Expression"
+								}
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "Data_from_SQL"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/MergeTableStore')]"
+			]
+		}
+	]
+}

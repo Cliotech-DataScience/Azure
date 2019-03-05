@@ -5,7 +5,11 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "pudatafactory"
+			"defaultValue": "puDataFactory"
+		},
+		"Events_Collector_PlatfromUsage_log_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Events_Collector_PlatfromUsage_log'"
 		},
 		"alldbdwh_connectionString": {
 			"type": "secureString",
@@ -34,6 +38,10 @@
 		"pufiles_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
+		},
+		"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
 		},
 		"alldbdwh_properties_typeProperties_userName": {
 			"type": "string",
@@ -80,6 +88,28 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Events_Collector_PlatfromUsage_log')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "\\\\netapp-ams-cifs\\db\\Events_Collector\\az_test_processed",
+					"userId": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('Events_Collector_PlatfromUsage_log_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/alldbdwh')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -719,7 +749,9 @@
 					"folderPath": "[parameters('DestinationDataset_qai_properties_typeProperties_folderPath')]"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Events_Collector_PlatfromUsage_log')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Dim_AccountContacts')]",
@@ -1077,23 +1109,8 @@
 					"folderPath": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"
 				}
 			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_bvj')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"typeProperties": {}
-			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+				"[concat(variables('factoryId'), '/linkedServices/Events_Collector_PlatfromUsage_log')]"
 			]
 		}
 	]

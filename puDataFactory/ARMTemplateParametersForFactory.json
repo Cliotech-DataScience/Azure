@@ -3,7 +3,7 @@
 	"contentVersion": "1.0.0.0",
 	"parameters": {
 		"factoryName": {
-			"value": "pudatafactory"
+			"value": "puDataFactory"
 		},
 		"Analysis_accessToken": {
 			"value": ""
@@ -223,6 +223,9 @@
 		},
 		"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
+		},
+		"TableServiceStoree_properties_typeProperties_url": {
+			"value": "https://dataloadestore.table.core.windows.net/"
 		},
 		"alldbdwh_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"

@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "pudatafactory"
+			"defaultValue": "puDataFactory"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -42,6 +42,10 @@
 		"dwhdb_blob_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'dwhdb_blob'"
+		},
+		"TableServiceStoree_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://dataloadestore.table.core.windows.net/"
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -90,14 +94,6 @@
 		"DestinationDataset_bvj_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "testdata"
-		},
-		"DestinationFilesBlobStore1_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": ""
-		},
-		"DestinationFilesBlobStore1_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "sinkdata/staged_sink"
 		}
 	},
 	"variables": {
@@ -105,13 +101,13 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/test table store')]",
+			"name": "[concat(parameters('factoryName'), '/MergeTableStore')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Web1",
+						"name": "MergeTableStorage",
 						"type": "WebActivity",
 						"dependsOn": [],
 						"policy": {
@@ -123,19 +119,33 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"url": "https://dataloadestore.table.core.windows.net/etlManage(PartitionKey='Upload Data',RowKey='SCMM_Activities')",
-							"method": "PUT",
+							"url": "https://prod-19.westeurope.logic.azure.com:443/workflows/fdc08617ec204e91923afb154eb5e9d3/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=lmpuubOmGI-VjJ9ltwWrti0QZzF4gYY4HHKM_RfQCis",
+							"method": "POST",
 							"headers": {},
 							"body": {
-								"Last_Incremental_Date": "2019-04-01T00:00:00.000Z",
-								"PartitionKey": "Upload Data",
-								"RowKey": "SCMM_Activities"
+								"value": "@concat('{ \"PartitionKey\":\"',pipeline().parameters.PartitionKey,'\",   \"RowKey\":\"',pipeline().parameters.RowKey,'\"  , \"PropertyName\":\"',pipeline().parameters.PropertyName,'\", \"PropertyValue\":\"',pipeline().parameters.PropertyValue,'\" }')",
+								"type": "Expression"
 							}
 						}
 					}
 				],
-				"folder": {
-					"name": "Data_from_SQL"
+				"parameters": {
+					"PartitionKey": {
+						"type": "String",
+						"defaultValue": "PartitionKey"
+					},
+					"RowKey": {
+						"type": "String",
+						"defaultValue": "RowKey"
+					},
+					"PropertyName": {
+						"type": "String",
+						"defaultValue": "PropertyName"
+					},
+					"PropertyValue": {
+						"type": "String",
+						"defaultValue": "PropertyValue"
+					}
 				},
 				"annotations": []
 			},
@@ -237,6 +247,21 @@
 				"type": "AzureBlobStorage",
 				"typeProperties": {
 					"connectionString": "[parameters('DataloadStore_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TableServiceStoree')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "HttpServer",
+				"typeProperties": {
+					"url": "[parameters('TableServiceStoree_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
 				}
 			},
 			"dependsOn": []
@@ -680,27 +705,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage2')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DestinationFilesBlobStore1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Connection to your destination Azure Blob Store.",
-				"linkedServiceName": {
-					"referenceName": "cliotestingstore",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"typeProperties": {
-					"fileName": "[parameters('DestinationFilesBlobStore1_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('DestinationFilesBlobStore1_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/cliotestingstore')]"
 			]
 		}
 	]

@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "pudatafactory"
+			"defaultValue": "puDataFactory"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -299,6 +299,10 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"TableServiceStoree_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://dataloadestore.table.core.windows.net/"
+		},
 		"alldbdwh_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -369,6 +373,9 @@
 					"dwhdb_blob_connectionString": {
 						"value": "[parameters('dwhdb_blob_connectionString')]"
 					},
+					"TableServiceStoree_properties_typeProperties_url": {
+						"value": "[parameters('TableServiceStoree_properties_typeProperties_url')]"
+					},
 					"BI_Events_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('BI_Events_blob_properties_typeProperties_fileName')]"
 					},
@@ -404,12 +411,6 @@
 					},
 					"DestinationDataset_bvj_properties_typeProperties_folderPath": {
 						"value": "[parameters('DestinationDataset_bvj_properties_typeProperties_folderPath')]"
-					},
-					"DestinationFilesBlobStore1_properties_typeProperties_fileName": {
-						"value": "[parameters('DestinationFilesBlobStore1_properties_typeProperties_fileName')]"
-					},
-					"DestinationFilesBlobStore1_properties_typeProperties_folderPath": {
-						"value": "[parameters('DestinationFilesBlobStore1_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -435,8 +436,11 @@
 					"Dwhpr_password": {
 						"value": "[parameters('Dwhpr_password')]"
 					},
-					"Events_Collector_PlatfromUsage_log_password": {
-						"value": "[parameters('Events_Collector_PlatfromUsage_log_password')]"
+					"DestinationFilesBlobStore1_properties_typeProperties_fileName": {
+						"value": "[parameters('DestinationFilesBlobStore1_properties_typeProperties_fileName')]"
+					},
+					"DestinationFilesBlobStore1_properties_typeProperties_folderPath": {
+						"value": "[parameters('DestinationFilesBlobStore1_properties_typeProperties_folderPath')]"
 					},
 					"SourceAvailabilityBlobStore1_properties_typeProperties_fileName": {
 						"value": "[parameters('SourceAvailabilityBlobStore1_properties_typeProperties_fileName')]"
@@ -527,9 +531,6 @@
 					},
 					"Dwhpr_properties_typeProperties_userName": {
 						"value": "[parameters('Dwhpr_properties_typeProperties_userName')]"
-					},
-					"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
-						"value": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_userId')]"
 					}
 				}
 			},
@@ -551,6 +552,9 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"Events_Collector_PlatfromUsage_log_password": {
+						"value": "[parameters('Events_Collector_PlatfromUsage_log_password')]"
+					},
 					"alldbdwh_connectionString": {
 						"value": "[parameters('alldbdwh_connectionString')]"
 					},
@@ -571,6 +575,9 @@
 					},
 					"pufiles_password": {
 						"value": "[parameters('pufiles_password')]"
+					},
+					"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
+						"value": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_userId')]"
 					},
 					"alldbdwh_properties_typeProperties_userName": {
 						"value": "[parameters('alldbdwh_properties_typeProperties_userName')]"

@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "pudatafactory"
+			"defaultValue": "puDataFactory"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -298,6 +298,10 @@
 		"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
+		},
+		"TableServiceStoree_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://dataloadestore.table.core.windows.net/"
 		},
 		"alldbdwh_properties_typeProperties_userName": {
 			"type": "string",
@@ -2465,6 +2469,57 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/MergeTableStore')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "MergeTableStorage",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-19.westeurope.logic.azure.com:443/workflows/fdc08617ec204e91923afb154eb5e9d3/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=lmpuubOmGI-VjJ9ltwWrti0QZzF4gYY4HHKM_RfQCis",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"value": "@concat('{ \"PartitionKey\":\"',pipeline().parameters.PartitionKey,'\",   \"RowKey\":\"',pipeline().parameters.RowKey,'\"  , \"PropertyName\":\"',pipeline().parameters.PropertyName,'\", \"PropertyValue\":\"',pipeline().parameters.PropertyValue,'\" }')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"parameters": {
+					"PartitionKey": {
+						"type": "String",
+						"defaultValue": "PartitionKey"
+					},
+					"RowKey": {
+						"type": "String",
+						"defaultValue": "RowKey"
+					},
+					"PropertyName": {
+						"type": "String",
+						"defaultValue": "PropertyName"
+					},
+					"PropertyValue": {
+						"type": "String",
+						"defaultValue": "PropertyValue"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Platfrom_Usage_Log_Collector')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -2633,6 +2688,12 @@
 								"dependencyConditions": [
 									"Succeeded"
 								]
+							},
+							{
+								"activity": "RUN - Users",
+								"dependencyConditions": [
+									"Succeeded"
+								]
 							}
 						],
 						"userProperties": [],
@@ -2689,6 +2750,75 @@
 							},
 							"waitOnCompletion": true
 						}
+					},
+					{
+						"name": "RUN - Users",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "DWH_Dim_Users",
+								"type": "PipelineReference"
+							}
+						}
+					},
+					{
+						"name": "RUN - Calls",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - emerp_events",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "DWH_Calls",
+								"type": "PipelineReference"
+							}
+						}
+					},
+					{
+						"name": "RUN - Deals",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - Calls",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "FXNET_Deals",
+								"type": "PipelineReference"
+							}
+						}
+					},
+					{
+						"name": "RUN - LeadAssignments",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - Deals",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "DWH_LeadAssignments",
+								"type": "PipelineReference"
+							}
+						}
 					}
 				],
 				"annotations": []
@@ -2701,7 +2831,11 @@
 				"[concat(variables('factoryId'), '/pipelines/01_platfromusage_files_copy_to_blob')]",
 				"[concat(variables('factoryId'), '/pipelines/Serials')]",
 				"[concat(variables('factoryId'), '/pipelines/EMERP_Events')]",
-				"[concat(variables('factoryId'), '/pipelines/Contacts')]"
+				"[concat(variables('factoryId'), '/pipelines/Contacts')]",
+				"[concat(variables('factoryId'), '/pipelines/DWH_Dim_Users')]",
+				"[concat(variables('factoryId'), '/pipelines/DWH_Calls')]",
+				"[concat(variables('factoryId'), '/pipelines/FXNET_Deals')]",
+				"[concat(variables('factoryId'), '/pipelines/DWH_LeadAssignments')]"
 			]
 		},
 		{
@@ -2820,25 +2954,30 @@
 						]
 					},
 					{
-						"name": "Web1",
-						"type": "WebActivity",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "copy_to_blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"userProperties": [],
 						"typeProperties": {
-							"url": "https://dataloadestore.table.core.windows.net/etlManage(PartitionKey='Upload Data',RowKey='SCMM_Activities')",
-							"method": "PUT",
-							"headers": {},
-							"body": {
-								"Last_Incremental_Date": "2019-04-01T00:00:00.000Z",
+							"pipeline": {
+								"referenceName": "MergeTableStore",
+								"type": "PipelineReference"
+							},
+							"parameters": {
 								"PartitionKey": "Upload Data",
-								"RowKey": "SCMM_Activities"
+								"RowKey": "SCMM_Activities",
+								"PropertyName": "Last_Incremental_date",
+								"PropertyValue": {
+									"value": "@activity('LK_new_max_date').output",
+									"type": "Expression"
+								}
 							}
 						}
 					}
@@ -2851,7 +2990,8 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/etl_manage')]",
 				"[concat(variables('factoryId'), '/datasets/scmm_activities_src')]",
-				"[concat(variables('factoryId'), '/datasets/scmm_activities_blob')]"
+				"[concat(variables('factoryId'), '/datasets/scmm_activities_blob')]",
+				"[concat(variables('factoryId'), '/pipelines/MergeTableStore')]"
 			]
 		},
 		{
@@ -3459,132 +3599,6 @@
 				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]",
 				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/run_all_test')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "RUN - 02_platfromusage_unzip_zip_blob_files",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - 01_platfromusage_files_copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "02_platfromusage_unzip_zip_blob_files",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true
-						}
-					},
-					{
-						"name": "RUN - 03_PU_Load_ods_data",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - 02_platfromusage_unzip_zip_blob_files",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "03_PU_Load_ods_data",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true
-						}
-					},
-					{
-						"name": "RUN - 04_PU_ods_to_events",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - 03_PU_Load_ods_data",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "04_PU_ods_to_events",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true
-						}
-					},
-					{
-						"name": "RUN - 01_platfromusage_files_copy_to_blob",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "01_platfromusage_files_copy_to_blob",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true
-						}
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/02_platfromusage_unzip_zip_blob_files')]",
-				"[concat(variables('factoryId'), '/pipelines/03_PU_Load_ods_data')]",
-				"[concat(variables('factoryId'), '/pipelines/04_PU_ods_to_events')]",
-				"[concat(variables('factoryId'), '/pipelines/01_platfromusage_files_copy_to_blob')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/test table store')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Web1",
-						"type": "WebActivity",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": "https://dataloadestore.table.core.windows.net/etlManage(PartitionKey='Upload Data',RowKey='SCMM_Activities')",
-							"method": "PUT",
-							"headers": {},
-							"body": {
-								"Last_Incremental_Date": "2019-04-01T00:00:00.000Z",
-								"PartitionKey": "Upload Data",
-								"RowKey": "SCMM_Activities"
-							}
-						}
-					}
-				],
-				"folder": {
-					"name": "Data_from_SQL"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/BI_Events_blob')]",
@@ -6205,6 +6219,21 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/alldbgateway')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TableServiceStoree')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "HttpServer",
+				"typeProperties": {
+					"url": "[parameters('TableServiceStoree_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/alldbdwh')]",

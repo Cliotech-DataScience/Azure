@@ -5,13 +5,202 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "pudatafactory"
+			"defaultValue": "puDataFactory"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Customers')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LK_Last_Id_Mng_azure_ETL",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "\n  \nSELECT  LastIncrementalDate=DATEADD(MINUTE,65,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  [localdb].[azure].[Mng_azure_ETL]\n  WHERE TableName='Customers'\n"
+							},
+							"dataset": {
+								"referenceName": "Mng_azure_ETL",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "LK_new_max_id",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "SELECT ExecutionDate=MAX(SsisUpdatedDate)\n FROM dwh.azure.AZ_Customers\n"
+							},
+							"dataset": {
+								"referenceName": "Mng_azure_ETL",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "copy_to_blob",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "LK_Last_Id_Mng_azure_ETL",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "LK_new_max_id",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "select * from  dwh.azure.AZ_Customers\n where SsisUpdatedDate > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' and SsisUpdatedDate<= '@{activity('LK_new_max_id').output.firstRow.ExecutionDate}'",
+									"type": "Expression"
+								}
+							},
+							"sink": {
+								"type": "BlobSink"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0
+						},
+						"inputs": [
+							{
+								"referenceName": "DWH_Dim_Customers_src",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DWH_Dim_Customers_blob",
+								"type": "DatasetReference",
+								"parameters": {
+									"folder_name": "Customers"
+								}
+							}
+						]
+					},
+					{
+						"name": "update_mng_azure",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "copy_to_blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[concat('[', 'azure].[SP_Update_Mng_azure_ETL]')]",
+							"storedProcedureParameters": {
+								"LastId": {
+									"value": "-1",
+									"type": "Int64"
+								},
+								"LastIncrementalDate": {
+									"value": {
+										"value": "@{activity('LK_new_max_id').output.firstRow.ExecutionDate}",
+										"type": "Expression"
+									},
+									"type": "DateTime"
+								},
+								"TableName": {
+									"value": "Customers",
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "alldbdwh",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Customers",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "update_mng_azure",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Load Data/Dimensions/Customers"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Data_from_SQL"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DWH_Calls')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -1050,25 +1239,30 @@
 						]
 					},
 					{
-						"name": "Web1",
-						"type": "WebActivity",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "copy_to_blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"userProperties": [],
 						"typeProperties": {
-							"url": "https://dataloadestore.table.core.windows.net/etlManage(PartitionKey='Upload Data',RowKey='SCMM_Activities')",
-							"method": "PUT",
-							"headers": {},
-							"body": {
-								"Last_Incremental_Date": "2019-04-01T00:00:00.000Z",
+							"pipeline": {
+								"referenceName": "MergeTableStore",
+								"type": "PipelineReference"
+							},
+							"parameters": {
 								"PartitionKey": "Upload Data",
-								"RowKey": "SCMM_Activities"
+								"RowKey": "SCMM_Activities",
+								"PropertyName": "Last_Incremental_date",
+								"PropertyValue": {
+									"value": "@activity('LK_new_max_date').output",
+									"type": "Expression"
+								}
 							}
 						}
 					}
@@ -1616,6 +1810,12 @@
 								"dependencyConditions": [
 									"Succeeded"
 								]
+							},
+							{
+								"activity": "RUN - Users",
+								"dependencyConditions": [
+									"Succeeded"
+								]
 							}
 						],
 						"userProperties": [],
@@ -1672,98 +1872,88 @@
 							},
 							"waitOnCompletion": true
 						}
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Serials')]",
-				"[concat(variables('factoryId'), '/pipelines/EMERP_Events')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/run_all_test')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "RUN - 02_platfromusage_unzip_zip_blob_files",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - 01_platfromusage_files_copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "02_platfromusage_unzip_zip_blob_files",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true
-						}
 					},
 					{
-						"name": "RUN - 03_PU_Load_ods_data",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - 02_platfromusage_unzip_zip_blob_files",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "03_PU_Load_ods_data",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true
-						}
-					},
-					{
-						"name": "RUN - 04_PU_ods_to_events",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - 03_PU_Load_ods_data",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "04_PU_ods_to_events",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true
-						}
-					},
-					{
-						"name": "RUN - 01_platfromusage_files_copy_to_blob",
+						"name": "RUN - Users",
 						"type": "ExecutePipeline",
 						"dependsOn": [],
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
-								"referenceName": "01_platfromusage_files_copy_to_blob",
+								"referenceName": "DWH_Dim_Users",
 								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true
+							}
+						}
+					},
+					{
+						"name": "RUN - Calls",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - emerp_events",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "DWH_Calls",
+								"type": "PipelineReference"
+							}
+						}
+					},
+					{
+						"name": "RUN - Deals",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - Calls",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "FXNET_Deals",
+								"type": "PipelineReference"
+							}
+						}
+					},
+					{
+						"name": "RUN - LeadAssignments",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - Deals",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "DWH_LeadAssignments",
+								"type": "PipelineReference"
+							}
 						}
 					}
 				],
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Customers')]",
+				"[concat(variables('factoryId'), '/pipelines/Serials')]",
+				"[concat(variables('factoryId'), '/pipelines/EMERP_Events')]",
+				"[concat(variables('factoryId'), '/pipelines/DWH_Dim_Users')]",
+				"[concat(variables('factoryId'), '/pipelines/DWH_Calls')]",
+				"[concat(variables('factoryId'), '/pipelines/FXNET_Deals')]",
+				"[concat(variables('factoryId'), '/pipelines/DWH_LeadAssignments')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/every_day_run_all_piplines_to_platfrom_usage')]",
