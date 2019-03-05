@@ -28,13 +28,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "LK_new_max_Date",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "LK_Last_Date_Mng_azure_ETL",
+						"activity": "Update ETL Manage Upload Data",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -51,7 +45,7 @@
 					"source": {
 						"type": "SqlSource",
 						"sqlReaderQuery": {
-							"value": "select * \nFROM dwh.azure.AZ_calls\nwhere callday> '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Call_Date}' and callday<= '@{activity('LK_new_max_Date').output.firstRow.Next_Call_Day}'",
+							"value": "select * \nFROM dwh.azure.AZ_calls\nwhere callday> '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Incremental_Date}' and callday<= '@{activity('LK_new_max_Date').output.firstRow.Next_Call_Day}'",
 							"type": "Expression"
 						}
 					},
@@ -83,75 +77,6 @@
 				]
 			},
 			{
-				"name": "update_mng_azure",
-				"type": "SqlServerStoredProcedure",
-				"dependsOn": [
-					{
-						"activity": "copy_to_blob",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"typeProperties": {
-					"storedProcedureName": "[azure].[SP_Update_Mng_azure_ETL]",
-					"storedProcedureParameters": {
-						"LastId": {
-							"value": "-1",
-							"type": "Int64"
-						},
-						"LastIncrementalDate": {
-							"value": {
-								"value": "@{activity('LK_new_max_Date').output.firstRow.Next_Call_Day}",
-								"type": "Expression"
-							},
-							"type": "DateTime"
-						},
-						"TableName": {
-							"value": "DWH_Calls",
-							"type": "String"
-						}
-					}
-				},
-				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
-				"name": "Load_Calls_To_Events",
-				"type": "DatabricksNotebook",
-				"dependsOn": [
-					{
-						"activity": "update_mng_azure",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"typeProperties": {
-					"notebookPath": "/Load Data/Calls/Load Calls_new_Table"
-				},
-				"linkedServiceName": {
-					"referenceName": "Analysis",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
 				"name": "LK_Last_Date_Mng_azure_ETL",
 				"type": "Lookup",
 				"policy": {
@@ -163,12 +88,46 @@
 				},
 				"typeProperties": {
 					"source": {
-						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT  Last_Call_Date = LastIncrementalDate \n  ---- remove to use incremental\nFROM  localdb.azure.Mng_azure_ETL\nWHERE TableName='DWH_Calls'"
+						"type": "AzureTableSource",
+						"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq 'DWH_Calls'",
+						"azureTableSourceIgnoreTableNotFound": false
 					},
 					"dataset": {
-						"referenceName": "dwh_calls_src",
+						"referenceName": "etl_manage",
 						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Update ETL Manage Upload Data",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "LK_new_max_Date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "LK_Last_Date_Mng_azure_ETL",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "MergeTableStore",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"PartitionKey": "Upload Data",
+						"RowKey": "DWH_Calls",
+						"PropertyName": "Last_Incremental_Date",
+						"PropertyValue": {
+							"value": "@{activity('LK_new_max_Date').output.firstRow.Next_Call_Day}",
+							"type": "Expression"
+						}
 					}
 				}
 			}
