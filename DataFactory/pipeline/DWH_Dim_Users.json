@@ -16,7 +16,7 @@
 					"source": {
 						"type": "SqlSource",
 						"sqlReaderQuery": {
-							"value": "select * from  dwh.azure.Dim_Users\n ",
+							"value": "select * from  dwh.azure.AZ_Users\n ",
 							"type": "Expression"
 						}
 					},
