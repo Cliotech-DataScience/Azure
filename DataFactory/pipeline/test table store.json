@@ -16,7 +16,7 @@
 					"url": "https://prod-19.westeurope.logic.azure.com:443/workflows/fdc08617ec204e91923afb154eb5e9d3/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=lmpuubOmGI-VjJ9ltwWrti0QZzF4gYY4HHKM_RfQCis",
 					"method": "POST",
 					"body": {
-						"value": "@pipeline().parameters.params_body",
+						"value": "@concat('{ \"PartitionKey\":\"Upload Data\",   \"RowKey\":\"SCMM_Activities\"  , \"PropertyName\":\"Last_Id\", \"PropertyValue\":\"',' pipeline().parameters.ddd ','\" }')",
 						"type": "Expression"
 					}
 				}
@@ -31,6 +31,10 @@
 					"PropertyName": "Last_Id",
 					"PropertyValue": "300"
 				}
+			},
+			"ddd": {
+				"type": "String",
+				"defaultValue": "500"
 			}
 		},
 		"folder": {
