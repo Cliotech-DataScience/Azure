@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Web1",
+				"name": "MergeTableStorage",
 				"type": "WebActivity",
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -16,7 +16,7 @@
 					"url": "https://prod-19.westeurope.logic.azure.com:443/workflows/fdc08617ec204e91923afb154eb5e9d3/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=lmpuubOmGI-VjJ9ltwWrti0QZzF4gYY4HHKM_RfQCis",
 					"method": "POST",
 					"body": {
-						"value": "@concat('{ \"PartitionKey\":\"Upload Data\",   \"RowKey\":\"SCMM_Activities\"  , \"PropertyName\":\"Last_Id\", \"PropertyValue\":\"',' pipeline().parameters.ddd ','\" }')",
+						"value": "@concat('{ \"PartitionKey\":\"',pipeline().parameters.PartitionKey,'\",   \"RowKey\":\"',pipeline().parameters.RowKey,'\"  , \"PropertyName\":\"',pipeline().parameters.PropertyName,'\", \"PropertyValue\":\"',pipeline().parameters.PropertyValue,'\" }')",
 						"type": "Expression"
 					}
 				}
