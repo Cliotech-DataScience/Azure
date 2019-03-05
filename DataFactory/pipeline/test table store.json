@@ -23,10 +23,13 @@
 			}
 		],
 		"parameters": {
-			"last_date_param": {
+			"params_body": {
 				"type": "String",
 				"defaultValue": {
-					"Last_Incremental_Date": "150"
+					"PartitionKey": "Upload Data",
+					"RowKey": "SCMM_Activities",
+					"PropertyName": "Last_Id",
+					"PropertyValue": "300"
 				}
 			}
 		},
