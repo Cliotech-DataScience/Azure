@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -2818,6 +2818,29 @@
 								"parameters": {}
 							}
 						]
+					},
+					{
+						"name": "Web1",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://dataloadestore.table.core.windows.net/etlManage(PartitionKey='Upload Data',RowKey='SCMM_Activities')",
+							"method": "PUT",
+							"headers": {},
+							"body": {
+								"Last_Incremental_Date": "2019-04-01T00:00:00.000Z",
+								"PartitionKey": "Upload Data",
+								"RowKey": "SCMM_Activities"
+							}
+						}
 					}
 				],
 				"folder": {
@@ -3515,26 +3538,6 @@
 							},
 							"waitOnCompletion": true
 						}
-					},
-					{
-						"name": "RUN - emerp_events",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - 04_PU_ods_to_events",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "EMERP_Events",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true
-						}
 					}
 				],
 				"annotations": []
@@ -3543,9 +3546,45 @@
 				"[concat(variables('factoryId'), '/pipelines/02_platfromusage_unzip_zip_blob_files')]",
 				"[concat(variables('factoryId'), '/pipelines/03_PU_Load_ods_data')]",
 				"[concat(variables('factoryId'), '/pipelines/04_PU_ods_to_events')]",
-				"[concat(variables('factoryId'), '/pipelines/01_platfromusage_files_copy_to_blob')]",
-				"[concat(variables('factoryId'), '/pipelines/EMERP_Events')]"
+				"[concat(variables('factoryId'), '/pipelines/01_platfromusage_files_copy_to_blob')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/test table store')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Web1",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://dataloadestore.table.core.windows.net/etlManage(PartitionKey='Upload Data',RowKey='SCMM_Activities')",
+							"method": "PUT",
+							"headers": {},
+							"body": {
+								"Last_Incremental_Date": "2019-04-01T00:00:00.000Z",
+								"PartitionKey": "Upload Data",
+								"RowKey": "SCMM_Activities"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "Data_from_SQL"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/BI_Events_blob')]",
@@ -3949,6 +3988,9 @@
 				"linkedServiceName": {
 					"referenceName": "alldbdwh",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Platform Usage"
 				},
 				"annotations": [],
 				"type": "SqlServerTable",
@@ -4863,6 +4905,9 @@
 						"type": "String"
 					}
 				},
+				"folder": {
+					"name": "Platform Usage"
+				},
 				"annotations": [],
 				"type": "FileShare",
 				"typeProperties": {
@@ -5015,6 +5060,9 @@
 					"file_name": {
 						"type": "String"
 					}
+				},
+				"folder": {
+					"name": "Platform Usage"
 				},
 				"annotations": [],
 				"type": "AzureBlob",
@@ -5691,6 +5739,9 @@
 					"file_name": {
 						"type": "String"
 					}
+				},
+				"folder": {
+					"name": "Platform Usage"
 				},
 				"annotations": [],
 				"type": "AzureBlob",

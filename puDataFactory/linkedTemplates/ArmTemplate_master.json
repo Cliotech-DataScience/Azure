@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -410,12 +410,6 @@
 					},
 					"DestinationFilesBlobStore1_properties_typeProperties_folderPath": {
 						"value": "[parameters('DestinationFilesBlobStore1_properties_typeProperties_folderPath')]"
-					},
-					"SourceAvailabilityBlobStore1_properties_typeProperties_fileName": {
-						"value": "[parameters('SourceAvailabilityBlobStore1_properties_typeProperties_fileName')]"
-					},
-					"SourceAvailabilityBlobStore1_properties_typeProperties_folderPath": {
-						"value": "[parameters('SourceAvailabilityBlobStore1_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -444,11 +438,11 @@
 					"Events_Collector_PlatfromUsage_log_password": {
 						"value": "[parameters('Events_Collector_PlatfromUsage_log_password')]"
 					},
-					"alldbdwh_connectionString": {
-						"value": "[parameters('alldbdwh_connectionString')]"
+					"SourceAvailabilityBlobStore1_properties_typeProperties_fileName": {
+						"value": "[parameters('SourceAvailabilityBlobStore1_properties_typeProperties_fileName')]"
 					},
-					"alldbdwh_password": {
-						"value": "[parameters('alldbdwh_password')]"
+					"SourceAvailabilityBlobStore1_properties_typeProperties_folderPath": {
+						"value": "[parameters('SourceAvailabilityBlobStore1_properties_typeProperties_folderPath')]"
 					},
 					"SourceFilesBlobStore1_properties_typeProperties_fileName": {
 						"value": "[parameters('SourceFilesBlobStore1_properties_typeProperties_fileName')]"
@@ -536,9 +530,6 @@
 					},
 					"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
 						"value": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_userId')]"
-					},
-					"alldbdwh_properties_typeProperties_userName": {
-						"value": "[parameters('alldbdwh_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -560,6 +551,12 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"alldbdwh_connectionString": {
+						"value": "[parameters('alldbdwh_connectionString')]"
+					},
+					"alldbdwh_password": {
+						"value": "[parameters('alldbdwh_password')]"
+					},
 					"destpufiles_connectionString": {
 						"value": "[parameters('destpufiles_connectionString')]"
 					},
@@ -574,6 +571,9 @@
 					},
 					"pufiles_password": {
 						"value": "[parameters('pufiles_password')]"
+					},
+					"alldbdwh_properties_typeProperties_userName": {
+						"value": "[parameters('alldbdwh_properties_typeProperties_userName')]"
 					},
 					"emerpdbpr_properties_typeProperties_userName": {
 						"value": "[parameters('emerpdbpr_properties_typeProperties_userName')]"

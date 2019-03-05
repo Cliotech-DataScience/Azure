@@ -1,0 +1,642 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "pudatafactory"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/SCMM_Activities')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LK_Last_Date_Mng_azure_ETL",
+						"type": "Lookup",
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"source": {
+								"type": "AzureTableSource",
+								"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq 'SCMM_Activities'",
+								"azureTableSourceIgnoreTableNotFound": false
+							},
+							"dataset": {
+								"referenceName": "etl_manage",
+								"type": "DatasetReference"
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "LK_new_max_date",
+						"type": "Lookup",
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "SELECT Last_Activity_Date = MAX(Activity_Date)\nFROM EMERP_LM.azure.AZ_SCMM_Activities\n"
+							},
+							"dataset": {
+								"referenceName": "scmm_activities_src",
+								"type": "DatasetReference"
+							}
+						}
+					},
+					{
+						"name": "copy_to_blob",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "LK_Last_Date_Mng_azure_ETL",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "LK_new_max_date",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "select * \nFROM EMERP_LM.azure.AZ_SCMM_Activities\nwhere Activity_Date > \ngetdate()"
+							},
+							"sink": {
+								"type": "BlobSink"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Activity_Id": "Activity_Id",
+									"Activity_Date": "Activity_Date",
+									"details": "details"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "scmm_activities_src",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "scmm_activities_blob",
+								"type": "DatasetReference"
+							}
+						]
+					},
+					{
+						"name": "Web1",
+						"type": "WebActivity",
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"url": "https://dataloadestore.table.core.windows.net/etlManage(PartitionKey='Upload Data',RowKey='SCMM_Activities')",
+							"method": "PUT",
+							"body": {
+								"Last_Incremental_Date": "2019-04-01T00:00:00.000Z",
+								"PartitionKey": "Upload Data",
+								"RowKey": "SCMM_Activities"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "Data_from_SQL"
+				}
+			}
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/run_all_test')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "RUN - 02_platfromusage_unzip_zip_blob_files",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - 01_platfromusage_files_copy_to_blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "02_platfromusage_unzip_zip_blob_files",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "RUN - 03_PU_Load_ods_data",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - 02_platfromusage_unzip_zip_blob_files",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "03_PU_Load_ods_data",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "RUN - 04_PU_ods_to_events",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - 03_PU_Load_ods_data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "04_PU_ods_to_events",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					},
+					{
+						"name": "RUN - 01_platfromusage_files_copy_to_blob",
+						"type": "ExecutePipeline",
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "01_platfromusage_files_copy_to_blob",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true
+						}
+					}
+				]
+			}
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/test table store')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Web1",
+						"type": "WebActivity",
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"url": "https://dataloadestore.table.core.windows.net/etlManage(PartitionKey='Upload Data',RowKey='SCMM_Activities')",
+							"method": "PUT",
+							"body": {
+								"Last_Incremental_Date": "2019-04-01T00:00:00.000Z",
+								"PartitionKey": "Upload Data",
+								"RowKey": "SCMM_Activities"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "Data_from_SQL"
+				}
+			}
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWH_pu_list_files')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Platform Usage"
+				},
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "TransactionNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "PositionNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "AccountNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "CustomerHistory_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "CustomersExtendedHistory_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "DealAttirbute_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "Instrument_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "TransactionType_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "Direction_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "Source_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "DealType_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "ExecutionDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "ExecutionDay",
+						"type": "DateTime"
+					},
+					{
+						"name": "ExecutionTime",
+						"type": "TimeSpan"
+					},
+					{
+						"name": "TransactionCloseDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "ValueDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "ValueDay",
+						"type": "DateTime"
+					},
+					{
+						"name": "BaseAmount",
+						"type": "Decimal"
+					},
+					{
+						"name": "OtherAmount",
+						"type": "Decimal"
+					},
+					{
+						"name": "SpotRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "ForwardPips",
+						"type": "Double"
+					},
+					{
+						"name": "TotRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "Volume_USD",
+						"type": "Decimal"
+					},
+					{
+						"name": "ServerRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "OtherServerRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "ExecutedLimit",
+						"type": "Int16"
+					},
+					{
+						"name": "PL",
+						"type": "Decimal"
+					},
+					{
+						"name": "IsFirstBOP",
+						"type": "Boolean"
+					},
+					{
+						"name": "IsFirstForex",
+						"type": "Boolean"
+					},
+					{
+						"name": "IsFirstDeal",
+						"type": "Boolean"
+					},
+					{
+						"name": "Deleted",
+						"type": "Boolean"
+					},
+					{
+						"name": "PositionClosed",
+						"type": "Int16"
+					},
+					{
+						"name": "DealPL_USD",
+						"type": "Decimal"
+					},
+					{
+						"name": "PL_SymbolId",
+						"type": "Int16"
+					},
+					{
+						"name": "AccountBasesymbolId",
+						"type": "Int16"
+					},
+					{
+						"name": "EtlUpdatedDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "SpreadCost",
+						"type": "Decimal"
+					},
+					{
+						"name": "Folder_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "Broker_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "AccountNumber_modo",
+						"type": "Int32"
+					},
+					{
+						"name": "PositionNumber_modo",
+						"type": "Int32"
+					},
+					{
+						"name": "PL_AccountBase",
+						"type": "Decimal"
+					},
+					{
+						"name": "Customer_Favor_Rate_diff",
+						"type": "Decimal"
+					},
+					{
+						"name": "Channel_Bucket_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Sessions_ID",
+						"type": "Int64"
+					},
+					{
+						"name": "DealCountTotal",
+						"type": "Int32"
+					},
+					{
+						"name": "Retention_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "ConversionRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "CommissionInAccountBase",
+						"type": "Decimal"
+					},
+					{
+						"name": "SpreadCostInAccountBase",
+						"type": "Decimal"
+					},
+					{
+						"name": "RolloverSpreadCostInAccountBase",
+						"type": "Decimal"
+					},
+					{
+						"name": "CommissionInOther",
+						"type": "Decimal"
+					},
+					{
+						"name": "SpreadCostInOther",
+						"type": "Decimal"
+					},
+					{
+						"name": "RolloverSpreadCostInOther",
+						"type": "Decimal"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[concat('[', 'azure].[platfrom_usage_log_file]')]"
+				}
+			}
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Source_file_avi')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "fileserver1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"file_name": {
+						"type": "String"
+					},
+					"folder": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Platform Usage"
+				},
+				"type": "FileShare",
+				"typeProperties": {
+					"compression": {
+						"type": "ZipDeflate",
+						"level": "Optimal"
+					},
+					"fileName": {
+						"value": "@dataset().file_name",
+						"type": "Expression"
+					},
+					"folderPath": {
+						"value": "@dataset().folder",
+						"type": "Expression"
+					}
+				}
+			}
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/blob_platfrom_unzip_file')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"folder_name": {
+						"type": "String"
+					},
+					"file_name": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Platform Usage"
+				},
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "ip",
+						"type": "String"
+					},
+					{
+						"name": "hyphen_1",
+						"type": "String"
+					},
+					{
+						"name": "hyphen_2",
+						"type": "String"
+					},
+					{
+						"name": "datetime",
+						"type": "String"
+					},
+					{
+						"name": "time",
+						"type": "String"
+					},
+					{
+						"name": "url_parm",
+						"type": "String"
+					},
+					{
+						"name": "Prop_6",
+						"type": "String"
+					},
+					{
+						"name": "Prop_7",
+						"type": "String"
+					},
+					{
+						"name": "server",
+						"type": "String"
+					},
+					{
+						"name": "user_agent",
+						"type": "String"
+					},
+					{
+						"name": "log_parm",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"folderPath": {
+						"value": "@dataset().folder_name",
+						"type": "Expression"
+					}
+				}
+			}
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/platformusage_blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"folder_name": {
+						"type": "String"
+					},
+					"file_name": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Platform Usage"
+				},
+				"type": "AzureBlob",
+				"typeProperties": {
+					"compression": {
+						"type": "ZipDeflate",
+						"level": "Optimal"
+					},
+					"fileName": {
+						"value": "@dataset().file_name",
+						"type": "Expression"
+					},
+					"folderPath": {
+						"value": "@dataset().folder_name",
+						"type": "Expression"
+					}
+				}
+			}
+		}
+	]
+}

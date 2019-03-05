@@ -5,7 +5,15 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
+		},
+		"alldbdwh_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'alldbdwh'"
+		},
+		"alldbdwh_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'alldbdwh'"
 		},
 		"destpufiles_connectionString": {
 			"type": "secureString",
@@ -26,6 +34,10 @@
 		"pufiles_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
+		},
+		"alldbdwh_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
 		},
 		"emerpdbpr_properties_typeProperties_userName": {
 			"type": "string",
@@ -68,6 +80,28 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/alldbdwh')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('alldbdwh_connectionString')]",
+					"userName": "[parameters('alldbdwh_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('alldbdwh_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/destpufiles')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -364,7 +398,9 @@
 					"tableName": "dwh.azure.AZ_Customers"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DWH_pu_list_files')]",
@@ -374,6 +410,9 @@
 				"linkedServiceName": {
 					"referenceName": "alldbdwh",
 					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Platform Usage"
 				},
 				"annotations": [],
 				"type": "SqlServerTable",
@@ -599,7 +638,9 @@
 					"tableName": "[concat('[', 'azure].[platfrom_usage_log_file]')]"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DestinationDataset_gjq')]",
@@ -713,7 +754,9 @@
 					"tableName": "dwh.azure.AZ_Dim_AccountContacts"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/EMERP_DB_Events')]",
@@ -979,7 +1022,9 @@
 					"tableName": "[concat('[', 'azure].[AZ_Fact_Transactions]')]"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Mng_azure_ETL')]",
@@ -996,7 +1041,9 @@
 					"tableName": "[concat('[', 'azure].[Mng_azure_ETL]')]"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/SourceDataset_576')]",
@@ -1011,7 +1058,9 @@
 				"type": "SqlServerTable",
 				"typeProperties": {}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/SourceDataset_PlatfromUsagePROD')]",
@@ -1043,22 +1092,9 @@
 				"type": "SqlServerTable",
 				"typeProperties": {}
 			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_gjq')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"typeProperties": {}
-			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+			]
 		}
 	]
 }
