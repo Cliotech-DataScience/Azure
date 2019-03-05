@@ -105,16 +105,27 @@
 			{
 				"name": "Execute Pipeline1",
 				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "copy_to_blob",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "test table store",
+						"referenceName": "MergeTableStore",
 						"type": "PipelineReference"
 					},
 					"parameters": {
 						"PartitionKey": "Upload Data",
 						"RowKey": "SCMM_Activities",
-						"PropertyName": "Last_Id",
-						"PropertyValue": "888"
+						"PropertyName": "Last_Incremental_date",
+						"PropertyValue": {
+							"value": "@activity('LK_new_max_date').output",
+							"type": "Expression"
+						}
 					}
 				}
 			}
