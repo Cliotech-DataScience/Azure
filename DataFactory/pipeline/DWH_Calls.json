@@ -120,6 +120,7 @@
 						"referenceName": "MergeTableStore",
 						"type": "PipelineReference"
 					},
+					"waitOnCompletion": false,
 					"parameters": {
 						"PartitionKey": "Upload Data",
 						"RowKey": "DWH_Calls",
