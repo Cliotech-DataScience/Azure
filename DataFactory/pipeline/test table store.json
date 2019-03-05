@@ -23,18 +23,21 @@
 			}
 		],
 		"parameters": {
-			"params_body": {
+			"PartitionKey": {
 				"type": "String",
-				"defaultValue": {
-					"PartitionKey": "Upload Data",
-					"RowKey": "SCMM_Activities",
-					"PropertyName": "Last_Id",
-					"PropertyValue": "300"
-				}
+				"defaultValue": "PartitionKey"
 			},
-			"ddd": {
+			"RowKey": {
 				"type": "String",
-				"defaultValue": "500"
+				"defaultValue": "RowKey"
+			},
+			"PropertyName": {
+				"type": "String",
+				"defaultValue": "PropertyName"
+			},
+			"PropertyValue": {
+				"type": "String",
+				"defaultValue": "PropertyValue"
 			}
 		},
 		"folder": {
