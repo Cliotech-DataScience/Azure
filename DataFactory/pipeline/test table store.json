@@ -13,16 +13,20 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"url": "https://dataloadestore.table.core.windows.net/etlManage(PartitionKey='Upload Data',RowKey='SCMM_Activities')",
-					"method": "PUT",
-					"body": {
-						"Last_Incremental_Date": "2019-04-01T00:00:00.000Z",
-						"PartitionKey": "Upload Data",
-						"RowKey": "SCMM_Activities"
-					}
+					"url": "https://prod-19.westeurope.logic.azure.com:443/workflows/fdc08617ec204e91923afb154eb5e9d3/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=lmpuubOmGI-VjJ9ltwWrti0QZzF4gYY4HHKM_RfQCis",
+					"method": "POST",
+					"body": ""
 				}
 			}
 		],
+		"parameters": {
+			"last_date_param": {
+				"type": "String",
+				"defaultValue": {
+					"Last_Incremental_Date": "150"
+				}
+			}
+		},
 		"folder": {
 			"name": "Data_from_SQL"
 		}
