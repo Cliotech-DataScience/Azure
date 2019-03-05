@@ -103,22 +103,18 @@
 				]
 			},
 			{
-				"name": "Web1",
-				"type": "WebActivity",
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
 				"typeProperties": {
-					"url": "https://dataloadestore.table.core.windows.net/etlManage(PartitionKey='Upload Data',RowKey='SCMM_Activities')",
-					"method": "PUT",
-					"body": {
-						"Last_Incremental_Date": "2019-04-01T00:00:00.000Z",
+					"pipeline": {
+						"referenceName": "test table store",
+						"type": "PipelineReference"
+					},
+					"parameters": {
 						"PartitionKey": "Upload Data",
-						"RowKey": "SCMM_Activities"
+						"RowKey": "SCMM_Activities",
+						"PropertyName": "Last_Id",
+						"PropertyValue": "888"
 					}
 				}
 			}
