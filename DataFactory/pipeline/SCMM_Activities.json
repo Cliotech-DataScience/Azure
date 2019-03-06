@@ -103,7 +103,7 @@
 				]
 			},
 			{
-				"name": "Execute Pipeline1",
+				"name": "Update Manage Table",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
