@@ -1620,7 +1620,13 @@
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "Update ETL Manage Upload Data",
+								"activity": "LK_new_max_Date",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "LK_Last_Date_Mng_azure_ETL",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1697,17 +1703,38 @@
 						}
 					},
 					{
-						"name": "Update ETL Manage Upload Data",
-						"type": "ExecutePipeline",
+						"name": "Load Calls",
+						"type": "DatabricksNotebook",
 						"dependsOn": [
 							{
-								"activity": "LK_new_max_Date",
+								"activity": "merge tbl store",
 								"dependencyConditions": [
 									"Succeeded"
 								]
-							},
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Load Data/Calls/Load Calls_new_Table"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "merge tbl store",
+						"type": "ExecutePipeline",
+						"dependsOn": [
 							{
-								"activity": "LK_Last_Date_Mng_azure_ETL",
+								"activity": "copy_to_blob",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1719,13 +1746,12 @@
 								"referenceName": "MergeTableStore",
 								"type": "PipelineReference"
 							},
-							"waitOnCompletion": false,
 							"parameters": {
 								"PartitionKey": "Upload Data",
 								"RowKey": "DWH_Calls",
 								"PropertyName": "Last_Incremental_Date",
 								"PropertyValue": {
-									"value": "@{activity('LK_new_max_Date').output.firstRow.Next_Call_Day}",
+									"value": "@activity('LK_new_max_Date').output.Next_Call_Day",
 									"type": "Expression"
 								}
 							}
@@ -1741,6 +1767,7 @@
 				"[concat(variables('factoryId'), '/datasets/dwh_calls_src')]",
 				"[concat(variables('factoryId'), '/datasets/dwh_calls_blob')]",
 				"[concat(variables('factoryId'), '/datasets/etl_manage')]",
+				"[concat(variables('factoryId'), '/linkedServices/Analysis')]",
 				"[concat(variables('factoryId'), '/pipelines/MergeTableStore')]"
 			]
 		},
@@ -6332,6 +6359,44 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/SCMM_Activities Daily')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "SCMM_Activities",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-03-06T15:12:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								9
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/SCMM_Activities')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/every_day_run_all_piplines_to_platfrom_usage')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -6392,44 +6457,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SCMM_Activities Daily')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "SCMM_Activities",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-03-06T15:12:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								9
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/SCMM_Activities')]"
-			]
 		}
 	]
 }

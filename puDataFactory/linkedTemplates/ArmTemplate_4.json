@@ -236,7 +236,13 @@
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "Update ETL Manage Upload Data",
+								"activity": "LK_new_max_Date",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "LK_Last_Date_Mng_azure_ETL",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -313,17 +319,38 @@
 						}
 					},
 					{
-						"name": "Update ETL Manage Upload Data",
-						"type": "ExecutePipeline",
+						"name": "Load Calls",
+						"type": "DatabricksNotebook",
 						"dependsOn": [
 							{
-								"activity": "LK_new_max_Date",
+								"activity": "merge tbl store",
 								"dependencyConditions": [
 									"Succeeded"
 								]
-							},
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Load Data/Calls/Load Calls_new_Table"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "merge tbl store",
+						"type": "ExecutePipeline",
+						"dependsOn": [
 							{
-								"activity": "LK_Last_Date_Mng_azure_ETL",
+								"activity": "copy_to_blob",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -335,13 +362,12 @@
 								"referenceName": "MergeTableStore",
 								"type": "PipelineReference"
 							},
-							"waitOnCompletion": false,
 							"parameters": {
 								"PartitionKey": "Upload Data",
 								"RowKey": "DWH_Calls",
 								"PropertyName": "Last_Incremental_Date",
 								"PropertyValue": {
-									"value": "@{activity('LK_new_max_Date').output.firstRow.Next_Call_Day}",
+									"value": "@activity('LK_new_max_Date').output.Next_Call_Day",
 									"type": "Expression"
 								}
 							}
