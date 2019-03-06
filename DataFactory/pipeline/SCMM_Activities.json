@@ -15,7 +15,6 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureTableSource",
-						"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq 'SCMM_Activities'",
 						"azureTableSourceIgnoreTableNotFound": false
 					},
 					"dataset": {
