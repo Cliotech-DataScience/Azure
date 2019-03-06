@@ -20,11 +20,11 @@
 				"type": "DateTimeOffset"
 			},
 			{
-				"name": "Last_Call_Date",
+				"name": "Last_Incremental_Date",
 				"type": "String"
 			},
 			{
-				"name": "Next_Call_Date",
+				"name": "Next_Incremental_Date",
 				"type": "String"
 			},
 			{
@@ -34,26 +34,6 @@
 			{
 				"name": "Next_PU_INT",
 				"type": "Int64"
-			},
-			{
-				"name": "Last_Incremental_Date",
-				"type": "DateTimeOffset"
-			},
-			{
-				"name": "Last_Assignment_Date",
-				"type": "String"
-			},
-			{
-				"name": "Next_Assignment_Date",
-				"type": "String"
-			},
-			{
-				"name": "Last_Deal_Date",
-				"type": "String"
-			},
-			{
-				"name": "Next_Deal_Date",
-				"type": "String"
 			}
 		],
 		"typeProperties": {
