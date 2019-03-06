@@ -2688,12 +2688,6 @@
 								"dependencyConditions": [
 									"Succeeded"
 								]
-							},
-							{
-								"activity": "RUN - Users",
-								"dependencyConditions": [
-									"Succeeded"
-								]
 							}
 						],
 						"userProperties": [],
@@ -2750,75 +2744,6 @@
 							},
 							"waitOnCompletion": true
 						}
-					},
-					{
-						"name": "RUN - Users",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "DWH_Dim_Users",
-								"type": "PipelineReference"
-							}
-						}
-					},
-					{
-						"name": "RUN - Calls",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - emerp_events",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "DWH_Calls",
-								"type": "PipelineReference"
-							}
-						}
-					},
-					{
-						"name": "RUN - Deals",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - Calls",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "FXNET_Deals",
-								"type": "PipelineReference"
-							}
-						}
-					},
-					{
-						"name": "RUN - LeadAssignments",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - Deals",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "DWH_LeadAssignments",
-								"type": "PipelineReference"
-							}
-						}
 					}
 				],
 				"annotations": []
@@ -2831,11 +2756,7 @@
 				"[concat(variables('factoryId'), '/pipelines/01_platfromusage_files_copy_to_blob')]",
 				"[concat(variables('factoryId'), '/pipelines/Serials')]",
 				"[concat(variables('factoryId'), '/pipelines/EMERP_Events')]",
-				"[concat(variables('factoryId'), '/pipelines/Contacts')]",
-				"[concat(variables('factoryId'), '/pipelines/DWH_Dim_Users')]",
-				"[concat(variables('factoryId'), '/pipelines/DWH_Calls')]",
-				"[concat(variables('factoryId'), '/pipelines/FXNET_Deals')]",
-				"[concat(variables('factoryId'), '/pipelines/DWH_LeadAssignments')]"
+				"[concat(variables('factoryId'), '/pipelines/Contacts')]"
 			]
 		},
 		{
