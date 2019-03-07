@@ -1,5 +1,5 @@
 {
-	"name": "SCMM_Activities",
+	"name": "Communication",
 	"properties": {
 		"activities": [
 			{
@@ -15,7 +15,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureTableSource",
-						"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq 'SCMM_Activities'",
+						"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq 'Communication'",
 						"azureTableSourceIgnoreTableNotFound": false
 					},
 					"dataset": {
@@ -38,10 +38,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT Last_Activity_Date = MAX(Activity_Date)\nFROM EMERP_LM.azure.AZ_SCMM_Activities\n"
+						"sqlReaderQuery": "SELECT Last_Event_Date = MAX(Event_Date)\nFROM EMERP_LM.azure.AZ_Communication\n"
 					},
 					"dataset": {
-						"referenceName": "scmm_activities_src",
+						"referenceName": "Communication_src",
 						"type": "DatasetReference"
 					}
 				}
@@ -74,7 +74,7 @@
 					"source": {
 						"type": "SqlSource",
 						"sqlReaderQuery": {
-							"value": "select * \nFROM EMERP_LM.azure.AZ_SCMM_Activities\nwhere Activity_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Activity_Date <= '@{activity('LK_new_max_Date').output.firstRow.Last_Activity_Date}'",
+							"value": "select * \nFROM EMERP_LM.azure.AZ_Communication\nwhere Event_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Event_Date <= '@{activity('LK_new_max_Date').output.firstRow.Last_Event_Date}'",
 							"type": "Expression"
 						}
 					},
@@ -86,21 +86,21 @@
 					"translator": {
 						"type": "TabularTranslator",
 						"columnMappings": {
-							"Activity_Id": "Activity_Id",
-							"Activity_Date": "Activity_Date",
+							"MessageID": "MessageID",
+							"Event_Date": "Event_Date",
 							"details": "details"
 						}
 					}
 				},
 				"inputs": [
 					{
-						"referenceName": "scmm_activities_src",
+						"referenceName": "Communication_src",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "scmm_activities_blob",
+						"referenceName": "Communication_blob",
 						"type": "DatasetReference"
 					}
 				]
@@ -123,39 +123,13 @@
 					},
 					"parameters": {
 						"PartitionKey": "Upload Data",
-						"RowKey": "SCMM_Activities",
+						"RowKey": "Communication",
 						"PropertyName": "Last_Incremental_Date",
 						"PropertyValue": {
-							"value": "@activity('LK_new_max_date').output.firstRow.Last_Activity_Date",
+							"value": "@activity('LK_new_max_date').output.firstRow.Last_Event_Date",
 							"type": "Expression"
 						}
 					}
-				}
-			},
-			{
-				"name": "Load_Activities_To_Events",
-				"type": "DatabricksNotebook",
-				"dependsOn": [
-					{
-						"activity": "Update Manage Table",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"typeProperties": {
-					"notebookPath": "/Load Data/SCMM/Load Activities"
-				},
-				"linkedServiceName": {
-					"referenceName": "Analysis",
-					"type": "LinkedServiceReference"
 				}
 			}
 		],

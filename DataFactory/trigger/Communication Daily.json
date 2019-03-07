@@ -1,11 +1,11 @@
 {
-	"name": "SCMM_Activities Daily",
+	"name": "Communication Daily",
 	"properties": {
 		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "SCMM_Activities",
+					"referenceName": "Communication",
 					"type": "PipelineReference"
 				}
 			}
@@ -15,11 +15,11 @@
 			"recurrence": {
 				"frequency": "Day",
 				"interval": 1,
-				"startTime": "2019-03-06T15:12:00.000Z",
+				"startTime": "2019-03-07T17:45:00.000Z",
 				"timeZone": "UTC",
 				"schedule": {
 					"minutes": [
-						0
+						30
 					],
 					"hours": [
 						8
