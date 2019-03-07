@@ -2433,7 +2433,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"notebookPath": "/Load Data/FXNET/Load Deals_new_Table"
+							"notebookPath": "/Load Data/FXNET/Load Deals"
 						},
 						"linkedServiceName": {
 							"referenceName": "Analysis",
