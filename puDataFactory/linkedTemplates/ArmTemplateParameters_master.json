@@ -86,6 +86,12 @@
 		"Blob_Serials_properties_typeProperties_folderPath": {
 			"value": "rawdata/Serials"
 		},
+		"Communication_blob_properties_typeProperties_fileName": {
+			"value": "@CONCAT('Communication_', pipeline().TriggerTime, '.csv.bz2')"
+		},
+		"Communication_blob_properties_typeProperties_folderPath": {
+			"value": "@concat('rawdata/Communication/Received=',utcnow())"
+		},
 		"DWH_Dim_Customers_blob_properties_typeProperties_fileName": {
 			"value": "@CONCAT('Customers_', pipeline().RunId, '.csv')"
 		},
@@ -196,12 +202,6 @@
 		},
 		"pufiles_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
-		},
-		"Communication_blob_properties_typeProperties_fileName": {
-			"value": "@CONCAT('Communication_', pipeline().TriggerTime, '.csv.bz2')"
-		},
-		"Communication_blob_properties_typeProperties_folderPath": {
-			"value": "@concat('rawdata/Communication/Received=',utcnow())"
 		}
 	}
 }

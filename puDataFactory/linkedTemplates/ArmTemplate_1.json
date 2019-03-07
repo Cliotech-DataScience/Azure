@@ -27,17 +27,21 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'alldbdwh'"
 		},
-		"destpufiles_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'destpufiles'"
+		"DWH_Dim_Customers_blob_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@CONCAT('Customers_', pipeline().RunId, '.csv')"
 		},
-		"emerpdbpr_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'emerpdbpr'"
+		"DWH_Dim_Customers_blob_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "rawdata/Customers"
 		},
-		"emerpdbpr_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'emerpdbpr'"
+		"blob_EMERP_Events_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@CONCAT('EMERP_Events', pipeline().RunId, '.csv')"
+		},
+		"blob_EMERP_Events_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "rawdata/EMERP_Events"
 		},
 		"blob_Fact_Transactions_properties_typeProperties_fileName": {
 			"type": "string",
@@ -142,16 +146,87 @@
 		"alldbdwh_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
-		},
-		"emerpdbpr_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "efix\\az_etl"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/DWH_Dim_Customers_blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"folder_name": {
+						"type": "String",
+						"defaultValue": "Dim_AccountContacts"
+					}
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"nullValue": "\\N",
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"fileName": {
+						"value": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/blob_EMERP_Events')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"folder_name": {
+						"type": "String",
+						"defaultValue": "EMERP_Events"
+					}
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": "\u0001",
+						"rowDelimiter": "\n",
+						"nullValue": "\\N",
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"fileName": {
+						"value": "[parameters('blob_EMERP_Events_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": "[parameters('blob_EMERP_Events_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/blob_Fact_Transactions')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -1044,46 +1119,6 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('alldbdwh_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "alldbgateway",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/destpufiles')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('destpufiles_connectionString')]"
-				},
-				"connectVia": {
-					"referenceName": "puodsfiles",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/emerpdbpr')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "emerp-db-pr,2555",
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('emerpdbpr_connectionString')]",
-					"userName": "[parameters('emerpdbpr_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('emerpdbpr_password')]"
 					}
 				},
 				"connectVia": {

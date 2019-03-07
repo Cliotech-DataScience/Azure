@@ -79,21 +79,13 @@
 			"type": "string",
 			"defaultValue": "rawdata/Serials"
 		},
-		"DWH_Dim_Customers_blob_properties_typeProperties_fileName": {
+		"Communication_blob_properties_typeProperties_fileName": {
 			"type": "string",
-			"defaultValue": "@CONCAT('Customers_', pipeline().RunId, '.csv')"
+			"defaultValue": "@CONCAT('Communication_', pipeline().TriggerTime, '.csv.bz2')"
 		},
-		"DWH_Dim_Customers_blob_properties_typeProperties_folderPath": {
+		"Communication_blob_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "rawdata/Customers"
-		},
-		"blob_EMERP_Events_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('EMERP_Events', pipeline().RunId, '.csv')"
-		},
-		"blob_EMERP_Events_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "rawdata/EMERP_Events"
+			"defaultValue": "@concat('rawdata/Communication/Received=',utcnow())"
 		}
 	},
 	"variables": {
@@ -288,6 +280,42 @@
 				"type": "AzureBlobStorage",
 				"typeProperties": {
 					"connectionString": "[parameters('dwhdb_blob_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SCMM_Activities Daily')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "SCMM_Activities",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-03-06T15:12:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								8
+							]
+						}
+					}
 				}
 			},
 			"dependsOn": []
@@ -637,82 +665,60 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DWH_Dim_Customers_blob')]",
+			"name": "[concat(parameters('factoryName'), '/Communication_blob')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
+					"referenceName": "DataloadStore",
 					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"folder_name": {
-						"type": "String",
-						"defaultValue": "Dim_AccountContacts"
-					}
 				},
 				"folder": {
 					"name": "DWH"
 				},
 				"annotations": [],
 				"type": "AzureBlob",
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"nullValue": "\\N",
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": true
+				"structure": [
+					{
+						"name": "MessageID",
+						"type": "Int32"
 					},
-					"fileName": {
-						"value": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_fileName')]",
-						"type": "Expression"
+					{
+						"name": "Event_Date",
+						"type": "DateTime"
 					},
-					"folderPath": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/blob_EMERP_Events')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"folder_name": {
-						"type": "String",
-						"defaultValue": "EMERP_Events"
+					{
+						"name": "details",
+						"type": "String"
 					}
-				},
-				"annotations": [],
-				"type": "AzureBlob",
+				],
 				"typeProperties": {
 					"format": {
 						"type": "TextFormat",
-						"columnDelimiter": "\u0001",
-						"rowDelimiter": "\n",
+						"columnDelimiter": "\t",
+						"rowDelimiter": "",
+						"quoteChar": "",
 						"nullValue": "\\N",
+						"encodingName": null,
 						"treatEmptyAsNull": true,
 						"skipLineCount": 0,
-						"firstRowAsHeader": true
+						"firstRowAsHeader": false
+					},
+					"compression": {
+						"type": "BZip2"
 					},
 					"fileName": {
-						"value": "[parameters('blob_EMERP_Events_properties_typeProperties_fileName')]",
+						"value": "[parameters('Communication_blob_properties_typeProperties_fileName')]",
 						"type": "Expression"
 					},
-					"folderPath": "[parameters('blob_EMERP_Events_properties_typeProperties_folderPath')]"
+					"folderPath": {
+						"value": "[parameters('Communication_blob_properties_typeProperties_folderPath')]",
+						"type": "Expression"
+					}
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+				"[concat(variables('factoryId'), '/linkedServices/DataloadStore')]"
 			]
 		}
 	]

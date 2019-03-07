@@ -7,6 +7,18 @@
 			"metadata": "Data Factory Name",
 			"defaultValue": "puDataFactory"
 		},
+		"destpufiles_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'destpufiles'"
+		},
+		"emerpdbpr_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'emerpdbpr'"
+		},
+		"emerpdbpr_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'emerpdbpr'"
+		},
 		"fileserver1_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'fileserver1'"
@@ -15,6 +27,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
 		},
+		"emerpdbpr_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
 		"fileserver1_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -22,14 +38,6 @@
 		"pufiles_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
-		},
-		"Communication_blob_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('Communication_', pipeline().TriggerTime, '.csv.bz2')"
-		},
-		"Communication_blob_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@concat('rawdata/Communication/Received=',utcnow())"
 		},
 		"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 			"type": "string",
@@ -48,6 +56,46 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/destpufiles')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('destpufiles_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "puodsfiles",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/emerpdbpr')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "emerp-db-pr,2555",
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('emerpdbpr_connectionString')]",
+					"userName": "[parameters('emerpdbpr_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('emerpdbpr_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/fileserver1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -88,61 +136,6 @@
 				"connectVia": {
 					"referenceName": "alldbgateway",
 					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Communication_blob')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DataloadStore",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "MessageID",
-						"type": "Int32"
-					},
-					{
-						"name": "Event_Date",
-						"type": "DateTime"
-					},
-					{
-						"name": "details",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": "\t",
-						"rowDelimiter": "",
-						"quoteChar": "",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"compression": {
-						"type": "BZip2"
-					},
-					"fileName": {
-						"value": "[parameters('Communication_blob_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": {
-						"value": "[parameters('Communication_blob_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
 				}
 			},
 			"dependsOn": []
@@ -293,6 +286,40 @@
 					"name": "BI"
 				},
 				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Communication_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "MessageID",
+						"type": "Int32"
+					},
+					{
+						"name": "Event_Date",
+						"type": "DateTime"
+					},
+					{
+						"name": "details",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": "emerp_lm.azure.AZ_Communication"
+				}
 			},
 			"dependsOn": []
 		},
@@ -1100,71 +1127,6 @@
 				],
 				"typeProperties": {
 					"tableName": "dwh.azure.deals"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/scmm_activities_src')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "Activity_Id",
-						"type": "Int32"
-					},
-					{
-						"name": "Activity_Date",
-						"type": "DateTime"
-					},
-					{
-						"name": "details",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"tableName": "emerp_lm.azure.AZ_SCMM_Activities"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/serials')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "emerpdbpr",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "Serial",
-						"type": "Int64"
-					},
-					{
-						"name": "serial_details",
-						"type": "String"
-					},
-					{
-						"name": "update_date",
-						"type": "DateTime"
-					}
-				],
-				"typeProperties": {
-					"tableName": "azure.az_serials"
 				}
 			},
 			"dependsOn": []
