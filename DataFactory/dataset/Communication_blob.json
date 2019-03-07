@@ -1,0 +1,52 @@
+{
+	"name": "Communication_blob",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DataloadStore",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DWH"
+		},
+		"type": "AzureBlob",
+		"structure": [
+			{
+				"name": "MessageID",
+				"type": "Int32"
+			},
+			{
+				"name": "Event_Date",
+				"type": "DateTime"
+			},
+			{
+				"name": "details",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": "\t",
+				"rowDelimiter": "",
+				"quoteChar": "",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": false
+			},
+			"compression": {
+				"type": "BZip2"
+			},
+			"fileName": {
+				"value": "@CONCAT('Communication_', pipeline().TriggerTime, '.csv.bz2')",
+				"type": "Expression"
+			},
+			"folderPath": {
+				"value": "@concat('rawdata/Communication/Received=',utcnow())",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
