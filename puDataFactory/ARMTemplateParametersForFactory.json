@@ -196,6 +196,12 @@
 		},
 		"pufiles_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
+		},
+		"Communication_blob_properties_typeProperties_fileName": {
+			"value": "@CONCAT('Communication_', pipeline().TriggerTime, '.csv.bz2')"
+		},
+		"Communication_blob_properties_typeProperties_folderPath": {
+			"value": "@concat('rawdata/Communication/Received=',utcnow())"
 		}
 	}
 }

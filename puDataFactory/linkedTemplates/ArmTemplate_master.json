@@ -263,6 +263,14 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"Communication_blob_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@CONCAT('Communication_', pipeline().TriggerTime, '.csv.bz2')"
+		},
+		"Communication_blob_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@concat('rawdata/Communication/Received=',utcnow())"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -510,6 +518,12 @@
 					},
 					"pufiles_properties_typeProperties_userId": {
 						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
+					},
+					"Communication_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('Communication_blob_properties_typeProperties_fileName')]"
+					},
+					"Communication_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('Communication_blob_properties_typeProperties_folderPath')]"
 					},
 					"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 						"value": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"
