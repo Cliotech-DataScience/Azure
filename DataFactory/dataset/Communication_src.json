@@ -1,0 +1,31 @@
+{
+	"name": "Communication_src",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "alldbdwh",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DWH"
+		},
+		"type": "SqlServerTable",
+		"structure": [
+			{
+				"name": "MessageID",
+				"type": "Int32"
+			},
+			{
+				"name": "Event_Date",
+				"type": "DateTime"
+			},
+			{
+				"name": "details",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": "emerp_lm.azure.AZ_Communication"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
