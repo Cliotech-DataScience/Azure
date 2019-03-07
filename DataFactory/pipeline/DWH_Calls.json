@@ -151,7 +151,7 @@
 						"RowKey": "DWH_Calls",
 						"PropertyName": "Last_Incremental_Date",
 						"PropertyValue": {
-							"value": "@activity('LK_new_max_Date').output.Next_Call_Day.firstRow()",
+							"value": "@{activity('LK_new_max_Date').output.firstRow.ExecutionDay}",
 							"type": "Expression"
 						}
 					}
