@@ -123,65 +123,9 @@
 			"type": "string",
 			"defaultValue": "rawdata/Customers"
 		},
-		"DestinationDataset_bvj_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "datadsp"
-		},
-		"DestinationDataset_bvj_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "testdata"
-		},
-		"DestinationDataset_gjq_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "fact_account"
-		},
-		"DestinationDataset_gjq_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": ""
-		},
-		"DestinationDataset_opq_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "pulogfile"
-		},
-		"DestinationDataset_opq_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "puods"
-		},
-		"DestinationDataset_qai_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "INprocessed"
-		},
-		"DestinationFilesBlobStore1_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": ""
-		},
-		"DestinationFilesBlobStore1_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "sinkdata/staged_sink"
-		},
-		"SourceAvailabilityBlobStore1_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "_success"
-		},
-		"SourceAvailabilityBlobStore1_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "data/source"
-		},
 		"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "processed"
-		},
-		"SourceDataset_opq_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": ""
-		},
-		"SourceFilesBlobStore1_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "Product.csv"
-		},
-		"SourceFilesBlobStore1_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "data/source"
 		},
 		"Source_file_avi_properties_typeProperties_fileName": {
 			"type": "string",
@@ -406,11 +350,11 @@
 					"DWH_Dim_Customers_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_folderPath')]"
 					},
-					"DestinationDataset_bvj_properties_typeProperties_fileName": {
-						"value": "[parameters('DestinationDataset_bvj_properties_typeProperties_fileName')]"
+					"blob_EMERP_Events_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_EMERP_Events_properties_typeProperties_fileName')]"
 					},
-					"DestinationDataset_bvj_properties_typeProperties_folderPath": {
-						"value": "[parameters('DestinationDataset_bvj_properties_typeProperties_folderPath')]"
+					"blob_EMERP_Events_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_EMERP_Events_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -436,29 +380,23 @@
 					"Dwhpr_password": {
 						"value": "[parameters('Dwhpr_password')]"
 					},
-					"DestinationFilesBlobStore1_properties_typeProperties_fileName": {
-						"value": "[parameters('DestinationFilesBlobStore1_properties_typeProperties_fileName')]"
+					"Events_Collector_PlatfromUsage_log_password": {
+						"value": "[parameters('Events_Collector_PlatfromUsage_log_password')]"
 					},
-					"DestinationFilesBlobStore1_properties_typeProperties_folderPath": {
-						"value": "[parameters('DestinationFilesBlobStore1_properties_typeProperties_folderPath')]"
+					"alldbdwh_connectionString": {
+						"value": "[parameters('alldbdwh_connectionString')]"
 					},
-					"SourceAvailabilityBlobStore1_properties_typeProperties_fileName": {
-						"value": "[parameters('SourceAvailabilityBlobStore1_properties_typeProperties_fileName')]"
+					"alldbdwh_password": {
+						"value": "[parameters('alldbdwh_password')]"
 					},
-					"SourceAvailabilityBlobStore1_properties_typeProperties_folderPath": {
-						"value": "[parameters('SourceAvailabilityBlobStore1_properties_typeProperties_folderPath')]"
+					"destpufiles_connectionString": {
+						"value": "[parameters('destpufiles_connectionString')]"
 					},
-					"SourceFilesBlobStore1_properties_typeProperties_fileName": {
-						"value": "[parameters('SourceFilesBlobStore1_properties_typeProperties_fileName')]"
+					"emerpdbpr_connectionString": {
+						"value": "[parameters('emerpdbpr_connectionString')]"
 					},
-					"SourceFilesBlobStore1_properties_typeProperties_folderPath": {
-						"value": "[parameters('SourceFilesBlobStore1_properties_typeProperties_folderPath')]"
-					},
-					"blob_EMERP_Events_properties_typeProperties_fileName": {
-						"value": "[parameters('blob_EMERP_Events_properties_typeProperties_fileName')]"
-					},
-					"blob_EMERP_Events_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_EMERP_Events_properties_typeProperties_folderPath')]"
+					"emerpdbpr_password": {
+						"value": "[parameters('emerpdbpr_password')]"
 					},
 					"blob_Fact_Transactions_properties_typeProperties_fileName": {
 						"value": "[parameters('blob_Fact_Transactions_properties_typeProperties_fileName')]"
@@ -531,6 +469,15 @@
 					},
 					"Dwhpr_properties_typeProperties_userName": {
 						"value": "[parameters('Dwhpr_properties_typeProperties_userName')]"
+					},
+					"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
+						"value": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_userId')]"
+					},
+					"alldbdwh_properties_typeProperties_userName": {
+						"value": "[parameters('alldbdwh_properties_typeProperties_userName')]"
+					},
+					"emerpdbpr_properties_typeProperties_userName": {
+						"value": "[parameters('emerpdbpr_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -552,38 +499,11 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"Events_Collector_PlatfromUsage_log_password": {
-						"value": "[parameters('Events_Collector_PlatfromUsage_log_password')]"
-					},
-					"alldbdwh_connectionString": {
-						"value": "[parameters('alldbdwh_connectionString')]"
-					},
-					"alldbdwh_password": {
-						"value": "[parameters('alldbdwh_password')]"
-					},
-					"destpufiles_connectionString": {
-						"value": "[parameters('destpufiles_connectionString')]"
-					},
-					"emerpdbpr_connectionString": {
-						"value": "[parameters('emerpdbpr_connectionString')]"
-					},
-					"emerpdbpr_password": {
-						"value": "[parameters('emerpdbpr_password')]"
-					},
 					"fileserver1_password": {
 						"value": "[parameters('fileserver1_password')]"
 					},
 					"pufiles_password": {
 						"value": "[parameters('pufiles_password')]"
-					},
-					"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
-						"value": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_userId')]"
-					},
-					"alldbdwh_properties_typeProperties_userName": {
-						"value": "[parameters('alldbdwh_properties_typeProperties_userName')]"
-					},
-					"emerpdbpr_properties_typeProperties_userName": {
-						"value": "[parameters('emerpdbpr_properties_typeProperties_userName')]"
 					},
 					"fileserver1_properties_typeProperties_userId": {
 						"value": "[parameters('fileserver1_properties_typeProperties_userId')]"
@@ -591,23 +511,14 @@
 					"pufiles_properties_typeProperties_userId": {
 						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
 					},
-					"DestinationDataset_gjq_properties_typeProperties_fileName": {
-						"value": "[parameters('DestinationDataset_gjq_properties_typeProperties_fileName')]"
-					},
-					"DestinationDataset_gjq_properties_typeProperties_folderPath": {
-						"value": "[parameters('DestinationDataset_gjq_properties_typeProperties_folderPath')]"
-					},
-					"DestinationDataset_opq_properties_typeProperties_fileName": {
-						"value": "[parameters('DestinationDataset_opq_properties_typeProperties_fileName')]"
-					},
-					"DestinationDataset_opq_properties_typeProperties_folderPath": {
-						"value": "[parameters('DestinationDataset_opq_properties_typeProperties_folderPath')]"
-					},
-					"DestinationDataset_qai_properties_typeProperties_folderPath": {
-						"value": "[parameters('DestinationDataset_qai_properties_typeProperties_folderPath')]"
-					},
 					"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 						"value": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"
+					},
+					"Source_file_avi_properties_typeProperties_fileName": {
+						"value": "[parameters('Source_file_avi_properties_typeProperties_fileName')]"
+					},
+					"Source_file_avi_properties_typeProperties_folderPath": {
+						"value": "[parameters('Source_file_avi_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -628,40 +539,11 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"SourceDataset_opq_properties_typeProperties_folderPath": {
-						"value": "[parameters('SourceDataset_opq_properties_typeProperties_folderPath')]"
-					},
-					"Source_file_avi_properties_typeProperties_fileName": {
-						"value": "[parameters('Source_file_avi_properties_typeProperties_fileName')]"
-					},
-					"Source_file_avi_properties_typeProperties_folderPath": {
-						"value": "[parameters('Source_file_avi_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_2')]"
-			]
-		},
-		{
-			"name": "ArmTemplate_4",
-			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
-			"properties": {
-				"mode": "incremental",
-				"templateLink": {
-					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_4.json', parameters('containerSasToken'))]",
-					"contentVersion": "1.0.0.0"
-				},
-				"parameters": {
-					"factoryName": {
-						"value": "[parameters('factoryName')]"
-					}
-				}
-			},
-			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_3')]"
 			]
 		}
 	]

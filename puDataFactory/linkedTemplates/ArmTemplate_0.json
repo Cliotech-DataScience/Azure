@@ -87,13 +87,13 @@
 			"type": "string",
 			"defaultValue": "rawdata/Customers"
 		},
-		"DestinationDataset_bvj_properties_typeProperties_fileName": {
+		"blob_EMERP_Events_properties_typeProperties_fileName": {
 			"type": "string",
-			"defaultValue": "datadsp"
+			"defaultValue": "@CONCAT('EMERP_Events', pipeline().RunId, '.csv')"
 		},
-		"DestinationDataset_bvj_properties_typeProperties_folderPath": {
+		"blob_EMERP_Events_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "testdata"
+			"defaultValue": "rawdata/EMERP_Events"
 		}
 	},
 	"variables": {
@@ -678,33 +678,41 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DestinationDataset_bvj')]",
+			"name": "[concat(parameters('factoryName'), '/blob_EMERP_Events')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage2",
+					"referenceName": "AzureBlobStorage1",
 					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"folder_name": {
+						"type": "String",
+						"defaultValue": "EMERP_Events"
+					}
 				},
 				"annotations": [],
 				"type": "AzureBlob",
 				"typeProperties": {
 					"format": {
 						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
+						"columnDelimiter": "\u0001",
+						"rowDelimiter": "\n",
 						"nullValue": "\\N",
-						"encodingName": null,
 						"treatEmptyAsNull": true,
 						"skipLineCount": 0,
 						"firstRowAsHeader": true
 					},
-					"fileName": "[parameters('DestinationDataset_bvj_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('DestinationDataset_bvj_properties_typeProperties_folderPath')]"
+					"fileName": {
+						"value": "[parameters('blob_EMERP_Events_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": "[parameters('blob_EMERP_Events_properties_typeProperties_folderPath')]"
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage2')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
 			]
 		}
 	]

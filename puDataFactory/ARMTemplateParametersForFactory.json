@@ -92,50 +92,8 @@
 		"DWH_Dim_Customers_blob_properties_typeProperties_folderPath": {
 			"value": "rawdata/Customers"
 		},
-		"DestinationDataset_bvj_properties_typeProperties_fileName": {
-			"value": "datadsp"
-		},
-		"DestinationDataset_bvj_properties_typeProperties_folderPath": {
-			"value": "testdata"
-		},
-		"DestinationDataset_gjq_properties_typeProperties_fileName": {
-			"value": "fact_account"
-		},
-		"DestinationDataset_gjq_properties_typeProperties_folderPath": {
-			"value": ""
-		},
-		"DestinationDataset_opq_properties_typeProperties_fileName": {
-			"value": "pulogfile"
-		},
-		"DestinationDataset_opq_properties_typeProperties_folderPath": {
-			"value": "puods"
-		},
-		"DestinationDataset_qai_properties_typeProperties_folderPath": {
-			"value": "INprocessed"
-		},
-		"DestinationFilesBlobStore1_properties_typeProperties_fileName": {
-			"value": ""
-		},
-		"DestinationFilesBlobStore1_properties_typeProperties_folderPath": {
-			"value": "sinkdata/staged_sink"
-		},
-		"SourceAvailabilityBlobStore1_properties_typeProperties_fileName": {
-			"value": "_success"
-		},
-		"SourceAvailabilityBlobStore1_properties_typeProperties_folderPath": {
-			"value": "data/source"
-		},
 		"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 			"value": "processed"
-		},
-		"SourceDataset_opq_properties_typeProperties_folderPath": {
-			"value": ""
-		},
-		"SourceFilesBlobStore1_properties_typeProperties_fileName": {
-			"value": "Product.csv"
-		},
-		"SourceFilesBlobStore1_properties_typeProperties_folderPath": {
-			"value": "data/source"
 		},
 		"Source_file_avi_properties_typeProperties_fileName": {
 			"value": "@dataset().file_name"

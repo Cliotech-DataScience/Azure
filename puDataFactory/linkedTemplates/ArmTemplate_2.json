@@ -7,30 +7,6 @@
 			"metadata": "Data Factory Name",
 			"defaultValue": "puDataFactory"
 		},
-		"Events_Collector_PlatfromUsage_log_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'Events_Collector_PlatfromUsage_log'"
-		},
-		"alldbdwh_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'alldbdwh'"
-		},
-		"alldbdwh_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'alldbdwh'"
-		},
-		"destpufiles_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'destpufiles'"
-		},
-		"emerpdbpr_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'emerpdbpr'"
-		},
-		"emerpdbpr_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'emerpdbpr'"
-		},
 		"fileserver1_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'fileserver1'"
@@ -38,18 +14,6 @@
 		"pufiles_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
-		},
-		"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
-			"type": "string",
-			"defaultValue": "efix\\az_etl"
-		},
-		"alldbdwh_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "efix\\az_etl"
-		},
-		"emerpdbpr_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "efix\\az_etl"
 		},
 		"fileserver1_properties_typeProperties_userId": {
 			"type": "string",
@@ -59,119 +23,23 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
-		"DestinationDataset_gjq_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "fact_account"
-		},
-		"DestinationDataset_gjq_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": ""
-		},
-		"DestinationDataset_opq_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "pulogfile"
-		},
-		"DestinationDataset_opq_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "puods"
-		},
-		"DestinationDataset_qai_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "INprocessed"
-		},
 		"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "processed"
+		},
+		"Source_file_avi_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@dataset().file_name"
+		},
+		"Source_file_avi_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@dataset().folder"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
-		{
-			"name": "[concat(parameters('factoryName'), '/Events_Collector_PlatfromUsage_log')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "FileServer",
-				"typeProperties": {
-					"host": "\\\\netapp-ams-cifs\\db\\Events_Collector\\az_test_processed",
-					"userId": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_userId')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('Events_Collector_PlatfromUsage_log_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "alldbgateway",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/alldbdwh')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('alldbdwh_connectionString')]",
-					"userName": "[parameters('alldbdwh_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('alldbdwh_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "alldbgateway",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/destpufiles')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('destpufiles_connectionString')]"
-				},
-				"connectVia": {
-					"referenceName": "puodsfiles",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/emerpdbpr')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "emerp-db-pr,2555",
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('emerpdbpr_connectionString')]",
-					"userName": "[parameters('emerpdbpr_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('emerpdbpr_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "alldbgateway",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
 		{
 			"name": "[concat(parameters('factoryName'), '/fileserver1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -428,9 +296,7 @@
 					"tableName": "dwh.azure.AZ_Customers"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DWH_pu_list_files')]",
@@ -668,90 +534,7 @@
 					"tableName": "[concat('[', 'azure].[platfrom_usage_log_file]')]"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DestinationDataset_gjq')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "pufiles",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "FileShare",
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"nullValue": "\\N",
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"compression": {
-						"type": "GZip",
-						"level": "Optimal"
-					},
-					"fileName": "[parameters('DestinationDataset_gjq_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('DestinationDataset_gjq_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/pufiles')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DestinationDataset_opq')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "destpufiles",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"nullValue": "\\N",
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"fileName": "[parameters('DestinationDataset_opq_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('DestinationDataset_opq_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/destpufiles')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DestinationDataset_qai')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Events_Collector_PlatfromUsage_log",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "FileShare",
-				"typeProperties": {
-					"folderPath": "[parameters('DestinationDataset_qai_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Events_Collector_PlatfromUsage_log')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Dim_AccountContacts')]",
@@ -786,9 +569,7 @@
 					"tableName": "dwh.azure.AZ_Dim_AccountContacts"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/EMERP_DB_Events')]",
@@ -1054,9 +835,7 @@
 					"tableName": "[concat('[', 'azure].[AZ_Fact_Transactions]')]"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Mng_azure_ETL')]",
@@ -1073,26 +852,7 @@
 					"tableName": "[concat('[', 'azure].[Mng_azure_ETL]')]"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_576')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"typeProperties": {}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/SourceDataset_PlatfromUsagePROD')]",
@@ -1109,8 +869,408 @@
 					"folderPath": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"
 				}
 			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Source_file_avi')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "fileserver1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"file_name": {
+						"type": "String"
+					},
+					"folder": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Platform Usage"
+				},
+				"annotations": [],
+				"type": "FileShare",
+				"typeProperties": {
+					"compression": {
+						"type": "ZipDeflate",
+						"level": "Optimal"
+					},
+					"fileName": {
+						"value": "[parameters('Source_file_avi_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": {
+						"value": "[parameters('Source_file_avi_properties_typeProperties_folderPath')]",
+						"type": "Expression"
+					}
+				}
+			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Events_Collector_PlatfromUsage_log')]"
+				"[concat(variables('factoryId'), '/linkedServices/fileserver1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dwh_Dim_Users_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "User_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "details",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": "dwh.azure.Dim_Users"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dwh_calls_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "Call_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Call_Details",
+						"type": "String"
+					},
+					{
+						"name": "CallDay",
+						"type": "DateTime"
+					}
+				],
+				"typeProperties": {
+					"tableName": "dwh.azure.AZ_Calls"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dwh_lead_assignments_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "Fact_Lead_Assignments_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Assignment_Details",
+						"type": "String"
+					},
+					{
+						"name": "Assignment_Day",
+						"type": "DateTime"
+					}
+				],
+				"typeProperties": {
+					"tableName": "dwh.azure.Lead_assignments "
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/fxnet_deals_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "TransactionNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "Trans_Details",
+						"type": "String"
+					},
+					{
+						"name": "ExecutionDay",
+						"type": "DateTime"
+					}
+				],
+				"typeProperties": {
+					"tableName": "dwh.azure.deals"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/scmm_activities_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "Activity_Id",
+						"type": "Int32"
+					},
+					{
+						"name": "Activity_Date",
+						"type": "DateTime"
+					},
+					{
+						"name": "details",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": "emerp_lm.azure.AZ_SCMM_Activities"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/serials')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "emerpdbpr",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "Serial",
+						"type": "Int64"
+					},
+					{
+						"name": "serial_details",
+						"type": "String"
+					},
+					{
+						"name": "update_date",
+						"type": "DateTime"
+					}
+				],
+				"typeProperties": {
+					"tableName": "azure.az_serials"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/01_platfromusage_files_copy_to_blob')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LK_file",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "run_sp_add_new_file_name",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "\t  SELECT file_name,\n        folder\n\tFROM azure.platfrom_usage_log_file\n WHERE ISNULL(move_to_blob,0) <>1 \n  \n  IF @@ROWCOUNT=0 THROW 50000 ,'No file to move',1"
+							},
+							"dataset": {
+								"referenceName": "DWH_pu_list_files",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "Copy to blob",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "LK_file",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "FileSystemSource",
+								"recursive": true
+							},
+							"sink": {
+								"type": "BlobSink"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0
+						},
+						"inputs": [
+							{
+								"referenceName": "Source_file_avi",
+								"type": "DatasetReference",
+								"parameters": {
+									"file_name": {
+										"value": "@activity('LK_file').output.firstRow.file_name",
+										"type": "Expression"
+									},
+									"folder": {
+										"value": "@substring(activity('LK_file').output.firstRow.FILE_NAME,0,8)",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "platformusage_blob",
+								"type": "DatasetReference",
+								"parameters": {
+									"folder_name": {
+										"value": "@concat('platformusage/rawdata/',activity('LK_file').output.firstRow.folder,'/')\n ",
+										"type": "Expression"
+									},
+									"file_name": {
+										"value": "@concat(substring(activity('LK_file').output.firstRow.FILE_NAME,0,8),'.zip')",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "update_platfrom_usage_log_file",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Copy to blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[concat('[', 'azure].[SP_Update_platfrom_usage_log_file]')]",
+							"storedProcedureParameters": {
+								"file_name": {
+									"value": {
+										"value": "@activity('LK_file').output.firstRow.file_name",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "alldbdwh",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "run_sp_add_new_file_name",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[concat('[', 'azure].[SP_add_new_file_to_table]')]"
+						},
+						"linkedServiceName": {
+							"referenceName": "alldbdwh",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Platfrom_Usage"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DWH_pu_list_files')]",
+				"[concat(variables('factoryId'), '/datasets/Source_file_avi')]"
 			]
 		}
 	]
