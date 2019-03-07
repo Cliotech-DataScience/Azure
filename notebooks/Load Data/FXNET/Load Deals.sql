@@ -1,21 +1,20 @@
 -- Databricks notebook source
--- MAGIC %md
--- MAGIC -- create external table serials
--- MAGIC 
--- MAGIC drop table if exists rawdata.FXNET_deals ;
--- MAGIC 
--- MAGIC create table rawdata.FXNET_deals
--- MAGIC (
--- MAGIC TransactionNumber	bigint,
--- MAGIC Trans_Details string,
--- MAGIC ExecutionDay date,
--- MAGIC received timestamp
--- MAGIC 
--- MAGIC )
--- MAGIC using csv
--- MAGIC partitioned by (received)
--- MAGIC location '/mnt/dataloadestore/rawdata/FXNET_Deals/'
--- MAGIC options ('sep' = '\t' , 'quote'= "");
+
+drop table if exists rawdata.FXNET_deals ;
+
+create table rawdata.FXNET_deals
+(
+TransactionNumber	bigint,
+Trans_Details string,
+ExecutionDay date,
+received timestamp
+
+)
+using csv
+partitioned by (received)
+location '/mnt/dataloadestore/rawdata/FXNET_Deals/'
+options ('sep' = '\t' , 'quote'= "");
+
 
 -- COMMAND ----------
 
@@ -24,16 +23,16 @@ msck repair table rawdata.FXNET_deals
 
 -- COMMAND ----------
 
--- update the next value for reading deals into events table
-with fd as
-(
-  select max(received) as max_received
-  from rawdata.FXNET_deals fx
-  where fx.received > (select m.last_received from ods.etl_manage as m where m.table_name = 'FXNET_Deals' )
-)
-update ods.etl_manage
-set next_received = ifnull((select fd.max_received from fd),next_received)
-where table_name = 'FXNET_Deals'
+ -- update the next value for reading deals into events table
+ with fd as
+ (
+   select max(received) as max_received
+   from rawdata.FXNET_deals fx
+   where fx.received > (select m.last_received from ods.etl_manage as m where m.table_name = 'FXNET_Deals' )
+ )
+ update ods.etl_manage
+ set next_received = ifnull((select fd.max_received from fd),next_received)
+ where table_name = 'FXNET_Deals'
 
 
 -- COMMAND ----------
@@ -42,23 +41,23 @@ select * from ods.etl_manage
 
 -- COMMAND ----------
 
--- optimize delta file
-OPTIMIZE ods.etl_manage;
-set spark.databricks.delta.retentionDurationCheck.enabled = false;
-VACUUM ods.etl_manage RETAIN 0 HOURS ;
+ -- optimize delta file
+ OPTIMIZE ods.etl_manage;
+ set spark.databricks.delta.retentionDurationCheck.enabled = false;
+ VACUUM ods.etl_manage RETAIN 0 HOURS ;
 
 
 -- COMMAND ----------
 
-cache table ods.etl_manage
+-- cache table ods.etl_manage
 
 -- COMMAND ----------
 
--- the deals event should be added to events
-select distinct received
-from rawdata.FXNET_deals r 
-where r.received > (select mng.last_received from ods.etl_manage mng where mng.table_name = 'FXNET_Deals')
-  and r.received <= (select mng.next_received from ods.etl_manage mng where mng.table_name = 'FXNET_Deals') 
+ -- the deals event should be added to events
+ select distinct received
+ from rawdata.FXNET_deals r 
+ where r.received > (select mng.last_received from ods.etl_manage mng where mng.table_name = 'FXNET_Deals')
+   and r.received <= (select mng.next_received from ods.etl_manage mng where mng.table_name = 'FXNET_Deals') 
 
 -- COMMAND ----------
 
@@ -130,13 +129,13 @@ select
         "Recieved", received
       ) as Request ,
   ExecutionDay
-from rawdata.FXNET_deals r 
+from rawdata.FXNET_deals r
 where r.received > (select mng.last_received from ods.etl_manage mng where mng.table_name = 'FXNET_Deals')
   and r.received <= (select mng.next_received from ods.etl_manage mng where mng.table_name = 'FXNET_Deals') 
 
 -- COMMAND ----------
 
---cache table v_fxnet_deals
+cache table v_fxnet_deals
 
 -- COMMAND ----------
 

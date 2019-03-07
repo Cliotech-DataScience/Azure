@@ -1,0 +1,43 @@
+{
+	"name": "etl_manage",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DataLoadStorageAccount",
+			"type": "LinkedServiceReference"
+		},
+		"type": "AzureTable",
+		"structure": [
+			{
+				"name": "PartitionKey",
+				"type": "String"
+			},
+			{
+				"name": "RowKey",
+				"type": "String"
+			},
+			{
+				"name": "Timestamp",
+				"type": "DateTimeOffset"
+			},
+			{
+				"name": "Last_Incremental_Date",
+				"type": "String"
+			},
+			{
+				"name": "Next_Incremental_Date",
+				"type": "String"
+			},
+			{
+				"name": "Last_PU_INT",
+				"type": "Int64"
+			},
+			{
+				"name": "Next_PU_INT",
+				"type": "Int64"
+			}
+		],
+		"typeProperties": {
+			"tableName": "etlManage"
+		}
+	}
+}

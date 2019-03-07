@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "LK_Last_Id_Mng_azure_ETL",
+				"name": "LK_new_max_Date",
 				"type": "Lookup",
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -15,31 +15,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT  LastIncrementalDate \n  ---- remove to use incremental\nFROM  localdb.azure.Mng_azure_ETL\nWHERE TableName='DWH_Calls'"
+						"sqlReaderQuery": "SELECT Next_Call_Day=DATEADD(DAY,-1,MAX(callday))\nFROM dwh.azure.AZ_Calls"
 					},
 					"dataset": {
-						"referenceName": "Mng_azure_ETL",
-						"type": "DatasetReference"
-					}
-				}
-			},
-			{
-				"name": "LK_new_max_id",
-				"type": "Lookup",
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"typeProperties": {
-					"source": {
-						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT executionDay=DATEADD(DAY,-1,MAX(callday))\nFROM dwh.azure.calls"
-					},
-					"dataset": {
-						"referenceName": "Mng_azure_ETL",
+						"referenceName": "dwh_calls_src",
 						"type": "DatasetReference"
 					}
 				}
@@ -49,13 +28,13 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "LK_Last_Id_Mng_azure_ETL",
+						"activity": "LK_new_max_Date",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					},
 					{
-						"activity": "LK_new_max_id",
+						"activity": "LK_Last_Date_Mng_azure_ETL",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -72,7 +51,7 @@
 					"source": {
 						"type": "SqlSource",
 						"sqlReaderQuery": {
-							"value": "\nselect * \nFROM dwh.azure.calls\nwhere callday> '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' and callday<= '@{activity('LK_new_max_id').output.firstRow.executionDay}'",
+							"value": "select * \nFROM dwh.azure.AZ_calls\nwhere callday> '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Incremental_Date}' and callday<= '@{activity('LK_new_max_Date').output.firstRow.Next_Call_Day}'",
 							"type": "Expression"
 						}
 					},
@@ -104,16 +83,8 @@
 				]
 			},
 			{
-				"name": "update_mng_azure",
-				"type": "SqlServerStoredProcedure",
-				"dependsOn": [
-					{
-						"activity": "copy_to_blob",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"name": "LK_Last_Date_Mng_azure_ETL",
+				"type": "Lookup",
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -122,36 +93,23 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"storedProcedureName": "[azure].[SP_Update_Mng_azure_ETL]",
-					"storedProcedureParameters": {
-						"LastId": {
-							"value": "-1",
-							"type": "Int64"
-						},
-						"LastIncrementalDate": {
-							"value": {
-								"value": "@{activity('LK_new_max_id').output.firstRow.ExecutionDay}",
-								"type": "Expression"
-							},
-							"type": "DateTime"
-						},
-						"TableName": {
-							"value": "DWH_Calls",
-							"type": "String"
-						}
+					"source": {
+						"type": "AzureTableSource",
+						"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq 'DWH_Calls'",
+						"azureTableSourceIgnoreTableNotFound": false
+					},
+					"dataset": {
+						"referenceName": "etl_manage",
+						"type": "DatasetReference"
 					}
-				},
-				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
 				}
 			},
 			{
-				"name": "Load_Calls_To_Events",
+				"name": "Load Calls to Events",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
-						"activity": "update_mng_azure",
+						"activity": "merge tbl store",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -170,6 +128,33 @@
 				"linkedServiceName": {
 					"referenceName": "Analysis",
 					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "merge tbl store",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "copy_to_blob",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "MergeTableStore",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"PartitionKey": "Upload Data",
+						"RowKey": "DWH_Calls",
+						"PropertyName": "Last_Incremental_Date",
+						"PropertyValue": {
+							"value": "@{activity('LK_new_max_Date').output.firstRow.Next_Call_Day}",
+							"type": "Expression"
+						}
+					}
 				}
 			}
 		],

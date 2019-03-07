@@ -1,27 +1,26 @@
 {
-	"name": "EMERP_DB_Events",
+	"name": "dwh_Dim_Users_src",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "Dwhpr",
+			"referenceName": "alldbdwh",
 			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DWH"
 		},
 		"type": "SqlServerTable",
 		"structure": [
 			{
-				"name": "RAWDB_Id",
-				"type": "Int64"
+				"name": "User_ID",
+				"type": "Int16"
 			},
 			{
-				"name": "datails",
+				"name": "details",
 				"type": "String"
-			},
-			{
-				"name": "Fixed_Timestamp",
-				"type": "DateTime"
 			}
 		],
 		"typeProperties": {
-			"tableName": "emerp_db.azure.AZ_EMERP_DB_Events"
+			"tableName": "dwh.azure.Dim_Users"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"

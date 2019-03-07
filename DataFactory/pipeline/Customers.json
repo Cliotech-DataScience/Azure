@@ -84,13 +84,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Customers",
+						"referenceName": "DWH_Dim_Customers_src",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "blob_Customers",
+						"referenceName": "DWH_Dim_Customers_blob",
 						"type": "DatasetReference",
 						"parameters": {
 							"folder_name": "Customers"
@@ -160,7 +160,7 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"notebookPath": "/Process/Infrastructure/Customers"
+					"notebookPath": "/Load Data/Dimensions/Customers"
 				},
 				"linkedServiceName": {
 					"referenceName": "Analysis",

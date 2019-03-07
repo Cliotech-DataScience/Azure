@@ -1,0 +1,141 @@
+{
+	"name": "SCMM_Activities",
+	"properties": {
+		"activities": [
+			{
+				"name": "LK_Last_Date_Mng_azure_ETL",
+				"type": "Lookup",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"source": {
+						"type": "AzureTableSource",
+						"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq 'SCMM_Activities'",
+						"azureTableSourceIgnoreTableNotFound": false
+					},
+					"dataset": {
+						"referenceName": "etl_manage",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "LK_new_max_date",
+				"type": "Lookup",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"source": {
+						"type": "SqlSource",
+						"sqlReaderQuery": "SELECT Last_Activity_Date = MAX(Activity_Date)\nFROM EMERP_LM.azure.AZ_SCMM_Activities\n"
+					},
+					"dataset": {
+						"referenceName": "scmm_activities_src",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "copy_to_blob",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "LK_Last_Date_Mng_azure_ETL",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "LK_new_max_date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"source": {
+						"type": "SqlSource",
+						"sqlReaderQuery": {
+							"value": "select * \nFROM EMERP_LM.azure.AZ_SCMM_Activities\nwhere Activity_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Activity_Date <= '@{activity('LK_new_max_Date').output.firstRow.Last_Activity_Date}'",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "BlobSink"
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 0,
+					"translator": {
+						"type": "TabularTranslator",
+						"columnMappings": {
+							"Activity_Id": "Activity_Id",
+							"Activity_Date": "Activity_Date",
+							"details": "details"
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "scmm_activities_src",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "scmm_activities_blob",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Update Manage Table",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "copy_to_blob",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "MergeTableStore",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"PartitionKey": "Upload Data",
+						"RowKey": "SCMM_Activities",
+						"PropertyName": "Last_Incremental_Date",
+						"PropertyValue": {
+							"value": "@activity('LK_new_max_date').output.firstRow.Last_Activity_Date",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "Data_from_SQL"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

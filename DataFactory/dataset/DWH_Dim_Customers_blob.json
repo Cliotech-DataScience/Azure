@@ -1,5 +1,5 @@
 {
-	"name": "blob_Customers",
+	"name": "DWH_Dim_Customers_blob",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
@@ -10,6 +10,9 @@
 				"type": "String",
 				"defaultValue": "Dim_AccountContacts"
 			}
+		},
+		"folder": {
+			"name": "DWH"
 		},
 		"type": "AzureBlob",
 		"typeProperties": {

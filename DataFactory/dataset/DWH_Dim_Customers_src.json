@@ -1,9 +1,12 @@
 {
-	"name": "Customers",
+	"name": "DWH_Dim_Customers_src",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "alldbdwh",
 			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DWH"
 		},
 		"type": "SqlServerTable",
 		"structure": [

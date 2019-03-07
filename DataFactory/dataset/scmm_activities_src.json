@@ -1,5 +1,5 @@
 {
-	"name": "dwh_calls_src",
+	"name": "scmm_activities_src",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "alldbdwh",
@@ -11,20 +11,20 @@
 		"type": "SqlServerTable",
 		"structure": [
 			{
-				"name": "Call_ID",
+				"name": "Activity_Id",
 				"type": "Int32"
 			},
 			{
-				"name": "Call_Details",
-				"type": "String"
+				"name": "Activity_Date",
+				"type": "DateTime"
 			},
 			{
-				"name": "CallDay",
-				"type": "DateTime"
+				"name": "details",
+				"type": "String"
 			}
 		],
 		"typeProperties": {
-			"tableName": "dwh.azure.AZ_Calls"
+			"tableName": "emerp_lm.azure.AZ_SCMM_Activities"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"

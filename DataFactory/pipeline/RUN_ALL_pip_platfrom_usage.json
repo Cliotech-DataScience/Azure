@@ -91,6 +91,12 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
+					},
+					{
+						"activity": "RUN - Users",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
 				],
 				"typeProperties": {
@@ -140,6 +146,70 @@
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "RUN - Users",
+				"type": "ExecutePipeline",
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "DWH_Dim_Users",
+						"type": "PipelineReference"
+					}
+				}
+			},
+			{
+				"name": "RUN - Calls",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "RUN - emerp_events",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "DWH_Calls",
+						"type": "PipelineReference"
+					}
+				}
+			},
+			{
+				"name": "RUN - Deals",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "RUN - Calls",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "FXNET_Deals",
+						"type": "PipelineReference"
+					}
+				}
+			},
+			{
+				"name": "RUN - LeadAssignments",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "RUN - Deals",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "DWH_LeadAssignments",
+						"type": "PipelineReference"
+					}
 				}
 			}
 		]

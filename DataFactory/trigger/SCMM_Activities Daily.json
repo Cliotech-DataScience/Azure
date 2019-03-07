@@ -1,11 +1,11 @@
 {
-	"name": "FXNET_Deals_Daily_Load",
+	"name": "SCMM_Activities Daily",
 	"properties": {
 		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "FXNET_Deals",
+					"referenceName": "SCMM_Activities",
 					"type": "PipelineReference"
 				}
 			}
@@ -15,14 +15,14 @@
 			"recurrence": {
 				"frequency": "Day",
 				"interval": 1,
-				"startTime": "2019-02-10T07:00:00Z",
+				"startTime": "2019-03-06T15:12:00.000Z",
 				"timeZone": "UTC",
 				"schedule": {
 					"minutes": [
 						0
 					],
 					"hours": [
-						7
+						9
 					]
 				}
 			}

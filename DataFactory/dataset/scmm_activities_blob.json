@@ -1,5 +1,5 @@
 {
-	"name": "dwh_lead_assignments_blob",
+	"name": "scmm_activities_blob",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "DataloadStore",
@@ -11,16 +11,16 @@
 		"type": "AzureBlob",
 		"structure": [
 			{
-				"name": "Fact_Lead_Assignments_ID",
+				"name": "Activity_Id",
 				"type": "Int32"
 			},
 			{
-				"name": "Assignment_Details",
-				"type": "String"
+				"name": "Activity_Date",
+				"type": "DateTime"
 			},
 			{
-				"name": "Assignment_Day",
-				"type": "DateTime"
+				"name": "details",
+				"type": "String"
 			}
 		],
 		"typeProperties": {
@@ -28,6 +28,7 @@
 				"type": "TextFormat",
 				"columnDelimiter": "\t",
 				"rowDelimiter": "",
+				"quoteChar": "",
 				"nullValue": "\\N",
 				"encodingName": null,
 				"treatEmptyAsNull": true,
@@ -38,10 +39,13 @@
 				"type": "BZip2"
 			},
 			"fileName": {
-				"value": "@CONCAT('DWH_LeadAssignments_', pipeline().TriggerTime, '.csv.bz2')",
+				"value": "@CONCAT('SCMM_Activities_', pipeline().TriggerTime, '.csv.bz2')",
 				"type": "Expression"
 			},
-			"folderPath": "@concat('rawdata/DWH_LeadAssignments/Received=',utcnow())"
+			"folderPath": {
+				"value": "@concat('rawdata/SCMM_Activities/Received=',utcnow())",
+				"type": "Expression"
+			}
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
