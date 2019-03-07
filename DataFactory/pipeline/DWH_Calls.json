@@ -105,7 +105,7 @@
 				}
 			},
 			{
-				"name": "Load Calls",
+				"name": "Load Calls to Events",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
@@ -123,7 +123,7 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"notebookPath": "/Load Data/Calls/Load Calls_new_Table"
+					"notebookPath": "/Load Data/Calls/Load Calls"
 				},
 				"linkedServiceName": {
 					"referenceName": "Analysis",
