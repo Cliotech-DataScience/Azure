@@ -2037,7 +2037,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"notebookPath": "/Load Data/Lead Assignments/Load Lead Assignments_new_Table"
+							"notebookPath": "/Load Data/Lead Assignments/Load Lead Assignments"
 						},
 						"linkedServiceName": {
 							"referenceName": "Analysis",
