@@ -74,7 +74,7 @@
 					"source": {
 						"type": "SqlSource",
 						"sqlReaderQuery": {
-							"value": "select * \nFROM EMERP_LM.azure.AZ_SCMM_Activities\nwhere Activity_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Activity_Date <= '@{activity('LK_new_max_Date').output.firstRow.Last_Activity_Date}'",
+							"value": "select * \nFROM EMERP_LM.azure.AZ_Communication\nwhere Event_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Event_Date <= '@{activity('LK_new_max_Date').output.firstRow.Last_Event_Date}'",
 							"type": "Expression"
 						}
 					},
@@ -86,21 +86,21 @@
 					"translator": {
 						"type": "TabularTranslator",
 						"columnMappings": {
-							"Activity_Id": "Activity_Id",
-							"Activity_Date": "Activity_Date",
+							"MessageID": "MessageID",
+							"Event_Date": "Event_Date",
 							"details": "details"
 						}
 					}
 				},
 				"inputs": [
 					{
-						"referenceName": "scmm_activities_src",
+						"referenceName": "Communication_src",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "scmm_activities_blob",
+						"referenceName": "Communication_blob",
 						"type": "DatasetReference"
 					}
 				]
@@ -123,10 +123,10 @@
 					},
 					"parameters": {
 						"PartitionKey": "Upload Data",
-						"RowKey": "SCMM_Activities",
+						"RowKey": "Communication",
 						"PropertyName": "Last_Incremental_Date",
 						"PropertyValue": {
-							"value": "@activity('LK_new_max_date').output.firstRow.Last_Activity_Date",
+							"value": "@activity('LK_new_max_date').output.firstRow.Last_Event_Date",
 							"type": "Expression"
 						}
 					}
