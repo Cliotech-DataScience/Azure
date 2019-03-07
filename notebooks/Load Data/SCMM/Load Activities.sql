@@ -51,7 +51,7 @@ from vlast_date
 
 -- DBTITLE 1,get max new data from mrr table and set to variable
 -- MAGIC %python
--- MAGIC sql_query = "select max(raw.Received) as Last_Received_Date from rawdata.SCMM_Activities raw  where raw.Received > cast('" + manage.Last_Incremental_Date +"' as timestamp) and raw.Received = '2019-01-01'" 
+-- MAGIC sql_query = "select max(raw.Received) as Last_Received_Date from rawdata.SCMM_Activities raw  where raw.Received > cast('" + manage.Last_Incremental_Date +"' as timestamp) " 
 -- MAGIC max_date_sql = sql(sql_query)
 -- MAGIC max_received_col = max_date_sql.select('Last_Received_Date')
 -- MAGIC 
@@ -66,6 +66,11 @@ from vlast_date
 -- COMMAND ----------
 
 cache table  vmax_date
+
+-- COMMAND ----------
+
+select *
+from vmax_date
 
 -- COMMAND ----------
 
@@ -95,20 +100,20 @@ select
         "Event_Name", get_json_object(details, "$.Event_Name"),
         "User_Type", get_json_object(details, "$.User_Type"),
 		"UserID", get_json_object(details, "$.UserID"),
-        "User_Name", get_json_object(details, "$.CallDate"),
+        "User_Name", get_json_object(details, "$.User_Name"),
         "Contact_Id", get_json_object(details, "$.Contact_Id"),
-        "AccountNumber", get_json_object(details, "$.Call_Type"),
-		"Entity_Type", get_json_object(details, "$.Disposition"),
+        "AccountNumber", get_json_object(details, "$.AccountNumber"),
+		"Entity_Type", get_json_object(details, "$.Entity_Type"),
 		"EntityID",get_json_object(details, "$.EntityID"),
-		"Activity_Transition_ID",get_json_object(details, "$.Lastapp"),
+		"Activity_Transition_ID",get_json_object(details, "$.Activity_Transition_ID"),
 		"From_Status_Id",get_json_object(details, "$.From_Status_Id"),
 		"From_Status", get_json_object(details, "$.From_Status"),
 		"To_Status_Id", get_json_object(details, "$.To_Status_Id"),
-		"To_Status", get_json_object(details, "$.BrokerID"),
+		"To_Status", get_json_object(details, "$.To_Status"),
 		"Activity_Definition_ID", get_json_object(details, "$.Activity_Definition_ID"),
-		"ActivityName", get_json_object(details, "$.BrandId"),
+		"ActivityName", get_json_object(details, "$.ActivityName"),
 		"Activity_Path", get_json_object(details, "$.Activity_Path"),
-		"Activity_Category",get_json_object(details, "$.Country"),
+		"Activity_Category",get_json_object(details, "$.Activity_Category"),
 		"IsReminder", get_json_object(details, "$.IsReminder"),
 		"DateReminder", get_json_object(details, "$.DateReminder"),
         "Received", Received
@@ -117,7 +122,7 @@ select
 from rawdata.SCMM_Activities r 
 where r.Received >  (select cast(Last_Date as timestamp) from vlast_date) --Last_Call_Date.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3]
   and r.Received <= (select cast(Last_Received_Date as timestamp) from vmax_date)--receivedDate.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] 
-  and r.Received = '2019-01-01'
+  
 
 -- COMMAND ----------
 
@@ -205,7 +210,14 @@ from v_SCMM_Activities as d
 
 -- COMMAND ----------
 
--- DBTITLE 1,Update entity table with last call date = new max date 
+-- MAGIC %python
+-- MAGIC Next_Date_str
+-- MAGIC #manage_partition_key
+-- MAGIC #manage_row_key
+
+-- COMMAND ----------
+
+-- DBTITLE 1,Update manage table with last date = new max date 
 -- MAGIC %python
 -- MAGIC manage = table_service.get_entity(manage_table, manage_partition_key, manage_row_key)
 -- MAGIC Next_Date_str = manage.Next_Incremental_Date
@@ -213,7 +225,7 @@ from v_SCMM_Activities as d
 -- MAGIC if receivedDate is not None:
 -- MAGIC   new_val = {'PartitionKey': manage_partition_key, 'RowKey': manage_row_key,'Last_Incremental_Date': Next_Date_str }
 -- MAGIC 
--- MAGIC table_service.insert_or_merge_entity(manage_partition_key, new_val)
+-- MAGIC table_service.insert_or_merge_entity(manage_table, new_val)
 
 -- COMMAND ----------
 
