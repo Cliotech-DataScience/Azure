@@ -14,17 +14,20 @@
 				},
 				"typeProperties": {
 					"source": {
-						"type": "SqlSource",
-						"sqlReaderQuery": {
-							"value": "select * from  dwh.azure.AZ_Users\n ",
-							"type": "Expression"
-						}
+						"type": "SqlSource"
 					},
 					"sink": {
 						"type": "BlobSink"
 					},
 					"enableStaging": false,
-					"dataIntegrationUnits": 0
+					"dataIntegrationUnits": 0,
+					"translator": {
+						"type": "TabularTranslator",
+						"columnMappings": {
+							"User_ID": "User_ID",
+							"details": "details"
+						}
+					}
 				},
 				"inputs": [
 					{
