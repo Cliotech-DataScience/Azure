@@ -1559,7 +1559,7 @@
 							{
 								"activity": "copy_to_blob",
 								"dependencyConditions": [
-									"Succeeded"
+									"Failed"
 								]
 							}
 						],
