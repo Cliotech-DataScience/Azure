@@ -84,11 +84,6 @@ from vmax_date
 
 -- COMMAND ----------
 
-select *
-from rawdata.Communication
-
--- COMMAND ----------
-
 -- DBTITLE 1,prepare the data to be loaded to events
 -- creating the view for load
 create or replace temp view v_Communication
@@ -201,18 +196,11 @@ select
 
 -- request and partition
   Request ,
-  Event_Date_day as Event_Date_day
+  Event_Day as Event_Date_day
 from v_Communication as d 
   left join ods.accountcontacts as ac on d.Accountnumber = ac.Accountnumber
 
 
-
--- COMMAND ----------
-
--- MAGIC %python
--- MAGIC Next_Date_str
--- MAGIC #manage_partition_key
--- MAGIC #manage_row_key
 
 -- COMMAND ----------
 
