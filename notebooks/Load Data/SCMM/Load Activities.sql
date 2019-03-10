@@ -210,13 +210,6 @@ from v_SCMM_Activities as d
 
 -- COMMAND ----------
 
--- MAGIC %python
--- MAGIC Next_Date_str
--- MAGIC #manage_partition_key
--- MAGIC #manage_row_key
-
--- COMMAND ----------
-
 -- DBTITLE 1,Update manage table with last date = new max date 
 -- MAGIC %python
 -- MAGIC manage = table_service.get_entity(manage_table, manage_partition_key, manage_row_key)
