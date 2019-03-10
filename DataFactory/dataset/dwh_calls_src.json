@@ -2,7 +2,7 @@
 	"name": "dwh_calls_src",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "alldbdwh",
+			"referenceName": "DWH",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
@@ -24,7 +24,7 @@
 			}
 		],
 		"typeProperties": {
-			"tableName": "dwh.azure.AZ_Calls"
+			"tableName": "[azure].[AZ_Calls]"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"

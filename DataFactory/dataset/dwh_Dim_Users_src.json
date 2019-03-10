@@ -2,7 +2,7 @@
 	"name": "dwh_Dim_Users_src",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "alldbdwh",
+			"referenceName": "DWH",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
@@ -20,7 +20,7 @@
 			}
 		],
 		"typeProperties": {
-			"tableName": "dwh.azure.Dim_Users"
+			"tableName": "[azure].[AZ_Users]"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"

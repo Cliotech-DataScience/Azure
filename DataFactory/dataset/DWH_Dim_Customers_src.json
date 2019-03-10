@@ -2,7 +2,7 @@
 	"name": "DWH_Dim_Customers_src",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "alldbdwh",
+			"referenceName": "DWH",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
@@ -24,7 +24,7 @@
 			}
 		],
 		"typeProperties": {
-			"tableName": "dwh.azure.AZ_Customers"
+			"tableName": "[azure].[AZ_Customers]"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"

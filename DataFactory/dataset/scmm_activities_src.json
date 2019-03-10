@@ -2,7 +2,7 @@
 	"name": "scmm_activities_src",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "alldbdwh",
+			"referenceName": "emerp_lm",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
@@ -24,7 +24,7 @@
 			}
 		],
 		"typeProperties": {
-			"tableName": "emerp_lm.azure.AZ_SCMM_Activities"
+			"tableName": "[azure].[AZ_SCMM_Activities]"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"

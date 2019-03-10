@@ -3,25 +3,25 @@
 
 -- create external table 
 
-drop table if exists rawdata.SCMM_Activities ;
+drop table if exists rawdata.Communication ;
 
-create table rawdata.SCMM_Activities
+create table rawdata.Communication
    (
-   Activity_Id	bigint,
-   Activity_Date timestamp,
+   MessageID	bigint,
+   Event_Date timestamp,
    Details string,
    Received timestamp
    )
 using csv
 partitioned by (Received)
-location '/mnt/dataloadestore/rawdata/SCMM_Activities/'
+location '/mnt/dataloadestore/rawdata/Communication/'
 options ('sep' = '\t' , 'quote'= "");
 
 
 -- COMMAND ----------
 
 -- read the new partitions
-msck repair table rawdata.SCMM_Activities
+msck repair table rawdata.Communication
 
 -- COMMAND ----------
 
@@ -32,7 +32,7 @@ msck repair table rawdata.SCMM_Activities
 -- MAGIC table_service = TableService(account_name='dataloadestore', account_key='7wtLQIcK9q4QnXMCL6AO9I233TSi3hITG6tC4jO5VDEv3+ovoQo6NYv5IcboZo6Ncf5GeULV7uPdvUW+k8gJGA==')
 -- MAGIC manage_table = 'etlManage'
 -- MAGIC manage_partition_key = 'Load Events'
--- MAGIC manage_row_key = 'SCMM_Activities'
+-- MAGIC manage_row_key = 'Communication'
 
 -- COMMAND ----------
 
@@ -51,7 +51,7 @@ from vlast_date
 
 -- DBTITLE 1,get max new data from mrr table and set to variable
 -- MAGIC %python
--- MAGIC sql_query = "select max(raw.Received) as Last_Received_Date from rawdata.SCMM_Activities raw  where raw.Received > cast('" + manage.Last_Incremental_Date +"' as timestamp) " 
+-- MAGIC sql_query = "select max(raw.Received) as Last_Received_Date from rawdata.Communication raw  where raw.Received > cast('" + manage.Last_Incremental_Date +"' as timestamp) " 
 -- MAGIC max_date_sql = sql(sql_query)
 -- MAGIC max_received_col = max_date_sql.select('Last_Received_Date')
 -- MAGIC 
@@ -86,52 +86,46 @@ from vmax_date
 
 -- DBTITLE 1,prepare the data to be loaded to events
 -- creating the view for load
-create or replace temp view v_SCMM_Activities
+create or replace temp view v_Communication
 as
 select 
     get_json_object(details, "$.Event_Name") as Event_Name, 
-    get_json_object(details, "$.Activity_Category") as Event_Details, 
-    Activity_Date,
+    --get_json_object(details, "$.Activity_Category") as Event_Details, 
+    null as Event_Details, 
+    Event_Date,
     get_json_object(details, "$.AccountNumber") as AccountNumber,
     get_json_object(details, "$.Contact_Id") as Contact_ID,
   map(
-		"Activity_Date", get_json_object(details, "$.Activity_Date"),
-        "Activity_Id", get_json_object(details, "$.Activity_Id"),
+		"Event_Date", get_json_object(details, "$.Event_Date"),
+        "MessageID", get_json_object(details, "$.MessageID"),
         "Event_Name", get_json_object(details, "$.Event_Name"),
-        "User_Type", get_json_object(details, "$.User_Type"),
-		"UserID", get_json_object(details, "$.UserID"),
-        "User_Name", get_json_object(details, "$.User_Name"),
         "Contact_Id", get_json_object(details, "$.Contact_Id"),
         "AccountNumber", get_json_object(details, "$.AccountNumber"),
-		"Entity_Type", get_json_object(details, "$.Entity_Type"),
+		"Entity_Type", get_json_object(details, "$.EntityType"),
 		"EntityID",get_json_object(details, "$.EntityID"),
-		"Activity_Transition_ID",get_json_object(details, "$.Activity_Transition_ID"),
-		"From_Status_Id",get_json_object(details, "$.From_Status_Id"),
-		"From_Status", get_json_object(details, "$.From_Status"),
-		"To_Status_Id", get_json_object(details, "$.To_Status_Id"),
-		"To_Status", get_json_object(details, "$.To_Status"),
-		"Activity_Definition_ID", get_json_object(details, "$.Activity_Definition_ID"),
-		"ActivityName", get_json_object(details, "$.ActivityName"),
-		"Activity_Path", get_json_object(details, "$.Activity_Path"),
-		"Activity_Category",get_json_object(details, "$.Activity_Category"),
-		"IsReminder", get_json_object(details, "$.IsReminder"),
-		"DateReminder", get_json_object(details, "$.DateReminder"),
+		"ChannelID",get_json_object(details, "$.ChannelID"),
+		"ChannelName",get_json_object(details, "$.ChannelName"),
+		"CampaignID", get_json_object(details, "$.CampaignID"),
+		"CreationDate", get_json_object(details, "$.CreationDate"),
+		"Sending_Method", get_json_object(details, "$.Sending_Method"),
+		"IsControlGroup", get_json_object(details, "$.IsControlGroup"),
+		"Message_Event_ID", get_json_object(details, "$.Message_Event_ID"),
         "Received", Received
       ) as Request ,
-  cast(Activity_Date as Date) as Activity_Day
-from rawdata.SCMM_Activities r 
+  cast(Event_Date as Date) as Event_Day
+from rawdata.Communication as r 
 where r.Received >  (select cast(Last_Date as timestamp) from vlast_date) --Last_Call_Date.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3]
   and r.Received <= (select cast(Last_Received_Date as timestamp) from vmax_date)--receivedDate.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] 
   
 
 -- COMMAND ----------
 
-cache table v_SCMM_Activities
+cache table v_Communication
 
 -- COMMAND ----------
 
 select request["Received"], count(*)
-from v_SCMM_Activities
+from v_Communication
 group by  request["Received"]
 
 -- COMMAND ----------
@@ -147,8 +141,8 @@ cache table ods.accountcontacts
 -- --as
  insert into dwhdb.Events
 select 
-  Activity_Date as Event_Date    ,
-  'scmm' as Source  ,
+  Event_Date as Event_Date    ,
+  'dc' as Source  ,
   lower(Event_Name) as Event_Name,
   Event_Details as Event_Details,
   nvl(d.Contact_ID, ac.ContactID) as Contact_Id,
@@ -202,8 +196,8 @@ select
 
 -- request and partition
   Request ,
-  Activity_Day as Event_Date_day
-from v_SCMM_Activities as d 
+  Event_Day as Event_Date_day
+from v_Communication as d 
   left join ods.accountcontacts as ac on d.Accountnumber = ac.Accountnumber
 
 
