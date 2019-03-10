@@ -22,8 +22,8 @@
 		"typeProperties": {
 			"format": {
 				"type": "TextFormat",
-				"columnDelimiter": ",",
-				"rowDelimiter": "",
+				"columnDelimiter": "\u0001",
+				"rowDelimiter": "\n",
 				"nullValue": "\\N",
 				"treatEmptyAsNull": true,
 				"skipLineCount": 0,
