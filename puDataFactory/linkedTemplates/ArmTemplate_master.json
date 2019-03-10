@@ -27,6 +27,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase_dwh'"
 		},
+		"DWH_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'DWH'"
+		},
+		"DWH_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'DWH'"
+		},
 		"DataLoadStorageAccount_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'DataLoadStorageAccount'"
@@ -62,6 +70,14 @@
 		"destpufiles_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'destpufiles'"
+		},
+		"dwh12_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'dwh12'"
+		},
+		"dwh12_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'dwh12'"
 		},
 		"dwhdb_blob_connectionString": {
 			"type": "secureString",
@@ -243,6 +259,10 @@
 			"type": "string",
 			"defaultValue": "platformusage/rawdata/201810"
 		},
+		"DWH_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
 		"Dwhpr_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -256,6 +276,10 @@
 			"defaultValue": "https://dataloadestore.table.core.windows.net/"
 		},
 		"alldbdwh_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
+		"dwh12_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
@@ -357,6 +381,12 @@
 					},
 					"Communication_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('Communication_blob_properties_typeProperties_folderPath')]"
+					},
+					"DWH_Dim_Customers_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_fileName')]"
+					},
+					"DWH_Dim_Customers_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -376,6 +406,12 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"DWH_connectionString": {
+						"value": "[parameters('DWH_connectionString')]"
+					},
+					"DWH_password": {
+						"value": "[parameters('DWH_password')]"
+					},
 					"Dwhpr_connectionString": {
 						"value": "[parameters('Dwhpr_connectionString')]"
 					},
@@ -390,12 +426,6 @@
 					},
 					"alldbdwh_password": {
 						"value": "[parameters('alldbdwh_password')]"
-					},
-					"DWH_Dim_Customers_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_fileName')]"
-					},
-					"DWH_Dim_Customers_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_folderPath')]"
 					},
 					"blob_EMERP_Events_properties_typeProperties_fileName": {
 						"value": "[parameters('blob_EMERP_Events_properties_typeProperties_fileName')]"
@@ -472,6 +502,9 @@
 					"unzip_platfrom_file_properties_typeProperties_folderPath": {
 						"value": "[parameters('unzip_platfrom_file_properties_typeProperties_folderPath')]"
 					},
+					"DWH_properties_typeProperties_userName": {
+						"value": "[parameters('DWH_properties_typeProperties_userName')]"
+					},
 					"Dwhpr_properties_typeProperties_userName": {
 						"value": "[parameters('Dwhpr_properties_typeProperties_userName')]"
 					},
@@ -504,6 +537,12 @@
 					"destpufiles_connectionString": {
 						"value": "[parameters('destpufiles_connectionString')]"
 					},
+					"dwh12_connectionString": {
+						"value": "[parameters('dwh12_connectionString')]"
+					},
+					"dwh12_password": {
+						"value": "[parameters('dwh12_password')]"
+					},
 					"emerpdbpr_connectionString": {
 						"value": "[parameters('emerpdbpr_connectionString')]"
 					},
@@ -515,6 +554,9 @@
 					},
 					"pufiles_password": {
 						"value": "[parameters('pufiles_password')]"
+					},
+					"dwh12_properties_typeProperties_userName": {
+						"value": "[parameters('dwh12_properties_typeProperties_userName')]"
 					},
 					"emerpdbpr_properties_typeProperties_userName": {
 						"value": "[parameters('emerpdbpr_properties_typeProperties_userName')]"

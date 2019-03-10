@@ -11,6 +11,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'destpufiles'"
 		},
+		"dwh12_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'dwh12'"
+		},
+		"dwh12_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'dwh12'"
+		},
 		"emerpdbpr_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'emerpdbpr'"
@@ -26,6 +34,10 @@
 		"pufiles_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
+		},
+		"dwh12_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
 		},
 		"emerpdbpr_properties_typeProperties_userName": {
 			"type": "string",
@@ -68,6 +80,28 @@
 				},
 				"connectVia": {
 					"referenceName": "puodsfiles",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dwh12')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('dwh12_connectionString')]",
+					"userName": "[parameters('dwh12_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('dwh12_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
 					"type": "IntegrationRuntimeReference"
 				}
 			},
@@ -360,7 +394,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "alldbdwh",
+					"referenceName": "DWH",
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
@@ -383,7 +417,7 @@
 					}
 				],
 				"typeProperties": {
-					"tableName": "dwh.azure.AZ_Customers"
+					"tableName": "[concat('[', 'azure].[AZ_Customers]')]"
 				}
 			},
 			"dependsOn": []
@@ -1096,37 +1130,6 @@
 				],
 				"typeProperties": {
 					"tableName": "dwh.azure.Lead_assignments "
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/fxnet_deals_src')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "TransactionNumber",
-						"type": "Int32"
-					},
-					{
-						"name": "Trans_Details",
-						"type": "String"
-					},
-					{
-						"name": "ExecutionDay",
-						"type": "DateTime"
-					}
-				],
-				"typeProperties": {
-					"tableName": "dwh.azure.deals"
 				}
 			},
 			"dependsOn": []

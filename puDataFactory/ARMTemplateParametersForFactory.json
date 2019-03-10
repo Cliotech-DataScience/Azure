@@ -20,6 +20,12 @@
 		"AzureSqlDatabase_dwh_connectionString": {
 			"value": ""
 		},
+		"DWH_connectionString": {
+			"value": ""
+		},
+		"DWH_password": {
+			"value": ""
+		},
 		"DataLoadStorageAccount_connectionString": {
 			"value": ""
 		},
@@ -45,6 +51,12 @@
 			"value": ""
 		},
 		"destpufiles_connectionString": {
+			"value": ""
+		},
+		"dwh12_connectionString": {
+			"value": ""
+		},
+		"dwh12_password": {
 			"value": ""
 		},
 		"dwhdb_blob_connectionString": {
@@ -182,6 +194,9 @@
 		"unzip_platfrom_file_properties_typeProperties_folderPath": {
 			"value": "platformusage/rawdata/201810"
 		},
+		"DWH_properties_typeProperties_userName": {
+			"value": "efix\\az_etl"
+		},
 		"Dwhpr_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"
 		},
@@ -192,6 +207,9 @@
 			"value": "https://dataloadestore.table.core.windows.net/"
 		},
 		"alldbdwh_properties_typeProperties_userName": {
+			"value": "efix\\az_etl"
+		},
+		"dwh12_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"
 		},
 		"emerpdbpr_properties_typeProperties_userName": {
