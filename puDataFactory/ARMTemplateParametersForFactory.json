@@ -74,6 +74,12 @@
 		"pufiles_password": {
 			"value": ""
 		},
+		"emerp_lm_connectionString": {
+			"value": ""
+		},
+		"emerp_lm_password": {
+			"value": ""
+		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"value": "*.parquet"
 		},
@@ -219,6 +225,9 @@
 			"value": "efix\\az_etl"
 		},
 		"pufiles_properties_typeProperties_userId": {
+			"value": "efix\\az_etl"
+		},
+		"emerp_lm_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"
 		}
 	}

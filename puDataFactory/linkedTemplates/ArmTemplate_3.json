@@ -13,6 +13,40 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/dwh_lead_assignments_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "Fact_Lead_Assignments_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Assignment_Details",
+						"type": "String"
+					},
+					{
+						"name": "Assignment_Day",
+						"type": "DateTime"
+					}
+				],
+				"typeProperties": {
+					"tableName": "dwh.azure.Lead_assignments "
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/fxnet_deals_src')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -49,7 +83,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "alldbdwh",
+					"referenceName": "emerp_lm",
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
@@ -72,7 +106,7 @@
 					}
 				],
 				"typeProperties": {
-					"tableName": "emerp_lm.azure.AZ_SCMM_Activities"
+					"tableName": "[concat('[', 'azure].[AZ_SCMM_Activities]')]"
 				}
 			},
 			"dependsOn": []
@@ -1500,7 +1534,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dwh_lead_assignments_src')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/EMERP_Events')]",
@@ -2593,44 +2629,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/SCMM_Activities')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/every_day_run_all_piplines_to_platfrom_usage')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "RUN_ALL_pip_platfrom_usage",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-01-20T15:52:00Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								30
-							],
-							"hours": [
-								5
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/RUN_ALL_pip_platfrom_usage')]"
 			]
 		}
 	]

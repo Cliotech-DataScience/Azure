@@ -35,6 +35,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
 		},
+		"emerp_lm_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'emerp_lm'"
+		},
+		"emerp_lm_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'emerp_lm'"
+		},
 		"dwh12_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -48,6 +56,10 @@
 			"defaultValue": "efix\\az_etl"
 		},
 		"pufiles_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
+		"emerp_lm_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
@@ -165,6 +177,28 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('pufiles_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/emerp_lm')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('emerp_lm_connectionString')]",
+					"userName": "[parameters('emerp_lm_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('emerp_lm_password')]"
 					}
 				},
 				"connectVia": {
@@ -1096,40 +1130,6 @@
 				],
 				"typeProperties": {
 					"tableName": "[concat('[', 'azure].[AZ_Calls]')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dwh_lead_assignments_src')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "Fact_Lead_Assignments_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "Assignment_Details",
-						"type": "String"
-					},
-					{
-						"name": "Assignment_Day",
-						"type": "DateTime"
-					}
-				],
-				"typeProperties": {
-					"tableName": "dwh.azure.Lead_assignments "
 				}
 			},
 			"dependsOn": []

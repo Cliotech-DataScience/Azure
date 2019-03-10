@@ -99,6 +99,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
 		},
+		"emerp_lm_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'emerp_lm'"
+		},
+		"emerp_lm_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'emerp_lm'"
+		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "*.parquet"
@@ -292,6 +300,10 @@
 			"defaultValue": "efix\\az_etl"
 		},
 		"pufiles_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
+		"emerp_lm_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		}
@@ -5010,7 +5022,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "alldbdwh",
+					"referenceName": "emerp_lm",
 					"type": "LinkedServiceReference"
 				},
 				"folder": {
@@ -5033,11 +5045,11 @@
 					}
 				],
 				"typeProperties": {
-					"tableName": "emerp_lm.azure.AZ_SCMM_Activities"
+					"tableName": "[concat('[', 'azure].[AZ_SCMM_Activities]')]"
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+				"[concat(variables('factoryId'), '/linkedServices/emerp_lm')]"
 			]
 		},
 		{
@@ -5731,6 +5743,30 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/emerp_lm')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('emerp_lm_connectionString')]",
+					"userName": "[parameters('emerp_lm_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('emerp_lm_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/alldbgateway')]"
+			]
 		}
 	]
 }

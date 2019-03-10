@@ -99,6 +99,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
 		},
+		"emerp_lm_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'emerp_lm'"
+		},
+		"emerp_lm_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'emerp_lm'"
+		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "*.parquet"
@@ -292,6 +300,10 @@
 			"defaultValue": "efix\\az_etl"
 		},
 		"pufiles_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
+		"emerp_lm_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
@@ -555,6 +567,12 @@
 					"pufiles_password": {
 						"value": "[parameters('pufiles_password')]"
 					},
+					"emerp_lm_connectionString": {
+						"value": "[parameters('emerp_lm_connectionString')]"
+					},
+					"emerp_lm_password": {
+						"value": "[parameters('emerp_lm_password')]"
+					},
 					"dwh12_properties_typeProperties_userName": {
 						"value": "[parameters('dwh12_properties_typeProperties_userName')]"
 					},
@@ -566,6 +584,9 @@
 					},
 					"pufiles_properties_typeProperties_userId": {
 						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
+					},
+					"emerp_lm_properties_typeProperties_userName": {
+						"value": "[parameters('emerp_lm_properties_typeProperties_userName')]"
 					},
 					"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 						"value": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"
@@ -600,6 +621,26 @@
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_2')]"
+			]
+		},
+		{
+			"name": "ArmTemplate_4",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_4.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_3')]"
 			]
 		}
 	]
