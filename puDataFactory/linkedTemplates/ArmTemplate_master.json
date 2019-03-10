@@ -83,6 +83,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'dwhdb_blob'"
 		},
+		"emerp_lm_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'emerp_lm'"
+		},
+		"emerp_lm_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'emerp_lm'"
+		},
 		"emerpdbpr_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'emerpdbpr'"
@@ -98,14 +106,6 @@
 		"pufiles_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
-		},
-		"emerp_lm_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'emerp_lm'"
-		},
-		"emerp_lm_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'emerp_lm'"
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -291,6 +291,10 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"emerp_lm_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
 		"emerpdbpr_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -300,10 +304,6 @@
 			"defaultValue": "efix\\az_etl"
 		},
 		"pufiles_properties_typeProperties_userId": {
-			"type": "string",
-			"defaultValue": "efix\\az_etl"
-		},
-		"emerp_lm_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
@@ -555,6 +555,12 @@
 					"dwh12_password": {
 						"value": "[parameters('dwh12_password')]"
 					},
+					"emerp_lm_connectionString": {
+						"value": "[parameters('emerp_lm_connectionString')]"
+					},
+					"emerp_lm_password": {
+						"value": "[parameters('emerp_lm_password')]"
+					},
 					"emerpdbpr_connectionString": {
 						"value": "[parameters('emerpdbpr_connectionString')]"
 					},
@@ -567,14 +573,11 @@
 					"pufiles_password": {
 						"value": "[parameters('pufiles_password')]"
 					},
-					"emerp_lm_connectionString": {
-						"value": "[parameters('emerp_lm_connectionString')]"
-					},
-					"emerp_lm_password": {
-						"value": "[parameters('emerp_lm_password')]"
-					},
 					"dwh12_properties_typeProperties_userName": {
 						"value": "[parameters('dwh12_properties_typeProperties_userName')]"
+					},
+					"emerp_lm_properties_typeProperties_userName": {
+						"value": "[parameters('emerp_lm_properties_typeProperties_userName')]"
 					},
 					"emerpdbpr_properties_typeProperties_userName": {
 						"value": "[parameters('emerpdbpr_properties_typeProperties_userName')]"
@@ -584,9 +587,6 @@
 					},
 					"pufiles_properties_typeProperties_userId": {
 						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
-					},
-					"emerp_lm_properties_typeProperties_userName": {
-						"value": "[parameters('emerp_lm_properties_typeProperties_userName')]"
 					},
 					"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 						"value": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"

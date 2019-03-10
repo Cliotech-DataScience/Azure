@@ -62,6 +62,12 @@
 		"dwhdb_blob_connectionString": {
 			"value": ""
 		},
+		"emerp_lm_connectionString": {
+			"value": ""
+		},
+		"emerp_lm_password": {
+			"value": ""
+		},
 		"emerpdbpr_connectionString": {
 			"value": ""
 		},
@@ -72,12 +78,6 @@
 			"value": ""
 		},
 		"pufiles_password": {
-			"value": ""
-		},
-		"emerp_lm_connectionString": {
-			"value": ""
-		},
-		"emerp_lm_password": {
 			"value": ""
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
@@ -218,6 +218,9 @@
 		"dwh12_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"
 		},
+		"emerp_lm_properties_typeProperties_userName": {
+			"value": "efix\\az_etl"
+		},
 		"emerpdbpr_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"
 		},
@@ -225,9 +228,6 @@
 			"value": "efix\\az_etl"
 		},
 		"pufiles_properties_typeProperties_userId": {
-			"value": "efix\\az_etl"
-		},
-		"emerp_lm_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"
 		}
 	}
