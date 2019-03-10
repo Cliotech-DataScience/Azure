@@ -1316,7 +1316,7 @@
 							{
 								"activity": "copy_to_blob",
 								"dependencyConditions": [
-									"Failed"
+									"Succeeded"
 								]
 							}
 						],
