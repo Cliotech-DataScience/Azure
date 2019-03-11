@@ -1,25 +1,33 @@
 -- Databricks notebook source
---select 'some cell'
+-- DBTITLE 1,Create table service | get last call date | create view with the last date
+-- MAGIC %python
+-- MAGIC from azure.cosmosdb.table.tableservice import TableService
+-- MAGIC from azure.cosmosdb.table.models import Entity
+-- MAGIC table_service = TableService(account_name='dataloadestore', account_key='7wtLQIcK9q4QnXMCL6AO9I233TSi3hITG6tC4jO5VDEv3+ovoQo6NYv5IcboZo6Ncf5GeULV7uPdvUW+k8gJGA==')
+-- MAGIC calls_manage = table_service.get_entity('etlManage', 'Load Events', 'DWH_Calls')
+-- MAGIC Last_Call_Date_str = calls_manage.Last_Incremental_Date
+-- MAGIC Last_Call_Date_df = sql("select '"+Last_Call_Date_str+"' as Last_Call_Date")
+-- MAGIC Last_Call_Date_df.createOrReplaceTempView("vlast_Calls")
 
 -- COMMAND ----------
 
 
--- create external table 
+-- -- create external table 
 
-drop table if exists rawdata.DWH_Calls ;
+--   drop table if exists rawdata.DWH_Calls ;
 
-create table rawdata.DWH_Calls
-(
-Call_Id	Int,
-Call_Details string,
-ExecutionDay date,
-received timestamp
+--   create table rawdata.DWH_Calls
+--   (
+--   Call_Id	Int,
+--   Call_Details string,
+--   ExecutionDay date,
+--   Received timestamp
 
-)
-using csv
-partitioned by (received)
-location '/mnt/dataloadestore/rawdata/DWH_Calls/'
-options ('sep' = '\t' , 'quote'= "");
+--   )
+--   using csv
+--   partitioned by (received)
+--   location '/mnt/dataloadestore/rawdata/DWH_Calls/'
+--   options ('sep' = '\t' , 'quote'= "");
 
 
 -- COMMAND ----------
@@ -29,54 +37,32 @@ msck repair table rawdata.DWH_Calls
 
 -- COMMAND ----------
 
-select max(received) as max_received
-  from rawdata.DWH_Calls fx
-  where fx.received > (select m.last_received from ods.etl_manage as m where m.table_name = 'DWH_Calls')
+--cache table rawdata.dwh_calls
 
 -- COMMAND ----------
 
--- update the next value for reading calls into events table
-with fd as
-(
-  select max(received) as max_received
-  from rawdata.DWH_Calls fx
-  where fx.received > (select m.last_received from ods.etl_manage as m where m.table_name = 'DWH_Calls' )
-)
-update ods.etl_manage
-set next_received = ifnull((select fd.max_received from fd),next_received)
-where table_name = 'DWH_Calls'
-
-
--- COMMAND ----------
-
---update ods.etl_manage set next_received = '2019-02-12' where table_name ='DWH_Calls'
-select * from ods.etl_manage
-
+-- DBTITLE 1,get max new data from mrr table and set to variable
+-- MAGIC %python
+-- MAGIC max_date_sql = sql("select max(fx.received) as Last_Received_Date from rawdata.DWH_Calls fx  where fx.received > cast('" + calls_manage.Last_Incremental_Date +"' as timestamp)" )
+-- MAGIC max_received_col = max_date_sql.select('Last_Received_Date')
+-- MAGIC 
+-- MAGIC #do the if because if by any chance it will not find any date then the collect will fail "hive metadata error"
+-- MAGIC if max_received_col is not None:
+-- MAGIC   receivedDate = max_received_col.collect()[0][0]
+-- MAGIC else:
+-- MAGIC   receivedDate = None
+-- MAGIC 
+-- MAGIC max_date_sql.createOrReplaceTempView("vmax_Calls")
 
 -- COMMAND ----------
 
---insert into ods.etl_manage
---select "DWH_Calls",'2011-01-01','2012-01-01'
-
--- COMMAND ----------
-
--- optimize delta file
-OPTIMIZE ods.etl_manage;
-set spark.databricks.delta.retentionDurationCheck.enabled = false;
-VACUUM ods.etl_manage RETAIN 0 HOURS ;
-
-
--- COMMAND ----------
-
-cache table ods.etl_manage
-
--- COMMAND ----------
-
--- the calls event that should be added to events
-select distinct received
-from rawdata.DWH_Calls r 
-where r.received > (select mng.last_received from ods.etl_manage mng where mng.table_name = 'DWH_Calls')
-  and r.received <= (select mng.next_received from ods.etl_manage mng where mng.table_name = 'DWH_Calls') 
+-- DBTITLE 1,update entity table on next date = new max date received
+-- MAGIC %python
+-- MAGIC if receivedDate is not None:
+-- MAGIC   new_val = {'PartitionKey': 'Load Events', 'RowKey': 'DWH_Calls','Next_Incremental_Date' : receivedDate.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3]}
+-- MAGIC else:
+-- MAGIC   new_val = {'PartitionKey': 'Load Events', 'RowKey': 'DWH_Calls','Next_Incremental_Date' : Last_Call_Date_str}
+-- MAGIC table_service.insert_or_merge_entity('etlManage', new_val)
 
 -- COMMAND ----------
 
@@ -89,6 +75,7 @@ select
     
     cast(get_json_object(Call_details, "$.CallDate") as timeStamp) as ExecutionDate,
     get_json_object(Call_details, "$.AccountNumber") as AccountNumber,
+    get_json_object(Call_details, "$.Contact_ID") as Contact_ID,
     get_json_object(Call_details, "$.BrokerID") as Broker_ID,
     get_json_object(Call_details, "$.BrokerName") as BrokerName,
     get_json_object(Call_details, "$.BrandId") as BrandId,
@@ -144,8 +131,8 @@ select
       ) as Request ,
   ExecutionDay
 from rawdata.DWH_Calls r 
-where r.received > (select mng.last_received from ods.etl_manage mng where mng.table_name = 'DWH_Calls')
-  and r.received <= (select mng.next_received from ods.etl_manage mng where mng.table_name = 'DWH_Calls') 
+ where r.received >  (select cast(Last_Call_Date as timestamp) from vlast_Calls) --Last_Call_Date.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3]
+   and r.received <= (select cast(Last_Received_Date as timestamp) from vmax_Calls)--receivedDate.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] 
 
 -- COMMAND ----------
 
@@ -158,16 +145,16 @@ cache table ods.accountcontacts
 
 -- COMMAND ----------
 
--- insert the events
---create or replace temp view fxnet_deals_for_insert
---as
-insert into dwhdb.Events
+-- -- insert the events
+-- --create or replace temp view fxnet_deals_for_insert
+-- --as
+ insert into dwhdb.Events
 select 
   ExecutionDate    ,
   'calls' as Source  ,
   lower(Event_Name) as Event_Name,
   Event_Details as Event_Details,
-  ac.ContactID as Contact_Id,
+  nvl(d.Contact_ID, ac.ContactID) as Contact_Id,
   d.Accountnumber,
   Broker_ID,
   BrokerName as Broker,
@@ -219,19 +206,23 @@ select
 -- request and partition
   Request ,
   ExecutionDay as Event_Date_day
-from v_dwh_calls as d left join ods.accountcontacts as ac on d.Accountnumber = ac.Accountnumber
+from v_dwh_calls as d 
+left join ods.accountcontacts as ac on d.Accountnumber = ac.Accountnumber
 
 
 
 -- COMMAND ----------
 
-update ods.etl_manage
-set last_received = ifnull(next_received,last_received)
-where table_name = 'DWH_Calls'
+-- DBTITLE 1,Update entity table with last call date = new max date 
+-- MAGIC %python
+-- MAGIC calls_manage_Last = table_service.get_entity('etlManage', 'Load Events', 'DWH_Calls')
+-- MAGIC Next_Call_Date_str = calls_manage_Last.Next_Incremental_Date
+-- MAGIC 
+-- MAGIC if receivedDate is not None:
+-- MAGIC   new_val = {'PartitionKey': 'Load Events', 'RowKey': 'DWH_Calls','Last_Incremental_Date': Next_Call_Date_str }
+-- MAGIC 
+-- MAGIC table_service.insert_or_merge_entity('etlManage', new_val)
 
 -- COMMAND ----------
 
--- optimize delta file
-OPTIMIZE ods.etl_manage;
-set spark.databricks.delta.retentionDurationCheck.enabled = false;
-VACUUM ods.etl_manage RETAIN 0 HOURS ;
+-- delete from dwhdb.events where source like 'calls' and event_date_day >= '2019-02-25'
