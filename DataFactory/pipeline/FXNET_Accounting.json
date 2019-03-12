@@ -89,9 +89,10 @@
 					"translator": {
 						"type": "TabularTranslator",
 						"columnMappings": {
-							"Activity_Id": "Activity_Id",
-							"Activity_Date": "Activity_Date",
-							"details": "details"
+							"fact_account_trans_id": "fact_account_trans_id",
+							"ActionDay": "ActionDay",
+							"ActionDate": "ActionDate",
+							"Details": "Details"
 						}
 					}
 				},
