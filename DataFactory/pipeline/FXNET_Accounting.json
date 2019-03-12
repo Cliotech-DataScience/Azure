@@ -1,5 +1,5 @@
 {
-	"name": "Communication",
+	"name": "FXNET_Accounting",
 	"properties": {
 		"activities": [
 			{
@@ -15,7 +15,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureTableSource",
-						"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq 'Communication'",
+						"azureTableSourceQuery": {
+							"value": "PartitionKey eq 'Upload Data' and RowKey eq '@{variables('Table_Name')}'",
+							"type": "Expression"
+						},
 						"azureTableSourceIgnoreTableNotFound": false
 					},
 					"dataset": {
@@ -38,10 +41,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderQuery": " SELECT Last_Event_Date = MAX(Event_Date)\nFROM EMERP_LM.azure.AZ_Communication\nWHERE Event_Date < CAST(GETDATE() AS DATE)"
+						"sqlReaderQuery": "SELECT Last_Activity_Date = MAX(ActionDate)\nFROM azure.AZ_Accounting\nWHERE ActionDay BETWEEN CAST(GETDATE() - 100 AS DATE) AND CAST(GETDATE() - 1 AS DATE) "
 					},
 					"dataset": {
-						"referenceName": "Communication_src",
+						"referenceName": "fxnet_accounting_src",
 						"type": "DatasetReference"
 					}
 				}
@@ -74,7 +77,7 @@
 					"source": {
 						"type": "SqlSource",
 						"sqlReaderQuery": {
-							"value": "select * \nFROM EMERP_LM.azure.AZ_Communication\nwhere Event_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Event_Date <= '@{activity('LK_new_max_Date').output.firstRow.Last_Event_Date}'",
+							"value": "select * \nFROM azure.AZ_Accounting\nwhere ActionDate > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' \n  and ActionDate <= '@{activity('LK_new_max_Date').output.firstRow.Last_Activity_Date}'\n  and ActionDay > dateadd(day,-1,cast('@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' as date))\n  and ActionDay < dateadd(day,1,cast('@{activity('LK_new_max_Date').output.firstRow.Last_Activity_Date}' as date))",
 							"type": "Expression"
 						}
 					},
@@ -86,21 +89,22 @@
 					"translator": {
 						"type": "TabularTranslator",
 						"columnMappings": {
-							"MessageID": "MessageID",
-							"Event_Date": "Event_Date",
-							"details": "details"
+							"fact_account_trans_id": "fact_account_trans_id",
+							"ActionDay": "ActionDay",
+							"ActionDate": "ActionDate",
+							"Details": "Details"
 						}
 					}
 				},
 				"inputs": [
 					{
-						"referenceName": "Communication_src",
+						"referenceName": "fxnet_accounting_src",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "Communication_blob",
+						"referenceName": "fxnet_accounting_blob",
 						"type": "DatasetReference"
 					}
 				]
@@ -123,42 +127,25 @@
 					},
 					"parameters": {
 						"PartitionKey": "Upload Data",
-						"RowKey": "Communication",
+						"RowKey": {
+							"value": "@variables('Table_Name')",
+							"type": "Expression"
+						},
 						"PropertyName": "Last_Incremental_Date",
 						"PropertyValue": {
-							"value": "@activity('LK_new_max_date').output.firstRow.Last_Event_Date",
+							"value": "@activity('LK_new_max_date').output.firstRow.Last_Activity_Date",
 							"type": "Expression"
 						}
 					}
 				}
-			},
-			{
-				"name": "Load Communication to Events",
-				"type": "DatabricksNotebook",
-				"dependsOn": [
-					{
-						"activity": "Update Manage Table",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"typeProperties": {
-					"notebookPath": "/Load Data/Digital Communication/Load Communication"
-				},
-				"linkedServiceName": {
-					"referenceName": "Analysis",
-					"type": "LinkedServiceReference"
-				}
 			}
 		],
+		"variables": {
+			"Table_Name": {
+				"type": "String",
+				"defaultValue": "FXNET_Accounting"
+			}
+		},
 		"folder": {
 			"name": "Data_from_SQL"
 		}

@@ -1,19 +1,31 @@
 -- Databricks notebook source
+-- DBTITLE 1,Create table service | get last deal date | create view with the last date
+-- MAGIC %python
+-- MAGIC from azure.cosmosdb.table.tableservice import TableService
+-- MAGIC from azure.cosmosdb.table.models import Entity
+-- MAGIC table_service = TableService(account_name='dataloadestore', account_key='7wtLQIcK9q4QnXMCL6AO9I233TSi3hITG6tC4jO5VDEv3+ovoQo6NYv5IcboZo6Ncf5GeULV7uPdvUW+k8gJGA==')
+-- MAGIC deals_manage = table_service.get_entity('etlManage', 'Load Events', 'FXNET_Deals')
+-- MAGIC Last_Deal_Date_str = deals_manage.Last_Incremental_Date
+-- MAGIC Last_Deal_Date_df = sql("select '"+Last_Deal_Date_str+"' as Last_Deal_Date")
+-- MAGIC Last_Deal_Date_df.createOrReplaceTempView("vlast_Deals")
 
-drop table if exists rawdata.FXNET_deals ;
+-- COMMAND ----------
 
-create table rawdata.FXNET_deals
-(
-TransactionNumber	bigint,
-Trans_Details string,
-ExecutionDay date,
-received timestamp
 
-)
-using csv
-partitioned by (received)
-location '/mnt/dataloadestore/rawdata/FXNET_Deals/'
-options ('sep' = '\t' , 'quote'= "");
+--    drop table if exists rawdata.FXNET_deals ;
+
+--    create table rawdata.FXNET_deals
+--    (
+--    TransactionNumber	bigint,
+--    Trans_Details string,
+--    ExecutionDay date,
+--    Received timestamp
+
+--    )
+--    using csv
+--    partitioned by (received)
+--    location '/mnt/dataloadestore/rawdata/FXNET_Deals/'
+--    options ('sep' = '\t' , 'quote'= "");
 
 
 -- COMMAND ----------
@@ -23,41 +35,39 @@ msck repair table rawdata.FXNET_deals
 
 -- COMMAND ----------
 
- -- update the next value for reading deals into events table
- with fd as
- (
-   select max(received) as max_received
-   from rawdata.FXNET_deals fx
-   where fx.received > (select m.last_received from ods.etl_manage as m where m.table_name = 'FXNET_Deals' )
- )
- update ods.etl_manage
- set next_received = ifnull((select fd.max_received from fd),next_received)
- where table_name = 'FXNET_Deals'
-
+--cache table rawdata.FXNET_deals
 
 -- COMMAND ----------
 
-select * from ods.etl_manage
+-- select count(*),executionday
+-- from rawdata.fxnet_deals 
+-- where executionDay>'2019-01-01'
+-- group by executionDay
 
 -- COMMAND ----------
 
- -- optimize delta file
- OPTIMIZE ods.etl_manage;
- set spark.databricks.delta.retentionDurationCheck.enabled = false;
- VACUUM ods.etl_manage RETAIN 0 HOURS ;
-
+-- DBTITLE 1,get max new data from mrr table and set to variable
+-- MAGIC %python
+-- MAGIC max_date_sql = sql("select max(fx.Received) as Next_Received_Date from rawdata.FXNET_deals fx  where fx.Received > cast('" + deals_manage.Last_Incremental_Date +"' as timestamp)" )
+-- MAGIC max_received_col = max_date_sql.select('Next_Received_Date')
+-- MAGIC 
+-- MAGIC #do the if because if by any chance it will not find any date then the collect will fail "hive metadata error"
+-- MAGIC if max_received_col is not None:
+-- MAGIC   receivedDate = max_received_col.collect()[0][0]
+-- MAGIC else:
+-- MAGIC   receivedDate = None
+-- MAGIC 
+-- MAGIC max_date_sql.createOrReplaceTempView("vmax_Deals")
 
 -- COMMAND ----------
 
--- cache table ods.etl_manage
-
--- COMMAND ----------
-
- -- the deals event should be added to events
- select distinct received
- from rawdata.FXNET_deals r 
- where r.received > (select mng.last_received from ods.etl_manage mng where mng.table_name = 'FXNET_Deals')
-   and r.received <= (select mng.next_received from ods.etl_manage mng where mng.table_name = 'FXNET_Deals') 
+-- DBTITLE 1,update entity table on next date = new max date received
+-- MAGIC %python
+-- MAGIC if receivedDate is not None:
+-- MAGIC   new_val = {'PartitionKey': 'Load Events', 'RowKey': 'FXNET_Deals','Next_Incremental_Date' : receivedDate.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] }
+-- MAGIC else:
+-- MAGIC   new_val = {'PartitionKey': 'Load Events', 'RowKey': 'FXNET_Deals','Next_Incremental_Date' : Last_Deal_Date_str}
+-- MAGIC table_service.insert_or_merge_entity('etlManage', new_val)
 
 -- COMMAND ----------
 
@@ -130,23 +140,12 @@ select
       ) as Request ,
   ExecutionDay
 from rawdata.FXNET_deals r
-where r.received > (select mng.last_received from ods.etl_manage mng where mng.table_name = 'FXNET_Deals')
-  and r.received <= (select mng.next_received from ods.etl_manage mng where mng.table_name = 'FXNET_Deals') 
+where r.received >  (select mng.Last_Deal_Date from vlast_Deals mng)
+  and r.received <= (select mng.Next_Received_Date from vmax_Deals mng) 
 
 -- COMMAND ----------
 
 cache table v_fxnet_deals
-
--- COMMAND ----------
-
---select Event_Name,Event_Details,BrokerName, ExecutionDay, count(*)
---from v_fxnet_deals
---group by Event_Name,Event_Details, BrokerName , ExecutionDay
-
--- COMMAND ----------
-
---select *
---from ods.accountcontacts
 
 -- COMMAND ----------
 
@@ -222,27 +221,12 @@ from v_fxnet_deals as d left join ods.accountcontacts as ac on d.Accountnumber =
 
 -- COMMAND ----------
 
---insert into dwhdb.Events
---select *
---from  fxnet_deals_for_insert
-
--- COMMAND ----------
-
-update ods.etl_manage
-set last_received = ifnull(next_received,last_received)
-where table_name = 'FXNET_Deals'
-
--- COMMAND ----------
-
--- optimize delta file
-OPTIMIZE ods.etl_manage;
-set spark.databricks.delta.retentionDurationCheck.enabled = false;
-VACUUM ods.etl_manage RETAIN 0 HOURS ;
-
-
--- COMMAND ----------
-
--- optimize delta file
-OPTIMIZE dwhdb.events;
-set spark.databricks.delta.retentionDurationCheck.enabled = false;
-VACUUM ods.etl_manage RETAIN 0 HOURS ;
+-- DBTITLE 1,Update entity table with last deal date = new max date 
+-- MAGIC %python
+-- MAGIC deals_manage_Last = table_service.get_entity('etlManage', 'Load Events', 'FXNET_Deals')
+-- MAGIC Next_Deal_Date_str = deals_manage_Last.Next_Incremental_Date
+-- MAGIC 
+-- MAGIC if receivedDate is not None:
+-- MAGIC   new_val = {'PartitionKey': 'Load Events', 'RowKey': 'FXNET_Deals', 'Last_Incremental_Date': Next_Deal_Date_str }
+-- MAGIC 
+-- MAGIC table_service.insert_or_merge_entity('etlManage', new_val)
