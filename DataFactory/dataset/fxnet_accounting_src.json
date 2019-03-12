@@ -1,0 +1,35 @@
+{
+	"name": "fxnet_accounting_src",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DWH",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DWH"
+		},
+		"type": "SqlServerTable",
+		"structure": [
+			{
+				"name": "fact_account_trans_id",
+				"type": "Int64"
+			},
+			{
+				"name": "ActionDay",
+				"type": "Date"
+			},
+			{
+				"name": "ActionDate",
+				"type": "DateTime"
+			},
+			{
+				"name": "Details",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": "[azure].[AZ_Accounting]"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
