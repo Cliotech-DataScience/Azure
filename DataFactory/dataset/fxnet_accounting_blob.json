@@ -1,0 +1,56 @@
+{
+	"name": "fxnet_accounting_blob",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DataloadStore",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DWH"
+		},
+		"type": "AzureBlob",
+		"structure": [
+			{
+				"name": "fact_account_trans_id",
+				"type": "Int64"
+			},
+			{
+				"name": "ActionDay",
+				"type": "DateTime"
+			},
+			{
+				"name": "ActionDate",
+				"type": "DateTime"
+			},
+			{
+				"name": "Details",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": "\t",
+				"rowDelimiter": "",
+				"quoteChar": "",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": false
+			},
+			"compression": {
+				"type": "BZip2"
+			},
+			"fileName": {
+				"value": "@CONCAT('FXNET_Accounting_', pipeline().TriggerTime, '.csv.bz2')",
+				"type": "Expression"
+			},
+			"folderPath": {
+				"value": "@concat('rawdata/FXNET_Accounting/Received=',utcnow())",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
