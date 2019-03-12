@@ -16,7 +16,7 @@
 					"source": {
 						"type": "SqlSource",
 						"sqlReaderQuery": {
-							"value": "select * from  EmErp_DB.azure.AZ_EMERP_DB_Events\n ",
+							"value": "select * from  EmErp_DB.azure._events_missing_days_AZ_EMERP_DB_Events\n ",
 							"type": "Expression"
 						}
 					},
@@ -37,7 +37,7 @@
 						"referenceName": "blob_EMERP_Events",
 						"type": "DatasetReference",
 						"parameters": {
-							"folder_name": "EMERP_Events"
+							"folder_name": "EMERP_Events_missing"
 						}
 					}
 				]
