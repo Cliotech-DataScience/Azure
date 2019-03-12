@@ -41,7 +41,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT Last_Activity_Date = MAX(ActionDate)\nFROM azure.AZ_Accounting\nWHERE ActionDay BETWEEN CAST(GETDATE() - 100 AS DATE) AND CAST(GETDATE() - 1 AS DATE) \nand 1=0"
+						"sqlReaderQuery": "SELECT Last_Activity_Date = MAX(ActionDate)\nFROM azure.AZ_Accounting\nWHERE ActionDay BETWEEN CAST(GETDATE() - 100 AS DATE) AND CAST(GETDATE() - 1 AS DATE) "
 					},
 					"dataset": {
 						"referenceName": "fxnet_accounting_src",
@@ -56,13 +56,13 @@
 					{
 						"activity": "LK_Last_Date_Mng_azure_ETL",
 						"dependencyConditions": [
-							"Skipped"
+							"Succeeded"
 						]
 					},
 					{
 						"activity": "LK_new_max_date",
 						"dependencyConditions": [
-							"Skipped"
+							"Succeeded"
 						]
 					}
 				],
@@ -116,7 +116,7 @@
 					{
 						"activity": "copy_to_blob",
 						"dependencyConditions": [
-							"Skipped"
+							"Succeeded"
 						]
 					}
 				],
