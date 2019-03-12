@@ -74,7 +74,7 @@
 					"source": {
 						"type": "SqlSource",
 						"sqlReaderQuery": {
-							"value": "select * \nFROM EMERP_LM.azure.AZ_SCMM_Activities\nwhere Activity_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Activity_Date <= '@{activity('LK_new_max_Date').output.firstRow.Last_Activity_Date}'",
+							"value": "select * \nFROM azure.AZ_Accounting\nwhere ActionDate > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' \n  and ActionDate <= '@{activity('LK_new_max_Date').output.firstRow.Last_Activity_Date}'\n  and ActionDay > dateadd(day,-1,cast('@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' as date))\n  and ActionDay < dateadd(day,1,cast('@{activity('LK_new_max_Date').output.firstRow.Last_Activity_Date}' as date))",
 							"type": "Expression"
 						}
 					},
@@ -94,13 +94,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "scmm_activities_src",
+						"referenceName": "fxnet_accounting_src",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "scmm_activities_blob",
+						"referenceName": "fxnet_accounting_blob",
 						"type": "DatasetReference"
 					}
 				]
