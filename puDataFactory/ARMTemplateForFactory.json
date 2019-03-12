@@ -2990,7 +2990,7 @@
 							"source": {
 								"type": "SqlSource",
 								"sqlReaderQuery": {
-									"value": "select * from  EmErp_DB.azure.AZ_EMERP_DB_Events\n where Event_Date > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' \n AND Event_Date <= '@{activity('LK_new_max_id').output.firstRow.ExecutionDate}'",
+									"value": "select * from  EmErp_DB.azure._events_missing_days_AZ_EMERP_DB_Events\n ",
 									"type": "Expression"
 								}
 							},
@@ -3002,7 +3002,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "EMERP_DB_Events",
+								"referenceName": "all_db_emerp_events",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -3012,7 +3012,7 @@
 								"referenceName": "blob_EMERP_Events",
 								"type": "DatasetReference",
 								"parameters": {
-									"folder_name": "EMERP_Events"
+									"folder_name": "EMERP_Events_missing"
 								}
 							}
 						]
@@ -3024,7 +3024,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/EMERP_DB_Events')]",
+				"[concat(variables('factoryId'), '/datasets/all_db_emerp_events')]",
 				"[concat(variables('factoryId'), '/datasets/blob_EMERP_Events')]"
 			]
 		},
