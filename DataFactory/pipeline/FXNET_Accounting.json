@@ -16,7 +16,7 @@
 					"source": {
 						"type": "AzureTableSource",
 						"azureTableSourceQuery": {
-							"value": "@concat(\"PartitionKey eq 'Upload Data' and RowKey eq '\",variables('Table_Name'),\"'\")",
+							"value": "concat(\"PartitionKey eq 'Upload Data' and RowKey eq '\",variables('Table_Name'),\"'\")",
 							"type": "Expression"
 						},
 						"azureTableSourceIgnoreTableNotFound": false
@@ -56,13 +56,13 @@
 					{
 						"activity": "LK_Last_Date_Mng_azure_ETL",
 						"dependencyConditions": [
-							"Succeeded"
+							"Skipped"
 						]
 					},
 					{
 						"activity": "LK_new_max_date",
 						"dependencyConditions": [
-							"Succeeded"
+							"Skipped"
 						]
 					}
 				],
@@ -116,7 +116,7 @@
 					{
 						"activity": "copy_to_blob",
 						"dependencyConditions": [
-							"Succeeded"
+							"Skipped"
 						]
 					}
 				],
