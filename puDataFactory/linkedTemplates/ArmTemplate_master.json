@@ -307,6 +307,14 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"fxnet_accounting_blob_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@CONCAT('FXNET_Accounting_', pipeline().TriggerTime, '.csv.bz2')"
+		},
+		"fxnet_accounting_blob_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@concat('rawdata/FXNET_Accounting/Received=',utcnow())"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -587,6 +595,12 @@
 					},
 					"pufiles_properties_typeProperties_userId": {
 						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
+					},
+					"fxnet_accounting_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_fileName')]"
+					},
+					"fxnet_accounting_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_folderPath')]"
 					},
 					"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 						"value": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"
