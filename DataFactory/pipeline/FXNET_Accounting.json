@@ -16,7 +16,7 @@
 					"source": {
 						"type": "AzureTableSource",
 						"azureTableSourceQuery": {
-							"value": "PartitionKey eq 'Upload Data' and RowKey eq '@{variables('Table_Name')}')",
+							"value": "PartitionKey eq 'Upload Data' and RowKey eq '@{variables('Table_Name')}'",
 							"type": "Expression"
 						},
 						"azureTableSourceIgnoreTableNotFound": false
