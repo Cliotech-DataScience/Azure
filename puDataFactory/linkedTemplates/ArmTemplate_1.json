@@ -27,14 +27,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'Events_Collector_PlatfromUsage_log'"
 		},
-		"alldbdwh_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'alldbdwh'"
-		},
-		"alldbdwh_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'alldbdwh'"
-		},
 		"blob_EMERP_Events_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "@CONCAT('EMERP_Events', pipeline().RunId, '.csv')"
@@ -103,6 +95,14 @@
 			"type": "string",
 			"defaultValue": "@concat('rawdata/DWH_LeadAssignments/Received=',utcnow())"
 		},
+		"fxnet_accounting_blob_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@CONCAT('FXNET_Accounting_', pipeline().TriggerTime, '.csv.bz2')"
+		},
+		"fxnet_accounting_blob_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@concat('rawdata/FXNET_Accounting/Received=',utcnow())"
+		},
 		"fxnet_deals_blob_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "@CONCAT('FXNET_Deals_', pipeline().TriggerTime, '.csv.bz2')"
@@ -144,10 +144,6 @@
 			"defaultValue": "efix\\az_etl"
 		},
 		"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
-			"type": "string",
-			"defaultValue": "efix\\az_etl"
-		},
-		"alldbdwh_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		}
@@ -718,6 +714,65 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/fxnet_accounting_blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DataloadStore",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "fact_account_trans_id",
+						"type": "Int64"
+					},
+					{
+						"name": "ActionDay",
+						"type": "DateTime"
+					},
+					{
+						"name": "ActionDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "Details",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": "\t",
+						"rowDelimiter": "",
+						"quoteChar": "",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"compression": {
+						"type": "BZip2"
+					},
+					"fileName": {
+						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": {
+						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_folderPath')]",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/fxnet_deals_blob')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1084,28 +1139,6 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('Events_Collector_PlatfromUsage_log_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "alldbgateway",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/alldbdwh')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('alldbdwh_connectionString')]",
-					"userName": "[parameters('alldbdwh_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('alldbdwh_password')]"
 					}
 				},
 				"connectVia": {

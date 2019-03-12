@@ -7,6 +7,14 @@
 			"metadata": "Data Factory Name",
 			"defaultValue": "puDataFactory"
 		},
+		"alldbdwh_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'alldbdwh'"
+		},
+		"alldbdwh_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'alldbdwh'"
+		},
 		"destpufiles_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'destpufiles'"
@@ -43,6 +51,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
 		},
+		"alldbdwh_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
 		"dwh12_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -63,14 +75,6 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
-		"fxnet_accounting_blob_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('FXNET_Accounting_', pipeline().TriggerTime, '.csv.bz2')"
-		},
-		"fxnet_accounting_blob_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@concat('rawdata/FXNET_Accounting/Received=',utcnow())"
-		},
 		"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "processed"
@@ -88,6 +92,28 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/alldbdwh')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('alldbdwh_connectionString')]",
+					"userName": "[parameters('alldbdwh_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('alldbdwh_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/destpufiles')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -212,65 +238,6 @@
 				"connectVia": {
 					"referenceName": "alldbgateway",
 					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/fxnet_accounting_blob')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DataloadStore",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "fact_account_trans_id",
-						"type": "Int64"
-					},
-					{
-						"name": "ActionDay",
-						"type": "DateTime"
-					},
-					{
-						"name": "ActionDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "Details",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": "\t",
-						"rowDelimiter": "",
-						"quoteChar": "",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"compression": {
-						"type": "BZip2"
-					},
-					"fileName": {
-						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": {
-						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
 				}
 			},
 			"dependsOn": []
@@ -456,7 +423,9 @@
 					"tableName": "emerp_lm.azure.AZ_Communication"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Contacts')]",
@@ -759,7 +728,9 @@
 					"tableName": "[concat('[', 'azure].[platfrom_usage_log_file]')]"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Dim_AccountContacts')]",
@@ -794,7 +765,9 @@
 					"tableName": "dwh.azure.AZ_Dim_AccountContacts"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/EMERP_DB_Events')]",
@@ -1060,7 +1033,9 @@
 					"tableName": "[concat('[', 'azure].[AZ_Fact_Transactions]')]"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Mng_azure_ETL')]",
@@ -1077,7 +1052,9 @@
 					"tableName": "[concat('[', 'azure].[Mng_azure_ETL]')]"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/SourceDataset_PlatfromUsagePROD')]",

@@ -235,6 +235,14 @@
 			"type": "string",
 			"defaultValue": "@concat('rawdata/DWH_LeadAssignments/Received=',utcnow())"
 		},
+		"fxnet_accounting_blob_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@CONCAT('FXNET_Accounting_', pipeline().TriggerTime, '.csv.bz2')"
+		},
+		"fxnet_accounting_blob_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@concat('rawdata/FXNET_Accounting/Received=',utcnow())"
+		},
 		"fxnet_deals_blob_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "@CONCAT('FXNET_Deals_', pipeline().TriggerTime, '.csv.bz2')"
@@ -306,14 +314,6 @@
 		"pufiles_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
-		},
-		"fxnet_accounting_blob_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('FXNET_Accounting_', pipeline().TriggerTime, '.csv.bz2')"
-		},
-		"fxnet_accounting_blob_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@concat('rawdata/FXNET_Accounting/Received=',utcnow())"
 		},
 		"containerUri": {
 			"type": "string",
@@ -441,12 +441,6 @@
 					"Events_Collector_PlatfromUsage_log_password": {
 						"value": "[parameters('Events_Collector_PlatfromUsage_log_password')]"
 					},
-					"alldbdwh_connectionString": {
-						"value": "[parameters('alldbdwh_connectionString')]"
-					},
-					"alldbdwh_password": {
-						"value": "[parameters('alldbdwh_password')]"
-					},
 					"blob_EMERP_Events_properties_typeProperties_fileName": {
 						"value": "[parameters('blob_EMERP_Events_properties_typeProperties_fileName')]"
 					},
@@ -498,6 +492,12 @@
 					"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_folderPath')]"
 					},
+					"fxnet_accounting_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_fileName')]"
+					},
+					"fxnet_accounting_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_folderPath')]"
+					},
 					"fxnet_deals_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('fxnet_deals_blob_properties_typeProperties_fileName')]"
 					},
@@ -530,9 +530,6 @@
 					},
 					"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
 						"value": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_userId')]"
-					},
-					"alldbdwh_properties_typeProperties_userName": {
-						"value": "[parameters('alldbdwh_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -553,6 +550,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"alldbdwh_connectionString": {
+						"value": "[parameters('alldbdwh_connectionString')]"
+					},
+					"alldbdwh_password": {
+						"value": "[parameters('alldbdwh_password')]"
 					},
 					"destpufiles_connectionString": {
 						"value": "[parameters('destpufiles_connectionString')]"
@@ -581,6 +584,9 @@
 					"pufiles_password": {
 						"value": "[parameters('pufiles_password')]"
 					},
+					"alldbdwh_properties_typeProperties_userName": {
+						"value": "[parameters('alldbdwh_properties_typeProperties_userName')]"
+					},
 					"dwh12_properties_typeProperties_userName": {
 						"value": "[parameters('dwh12_properties_typeProperties_userName')]"
 					},
@@ -595,12 +601,6 @@
 					},
 					"pufiles_properties_typeProperties_userId": {
 						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
-					},
-					"fxnet_accounting_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_fileName')]"
-					},
-					"fxnet_accounting_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_folderPath')]"
 					},
 					"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 						"value": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"
