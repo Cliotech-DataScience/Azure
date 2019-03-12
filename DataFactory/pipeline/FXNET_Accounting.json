@@ -15,7 +15,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureTableSource",
-						"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq 'FXNET_Accounting'",
+						"azureTableSourceQuery": {
+							"value": "@concat(\"PartitionKey eq 'Upload Data' and RowKey eq '\",variables('Table_Name'),\"'\")",
+							"type": "Expression"
+						},
 						"azureTableSourceIgnoreTableNotFound": false
 					},
 					"dataset": {
@@ -123,7 +126,10 @@
 					},
 					"parameters": {
 						"PartitionKey": "Upload Data",
-						"RowKey": "SCMM_Activities",
+						"RowKey": {
+							"value": "@variables('Table_Name')",
+							"type": "Expression"
+						},
 						"PropertyName": "Last_Incremental_Date",
 						"PropertyValue": {
 							"value": "@activity('LK_new_max_date').output.firstRow.Last_Activity_Date",
@@ -131,34 +137,14 @@
 						}
 					}
 				}
-			},
-			{
-				"name": "Load_Activities_To_Events",
-				"type": "DatabricksNotebook",
-				"dependsOn": [
-					{
-						"activity": "Update Manage Table",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"typeProperties": {
-					"notebookPath": "/Load Data/SCMM/Load Activities"
-				},
-				"linkedServiceName": {
-					"referenceName": "Analysis",
-					"type": "LinkedServiceReference"
-				}
 			}
 		],
+		"variables": {
+			"Table_Name": {
+				"type": "String",
+				"defaultValue": "FXNET_Accounting"
+			}
+		},
 		"folder": {
 			"name": "Data_from_SQL"
 		}
