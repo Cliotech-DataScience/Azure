@@ -90,13 +90,6 @@ from vmax_date
 
 -- COMMAND ----------
 
-select *
-from rawdata.FXNET_Accounting r 
-where r.Received >  (select cast(Last_Date as timestamp) from vlast_date) --Last_Call_Date.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3]
-  and r.Received <= (select cast(Last_Received_Date as timestamp) from vmax_date)--receivedDate.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] 
-
--- COMMAND ----------
-
 -- DBTITLE 1,prepare the data to be loaded to events
 -- creating the view for load
 create or replace temp view v_FXNET_Accounting
