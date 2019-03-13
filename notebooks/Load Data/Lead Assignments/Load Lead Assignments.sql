@@ -135,7 +135,7 @@ cache table ods.accountcontacts
 insert into dwhdb.Events
 select 
   Assignment_Date    ,
-  'scmm_LM' as Source  ,
+  'scmm' as Source  ,
   lower(Event_Name) as Event_Name,
   Event_Details as Event_Details,
   ac.ContactID as Contact_Id,
