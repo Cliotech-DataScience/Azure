@@ -3,8 +3,11 @@
 -- MAGIC %python
 -- MAGIC from azure.cosmosdb.table.tableservice import TableService
 -- MAGIC from azure.cosmosdb.table.models import Entity
+-- MAGIC manage_table = 'etlManage'
+-- MAGIC manage_partition_key = 'Load Events'
+-- MAGIC manage_row_key = 'FXNET_Deals'
 -- MAGIC table_service = TableService(account_name='dataloadestore', account_key='7wtLQIcK9q4QnXMCL6AO9I233TSi3hITG6tC4jO5VDEv3+ovoQo6NYv5IcboZo6Ncf5GeULV7uPdvUW+k8gJGA==')
--- MAGIC deals_manage = table_service.get_entity('etlManage', 'Load Events', 'FXNET_Deals')
+-- MAGIC deals_manage = table_service.get_entity(manage_table, manage_partition_key, manage_row_key)
 -- MAGIC Last_Deal_Date_str = deals_manage.Last_Incremental_Date
 -- MAGIC Last_Deal_Date_df = sql("select '"+Last_Deal_Date_str+"' as Last_Deal_Date")
 -- MAGIC Last_Deal_Date_df.createOrReplaceTempView("vlast_Deals")
@@ -64,10 +67,10 @@ msck repair table rawdata.FXNET_deals
 -- DBTITLE 1,update entity table on next date = new max date received
 -- MAGIC %python
 -- MAGIC if receivedDate is not None:
--- MAGIC   new_val = {'PartitionKey': 'Load Events', 'RowKey': 'FXNET_Deals','Next_Incremental_Date' : receivedDate.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] }
+-- MAGIC   new_val = {'PartitionKey': manage_partition_key, 'RowKey': manage_row_key,'Next_Incremental_Date' : receivedDate.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] }
 -- MAGIC else:
--- MAGIC   new_val = {'PartitionKey': 'Load Events', 'RowKey': 'FXNET_Deals','Next_Incremental_Date' : Last_Deal_Date_str}
--- MAGIC table_service.insert_or_merge_entity('etlManage', new_val)
+-- MAGIC   new_val = {'PartitionKey': manage_partition_key, 'RowKey': manage_row_key,'Next_Incremental_Date' : Last_Deal_Date_str}
+-- MAGIC table_service.insert_or_merge_entity(manage_table, new_val)
 
 -- COMMAND ----------
 
@@ -223,10 +226,10 @@ from v_fxnet_deals as d left join ods.accountcontacts as ac on d.Accountnumber =
 
 -- DBTITLE 1,Update entity table with last deal date = new max date 
 -- MAGIC %python
--- MAGIC deals_manage_Last = table_service.get_entity('etlManage', 'Load Events', 'FXNET_Deals')
+-- MAGIC deals_manage_Last = table_service.get_entity(manage_table, manage_partition_key, manage_row_key)
 -- MAGIC Next_Deal_Date_str = deals_manage_Last.Next_Incremental_Date
 -- MAGIC 
 -- MAGIC if receivedDate is not None:
--- MAGIC   new_val = {'PartitionKey': 'Load Events', 'RowKey': 'FXNET_Deals', 'Last_Incremental_Date': Next_Deal_Date_str }
+-- MAGIC   new_val = {'PartitionKey': manage_partition_key, 'RowKey': manage_row_key, 'Last_Incremental_Date': Next_Deal_Date_str }
 -- MAGIC 
--- MAGIC table_service.insert_or_merge_entity('etlManage', new_val)
+-- MAGIC table_service.insert_or_merge_entity(manage_table, new_val)
