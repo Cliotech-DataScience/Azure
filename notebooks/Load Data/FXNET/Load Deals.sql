@@ -14,6 +14,11 @@
 
 -- COMMAND ----------
 
+select *
+from vlast_Deals
+
+-- COMMAND ----------
+
 
     drop table if exists rawdata.FXNET_deals ;
 
@@ -39,17 +44,6 @@ msck repair table rawdata.FXNET_deals
 
 -- COMMAND ----------
 
---cache table rawdata.FXNET_deals
-
--- COMMAND ----------
-
--- select count(*),executionday
--- from rawdata.fxnet_deals 
--- where executionDay>'2019-01-01'
--- group by executionDay
-
--- COMMAND ----------
-
 -- DBTITLE 1,get max new data from mrr table and set to variable
 -- MAGIC %python
 -- MAGIC max_date_sql = sql("select max(fx.Received) as Next_Received_Date from rawdata.FXNET_deals fx  where fx.Received > cast('" + deals_manage.Last_Incremental_Date +"' as timestamp)" )
@@ -62,6 +56,10 @@ msck repair table rawdata.FXNET_deals
 -- MAGIC   receivedDate = None
 -- MAGIC 
 -- MAGIC max_date_sql.createOrReplaceTempView("vmax_Deals")
+
+-- COMMAND ----------
+
+select * from vmax_Deals
 
 -- COMMAND ----------
 
@@ -151,6 +149,13 @@ where r.received >  (select mng.Last_Deal_Date from vlast_Deals mng)
 
 -- cahce account contacts for the join
 cache table ods.accountcontacts
+
+-- COMMAND ----------
+
+select ExecutionDay, count(*)
+from v_fxnet_deals
+group by  ExecutionDay
+order by ExecutionDay
 
 -- COMMAND ----------
 
