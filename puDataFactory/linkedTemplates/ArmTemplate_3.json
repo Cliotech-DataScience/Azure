@@ -2107,9 +2107,9 @@
 								"type": "TabularTranslator",
 								"columnMappings": {
 									"TransactionNumber": "TransactionNumber",
-									"Trans_Details": "Trans_Details",
+									"ExecutionDay": "ExecutionDay",
 									"ExecutionDate": "ExecutionDate",
-									"ExecutionDay": "ExecutionDay"
+									"Trans_Details": "Trans_Details"
 								}
 							}
 						},
