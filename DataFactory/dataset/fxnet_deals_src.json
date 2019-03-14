@@ -2,7 +2,7 @@
 	"name": "fxnet_deals_src",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "alldbdwh",
+			"referenceName": "DWH",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
@@ -15,16 +15,20 @@
 				"type": "Int32"
 			},
 			{
-				"name": "Trans_Details",
-				"type": "String"
+				"name": "ExecutionDay",
+				"type": "Date"
 			},
 			{
-				"name": "ExecutionDay",
+				"name": "ExecutionDate",
 				"type": "DateTime"
+			},
+			{
+				"name": "Trans_Details",
+				"type": "String"
 			}
 		],
 		"typeProperties": {
-			"tableName": "dwh.azure.deals"
+			"tableName": "azure.AZ_deals"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
