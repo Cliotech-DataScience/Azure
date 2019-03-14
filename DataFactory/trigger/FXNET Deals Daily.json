@@ -1,5 +1,5 @@
 {
-	"name": "FXNET_Deals_daily",
+	"name": "FXNET Deals Daily",
 	"properties": {
 		"runtimeState": "Started",
 		"pipelines": [
