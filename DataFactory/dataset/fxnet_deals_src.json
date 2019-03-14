@@ -28,7 +28,7 @@
 			}
 		],
 		"typeProperties": {
-			"tableName": "azure.AZ_deals"
+			"tableName": "[azure].[AZ_Deals]"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
