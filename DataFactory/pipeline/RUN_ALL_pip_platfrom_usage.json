@@ -177,29 +177,11 @@
 				}
 			},
 			{
-				"name": "RUN - Deals",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "RUN - Calls",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "FXNET_Deals",
-						"type": "PipelineReference"
-					}
-				}
-			},
-			{
 				"name": "RUN - LeadAssignments",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "RUN - Deals",
+						"activity": "RUN - Calls",
 						"dependencyConditions": [
 							"Succeeded"
 						]
