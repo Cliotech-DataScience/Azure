@@ -15,7 +15,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureTableSource",
-						"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq '@{variables('Table_Name')}'",
+						"azureTableSourceQuery": {
+							"value": "PartitionKey eq 'Upload Data' and RowKey eq '@{variables('Table_Name')}'",
+							"type": "Expression"
+						},
 						"azureTableSourceIgnoreTableNotFound": false
 					},
 					"dataset": {
@@ -87,6 +90,7 @@
 						"columnMappings": {
 							"TransactionNumber": "TransactionNumber",
 							"Trans_Details": "Trans_Details",
+							"ExecutionDate": "ExecutionDate",
 							"ExecutionDay": "ExecutionDay"
 						}
 					}
@@ -148,9 +152,15 @@
 					},
 					"parameters": {
 						"PartitionKey": "Upload Data",
-						"RowKey": "@variables('Table_Name')",
+						"RowKey": {
+							"value": "@variables('Table_Name')",
+							"type": "Expression"
+						},
 						"PropertyName": "Last_Incremental_Date",
-						"PropertyValue": "@activity('LK_new_max_date').output.firstRow.NextIncrementalDay"
+						"PropertyValue": {
+							"value": "@activity('LK_new_max_date').output.firstRow.NextIncrementalDay",
+							"type": "Expression"
+						}
 					}
 				}
 			}
