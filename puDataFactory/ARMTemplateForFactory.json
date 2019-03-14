@@ -2374,6 +2374,33 @@
 								}
 							}
 						}
+					},
+					{
+						"name": "Load Deals",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Update mng ETL table storage",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Load Data/FXNET/Load Deals"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
 				"variables": {
@@ -2391,7 +2418,8 @@
 				"[concat(variables('factoryId'), '/datasets/etl_manage')]",
 				"[concat(variables('factoryId'), '/datasets/fxnet_deals_src')]",
 				"[concat(variables('factoryId'), '/datasets/fxnet_deals_blob')]",
-				"[concat(variables('factoryId'), '/pipelines/MergeTableStore')]"
+				"[concat(variables('factoryId'), '/pipelines/MergeTableStore')]",
+				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
 			]
 		},
 		{
@@ -5992,10 +6020,10 @@
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
-								15
+								10
 							],
 							"hours": [
-								9
+								8
 							]
 						}
 					}

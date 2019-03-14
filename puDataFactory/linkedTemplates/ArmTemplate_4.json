@@ -298,10 +298,10 @@
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
-								15
+								10
 							],
 							"hours": [
-								9
+								8
 							]
 						}
 					}
