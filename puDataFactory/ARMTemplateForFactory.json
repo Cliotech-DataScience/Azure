@@ -5170,7 +5170,7 @@
 					}
 				],
 				"typeProperties": {
-					"tableName": "azure.AZ_deals"
+					"tableName": "[concat('[', 'azure].[AZ_Deals]')]"
 				}
 			},
 			"dependsOn": [
