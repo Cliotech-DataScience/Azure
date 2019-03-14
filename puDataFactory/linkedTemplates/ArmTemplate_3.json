@@ -2180,7 +2180,7 @@
 								},
 								"PropertyName": "Last_Incremental_Date",
 								"PropertyValue": {
-									"value": "@activity('LK_new_max_date').output.firstRow.NextIncrementalDay",
+									"value": "@activity('LK_new_max_date').output.firstRow.Last_Execution_Date",
 									"type": "Expression"
 								}
 							}
