@@ -15,20 +15,21 @@
 -- COMMAND ----------
 
 
---    drop table if exists rawdata.FXNET_deals ;
+    drop table if exists rawdata.FXNET_deals ;
 
---    create table rawdata.FXNET_deals
---    (
---    TransactionNumber	bigint,
---    Trans_Details string,
---    ExecutionDay date,
---    Received timestamp
+    create table rawdata.FXNET_deals
+    (
+    TransactionNumber	bigint,
+    ExecutionDay date,
+    ExecutionDate timestamp,
+    Trans_Details string,
+    Received timestamp
 
---    )
---    using csv
---    partitioned by (received)
---    location '/mnt/dataloadestore/rawdata/FXNET_Deals/'
---    options ('sep' = '\t' , 'quote'= "");
+    )
+    using csv
+    partitioned by (received)
+    location '/mnt/dataloadestore/rawdata/FXNET_Deals/'
+    options ('sep' = '\t' , 'quote'= "");
 
 
 -- COMMAND ----------
@@ -145,10 +146,6 @@ select
 from rawdata.FXNET_deals r
 where r.received >  (select mng.Last_Deal_Date from vlast_Deals mng)
   and r.received <= (select mng.Next_Received_Date from vmax_Deals mng) 
-
--- COMMAND ----------
-
-cache table v_fxnet_deals
 
 -- COMMAND ----------
 
