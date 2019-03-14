@@ -2175,6 +2175,33 @@
 								}
 							}
 						}
+					},
+					{
+						"name": "Load Accounts to Events",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Update Manage Table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Load Data/FXNET/Load Accounting"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
 				"variables": {
@@ -2192,7 +2219,8 @@
 				"[concat(variables('factoryId'), '/datasets/etl_manage')]",
 				"[concat(variables('factoryId'), '/datasets/fxnet_accounting_src')]",
 				"[concat(variables('factoryId'), '/datasets/fxnet_accounting_blob')]",
-				"[concat(variables('factoryId'), '/pipelines/MergeTableStore')]"
+				"[concat(variables('factoryId'), '/pipelines/MergeTableStore')]",
+				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
 			]
 		},
 		{
