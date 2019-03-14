@@ -796,6 +796,10 @@
 						"type": "String"
 					},
 					{
+						"name": "ExecutionDate",
+						"type": "DateTime"
+					},
+					{
 						"name": "ExecutionDay",
 						"type": "String"
 					}
