@@ -2056,7 +2056,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT Last_Execution_Date=MAX(ExecutionDate)\nFROM dwh.azure.AZ_Deals\nWHERE executionDay BETWEEN\nCAST(GETDATE() - 100 AS DATE) AND CAST(GETDATE() - 1 AS DATE) "
+								"sqlReaderQuery": "SELECT Last_Date=MAX(ExecutionDate)\nFROM azure.AZ_Deals\nWHERE executionDay BETWEEN\nCAST(GETDATE() - 100 AS DATE) AND CAST(GETDATE() - 1 AS DATE) "
 							},
 							"dataset": {
 								"referenceName": "fxnet_deals_src",
@@ -2094,7 +2094,7 @@
 							"source": {
 								"type": "SqlSource",
 								"sqlReaderQuery": {
-									"value": "\nselect * \nFROM dwh.azure.AZ_Deals\nwhere executionDay > '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' and executionDay<= '@{activity('LK_new_max_Date').output.firstRow.Last_Execution_Date}'",
+									"value": "select * \nFROM azure.AZ_Deals\nwhere executionDate > '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Incremental_Date}' \nand executionDate <= '@{activity('LK_new_max_Date').output.firstRow.Last_Date}'\nand executionDay > dateadd(day,-1,cast('@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Incremental_Date}' as date))\nand executionDay < dateadd(day,1,cast('@{activity('LK_new_max_Date').output.firstRow.Last_Date}' as date))",
 									"type": "Expression"
 								}
 							},
@@ -2129,33 +2129,6 @@
 						]
 					},
 					{
-						"name": "Load_Deals_To_Events",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "Update mng ETL table storage",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/FXNET/Load Deals"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
 						"name": "Update mng ETL table storage",
 						"type": "ExecutePipeline",
 						"dependsOn": [
@@ -2180,7 +2153,7 @@
 								},
 								"PropertyName": "Last_Incremental_Date",
 								"PropertyValue": {
-									"value": "@activity('LK_new_max_date').output.firstRow.Last_Execution_Date",
+									"value": "@activity('LK_new_max_Date').output.firstRow.Last_Date",
 									"type": "Expression"
 								}
 							}
