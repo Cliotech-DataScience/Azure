@@ -14,11 +14,12 @@
 				},
 				"typeProperties": {
 					"source": {
-						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT  LastIncrementalDate \n  ---- remove to use incremental\nFROM  localdb.azure.Mng_azure_ETL\nWHERE TableName='FXNET_Deals'"
+						"type": "AzureTableSource",
+						"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq '@{variables('Table_Name')}'",
+						"azureTableSourceIgnoreTableNotFound": false
 					},
 					"dataset": {
-						"referenceName": "Mng_azure_ETL",
+						"referenceName": "etl_manage",
 						"type": "DatasetReference"
 					}
 				}
@@ -36,10 +37,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT executionDay=DATEADD(DAY,-1,MAX(executionday))\nFROM dwh.azure.AZ_Deals"
+						"sqlReaderQuery": "SELECT Last_Execution_Date=MAX(ExecutionDate)\nFROM dwh.azure.AZ_Deals\nWHERE executionDay BETWEEN\nCAST(GETDATE() - 100 AS DATE) AND CAST(GETDATE() - 1 AS DATE) "
 					},
 					"dataset": {
-						"referenceName": "Mng_azure_ETL",
+						"referenceName": "fxnet_deals_src",
 						"type": "DatasetReference"
 					}
 				}
@@ -72,7 +73,7 @@
 					"source": {
 						"type": "SqlSource",
 						"sqlReaderQuery": {
-							"value": "\nselect * \nFROM dwh.azure.AZ_Deals\nwhere executionDay > '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' and executionDay<= '@{activity('LK_new_max_Date').output.firstRow.executionDay}'",
+							"value": "\nselect * \nFROM dwh.azure.AZ_Deals\nwhere executionDay > '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' and executionDay<= '@{activity('LK_new_max_Date').output.firstRow.Last_Execution_Date}'",
 							"type": "Expression"
 						}
 					},
@@ -104,54 +105,11 @@
 				]
 			},
 			{
-				"name": "update_mng_azure",
-				"type": "SqlServerStoredProcedure",
-				"dependsOn": [
-					{
-						"activity": "copy_to_blob",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"typeProperties": {
-					"storedProcedureName": "[azure].[SP_Update_Mng_azure_ETL]",
-					"storedProcedureParameters": {
-						"LastId": {
-							"value": "-1",
-							"type": "Int64"
-						},
-						"LastIncrementalDate": {
-							"value": {
-								"value": "@{activity('LK_new_max_Date').output.firstRow.ExecutionDay}",
-								"type": "Expression"
-							},
-							"type": "DateTime"
-						},
-						"TableName": {
-							"value": "FXNET_Deals",
-							"type": "String"
-						}
-					}
-				},
-				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
 				"name": "Load_Deals_To_Events",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
-						"activity": "update_mng_azure",
+						"activity": "Update mng ETL table storage",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -171,8 +129,38 @@
 					"referenceName": "Analysis",
 					"type": "LinkedServiceReference"
 				}
+			},
+			{
+				"name": "Update mng ETL table storage",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "copy_to_blob",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "MergeTableStore",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"PartitionKey": "Upload Data",
+						"RowKey": "@variables('Table_Name')",
+						"PropertyName": "Last_Incremental_Date",
+						"PropertyValue": "@activity('LK_new_max_date').output.firstRow.NextIncrementalDay"
+					}
+				}
 			}
 		],
+		"variables": {
+			"Table_Name": {
+				"type": "String",
+				"defaultValue": "FXNET_Deals"
+			}
+		},
 		"folder": {
 			"name": "Data_from_SQL"
 		}
