@@ -792,7 +792,7 @@
 						"type": "String"
 					},
 					{
-						"name": "Trans_Details",
+						"name": "ExecutionDay",
 						"type": "String"
 					},
 					{
@@ -800,7 +800,7 @@
 						"type": "DateTime"
 					},
 					{
-						"name": "ExecutionDay",
+						"name": "Trans_Details",
 						"type": "String"
 					}
 				],
