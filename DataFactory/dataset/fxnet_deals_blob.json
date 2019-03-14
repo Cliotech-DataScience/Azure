@@ -21,6 +21,10 @@
 			{
 				"name": "ExecutionDay",
 				"type": "String"
+			},
+			{
+				"name": "ExecutionDate",
+				"type": "DateTime"
 			}
 		],
 		"typeProperties": {
