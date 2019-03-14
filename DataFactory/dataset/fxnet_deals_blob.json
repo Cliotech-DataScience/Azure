@@ -5,6 +5,9 @@
 			"referenceName": "DataloadStore",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "DWH"
+		},
 		"type": "AzureBlob",
 		"structure": [
 			{
@@ -35,8 +38,14 @@
 			"compression": {
 				"type": "BZip2"
 			},
-			"fileName": "@CONCAT('FXNET_Deals_', pipeline().TriggerTime, '.csv.bz2')",
-			"folderPath": "@concat('rawdata/FXNET_Deals/Received=',utcnow())"
+			"fileName": {
+				"value": "@CONCAT('FXNET_Deals_', pipeline().TriggerTime, '.csv.bz2')",
+				"type": "Expression"
+			},
+			"folderPath": {
+				"value": "@concat('rawdata/FXNET_Deals/Received=',utcnow())",
+				"type": "Expression"
+			}
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
