@@ -781,6 +781,9 @@
 					"referenceName": "DataloadStore",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "DWH"
+				},
 				"annotations": [],
 				"type": "AzureBlob",
 				"structure": [
