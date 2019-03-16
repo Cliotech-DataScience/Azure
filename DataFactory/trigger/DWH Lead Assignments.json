@@ -1,0 +1,31 @@
+{
+	"name": "DWH Lead Assignments",
+	"properties": {
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "DWH_Lead_Assignments",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2019-03-16T22:04:00.000Z",
+				"timeZone": "UTC",
+				"schedule": {
+					"minutes": [
+						20
+					],
+					"hours": [
+						8
+					]
+				}
+			}
+		}
+	}
+}
