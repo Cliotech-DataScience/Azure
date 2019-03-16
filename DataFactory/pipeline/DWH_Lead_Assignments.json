@@ -25,7 +25,7 @@
 						"referenceName": "etl_manage",
 						"type": "DatasetReference"
 					},
-					"firstRowOnly": false
+					"firstRowOnly": true
 				}
 			},
 			{
