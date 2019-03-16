@@ -1,0 +1,171 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "puDataFactory"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/DWH_Lead_Assignments')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LK_Last_Date_Mng_azure_ETL",
+						"type": "Lookup",
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"source": {
+								"type": "AzureTableSource",
+								"azureTableSourceQuery": {
+									"value": "PartitionKey eq 'Upload Data' and RowKey eq '@{variables('Table_Name')}'",
+									"type": "Expression"
+								},
+								"azureTableSourceIgnoreTableNotFound": false
+							},
+							"dataset": {
+								"referenceName": "etl_manage",
+								"type": "DatasetReference"
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "LK_new_max_date",
+						"type": "Lookup",
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "SELECT Last_Date=MAX(Assignment_Date)\nFROM azure.AZ_Lead_Assignments \nWHERE Assignment_Day BETWEEN\nCAST(GETDATE() - 100 AS DATE) AND CAST(GETDATE() - 1 AS DATE) \n"
+							},
+							"dataset": {
+								"referenceName": "dwh_lead_assignments_src",
+								"type": "DatasetReference"
+							}
+						}
+					},
+					{
+						"name": "copy_to_blob",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "LK_Last_Date_Mng_azure_ETL",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "LK_new_max_date",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "SELECT * \nFROM azure.AZ_Lead_Assignments\nwhere Assignment_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' \n  and Assignment_Date <= '@{activity('LK_new_max_Date').output.firstRow.Last_Date}'\n  and Assignment_Day > dateadd(day,-1,cast('@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' as date))\n  and Assignment_Day < dateadd(day,1,cast('@{activity('LK_new_max_Date').output.firstRow.Last_Date}' as date))\n",
+									"type": "Expression"
+								}
+							},
+							"sink": {
+								"type": "BlobSink"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Fact_Lead_Assignments_ID": "Fact_Lead_Assignments_ID",
+									"Assignment_Day": "Assignment_Day",
+									"Assignment_Date": "Assignment_Date",
+									"Details": "Details"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "dwh_lead_assignments_src",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "dwh_lead_assignments_blob",
+								"type": "DatasetReference"
+							}
+						]
+					},
+					{
+						"name": "Update Manage Table",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "copy_to_blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "MergeTableStore",
+								"type": "PipelineReference"
+							},
+							"parameters": {
+								"PartitionKey": "Upload Data",
+								"RowKey": {
+									"value": "@variables('Table_Name')",
+									"type": "Expression"
+								},
+								"PropertyName": "Last_Incremental_Date",
+								"PropertyValue": {
+									"value": "@activity('LK_new_max_date').output.firstRow.Last_Date",
+									"type": "Expression"
+								}
+							}
+						}
+					}
+				],
+				"variables": {
+					"Table_Name": {
+						"type": "String",
+						"defaultValue": "DWH_Lead_Assignments"
+					}
+				},
+				"folder": {
+					"name": "Data_from_SQL"
+				}
+			}
+		}
+	]
+}

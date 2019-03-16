@@ -2470,23 +2470,23 @@
 							"translator": {
 								"type": "TabularTranslator",
 								"columnMappings": {
-									"fact_account_trans_id": "fact_account_trans_id",
-									"ActionDay": "ActionDay",
-									"ActionDate": "ActionDate",
+									"Fact_Lead_Assignments_ID": "Fact_Lead_Assignments_ID",
+									"Assignment_Day": "Assignment_Day",
+									"Assignment_Date": "Assignment_Date",
 									"Details": "Details"
 								}
 							}
 						},
 						"inputs": [
 							{
-								"referenceName": "fxnet_accounting_src",
+								"referenceName": "dwh_lead_assignments_src",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "fxnet_accounting_blob",
+								"referenceName": "dwh_lead_assignments_blob",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -2536,8 +2536,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dwh_lead_assignments_src')]",
-				"[concat(variables('factoryId'), '/datasets/fxnet_accounting_src')]"
+				"[concat(variables('factoryId'), '/datasets/dwh_lead_assignments_src')]"
 			]
 		},
 		{
