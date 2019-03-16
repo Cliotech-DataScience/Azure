@@ -1,6 +1,7 @@
 {
 	"name": "DWH_Lead_Assignments",
 	"properties": {
+		"description": "assignments",
 		"activities": [
 			{
 				"name": "LK_Last_Date_Mng_azure_ETL",
