@@ -11,6 +11,11 @@
 
 -- COMMAND ----------
 
+select *
+from vlast_Calls
+
+-- COMMAND ----------
+
 
 -- -- create external table 
 
@@ -53,6 +58,11 @@ msck repair table rawdata.DWH_Calls
 -- MAGIC   receivedDate = None
 -- MAGIC 
 -- MAGIC max_date_sql.createOrReplaceTempView("vmax_Calls")
+
+-- COMMAND ----------
+
+select *
+from vmax_Calls
 
 -- COMMAND ----------
 
@@ -136,7 +146,10 @@ from rawdata.DWH_Calls r
 
 -- COMMAND ----------
 
-cache table v_dwh_calls
+select ExecutionDay, count(*)
+from v_dwh_calls
+group by  ExecutionDay
+order by  ExecutionDay
 
 -- COMMAND ----------
 
