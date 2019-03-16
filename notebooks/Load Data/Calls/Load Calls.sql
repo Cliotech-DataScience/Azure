@@ -11,10 +11,33 @@
 
 -- COMMAND ----------
 
+select *
+from vlast_Calls
 
+-- COMMAND ----------
 -- -- create external table 
 
 --   drop table if exists rawdata.DWH_Calls ;
+
+--   create table rawdata.DWH_Calls
+--   (
+--   Call_Id	Int,
+--   Call_Details string,
+--   ExecutionDay date,
+--   Received timestamp
+
+--   )
+--   using csv
+--   partitioned by (received)
+--   location '/mnt/dataloadestore/rawdata/DWH_Calls/'
+--   options ('sep' = '\t' , 'quote'= "");
+
+-- COMMAND ----------
+
+
+-- -- create external table 
+--   drop table if exists rawdata.DWH_Calls ;
+--cache table rawdata.dwh_calls
 
 --   create table rawdata.DWH_Calls
 --   (
@@ -38,6 +61,26 @@ msck repair table rawdata.DWH_Calls
 -- COMMAND ----------
 
 --cache table rawdata.dwh_calls
+
+-- COMMAND ----------
+
+-- DBTITLE 1,get max new data from mrr table and set to variable
+-- MAGIC %python
+-- MAGIC max_date_sql = sql("select max(fx.received) as Last_Received_Date from rawdata.DWH_Calls fx  where fx.received > cast('" + calls_manage.Last_Incremental_Date +"' as timestamp)" )
+-- MAGIC max_received_col = max_date_sql.select('Last_Received_Date')
+-- MAGIC 
+-- MAGIC #do the if because if by any chance it will not find any date then the collect will fail "hive metadata error"
+-- MAGIC if max_received_col is not None:
+-- MAGIC   receivedDate = max_received_col.collect()[0][0]
+-- MAGIC else:
+-- MAGIC   receivedDate = None
+-- MAGIC 
+-- MAGIC max_date_sql.createOrReplaceTempView("vmax_Calls")
+
+-- COMMAND ----------
+
+select *
+from vmax_Calls
 
 -- COMMAND ----------
 
@@ -136,7 +179,10 @@ from rawdata.DWH_Calls r
 
 -- COMMAND ----------
 
-cache table v_dwh_calls
+select ExecutionDay, count(*)
+from v_dwh_calls
+group by  ExecutionDay
+order by  ExecutionDay
 
 -- COMMAND ----------
 
