@@ -69,6 +69,7 @@ cache table  vmax_date
 
 -- COMMAND ----------
 
+-- debug
 select *
 from vmax_date
 
@@ -130,9 +131,10 @@ cache table v_SCMM_Activities
 
 -- COMMAND ----------
 
-select request["Received"], count(*)
+select Activity_Day, count(*)
 from v_SCMM_Activities
-group by  request["Received"]
+group by  Activity_Day
+order by Activity_Day
 
 -- COMMAND ----------
 
