@@ -89,9 +89,9 @@
 					"translator": {
 						"type": "TabularTranslator",
 						"columnMappings": {
-							"fact_account_trans_id": "fact_account_trans_id",
-							"ActionDay": "ActionDay",
-							"ActionDate": "ActionDate",
+							"Fact_Lead_Assignments_ID": "Fact_Lead_Assignments_ID",
+							"Assignment_Day": "Assignment_Day",
+							"Assignment_Date": "Assignment_Date",
 							"Details": "Details"
 						}
 					}
