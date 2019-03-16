@@ -1,6 +1,7 @@
 {
 	"name": "DWH_Lead_Assignments",
 	"properties": {
+		"description": "assignments",
 		"activities": [
 			{
 				"name": "LK_Last_Date_Mng_azure_ETL",
@@ -137,6 +138,32 @@
 							"type": "Expression"
 						}
 					}
+				}
+			},
+			{
+				"name": "load assignments to events",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Update Manage Table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"notebookPath": "/Load Data/SCMM/Load Lead Assignments"
+				},
+				"linkedServiceName": {
+					"referenceName": "Analysis",
+					"type": "LinkedServiceReference"
 				}
 			}
 		],
