@@ -84,21 +84,6 @@ from vmax_Calls
 
 -- COMMAND ----------
 
--- DBTITLE 1,get max new data from mrr table and set to variable
--- MAGIC %python
--- MAGIC max_date_sql = sql("select max(fx.received) as Last_Received_Date from rawdata.DWH_Calls fx  where fx.received > cast('" + calls_manage.Last_Incremental_Date +"' as timestamp)" )
--- MAGIC max_received_col = max_date_sql.select('Last_Received_Date')
--- MAGIC 
--- MAGIC #do the if because if by any chance it will not find any date then the collect will fail "hive metadata error"
--- MAGIC if max_received_col is not None:
--- MAGIC   receivedDate = max_received_col.collect()[0][0]
--- MAGIC else:
--- MAGIC   receivedDate = None
--- MAGIC 
--- MAGIC max_date_sql.createOrReplaceTempView("vmax_Calls")
-
--- COMMAND ----------
-
 -- DBTITLE 1,update entity table on next date = new max date received
 -- MAGIC %python
 -- MAGIC if receivedDate is not None:
@@ -268,7 +253,3 @@ left join ods.accountcontacts as ac on d.Accountnumber = ac.Accountnumber
 -- MAGIC   new_val = {'PartitionKey': 'Load Events', 'RowKey': 'DWH_Calls','Last_Incremental_Date': Next_Call_Date_str }
 -- MAGIC 
 -- MAGIC table_service.insert_or_merge_entity('etlManage', new_val)
-
--- COMMAND ----------
-
--- delete from dwhdb.events where source like 'calls' and event_date_day >= '2019-02-25'
