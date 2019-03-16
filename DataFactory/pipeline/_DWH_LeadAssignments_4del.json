@@ -1,5 +1,5 @@
 {
-	"name": "DWH_Lead_Assignments",
+	"name": "_DWH_LeadAssignments_4del",
 	"properties": {
 		"activities": [
 			{
@@ -173,6 +173,12 @@
 				}
 			}
 		],
+		"variables": {
+			"Table_Name": {
+				"type": "String",
+				"defaultValue": "DWH_Lead_Assignments"
+			}
+		},
 		"folder": {
 			"name": "Data_from_SQL"
 		}
