@@ -98,13 +98,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "fxnet_accounting_src",
+						"referenceName": "dwh_lead_assignments_src",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "fxnet_accounting_blob",
+						"referenceName": "dwh_lead_assignments_blob",
 						"type": "DatasetReference"
 					}
 				]
