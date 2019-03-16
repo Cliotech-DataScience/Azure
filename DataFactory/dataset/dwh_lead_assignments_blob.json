@@ -15,12 +15,16 @@
 				"type": "Int32"
 			},
 			{
-				"name": "Assignment_Details",
-				"type": "String"
-			},
-			{
 				"name": "Assignment_Day",
 				"type": "DateTime"
+			},
+			{
+				"name": "Assignment_Date",
+				"type": "DateTime"
+			},
+			{
+				"name": "Details",
+				"type": "String"
 			}
 		],
 		"typeProperties": {
