@@ -78,12 +78,6 @@ from vmax_date
 
 -- COMMAND ----------
 
-select * from rawdata.DWH_Lead_Assignments
-where Lead_Assignments_ID= 1852388
-limit 1
-
--- COMMAND ----------
-
 -- creating the view for DWH_LeadAssignments
 create or replace temp view v_dwh_lead_assignments
 as
