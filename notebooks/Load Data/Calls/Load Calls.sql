@@ -15,11 +15,29 @@ select *
 from vlast_Calls
 
 -- COMMAND ----------
-
-
 -- -- create external table 
 
 --   drop table if exists rawdata.DWH_Calls ;
+
+--   create table rawdata.DWH_Calls
+--   (
+--   Call_Id	Int,
+--   Call_Details string,
+--   ExecutionDay date,
+--   Received timestamp
+
+--   )
+--   using csv
+--   partitioned by (received)
+--   location '/mnt/dataloadestore/rawdata/DWH_Calls/'
+--   options ('sep' = '\t' , 'quote'= "");
+
+-- COMMAND ----------
+
+
+-- -- create external table 
+--   drop table if exists rawdata.DWH_Calls ;
+--cache table rawdata.dwh_calls
 
 --   create table rawdata.DWH_Calls
 --   (
