@@ -310,7 +310,12 @@
 				"type": "Managed",
 				"typeProperties": {
 					"computeProperties": {
-						"location": "West Europe"
+						"location": "West Europe",
+						"dataFlowRuntime": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLiveInMinutes": 60
+						}
 					}
 				}
 			},

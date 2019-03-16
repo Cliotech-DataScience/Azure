@@ -219,6 +219,14 @@
 			"type": "string",
 			"defaultValue": "@concat('rawdata/DWH_Calls/received=',utcnow())"
 		},
+		"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@CONCAT('DWH_Lead_Assignments_', pipeline().TriggerTime, '.csv.bz2')"
+		},
+		"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@concat('rawdata/DWH_Lead_Assignments/Received=',utcnow())"
+		},
 		"fxnet_accounting_blob_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "@CONCAT('FXNET_Accounting_', pipeline().TriggerTime, '.csv.bz2')"
@@ -298,14 +306,6 @@
 		"pufiles_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
-		},
-		"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('DWH_Lead_Assignments_', pipeline().TriggerTime, '.csv.bz2')"
-		},
-		"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@concat('rawdata/DWH_Lead_Assignments/Received=',utcnow())"
 		},
 		"containerUri": {
 			"type": "string",
@@ -439,9 +439,6 @@
 					"alldbdwh_password": {
 						"value": "[parameters('alldbdwh_password')]"
 					},
-					"destpufiles_connectionString": {
-						"value": "[parameters('destpufiles_connectionString')]"
-					},
 					"blob_EMERP_Events_properties_typeProperties_fileName": {
 						"value": "[parameters('blob_EMERP_Events_properties_typeProperties_fileName')]"
 					},
@@ -480,6 +477,12 @@
 					},
 					"dwh_calls_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('dwh_calls_blob_properties_typeProperties_folderPath')]"
+					},
+					"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_fileName')]"
+					},
+					"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_folderPath')]"
 					},
 					"fxnet_accounting_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_fileName')]"
@@ -543,6 +546,9 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"destpufiles_connectionString": {
+						"value": "[parameters('destpufiles_connectionString')]"
+					},
 					"dwh12_connectionString": {
 						"value": "[parameters('dwh12_connectionString')]"
 					},
@@ -581,12 +587,6 @@
 					},
 					"pufiles_properties_typeProperties_userId": {
 						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
-					},
-					"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_fileName')]"
-					},
-					"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_folderPath')]"
 					},
 					"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 						"value": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"
