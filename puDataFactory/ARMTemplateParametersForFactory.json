@@ -152,12 +152,6 @@
 		"blob_platfrom_unzip_file_1_properties_typeProperties_folderPath": {
 			"value": "@dataset().folder_name"
 		},
-		"checkin_test_properties_typeProperties_fileName": {
-			"value": "*.parquet"
-		},
-		"checkin_test_properties_typeProperties_folderPath": {
-			"value": "bi-db/fact_events"
-		},
 		"dwh_Dim_Users_blob_properties_typeProperties_fileName": {
 			"value": "Users.csv"
 		},
@@ -169,12 +163,6 @@
 		},
 		"dwh_calls_blob_properties_typeProperties_folderPath": {
 			"value": "@concat('rawdata/DWH_Calls/received=',utcnow())"
-		},
-		"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
-			"value": "@CONCAT('DWH_LeadAssignments_', pipeline().TriggerTime, '.csv.bz2')"
-		},
-		"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
-			"value": "@concat('rawdata/DWH_LeadAssignments/Received=',utcnow())"
 		},
 		"fxnet_accounting_blob_properties_typeProperties_fileName": {
 			"value": "@CONCAT('FXNET_Accounting_', pipeline().TriggerTime, '.csv.bz2')"
@@ -235,6 +223,12 @@
 		},
 		"pufiles_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
+		},
+		"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
+			"value": "@CONCAT('DWH_Lead_Assignments_', pipeline().TriggerTime, '.csv.bz2')"
+		},
+		"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
+			"value": "@concat('rawdata/DWH_Lead_Assignments/Received=',utcnow())"
 		}
 	}
 }
