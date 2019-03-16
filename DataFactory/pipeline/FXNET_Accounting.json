@@ -164,6 +164,7 @@
 					"referenceName": "Analysis",
 					"type": "LinkedServiceReference"
 				}
+        
 			}
 		],
 		"variables": {

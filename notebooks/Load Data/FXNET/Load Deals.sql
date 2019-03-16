@@ -3,21 +3,41 @@
 -- MAGIC %python
 -- MAGIC from azure.cosmosdb.table.tableservice import TableService
 -- MAGIC from azure.cosmosdb.table.models import Entity
+
 -- MAGIC manage_table = 'etlManage'
 -- MAGIC manage_partition_key = 'Load Events'
 -- MAGIC manage_row_key = 'FXNET_Deals'
 -- MAGIC table_service = TableService(account_name='dataloadestore', account_key='7wtLQIcK9q4QnXMCL6AO9I233TSi3hITG6tC4jO5VDEv3+ovoQo6NYv5IcboZo6Ncf5GeULV7uPdvUW+k8gJGA==')
 -- MAGIC deals_manage = table_service.get_entity(manage_table, manage_partition_key, manage_row_key)
+
 -- MAGIC Last_Deal_Date_str = deals_manage.Last_Incremental_Date
 -- MAGIC Last_Deal_Date_df = sql("select '"+Last_Deal_Date_str+"' as Last_Deal_Date")
 -- MAGIC Last_Deal_Date_df.createOrReplaceTempView("vlast_Deals")
 
 -- COMMAND ----------
 
+
 select *
 from vlast_Deals
 
 -- COMMAND ----------
+
+
+--    drop table if exists rawdata.FXNET_deals ;
+
+--    create table rawdata.FXNET_deals
+--    (
+--    TransactionNumber	bigint,
+--    Trans_Details string,
+--    ExecutionDay date,
+--    Received timestamp
+
+
+--    )
+--    using csv
+--    partitioned by (received)
+--    location '/mnt/dataloadestore/rawdata/FXNET_Deals/'
+--    options ('sep' = '\t' , 'quote'= "");
 
 
     drop table if exists rawdata.FXNET_deals ;
@@ -61,15 +81,52 @@ msck repair table rawdata.FXNET_deals
 
 select * from vmax_Deals
 
+-- read the new partitions
+msck repair table rawdata.FXNET_deals
+
+-- COMMAND ----------
+
+--cache table rawdata.FXNET_deals
+
+-- COMMAND ----------
+
+-- select count(*),executionday
+-- from rawdata.fxnet_deals 
+-- where executionDay>'2019-01-01'
+-- group by executionDay
+
+-- COMMAND ----------
+
+-- DBTITLE 1,get max new data from mrr table and set to variable
+-- MAGIC %python
+-- MAGIC max_date_sql = sql("select max(fx.Received) as Next_Received_Date from rawdata.FXNET_deals fx  where fx.Received > cast('" + deals_manage.Last_Incremental_Date +"' as timestamp)" )
+-- MAGIC max_received_col = max_date_sql.select('Next_Received_Date')
+-- MAGIC 
+-- MAGIC #do the if because if by any chance it will not find any date then the collect will fail "hive metadata error"
+-- MAGIC if max_received_col is not None:
+-- MAGIC   receivedDate = max_received_col.collect()[0][0]
+-- MAGIC else:
+-- MAGIC   receivedDate = None
+-- MAGIC 
+-- MAGIC max_date_sql.createOrReplaceTempView("vmax_Deals")
+
+
 -- COMMAND ----------
 
 -- DBTITLE 1,update entity table on next date = new max date received
 -- MAGIC %python
 -- MAGIC if receivedDate is not None:
+
 -- MAGIC   new_val = {'PartitionKey': manage_partition_key, 'RowKey': manage_row_key,'Next_Incremental_Date' : receivedDate.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] }
 -- MAGIC else:
 -- MAGIC   new_val = {'PartitionKey': manage_partition_key, 'RowKey': manage_row_key,'Next_Incremental_Date' : Last_Deal_Date_str}
 -- MAGIC table_service.insert_or_merge_entity(manage_table, new_val)
+
+-- MAGIC   new_val = {'PartitionKey': 'Load Events', 'RowKey': 'FXNET_Deals','Next_Incremental_Date' : receivedDate.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] }
+-- MAGIC else:
+-- MAGIC   new_val = {'PartitionKey': 'Load Events', 'RowKey': 'FXNET_Deals','Next_Incremental_Date' : Last_Deal_Date_str}
+-- MAGIC table_service.insert_or_merge_entity('etlManage', new_val)
+
 
 -- COMMAND ----------
 
@@ -147,6 +204,7 @@ where r.received >  (select mng.Last_Deal_Date from vlast_Deals mng)
 
 -- COMMAND ----------
 
+
 -- cahce account contacts for the join
 cache table ods.accountcontacts
 
@@ -156,6 +214,12 @@ select ExecutionDay, count(*)
 from v_fxnet_deals
 group by  ExecutionDay
 order by ExecutionDay
+
+-- COMMAND ----------
+
+-- cahce account contacts for the join
+cache table ods.accountcontacts
+
 
 -- COMMAND ----------
 
@@ -228,6 +292,7 @@ from v_fxnet_deals as d left join ods.accountcontacts as ac on d.Accountnumber =
 
 -- DBTITLE 1,Update entity table with last deal date = new max date 
 -- MAGIC %python
+
 -- MAGIC deals_manage_Last = table_service.get_entity(manage_table, manage_partition_key, manage_row_key)
 -- MAGIC Next_Deal_Date_str = deals_manage_Last.Next_Incremental_Date
 -- MAGIC 
