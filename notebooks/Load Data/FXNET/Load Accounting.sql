@@ -26,11 +26,6 @@ msck repair table rawdata.FXNET_Accounting
 
 -- COMMAND ----------
 
-select *
-from rawdata.FXNET_Accounting
-
--- COMMAND ----------
-
 -- DBTITLE 1,Create table service | get last  date | create view with the last date
 -- MAGIC %python
 -- MAGIC from azure.cosmosdb.table.tableservice import TableService
