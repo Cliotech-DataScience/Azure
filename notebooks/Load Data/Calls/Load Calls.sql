@@ -91,7 +91,7 @@ select
     get_json_object(Call_details, "$.BrokerName") as BrokerName,
     get_json_object(Call_details, "$.BrandId") as BrandId,
   map(
-		"Call_ID", get_json_object(Call_details, "$.Call_ID"),
+		"Call_ID", Call_ID,
         "PBX_ID", get_json_object(Call_details, "$.PBX_ID"),
         "User_ID", get_json_object(Call_details, "$.User_ID"),
         "Extension", get_json_object(Call_details, "$.Extension"),
@@ -137,8 +137,8 @@ select
 		"CPK_Call_Price", get_json_object(Call_details, "$.CPK_Call_Price"),
 		"RSC_Call_Price", get_json_object(Call_details, "$.RSC_Call_Price"),
 		"ActualPrice",get_json_object(Call_details, "$.ActualPrice"),
-		"CallDay", get_json_object(Call_details, "$.CallDay"),
-        "Recieved", received
+		"CallDay", CallDay,
+        "Recieved", Received
       ) as Request ,
   ExecutionDay
 from rawdata.DWH_Calls r 
