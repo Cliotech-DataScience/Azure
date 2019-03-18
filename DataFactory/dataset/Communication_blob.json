@@ -43,7 +43,7 @@
 				"type": "Expression"
 			},
 			"folderPath": {
-				"value": "@concat('rawdata/Communication/Received=',utcnow())",
+				"value": "@concat('rawdata/Communication/Received=',utcnow('s'))",
 				"type": "Expression"
 			}
 		}
