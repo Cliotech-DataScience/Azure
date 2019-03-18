@@ -55,7 +55,7 @@ from vlast_date
 
 -- DBTITLE 1,get max new data from mrr table and set to variable
 -- MAGIC %python
--- MAGIC max_date_sql = sql("select max(fx.Received) as Last_Received_Date from rawdata.DWH_Calls fx  where fx.Received > cast('" + calls_manage.Last_Incremental_Date +"' as timestamp)" )
+-- MAGIC max_date_sql = sql("select max(fx.Received) as Last_Received_Date from rawdata.DWH_Calls fx  where fx.Received > cast('" + manage.Last_Incremental_Date +"' as timestamp)" )
 -- MAGIC max_received_col = max_date_sql.select('Last_Received_Date')
 -- MAGIC 
 -- MAGIC #do the if because if by any chance it will not find any date then the collect will fail "hive metadata error"
@@ -168,7 +168,7 @@ cache table ods.accountcontacts
 -- -- insert the events
 -- --create or replace temp view fxnet_deals_for_insert
 -- --as
- insert into dwhdb.Events
+insert into dwhdb.Events
 select 
   Event_Date    ,
   'calls' as Source  ,
