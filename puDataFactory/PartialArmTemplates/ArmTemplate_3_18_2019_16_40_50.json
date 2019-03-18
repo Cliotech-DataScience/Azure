@@ -1,0 +1,178 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "puDataFactory"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Communication_blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DataloadStore",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "MessageID",
+						"type": "Int32"
+					},
+					{
+						"name": "Event_Date",
+						"type": "DateTime"
+					},
+					{
+						"name": "details",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": "\t",
+						"rowDelimiter": "",
+						"quoteChar": "",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"compression": {
+						"type": "BZip2"
+					},
+					"fileName": {
+						"value": "@CONCAT('Communication_', pipeline().TriggerTime, '.csv.bz2')",
+						"type": "Expression"
+					},
+					"folderPath": {
+						"value": "@concat('rawdata/Communication/Received=',utcnow('s'))",
+						"type": "Expression"
+					}
+				}
+			}
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dwh_lead_assignments_blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DataloadStore",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "Fact_Lead_Assignments_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Assignment_Day",
+						"type": "DateTime"
+					},
+					{
+						"name": "Assignment_Date",
+						"type": "DateTime"
+					},
+					{
+						"name": "Details",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": "\t",
+						"rowDelimiter": "",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"compression": {
+						"type": "BZip2"
+					},
+					"fileName": {
+						"value": "@CONCAT('DWH_Lead_Assignments_', pipeline().TriggerTime, '.csv.bz2')",
+						"type": "Expression"
+					},
+					"folderPath": {
+						"value": "@concat('rawdata/DWH_Lead_Assignments/Received=',utcnow('s'))",
+						"type": "Expression"
+					}
+				}
+			}
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/scmm_activities_blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DataloadStore",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "Activity_Id",
+						"type": "Int32"
+					},
+					{
+						"name": "Activity_Date",
+						"type": "DateTime"
+					},
+					{
+						"name": "details",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": "\t",
+						"rowDelimiter": "",
+						"quoteChar": "",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"compression": {
+						"type": "BZip2"
+					},
+					"fileName": {
+						"value": "@CONCAT('SCMM_Activities_', pipeline().TriggerTime, '.csv.bz2')",
+						"type": "Expression"
+					},
+					"folderPath": {
+						"value": "@concat('rawdata/SCMM_Activities/Received=',utcnow('s'))",
+						"type": "Expression"
+					}
+				}
+			}
+		}
+	]
+}

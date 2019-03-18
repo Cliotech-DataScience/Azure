@@ -137,7 +137,7 @@
 		},
 		"Communication_blob_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "@concat('rawdata/Communication/Received=',utcnow())"
+			"defaultValue": "@concat('rawdata/Communication/Received=',utcnow('s'))"
 		},
 		"DWH_Dim_Customers_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -217,7 +217,7 @@
 		},
 		"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "@concat('rawdata/DWH_Lead_Assignments/Received=',utcnow())"
+			"defaultValue": "@concat('rawdata/DWH_Lead_Assignments/Received=',utcnow('s'))"
 		},
 		"fxnet_accounting_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -249,7 +249,7 @@
 		},
 		"scmm_activities_blob_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "@concat('rawdata/SCMM_Activities/Received=',utcnow())"
+			"defaultValue": "@concat('rawdata/SCMM_Activities/Received=',utcnow('s'))"
 		},
 		"unzip_platfrom_file_properties_typeProperties_fileName": {
 			"type": "string",

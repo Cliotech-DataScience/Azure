@@ -102,7 +102,7 @@
 			"value": "@CONCAT('Communication_', pipeline().TriggerTime, '.csv.bz2')"
 		},
 		"Communication_blob_properties_typeProperties_folderPath": {
-			"value": "@concat('rawdata/Communication/Received=',utcnow())"
+			"value": "@concat('rawdata/Communication/Received=',utcnow('s'))"
 		},
 		"DWH_Dim_Customers_blob_properties_typeProperties_fileName": {
 			"value": "@CONCAT('Customers_', pipeline().RunId, '.csv')"
@@ -162,7 +162,7 @@
 			"value": "@CONCAT('DWH_Lead_Assignments_', pipeline().TriggerTime, '.csv.bz2')"
 		},
 		"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
-			"value": "@concat('rawdata/DWH_Lead_Assignments/Received=',utcnow())"
+			"value": "@concat('rawdata/DWH_Lead_Assignments/Received=',utcnow('s'))"
 		},
 		"fxnet_accounting_blob_properties_typeProperties_fileName": {
 			"value": "@CONCAT('FXNET_Accounting_', pipeline().TriggerTime, '.csv.bz2')"
@@ -186,7 +186,7 @@
 			"value": "@CONCAT('SCMM_Activities_', pipeline().TriggerTime, '.csv.bz2')"
 		},
 		"scmm_activities_blob_properties_typeProperties_folderPath": {
-			"value": "@concat('rawdata/SCMM_Activities/Received=',utcnow())"
+			"value": "@concat('rawdata/SCMM_Activities/Received=',utcnow('s'))"
 		},
 		"unzip_platfrom_file_properties_typeProperties_fileName": {
 			"value": ""
