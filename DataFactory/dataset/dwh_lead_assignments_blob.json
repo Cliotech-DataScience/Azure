@@ -46,7 +46,7 @@
 				"type": "Expression"
 			},
 			"folderPath": {
-				"value": "@concat('rawdata/DWH_Lead_Assignments/Received=',utcnow())",
+				"value": "@concat('rawdata/DWH_Lead_Assignments/Received=',utcnow('s'))",
 				"type": "Expression"
 			}
 		}
