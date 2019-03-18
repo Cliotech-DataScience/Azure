@@ -1,0 +1,26 @@
+{
+	"name": "pipeline1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "MergeTableStore",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"PartitionKey": "test",
+						"RowKey": "test",
+						"PropertyName": "Last_Incremental_Date",
+						"PropertyValue": {
+							"value": "@utcnow('s')",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		]
+	}
+}
