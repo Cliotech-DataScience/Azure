@@ -71,14 +71,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'destpufiles'"
 		},
-		"dwh12_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'dwh12'"
-		},
-		"dwh12_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'dwh12'"
-		},
 		"dwhdb_blob_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'dwhdb_blob'"
@@ -217,7 +209,7 @@
 		},
 		"dwh_calls_blob_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "@concat('rawdata/DWH_Calls/received=',utcnow())"
+			"defaultValue": "@concat('rawdata/DWH_Calls/Received=',utcnow('s'))"
 		},
 		"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -284,10 +276,6 @@
 			"defaultValue": "https://dataloadestore.table.core.windows.net/"
 		},
 		"alldbdwh_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "efix\\az_etl"
-		},
-		"dwh12_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
@@ -549,12 +537,6 @@
 					"destpufiles_connectionString": {
 						"value": "[parameters('destpufiles_connectionString')]"
 					},
-					"dwh12_connectionString": {
-						"value": "[parameters('dwh12_connectionString')]"
-					},
-					"dwh12_password": {
-						"value": "[parameters('dwh12_password')]"
-					},
 					"emerp_lm_connectionString": {
 						"value": "[parameters('emerp_lm_connectionString')]"
 					},
@@ -572,9 +554,6 @@
 					},
 					"pufiles_password": {
 						"value": "[parameters('pufiles_password')]"
-					},
-					"dwh12_properties_typeProperties_userName": {
-						"value": "[parameters('dwh12_properties_typeProperties_userName')]"
 					},
 					"emerp_lm_properties_typeProperties_userName": {
 						"value": "[parameters('emerp_lm_properties_typeProperties_userName')]"

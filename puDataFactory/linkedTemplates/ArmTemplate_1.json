@@ -85,7 +85,7 @@
 		},
 		"dwh_calls_blob_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "@concat('rawdata/DWH_Calls/received=',utcnow())"
+			"defaultValue": "@concat('rawdata/DWH_Calls/Received=',utcnow('s'))"
 		},
 		"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
 			"type": "string",

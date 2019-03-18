@@ -71,14 +71,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'destpufiles'"
 		},
-		"dwh12_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'dwh12'"
-		},
-		"dwh12_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'dwh12'"
-		},
 		"dwhdb_blob_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'dwhdb_blob'"
@@ -217,7 +209,7 @@
 		},
 		"dwh_calls_blob_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "@concat('rawdata/DWH_Calls/received=',utcnow())"
+			"defaultValue": "@concat('rawdata/DWH_Calls/Received=',utcnow('s'))"
 		},
 		"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -284,10 +276,6 @@
 			"defaultValue": "https://dataloadestore.table.core.windows.net/"
 		},
 		"alldbdwh_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "efix\\az_etl"
-		},
-		"dwh12_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
@@ -5738,30 +5726,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/dwh12')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('dwh12_connectionString')]",
-					"userName": "[parameters('dwh12_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('dwh12_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "alldbgateway",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/alldbgateway')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/dwhdb_blob')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -5948,6 +5912,44 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DWH Lead Assignments')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "DWH_Lead_Assignments",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-03-16T22:04:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								20
+							],
+							"hours": [
+								8
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/DWH_Lead_Assignments')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/FXNET Accounting Daily')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -6127,44 +6129,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DWH Lead Assignments')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "DWH_Lead_Assignments",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-03-16T22:04:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								20
-							],
-							"hours": [
-								8
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/DWH_Lead_Assignments')]"
-			]
 		}
 	]
 }
