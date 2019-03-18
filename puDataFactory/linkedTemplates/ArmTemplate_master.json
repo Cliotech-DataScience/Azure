@@ -225,7 +225,7 @@
 		},
 		"fxnet_accounting_blob_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "@concat('rawdata/FXNET_Accounting/Received=',utcnow())"
+			"defaultValue": "@concat('rawdata/FXNET_Accounting/Received=',utcnow('s'))"
 		},
 		"fxnet_deals_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -233,7 +233,7 @@
 		},
 		"fxnet_deals_blob_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "@concat('rawdata/FXNET_Deals/Received=',utcnow())"
+			"defaultValue": "@concat('rawdata/FXNET_Deals/Received=',utcnow('s'))"
 		},
 		"platformusage_blob_properties_typeProperties_fileName": {
 			"type": "string",

@@ -168,13 +168,13 @@
 			"value": "@CONCAT('FXNET_Accounting_', pipeline().TriggerTime, '.csv.bz2')"
 		},
 		"fxnet_accounting_blob_properties_typeProperties_folderPath": {
-			"value": "@concat('rawdata/FXNET_Accounting/Received=',utcnow())"
+			"value": "@concat('rawdata/FXNET_Accounting/Received=',utcnow('s'))"
 		},
 		"fxnet_deals_blob_properties_typeProperties_fileName": {
 			"value": "@CONCAT('FXNET_Deals_', pipeline().TriggerTime, '.csv.bz2')"
 		},
 		"fxnet_deals_blob_properties_typeProperties_folderPath": {
-			"value": "@concat('rawdata/FXNET_Deals/Received=',utcnow())"
+			"value": "@concat('rawdata/FXNET_Deals/Received=',utcnow('s'))"
 		},
 		"platformusage_blob_properties_typeProperties_fileName": {
 			"value": "@dataset().file_name"
