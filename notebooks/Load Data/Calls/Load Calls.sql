@@ -1,39 +1,20 @@
 -- Databricks notebook source
--- DBTITLE 1,Create table service | get last call date | create view with the last date
--- MAGIC %python
--- MAGIC from azure.cosmosdb.table.tableservice import TableService
--- MAGIC from azure.cosmosdb.table.models import Entity
--- MAGIC table_service = TableService(account_name='dataloadestore', account_key='7wtLQIcK9q4QnXMCL6AO9I233TSi3hITG6tC4jO5VDEv3+ovoQo6NYv5IcboZo6Ncf5GeULV7uPdvUW+k8gJGA==')
--- MAGIC calls_manage = table_service.get_entity('etlManage', 'Load Events', 'DWH_Calls')
--- MAGIC Last_Call_Date_str = calls_manage.Last_Incremental_Date
--- MAGIC Last_Call_Date_df = sql("select '"+Last_Call_Date_str+"' as Last_Call_Date")
--- MAGIC Last_Call_Date_df.createOrReplaceTempView("vlast_Calls")
+-- create external table 
 
--- COMMAND ----------
+drop table if exists rawdata.DWH_Calls ;
 
--- debug
-select *
-from vlast_Calls
+create table rawdata.DWH_Calls
+(
+  Call_Id	Int,
+  Call_Details string,
+  CallDay date,
+  Received timestamp
 
--- COMMAND ----------
-
-
--- -- create external table 
-
---   drop table if exists rawdata.DWH_Calls ;
-
---   create table rawdata.DWH_Calls
---   (
---   Call_Id	Int,
---   Call_Details string,
---   ExecutionDay date,
---   Received timestamp
-
---   )
---   using csv
---   partitioned by (received)
---   location '/mnt/dataloadestore/rawdata/DWH_Calls/'
---   options ('sep' = '\t' , 'quote'= "");
+)
+using csv
+partitioned by (Received)
+location '/mnt/dataloadestore/rawdata/DWH_Calls/'
+options ('sep' = '\t' , 'quote'= "");
 
 
 -- COMMAND ----------
@@ -43,13 +24,38 @@ msck repair table rawdata.DWH_Calls
 
 -- COMMAND ----------
 
+-- DBTITLE 1,Create table service | get last call date | create view with the last date
+-- MAGIC %python
+-- MAGIC from azure.cosmosdb.table.tableservice import TableService
+-- MAGIC from azure.cosmosdb.table.models import Entity
+-- MAGIC table_service = TableService(account_name='dataloadestore', account_key='7wtLQIcK9q4QnXMCL6AO9I233TSi3hITG6tC4jO5VDEv3+ovoQo6NYv5IcboZo6Ncf5GeULV7uPdvUW+k8gJGA==')
+-- MAGIC manage_table = 'etlManage'
+-- MAGIC manage_partition_key = 'Load Events'
+-- MAGIC manage_row_key = 'DWH_Calls'
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC manage = table_service.get_entity(manage_table, manage_partition_key, manage_row_key)
+-- MAGIC Last_Date_str = manage.Last_Incremental_Date
+-- MAGIC Last_Date_df = sql("select cast('"+Last_Date_str+"' as timestamp) as Last_Date")
+-- MAGIC Last_Date_df.createOrReplaceTempView("vlast_date")
+
+-- COMMAND ----------
+
+-- debug
+select *
+from vlast_date
+
+-- COMMAND ----------
+
 --cache table rawdata.dwh_calls
 
 -- COMMAND ----------
 
 -- DBTITLE 1,get max new data from mrr table and set to variable
 -- MAGIC %python
--- MAGIC max_date_sql = sql("select max(fx.received) as Last_Received_Date from rawdata.DWH_Calls fx  where fx.received > cast('" + calls_manage.Last_Incremental_Date +"' as timestamp)" )
+-- MAGIC max_date_sql = sql("select max(fx.Received) as Last_Received_Date from rawdata.DWH_Calls fx  where fx.Received > cast('" + calls_manage.Last_Incremental_Date +"' as timestamp)" )
 -- MAGIC max_received_col = max_date_sql.select('Last_Received_Date')
 -- MAGIC 
 -- MAGIC #do the if because if by any chance it will not find any date then the collect will fail "hive metadata error"
@@ -58,22 +64,22 @@ msck repair table rawdata.DWH_Calls
 -- MAGIC else:
 -- MAGIC   receivedDate = None
 -- MAGIC 
--- MAGIC max_date_sql.createOrReplaceTempView("vmax_Calls")
+-- MAGIC max_date_sql.createOrReplaceTempView("vmax_date")
 
 -- COMMAND ----------
 
 select *
-from vmax_Calls
+from vmax_date
 
 -- COMMAND ----------
 
 -- DBTITLE 1,update entity table on next date = new max date received
 -- MAGIC %python
 -- MAGIC if receivedDate is not None:
--- MAGIC   new_val = {'PartitionKey': 'Load Events', 'RowKey': 'DWH_Calls','Next_Incremental_Date' : receivedDate.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3]}
+-- MAGIC   new_val = {'PartitionKey': manage_partition_key, 'RowKey': manage_row_key,'Next_Incremental_Date' : receivedDate.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3]}
 -- MAGIC else:
--- MAGIC   new_val = {'PartitionKey': 'Load Events', 'RowKey': 'DWH_Calls','Next_Incremental_Date' : Last_Call_Date_str}
--- MAGIC table_service.insert_or_merge_entity('etlManage', new_val)
+-- MAGIC   new_val = {'PartitionKey': manage_partition_key, 'RowKey': manage_row_key,'Next_Incremental_Date' : Last_Date_str}
+-- MAGIC table_service.insert_or_merge_entity(manage_table , new_val)
 
 -- COMMAND ----------
 
@@ -84,14 +90,14 @@ select
     get_json_object(Call_details, "$.Event_Name") as Event_Name, 
     get_json_object(Call_details, "$.Event_Details") as Event_Details, 
     
-    cast(get_json_object(Call_details, "$.CallDate") as timeStamp) as ExecutionDate,
+    cast(get_json_object(Call_details, "$.CallDate") as timeStamp) as Event_Date,
     get_json_object(Call_details, "$.AccountNumber") as AccountNumber,
     get_json_object(Call_details, "$.Contact_ID") as Contact_ID,
     get_json_object(Call_details, "$.BrokerID") as Broker_ID,
     get_json_object(Call_details, "$.BrokerName") as BrokerName,
     get_json_object(Call_details, "$.BrandId") as BrandId,
   map(
-		"Call_ID", get_json_object(Call_details, "$.Call_ID"),
+		"Call_ID", Call_ID,
         "PBX_ID", get_json_object(Call_details, "$.PBX_ID"),
         "User_ID", get_json_object(Call_details, "$.User_ID"),
         "Extension", get_json_object(Call_details, "$.Extension"),
@@ -137,20 +143,20 @@ select
 		"CPK_Call_Price", get_json_object(Call_details, "$.CPK_Call_Price"),
 		"RSC_Call_Price", get_json_object(Call_details, "$.RSC_Call_Price"),
 		"ActualPrice",get_json_object(Call_details, "$.ActualPrice"),
-		"CallDay", get_json_object(Call_details, "$.CallDay"),
-        "Recieved", received
+		"CallDay", CallDay,
+        "Recieved", Received
       ) as Request ,
-  ExecutionDay
+  CallDay
 from rawdata.DWH_Calls r 
- where r.received >  (select cast(Last_Call_Date as timestamp) from vlast_Calls) --Last_Call_Date.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3]
-   and r.received <= (select cast(Last_Received_Date as timestamp) from vmax_Calls)--receivedDate.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] 
+where r.Received >  (select cast(Last_Date as timestamp) from vlast_date) --Last_Call_Date.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3]
+  and r.Received <= (select cast(Last_Received_Date as timestamp) from vmax_date)--receivedDate.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] 
 
 -- COMMAND ----------
 
-select ExecutionDay, count(*)
+select CallDay, count(*)
 from v_dwh_calls
-group by  ExecutionDay
-order by  ExecutionDay
+group by  CallDay
+order by  CallDay
 
 -- COMMAND ----------
 
@@ -164,7 +170,7 @@ cache table ods.accountcontacts
 -- --as
  insert into dwhdb.Events
 select 
-  ExecutionDate    ,
+  Event_Date    ,
   'calls' as Source  ,
   lower(Event_Name) as Event_Name,
   Event_Details as Event_Details,
@@ -219,7 +225,7 @@ select
 
 -- request and partition
   Request ,
-  ExecutionDay as Event_Date_day
+  CallDay as Event_Date_day
 from v_dwh_calls as d 
 left join ods.accountcontacts as ac on d.Accountnumber = ac.Accountnumber
 
@@ -229,10 +235,10 @@ left join ods.accountcontacts as ac on d.Accountnumber = ac.Accountnumber
 
 -- DBTITLE 1,Update entity table with last call date = new max date 
 -- MAGIC %python
--- MAGIC calls_manage_Last = table_service.get_entity('etlManage', 'Load Events', 'DWH_Calls')
--- MAGIC Next_Call_Date_str = calls_manage_Last.Next_Incremental_Date
+-- MAGIC manage = table_service.get_entity(manage_table, manage_partition_key, manage_row_key)
+-- MAGIC Next_Date_str = manage.Next_Incremental_Date
 -- MAGIC 
 -- MAGIC if receivedDate is not None:
--- MAGIC   new_val = {'PartitionKey': 'Load Events', 'RowKey': 'DWH_Calls','Last_Incremental_Date': Next_Call_Date_str }
+-- MAGIC   new_val = {'PartitionKey': manage_partition_key, 'RowKey': manage_row_key,'Last_Incremental_Date': Next_Date_str }
 -- MAGIC 
--- MAGIC table_service.insert_or_merge_entity('etlManage', new_val)
+-- MAGIC table_service.insert_or_merge_entity(manage_table, new_val)
