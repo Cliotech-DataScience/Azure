@@ -1,0 +1,38 @@
+{
+	"name": "dwh_Customer_Questionnaires_blob",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DataloadStore",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DWH"
+		},
+		"type": "AzureBlob",
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": "\t",
+				"rowDelimiter": "",
+				"quoteChar": "",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": false
+			},
+			"compression": {
+				"type": "BZip2"
+			},
+			"fileName": {
+				"value": "@CONCAT('Customer_Questionnaires_', pipeline().TriggerTime, '.csv.bz2')",
+				"type": "Expression"
+			},
+			"folderPath": {
+				"value": "@concat('rawdata/Customer_Questionnaires/Received=',utcnow('s'))",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
