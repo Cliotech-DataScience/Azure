@@ -1,0 +1,31 @@
+{
+	"name": "dwh_Customer_Questionnaires_src",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DWH",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DWH"
+		},
+		"type": "SqlServerTable",
+		"structure": [
+			{
+				"name": "AccountNumber",
+				"type": "Int32"
+			},
+			{
+				"name": "details",
+				"type": "String"
+			},
+			{
+				"name": "Last_Update",
+				"type": "DateTime"
+			}
+		],
+		"typeProperties": {
+			"tableName": "[azure].[AZ_Customer_Questionnaires]"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
