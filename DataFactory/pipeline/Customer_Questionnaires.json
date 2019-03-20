@@ -169,7 +169,7 @@
 		"variables": {
 			"Table_Name": {
 				"type": "String",
-				"defaultValue": "FXNET_Accounting"
+				"defaultValue": "Customer_Questionnaires"
 			}
 		},
 		"folder": {
