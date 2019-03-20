@@ -1,0 +1,377 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name"
+		},
+		"Analysis": {
+			"type": "string"
+		},
+		"DataLoadStorageAccount": {
+			"type": "string"
+		},
+		"emerp_lm": {
+			"type": "string"
+		},
+		"DataloadStore": {
+			"type": "string"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/SCMM_Activities')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LK_Last_Date_Mng_azure_ETL",
+						"type": "Lookup",
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"source": {
+								"type": "AzureTableSource",
+								"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq 'SCMM_Activities'",
+								"azureTableSourceIgnoreTableNotFound": false
+							},
+							"dataset": {
+								"referenceName": "etl_manage",
+								"type": "DatasetReference"
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "LK_new_max_date",
+						"type": "Lookup",
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "SELECT Last_Activity_Date = MAX(Activity_Date)\nFROM azure.AZ_SCMM_Activities\n"
+							},
+							"dataset": {
+								"referenceName": "scmm_activities_src",
+								"type": "DatasetReference"
+							}
+						}
+					},
+					{
+						"name": "copy_to_blob",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "LK_Last_Date_Mng_azure_ETL",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "LK_new_max_date",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "select * \nFROM EMERP_LM.azure.AZ_SCMM_Activities\nwhere Activity_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Activity_Date <= '@{activity('LK_new_max_Date').output.firstRow.Last_Activity_Date}'",
+									"type": "Expression"
+								}
+							},
+							"sink": {
+								"type": "BlobSink"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Activity_Id": "Activity_Id",
+									"Activity_Date": "Activity_Date",
+									"details": "details"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "scmm_activities_src",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "scmm_activities_blob",
+								"type": "DatasetReference"
+							}
+						]
+					},
+					{
+						"name": "Update Manage Table",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "copy_to_blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "MergeTableStore",
+								"type": "PipelineReference"
+							},
+							"parameters": {
+								"PartitionKey": "Upload Data",
+								"RowKey": "SCMM_Activities",
+								"PropertyName": "Last_Incremental_Date",
+								"PropertyValue": {
+									"value": "@activity('LK_new_max_date').output.firstRow.Last_Activity_Date",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Load_Activities_To_Events",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Update Manage Table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"notebookPath": "/Load Data/SCMM/Load Activities"
+						},
+						"linkedServiceName": {
+							"referenceName": "[parameters('Analysis')]",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Data_from_SQL"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/etl_manage')]",
+				"[concat(variables('factoryId'), '/datasets/scmm_activities_src')]",
+				"[concat(variables('factoryId'), '/datasets/scmm_activities_blob')]",
+				"[concat(variables('factoryId'), '/pipelines/MergeTableStore')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/etl_manage')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('DataLoadStorageAccount')]",
+					"type": "LinkedServiceReference"
+				},
+				"type": "AzureTable",
+				"structure": [
+					{
+						"name": "PartitionKey",
+						"type": "String"
+					},
+					{
+						"name": "RowKey",
+						"type": "String"
+					},
+					{
+						"name": "Timestamp",
+						"type": "DateTimeOffset"
+					},
+					{
+						"name": "Last_Incremental_Date",
+						"type": "String"
+					},
+					{
+						"name": "Next_Incremental_Date",
+						"type": "String"
+					},
+					{
+						"name": "Last_PU_INT",
+						"type": "Int64"
+					},
+					{
+						"name": "Next_PU_INT",
+						"type": "Int64"
+					}
+				],
+				"typeProperties": {
+					"tableName": "etlManage"
+				}
+			}
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/scmm_activities_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('emerp_lm')]",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "Activity_Id",
+						"type": "Int32"
+					},
+					{
+						"name": "Activity_Date",
+						"type": "DateTime"
+					},
+					{
+						"name": "details",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[concat('[', 'azure].[AZ_SCMM_Activities]')]"
+				}
+			}
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/scmm_activities_blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "[parameters('DataloadStore')]",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "Activity_Id",
+						"type": "Int32"
+					},
+					{
+						"name": "Activity_Date",
+						"type": "DateTime"
+					},
+					{
+						"name": "details",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": "\t",
+						"rowDelimiter": "",
+						"quoteChar": "",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"compression": {
+						"type": "BZip2"
+					},
+					"fileName": {
+						"value": "@CONCAT('SCMM_Activities_', pipeline().TriggerTime, '.csv.bz2')",
+						"type": "Expression"
+					},
+					"folderPath": {
+						"value": "@concat('rawdata/SCMM_Activities/Received=',utcnow('s'))",
+						"type": "Expression"
+					}
+				}
+			}
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MergeTableStore')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "MergeTableStorage",
+						"type": "WebActivity",
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"url": "https://prod-19.westeurope.logic.azure.com:443/workflows/fdc08617ec204e91923afb154eb5e9d3/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=lmpuubOmGI-VjJ9ltwWrti0QZzF4gYY4HHKM_RfQCis",
+							"method": "POST",
+							"body": {
+								"value": "@concat('{ \"PartitionKey\":\"',pipeline().parameters.PartitionKey,'\",   \"RowKey\":\"',pipeline().parameters.RowKey,'\"  , \"PropertyName\":\"',pipeline().parameters.PropertyName,'\", \"PropertyValue\":\"',pipeline().parameters.PropertyValue,'\" }')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"parameters": {
+					"PartitionKey": {
+						"type": "String",
+						"defaultValue": "PartitionKey"
+					},
+					"RowKey": {
+						"type": "String",
+						"defaultValue": "RowKey"
+					},
+					"PropertyName": {
+						"type": "String",
+						"defaultValue": "PropertyName"
+					},
+					"PropertyValue": {
+						"type": "String",
+						"defaultValue": "PropertyValue"
+					}
+				}
+			}
+		}
+	]
+}
