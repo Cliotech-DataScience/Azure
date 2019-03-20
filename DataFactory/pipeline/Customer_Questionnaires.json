@@ -41,7 +41,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderQuery": " SELECT Last_Activity_Date = MAX(Last_Update)\nFROM azure.AZ_Customer_Questionnaires"
+						"sqlReaderQuery": " SELECT Last_Update= MAX(Last_Update)\nFROM azure.AZ_Customer_Questionnaires"
 					},
 					"dataset": {
 						"referenceName": "dwh_Customer_Questionnaires_src",
