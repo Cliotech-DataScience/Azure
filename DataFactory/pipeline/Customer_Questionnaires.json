@@ -85,16 +85,7 @@
 						"type": "BlobSink"
 					},
 					"enableStaging": false,
-					"dataIntegrationUnits": 0,
-					"translator": {
-						"type": "TabularTranslator",
-						"columnMappings": {
-							"fact_account_trans_id": "fact_account_trans_id",
-							"ActionDay": "ActionDay",
-							"ActionDate": "ActionDate",
-							"Details": "Details"
-						}
-					}
+					"dataIntegrationUnits": 0
 				},
 				"inputs": [
 					{
@@ -104,7 +95,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "fxnet_accounting_blob",
+						"referenceName": "dwh_Customer_Questionnaires_blob",
 						"type": "DatasetReference"
 					}
 				]
