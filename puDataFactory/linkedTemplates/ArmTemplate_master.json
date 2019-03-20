@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -295,6 +295,14 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@CONCAT('Customer_Questionnaires_', pipeline().TriggerTime, '.csv.bz2')"
+		},
+		"dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@concat('rawdata/Customer_Questionnaires/Received=',utcnow('s'))"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -566,6 +574,12 @@
 					},
 					"pufiles_properties_typeProperties_userId": {
 						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
+					},
+					"dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName')]"
+					},
+					"dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath')]"
 					},
 					"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 						"value": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"
