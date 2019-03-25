@@ -1,0 +1,8 @@
+{
+	"name": "Sync_customers_clustering",
+	"properties": {
+		"folder": {
+			"name": "Data_to_SQL"
+		}
+	}
+}
