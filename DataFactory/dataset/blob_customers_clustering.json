@@ -14,8 +14,10 @@
 				"nullValue": "\\N",
 				"treatEmptyAsNull": true,
 				"skipLineCount": 0,
-				"firstRowAsHeader": false
-			}
+				"firstRowAsHeader": true
+			},
+			"fileName": "*.csv",
+			"folderPath": "rawdata/export_file/customers_clustering/"
 		}
 	}
 }
