@@ -20,7 +20,8 @@
 					"dataset": {
 						"referenceName": "blob_customers_clustering",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			}
 		],
