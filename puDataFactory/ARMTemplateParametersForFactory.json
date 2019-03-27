@@ -41,6 +41,12 @@
 		"Events_Collector_PlatfromUsage_log_password": {
 			"value": ""
 		},
+		"STG_connectionString": {
+			"value": ""
+		},
+		"STG_password": {
+			"value": ""
+		},
 		"alldbdwh_connectionString": {
 			"value": ""
 		},
@@ -131,6 +137,12 @@
 		"blob_Fact_Transactions_properties_typeProperties_folderPath": {
 			"value": "rawdata/Fact_Transactions"
 		},
+		"blob_customers_clustering_properties_typeProperties_fileName": {
+			"value": "*.csv"
+		},
+		"blob_customers_clustering_properties_typeProperties_folderPath": {
+			"value": "rawdata/export_file/customers_clustering/"
+		},
 		"blob_platfrom_merge_file_des_properties_typeProperties_fileName": {
 			"value": "@dataset().file_name"
 		},
@@ -145,6 +157,12 @@
 		},
 		"blob_platfrom_unzip_file_1_properties_typeProperties_folderPath": {
 			"value": "@dataset().folder_name"
+		},
+		"dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName": {
+			"value": "@CONCAT('Customer_Questionnaires_', pipeline().TriggerTime, '.csv.bz2')"
+		},
+		"dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath": {
+			"value": "@concat('rawdata/Customer_Questionnaires/Received=',utcnow('s'))"
 		},
 		"dwh_Dim_Users_blob_properties_typeProperties_fileName": {
 			"value": "Users.csv"
@@ -203,6 +221,9 @@
 		"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
 		},
+		"STG_properties_typeProperties_userName": {
+			"value": "efix\\az_etl"
+		},
 		"TableServiceStoree_properties_typeProperties_url": {
 			"value": "https://dataloadestore.table.core.windows.net/"
 		},
@@ -221,11 +242,11 @@
 		"pufiles_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
 		},
-		"dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName": {
-			"value": "@CONCAT('Customer_Questionnaires_', pipeline().TriggerTime, '.csv.bz2')"
+		"blob_customers_clustering_folder_properties_typeProperties_fileName": {
+			"value": ""
 		},
-		"dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath": {
-			"value": "@concat('rawdata/Customer_Questionnaires/Received=',utcnow('s'))"
+		"blob_customers_clustering_folder_properties_typeProperties_folderPath": {
+			"value": "rawdata/export_file/customers_clustering/"
 		}
 	}
 }
