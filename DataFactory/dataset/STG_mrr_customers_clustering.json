@@ -9,6 +9,26 @@
 			"name": "sync"
 		},
 		"type": "SqlServerTable",
+		"structure": [
+			{
+				"name": "AccountNumber",
+				"type": "Int64",
+				"precision": 19,
+				"scale": 255
+			},
+			{
+				"name": "cluster_type",
+				"type": "String",
+				"precision": 255,
+				"scale": 255
+			},
+			{
+				"name": "update_date",
+				"type": "DateTime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
 		"typeProperties": {
 			"tableName": "[dbo].[mrr_customers_clustering]"
 		}

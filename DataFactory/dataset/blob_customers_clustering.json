@@ -9,12 +9,23 @@
 			"name": "sync"
 		},
 		"type": "AzureBlob",
+		"structure": [
+			{
+				"name": "{\"added\":[\"part-00000-tid-3481970782774430407-fc8623e3-adcd-4ef8-8965-6626f8524d95-426-c000.csv\"]",
+				"type": "String"
+			},
+			{
+				"name": "\"removed\":[]}",
+				"type": "String"
+			}
+		],
 		"typeProperties": {
 			"format": {
 				"type": "TextFormat",
 				"columnDelimiter": ",",
 				"rowDelimiter": "",
 				"nullValue": "\\N",
+				"encodingName": null,
 				"treatEmptyAsNull": true,
 				"skipLineCount": 0,
 				"firstRowAsHeader": true

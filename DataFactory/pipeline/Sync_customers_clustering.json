@@ -3,37 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Lookup1",
-				"type": "Lookup",
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"typeProperties": {
-					"source": {
-						"type": "BlobSource",
-						"recursive": true
-					},
-					"dataset": {
-						"referenceName": "blob_customers_clustering",
-						"type": "DatasetReference"
-					}
-				}
-			},
-			{
 				"name": "Copy Data1",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Lookup1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -50,7 +21,14 @@
 						"type": "SqlSink",
 						"writeBatchSize": 10000
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"columnMappings": {
+							"{\"added\":[\"part-00000-tid-3481970782774430407-fc8623e3-adcd-4ef8-8965-6626f8524d95-426-c000.csv\"]": "update_date",
+							"\"removed\":[]}": "cluster_type"
+						}
+					}
 				},
 				"inputs": [
 					{
