@@ -1,0 +1,41 @@
+{
+	"name": "blob_customers_clustering_folder",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "sync"
+		},
+		"type": "AzureBlob",
+		"structure": [
+			{
+				"name": "AccountNumber",
+				"type": "String"
+			},
+			{
+				"name": "cluster_type",
+				"type": "String"
+			},
+			{
+				"name": "update_date",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": true
+			},
+			"fileName": "",
+			"folderPath": "rawdata/export_file/customers_clustering/"
+		}
+	}
+}
