@@ -20,6 +20,16 @@
 			}
 		],
 		"typeProperties": {
+			"format": {
+				"type": "TextFormat",
+				"columnDelimiter": ",",
+				"rowDelimiter": "",
+				"nullValue": "\\N",
+				"encodingName": null,
+				"treatEmptyAsNull": true,
+				"skipLineCount": 0,
+				"firstRowAsHeader": true
+			},
 			"fileName": "*.csv",
 			"folderPath": "rawdata/export_file/customers_clustering/"
 		}
