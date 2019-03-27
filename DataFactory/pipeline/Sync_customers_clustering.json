@@ -1,49 +1,6 @@
 {
 	"name": "Sync_customers_clustering",
 	"properties": {
-		"activities": [
-			{
-				"name": "Copy Data1",
-				"type": "Copy",
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"typeProperties": {
-					"source": {
-						"type": "BlobSource",
-						"recursive": true
-					},
-					"sink": {
-						"type": "SqlSink",
-						"writeBatchSize": 10000
-					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"columnMappings": {
-							"{\"added\":[\"part-00000-tid-3481970782774430407-fc8623e3-adcd-4ef8-8965-6626f8524d95-426-c000.csv\"]": "AccountNumber",
-							"\"removed\":[]}": "cluster_type"
-						}
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "blob_customers_clustering",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "STG_mrr_customers_clustering",
-						"type": "DatasetReference"
-					}
-				]
-			}
-		],
 		"folder": {
 			"name": "Data_to_SQL"
 		}
