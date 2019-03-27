@@ -34,7 +34,7 @@
 				"skipLineCount": 0,
 				"firstRowAsHeader": true
 			},
-			"fileName": "",
+			"fileName": "*.csv",
 			"folderPath": "rawdata/export_file/customers_clustering/"
 		}
 	}
