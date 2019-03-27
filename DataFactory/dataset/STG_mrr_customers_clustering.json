@@ -1,0 +1,13 @@
+{
+	"name": "STG_mrr_customers_clustering",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "STG",
+			"type": "LinkedServiceReference"
+		},
+		"type": "SqlServerTable",
+		"typeProperties": {
+			"tableName": "[dbo].[mrr_customers_clustering]"
+		}
+	}
+}
