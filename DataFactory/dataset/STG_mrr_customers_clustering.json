@@ -5,6 +5,9 @@
 			"referenceName": "STG",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "sync"
+		},
 		"type": "SqlServerTable",
 		"typeProperties": {
 			"tableName": "[dbo].[mrr_customers_clustering]"
