@@ -64,7 +64,7 @@
 				},
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "blob_customers_clustering",
+						"referenceName": "blob_customers_clustering_folder",
 						"type": "DatasetReference"
 					},
 					"recursive": true,
