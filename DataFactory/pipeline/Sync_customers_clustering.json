@@ -18,7 +18,8 @@
 						"recursive": true
 					},
 					"sink": {
-						"type": "BlobSink"
+						"type": "SqlSink",
+						"writeBatchSize": 10000
 					},
 					"enableStaging": false,
 					"translator": {
@@ -38,7 +39,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "blob_customers_clustering",
+						"referenceName": "STG_mrr_customers_clustering",
 						"type": "DatasetReference"
 					}
 				]
