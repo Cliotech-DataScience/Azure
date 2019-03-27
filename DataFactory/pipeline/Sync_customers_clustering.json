@@ -25,7 +25,7 @@
 					"translator": {
 						"type": "TabularTranslator",
 						"columnMappings": {
-							"{\"added\":[\"part-00000-tid-3481970782774430407-fc8623e3-adcd-4ef8-8965-6626f8524d95-426-c000.csv\"]": "update_date",
+							"{\"added\":[\"part-00000-tid-3481970782774430407-fc8623e3-adcd-4ef8-8965-6626f8524d95-426-c000.csv\"]": "AccountNumber",
 							"\"removed\":[]}": "cluster_type"
 						}
 					}
