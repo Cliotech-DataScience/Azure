@@ -5,6 +5,14 @@
 			{
 				"name": "Copy_csv_to_STG",
 				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -51,7 +59,7 @@
 					{
 						"activity": "Copy_csv_to_STG",
 						"dependencyConditions": [
-							"Succeeded"
+							"Skipped"
 						]
 					}
 				],
@@ -69,6 +77,23 @@
 					},
 					"recursive": true,
 					"enableLogging": false
+				}
+			},
+			{
+				"name": "Get Metadata1",
+				"type": "GetMetadata",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "blob_customers_clustering",
+						"type": "DatasetReference"
+					}
 				}
 			}
 		],
