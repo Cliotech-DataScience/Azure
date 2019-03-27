@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy Data1",
+				"name": "Copy_csv_to_STG",
 				"type": "Copy",
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -45,11 +45,11 @@
 				]
 			},
 			{
-				"name": "Delete1",
+				"name": "delete_all_file",
 				"type": "Delete",
 				"dependsOn": [
 					{
-						"activity": "Copy Data1",
+						"activity": "Copy_csv_to_STG",
 						"dependencyConditions": [
 							"Succeeded"
 						]
