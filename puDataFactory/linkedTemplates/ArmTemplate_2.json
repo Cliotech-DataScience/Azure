@@ -90,6 +90,10 @@
 		"blob_customers_clustering_json_file_list_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "rawdata/export_file/customers_clustering/file_list.json"
+		},
+		"blob_customers_clustering_folder_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@concat('rawdata/export_file/customers_clustering/',dataset().folder_name)"
 		}
 	},
 	"variables": {
@@ -298,6 +302,58 @@
 					},
 					"fileName": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_fileName')]",
 					"folderPath": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/blob_customers_clustering_folder')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"folder_name": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "sync"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "AccountNumber",
+						"type": "String"
+					},
+					{
+						"name": "cluster_type",
+						"type": "String"
+					},
+					{
+						"name": "update_date",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"folderPath": {
+						"value": "[parameters('blob_customers_clustering_folder_properties_typeProperties_folderPath')]",
+						"type": "Expression"
+					}
 				}
 			},
 			"dependsOn": []
@@ -1114,42 +1170,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/STG_mrr_customers_clustering')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "STG",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "sync"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "AccountNumber",
-						"type": "Int64"
-					},
-					{
-						"name": "cluster_type",
-						"type": "String"
-					},
-					{
-						"name": "update_date",
-						"type": "DateTime"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[concat('[', 'dbo].[mrr_customers_clustering]')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/STG')]"
 			]
 		}
 	]

@@ -331,6 +331,10 @@
 			"type": "string",
 			"defaultValue": "rawdata/export_file/customers_clustering/file_list.json"
 		},
+		"blob_customers_clustering_folder_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@concat('rawdata/export_file/customers_clustering/',dataset().folder_name)"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -629,6 +633,9 @@
 					},
 					"blob_customers_clustering_json_file_list_properties_typeProperties_folderPath": {
 						"value": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_folderPath')]"
+					},
+					"blob_customers_clustering_folder_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_customers_clustering_folder_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
