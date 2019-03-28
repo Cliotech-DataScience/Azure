@@ -25,6 +25,23 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Mng_azure_ETL')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"typeProperties": {
+					"tableName": "[concat('[', 'azure].[Mng_azure_ETL]')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/STG_mrr_customers_clustering')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1166,7 +1183,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Mng_azure_ETL')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Customer_Questionnaires')]",
@@ -1515,7 +1534,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Mng_azure_ETL')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DWH_Calls')]",
@@ -1697,93 +1718,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/dwh_calls_src')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DWH_Dim_Users')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "copy_to_blob",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource"
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"User_ID": "User_ID",
-									"details": "details"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "dwh_Dim_Users_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "dwh_Dim_Users_blob",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Load_Users",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/Dimensions/Users"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Data_from_SQL"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dwh_Dim_Users_src')]"
 			]
 		}
 	]

@@ -7,6 +7,22 @@
 			"metadata": "Data Factory Name",
 			"defaultValue": "pudatafactory"
 		},
+		"DWH_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'DWH'"
+		},
+		"DWH_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'DWH'"
+		},
+		"Dwhpr_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Dwhpr'"
+		},
+		"Dwhpr_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Dwhpr'"
+		},
 		"Events_Collector_PlatfromUsage_log_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'Events_Collector_PlatfromUsage_log'"
@@ -55,6 +71,22 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
 		},
+		"unzip_platfrom_file_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"unzip_platfrom_file_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "platformusage/rawdata/201810"
+		},
+		"DWH_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
+		"Dwhpr_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
 		"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -82,24 +114,86 @@
 		"pufiles_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
-		},
-		"blob_customers_clustering_json_file_list_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "*.json"
-		},
-		"blob_customers_clustering_json_file_list_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "rawdata/export_file/customers_clustering/file_list.json"
-		},
-		"blob_customers_clustering_folder_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@concat('rawdata/export_file/customers_clustering/',dataset().folder_name)"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/unzip_platfrom_file')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"nullValue": "\\N",
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"compression": {
+						"type": "ZipDeflate"
+					},
+					"fileName": "[parameters('unzip_platfrom_file_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('unzip_platfrom_file_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWH')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('DWH_connectionString')]",
+					"userName": "[parameters('DWH_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('DWH_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dwhpr')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('Dwhpr_connectionString')]",
+					"userName": "[parameters('Dwhpr_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('Dwhpr_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Events_Collector_PlatfromUsage_log')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -268,92 +362,6 @@
 				"connectVia": {
 					"referenceName": "alldbgateway",
 					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/blob_customers_clustering_json_file_list')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "sync"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "file",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "JsonFormat",
-						"filePattern": "setOfObjects",
-						"jsonPathDefinition": {
-							"file": "$.['_1']"
-						}
-					},
-					"fileName": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/blob_customers_clustering_folder')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"folder_name": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "sync"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "AccountNumber",
-						"type": "String"
-					},
-					{
-						"name": "cluster_type",
-						"type": "String"
-					},
-					{
-						"name": "update_date",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": true
-					},
-					"folderPath": {
-						"value": "[parameters('blob_customers_clustering_folder_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
 				}
 			},
 			"dependsOn": []
@@ -572,7 +580,9 @@
 					"tableName": "EmErp_LM.azure.scmm_contacts"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Dwhpr')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DWH_Dim_Customers_src')]",
@@ -606,7 +616,9 @@
 					"tableName": "[concat('[', 'azure].[AZ_Customers]')]"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/DWH')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DWH_pu_list_files')]",
@@ -914,7 +926,9 @@
 					"tableName": "emerp_db.azure.AZ_EMERP_DB_Events"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Dwhpr')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Fact_Transactions')]",
@@ -1147,25 +1161,6 @@
 				],
 				"typeProperties": {
 					"tableName": "[concat('[', 'azure].[AZ_Fact_Transactions]')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Mng_azure_ETL')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"typeProperties": {
-					"tableName": "[concat('[', 'azure].[Mng_azure_ETL]')]"
 				}
 			},
 			"dependsOn": [

@@ -7,22 +7,6 @@
 			"metadata": "Data Factory Name",
 			"defaultValue": "pudatafactory"
 		},
-		"DWH_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'DWH'"
-		},
-		"DWH_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'DWH'"
-		},
-		"Dwhpr_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'Dwhpr'"
-		},
-		"Dwhpr_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'Dwhpr'"
-		},
 		"blob_EMERP_Events_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "@CONCAT('EMERP_Events', pipeline().RunId, '.csv')"
@@ -46,6 +30,30 @@
 		"blob_customers_clustering_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "@concat('rawdata/export_file/customers_clustering/',dataset().folder_name)"
+		},
+		"blob_customers_clustering_folder_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"blob_customers_clustering_folder_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@concat('rawdata/export_file/customers_clustering/',dataset().folder_name)"
+		},
+		"blob_customers_clustering_folder_hd_file_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "dataset().folder_name"
+		},
+		"blob_customers_clustering_folder_hd_file_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "rawdata/export_file/customers_clustering/"
+		},
+		"blob_customers_clustering_json_file_list_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "*.json"
+		},
+		"blob_customers_clustering_json_file_list_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "rawdata/export_file/customers_clustering/file_list.json"
 		},
 		"blob_platfrom_merge_file_des_properties_typeProperties_fileName": {
 			"type": "string",
@@ -130,22 +138,6 @@
 		"scmm_activities_blob_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "@concat('rawdata/SCMM_Activities/Received=',utcnow('s'))"
-		},
-		"unzip_platfrom_file_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": ""
-		},
-		"unzip_platfrom_file_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "platformusage/rawdata/201810"
-		},
-		"DWH_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "efix\\az_etl"
-		},
-		"Dwhpr_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "efix\\az_etl"
 		}
 	},
 	"variables": {
@@ -276,6 +268,146 @@
 						"value": "[parameters('blob_customers_clustering_properties_typeProperties_folderPath')]",
 						"type": "Expression"
 					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/blob_customers_clustering_folder')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"folder_name": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "sync"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "AccountNumber",
+						"type": "String"
+					},
+					{
+						"name": "cluster_type",
+						"type": "String"
+					},
+					{
+						"name": "update_date",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"fileName": "[parameters('blob_customers_clustering_folder_properties_typeProperties_fileName')]",
+					"folderPath": {
+						"value": "[parameters('blob_customers_clustering_folder_properties_typeProperties_folderPath')]",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/blob_customers_clustering_folder_hd_file')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"folder_name": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "sync"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "AccountNumber",
+						"type": "String"
+					},
+					{
+						"name": "cluster_type",
+						"type": "String"
+					},
+					{
+						"name": "update_date",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"fileName": "[parameters('blob_customers_clustering_folder_hd_file_properties_typeProperties_fileName')]",
+					"folderPath": {
+						"value": "[parameters('blob_customers_clustering_folder_hd_file_properties_typeProperties_folderPath')]",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/blob_customers_clustering_json_file_list')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "sync"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "file",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "JsonFormat",
+						"filePattern": "setOfObjects",
+						"jsonPathDefinition": {
+							"file": "$.['_1']"
+						}
+					},
+					"fileName": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_folderPath')]"
 				}
 			},
 			"dependsOn": []
@@ -1110,80 +1242,6 @@
 				],
 				"typeProperties": {
 					"tableName": "[concat('[', 'dbo].[dim_serials]')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/unzip_platfrom_file')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"nullValue": "\\N",
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"compression": {
-						"type": "ZipDeflate"
-					},
-					"fileName": "[parameters('unzip_platfrom_file_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('unzip_platfrom_file_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DWH')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('DWH_connectionString')]",
-					"userName": "[parameters('DWH_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('DWH_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "alldbgateway",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Dwhpr')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('Dwhpr_connectionString')]",
-					"userName": "[parameters('Dwhpr_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('Dwhpr_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "alldbgateway",
-					"type": "IntegrationRuntimeReference"
 				}
 			},
 			"dependsOn": []

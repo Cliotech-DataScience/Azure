@@ -191,6 +191,30 @@
 			"type": "string",
 			"defaultValue": "@concat('rawdata/export_file/customers_clustering/',dataset().folder_name)"
 		},
+		"blob_customers_clustering_folder_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"blob_customers_clustering_folder_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@concat('rawdata/export_file/customers_clustering/',dataset().folder_name)"
+		},
+		"blob_customers_clustering_folder_hd_file_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "dataset().folder_name"
+		},
+		"blob_customers_clustering_folder_hd_file_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "rawdata/export_file/customers_clustering/"
+		},
+		"blob_customers_clustering_json_file_list_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "*.json"
+		},
+		"blob_customers_clustering_json_file_list_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "rawdata/export_file/customers_clustering/file_list.json"
+		},
 		"blob_platfrom_merge_file_des_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "@dataset().file_name"
@@ -323,18 +347,6 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
-		"blob_customers_clustering_json_file_list_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "*.json"
-		},
-		"blob_customers_clustering_json_file_list_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "rawdata/export_file/customers_clustering/file_list.json"
-		},
-		"blob_customers_clustering_folder_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@concat('rawdata/export_file/customers_clustering/',dataset().folder_name)"
-		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -446,18 +458,6 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"DWH_connectionString": {
-						"value": "[parameters('DWH_connectionString')]"
-					},
-					"DWH_password": {
-						"value": "[parameters('DWH_password')]"
-					},
-					"Dwhpr_connectionString": {
-						"value": "[parameters('Dwhpr_connectionString')]"
-					},
-					"Dwhpr_password": {
-						"value": "[parameters('Dwhpr_password')]"
-					},
 					"blob_EMERP_Events_properties_typeProperties_fileName": {
 						"value": "[parameters('blob_EMERP_Events_properties_typeProperties_fileName')]"
 					},
@@ -475,6 +475,24 @@
 					},
 					"blob_customers_clustering_properties_typeProperties_folderPath": {
 						"value": "[parameters('blob_customers_clustering_properties_typeProperties_folderPath')]"
+					},
+					"blob_customers_clustering_folder_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_customers_clustering_folder_properties_typeProperties_fileName')]"
+					},
+					"blob_customers_clustering_folder_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_customers_clustering_folder_properties_typeProperties_folderPath')]"
+					},
+					"blob_customers_clustering_folder_hd_file_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_customers_clustering_folder_hd_file_properties_typeProperties_fileName')]"
+					},
+					"blob_customers_clustering_folder_hd_file_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_customers_clustering_folder_hd_file_properties_typeProperties_folderPath')]"
+					},
+					"blob_customers_clustering_json_file_list_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_fileName')]"
+					},
+					"blob_customers_clustering_json_file_list_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_folderPath')]"
 					},
 					"blob_platfrom_merge_file_des_properties_typeProperties_fileName": {
 						"value": "[parameters('blob_platfrom_merge_file_des_properties_typeProperties_fileName')]"
@@ -538,18 +556,6 @@
 					},
 					"scmm_activities_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('scmm_activities_blob_properties_typeProperties_folderPath')]"
-					},
-					"unzip_platfrom_file_properties_typeProperties_fileName": {
-						"value": "[parameters('unzip_platfrom_file_properties_typeProperties_fileName')]"
-					},
-					"unzip_platfrom_file_properties_typeProperties_folderPath": {
-						"value": "[parameters('unzip_platfrom_file_properties_typeProperties_folderPath')]"
-					},
-					"DWH_properties_typeProperties_userName": {
-						"value": "[parameters('DWH_properties_typeProperties_userName')]"
-					},
-					"Dwhpr_properties_typeProperties_userName": {
-						"value": "[parameters('Dwhpr_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -570,6 +576,18 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"DWH_connectionString": {
+						"value": "[parameters('DWH_connectionString')]"
+					},
+					"DWH_password": {
+						"value": "[parameters('DWH_password')]"
+					},
+					"Dwhpr_connectionString": {
+						"value": "[parameters('Dwhpr_connectionString')]"
+					},
+					"Dwhpr_password": {
+						"value": "[parameters('Dwhpr_password')]"
 					},
 					"Events_Collector_PlatfromUsage_log_password": {
 						"value": "[parameters('Events_Collector_PlatfromUsage_log_password')]"
@@ -607,6 +625,18 @@
 					"pufiles_password": {
 						"value": "[parameters('pufiles_password')]"
 					},
+					"unzip_platfrom_file_properties_typeProperties_fileName": {
+						"value": "[parameters('unzip_platfrom_file_properties_typeProperties_fileName')]"
+					},
+					"unzip_platfrom_file_properties_typeProperties_folderPath": {
+						"value": "[parameters('unzip_platfrom_file_properties_typeProperties_folderPath')]"
+					},
+					"DWH_properties_typeProperties_userName": {
+						"value": "[parameters('DWH_properties_typeProperties_userName')]"
+					},
+					"Dwhpr_properties_typeProperties_userName": {
+						"value": "[parameters('Dwhpr_properties_typeProperties_userName')]"
+					},
 					"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
 						"value": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_userId')]"
 					},
@@ -627,15 +657,6 @@
 					},
 					"pufiles_properties_typeProperties_userId": {
 						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
-					},
-					"blob_customers_clustering_json_file_list_properties_typeProperties_fileName": {
-						"value": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_fileName')]"
-					},
-					"blob_customers_clustering_json_file_list_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_folderPath')]"
-					},
-					"blob_customers_clustering_folder_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_customers_clustering_folder_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
