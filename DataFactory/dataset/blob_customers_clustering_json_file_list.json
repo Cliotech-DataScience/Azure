@@ -1,5 +1,5 @@
 {
-	"name": "blob_customers_clustering_folder",
+	"name": "blob_customers_clustering_json_file_list",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
@@ -34,8 +34,8 @@
 				"skipLineCount": 0,
 				"firstRowAsHeader": true
 			},
-			"fileName": "",
-			"folderPath": "rawdata/export_file/customers_clustering/"
+			"fileName": "*.json",
+			"folderPath": "rawdata/export_file/customers_clustering/file_list/"
 		}
 	}
 }
