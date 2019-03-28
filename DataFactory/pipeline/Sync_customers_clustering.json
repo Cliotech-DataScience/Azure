@@ -73,7 +73,13 @@
 							"inputs": [
 								{
 									"referenceName": "blob_customers_clustering",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"folder_name": {
+											"value": "@activity('LK_file_name').output",
+											"type": "Expression"
+										}
+									}
 								}
 							],
 							"outputs": [
