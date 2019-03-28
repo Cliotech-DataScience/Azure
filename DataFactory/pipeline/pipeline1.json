@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Delete1",
-				"type": "Delete",
+				"name": "Lookup1",
+				"type": "Lookup",
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -13,15 +13,58 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"dataset": {
-						"referenceName": "blob_customers_clustering_folder",
-						"type": "DatasetReference",
-						"parameters": {
-							"folder_name": "@item()._1"
-						}
+					"source": {
+						"type": "BlobSource",
+						"recursive": true
 					},
-					"recursive": true,
-					"enableLogging": false
+					"dataset": {
+						"referenceName": "blob_customers_clustering_json_file_list",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('LK_file_name').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Delete2",
+							"type": "Delete",
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "blob_customers_clustering_folder",
+									"type": "DatasetReference",
+									"parameters": {
+										"folder_name": "@item()._1"
+									}
+								},
+								"recursive": true,
+								"enableLogging": false
+							}
+						}
+					]
 				}
 			}
 		],
