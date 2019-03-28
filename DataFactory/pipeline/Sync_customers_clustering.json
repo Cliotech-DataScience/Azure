@@ -89,6 +89,32 @@
 									"type": "DatasetReference"
 								}
 							]
+						},
+						{
+							"name": "Delete1",
+							"type": "Delete",
+							"dependsOn": [
+								{
+									"activity": "copy_file",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "blob_customers_clustering",
+									"type": "DatasetReference"
+								},
+								"enableLogging": true
+							}
 						}
 					]
 				}
