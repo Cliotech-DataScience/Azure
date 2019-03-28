@@ -39,6 +39,7 @@
 				"skipLineCount": 0,
 				"firstRowAsHeader": true
 			},
+			"fileName": "*.file",
 			"folderPath": {
 				"value": "@concat('rawdata/export_file/customers_clustering/',dataset().folder_name)",
 				"type": "Expression"
