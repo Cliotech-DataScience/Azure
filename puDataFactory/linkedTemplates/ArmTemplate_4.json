@@ -1251,7 +1251,7 @@
 									]
 								},
 								{
-									"name": "Delete1",
+									"name": "Delete_folder",
 									"type": "Delete",
 									"dependsOn": [
 										{
