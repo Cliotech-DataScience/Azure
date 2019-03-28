@@ -189,7 +189,7 @@
 		},
 		"blob_customers_clustering_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "rawdata/export_file/customers_clustering/"
+			"defaultValue": "@concat('rawdata/export_file/customers_clustering/',dataset().folder_name)"
 		},
 		"blob_platfrom_merge_file_des_properties_typeProperties_fileName": {
 			"type": "string",
@@ -323,13 +323,13 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
-		"blob_customers_clustering_folder_properties_typeProperties_fileName": {
+		"blob_customers_clustering_json_file_list_properties_typeProperties_fileName": {
 			"type": "string",
-			"defaultValue": ""
+			"defaultValue": "*.json"
 		},
-		"blob_customers_clustering_folder_properties_typeProperties_folderPath": {
+		"blob_customers_clustering_json_file_list_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "rawdata/export_file/customers_clustering/"
+			"defaultValue": "rawdata/export_file/customers_clustering/file_list.json"
 		}
 	},
 	"variables": {
@@ -3325,8 +3325,8 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy_csv_to_STG",
-						"type": "Copy",
+						"name": "LK_file_name",
+						"type": "Lookup",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
@@ -3341,62 +3341,84 @@
 								"type": "BlobSource",
 								"recursive": true
 							},
-							"sink": {
-								"type": "SqlSink",
-								"writeBatchSize": 10000
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"AccountNumber": "AccountNumber",
-									"cluster_type": "cluster_type",
-									"update_date": "update_date"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "blob_customers_clustering",
+							"dataset": {
+								"referenceName": "blob_customers_clustering_json_file_list",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
-						],
-						"outputs": [
-							{
-								"referenceName": "STG_mrr_customers_clustering",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
+						}
 					},
 					{
-						"name": "delete_all_file",
-						"type": "Delete",
+						"name": "ForEach_file",
+						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "Copy_csv_to_STG",
+								"activity": "LK_file_name",
 								"dependencyConditions": [
 									"Succeeded"
 								]
 							}
 						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
 						"userProperties": [],
 						"typeProperties": {
-							"dataset": {
-								"referenceName": "blob_customers_clustering_folder",
-								"type": "DatasetReference",
-								"parameters": {}
+							"items": {
+								"value": "@activity('LK_file_name').output.value",
+								"type": "Expression"
 							},
-							"recursive": true,
-							"enableLogging": false
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "copy_file",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "BlobSource",
+											"recursive": true
+										},
+										"sink": {
+											"type": "SqlSink",
+											"writeBatchSize": 10000
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"columnMappings": {
+												"AccountNumber": "AccountNumber",
+												"cluster_type": "cluster_type",
+												"update_date": "update_date"
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "blob_customers_clustering",
+											"type": "DatasetReference",
+											"parameters": {
+												"folder_name": {
+													"value": "@activity('LK_file_name').output",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "STG_mrr_customers_clustering",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									]
+								}
+							]
 						}
 					}
 				],
@@ -3406,9 +3428,9 @@
 				"annotations": []
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/blob_customers_clustering_json_file_list')]",
 				"[concat(variables('factoryId'), '/datasets/blob_customers_clustering')]",
-				"[concat(variables('factoryId'), '/datasets/STG_mrr_customers_clustering')]",
-				"[concat(variables('factoryId'), '/datasets/blob_customers_clustering_folder')]"
+				"[concat(variables('factoryId'), '/datasets/STG_mrr_customers_clustering')]"
 			]
 		},
 		{
@@ -4711,6 +4733,11 @@
 					"referenceName": "AzureBlobStorage1",
 					"type": "LinkedServiceReference"
 				},
+				"parameters": {
+					"folder_name": {
+						"type": "String"
+					}
+				},
 				"folder": {
 					"name": "sync"
 				},
@@ -4741,8 +4768,14 @@
 						"skipLineCount": 0,
 						"firstRowAsHeader": true
 					},
-					"fileName": "[parameters('blob_customers_clustering_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('blob_customers_clustering_properties_typeProperties_folderPath')]"
+					"fileName": {
+						"value": "[parameters('blob_customers_clustering_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": {
+						"value": "[parameters('blob_customers_clustering_properties_typeProperties_folderPath')]",
+						"type": "Expression"
+					}
 				}
 			},
 			"dependsOn": [
@@ -6609,7 +6642,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/blob_customers_clustering_folder')]",
+			"name": "[concat(parameters('factoryName'), '/blob_customers_clustering_json_file_list')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -6624,31 +6657,20 @@
 				"type": "AzureBlob",
 				"structure": [
 					{
-						"name": "AccountNumber",
-						"type": "String"
-					},
-					{
-						"name": "cluster_type",
-						"type": "String"
-					},
-					{
-						"name": "update_date",
+						"name": "file",
 						"type": "String"
 					}
 				],
 				"typeProperties": {
 					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": true
+						"type": "JsonFormat",
+						"filePattern": "setOfObjects",
+						"jsonPathDefinition": {
+							"file": "$.['_1']"
+						}
 					},
-					"fileName": "[parameters('blob_customers_clustering_folder_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('blob_customers_clustering_folder_properties_typeProperties_folderPath')]"
+					"fileName": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_folderPath')]"
 				}
 			},
 			"dependsOn": [

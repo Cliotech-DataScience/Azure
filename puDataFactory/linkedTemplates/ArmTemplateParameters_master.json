@@ -141,7 +141,7 @@
 			"value": "*.csv"
 		},
 		"blob_customers_clustering_properties_typeProperties_folderPath": {
-			"value": "rawdata/export_file/customers_clustering/"
+			"value": "@concat('rawdata/export_file/customers_clustering/',dataset().folder_name)"
 		},
 		"blob_platfrom_merge_file_des_properties_typeProperties_fileName": {
 			"value": "@dataset().file_name"
@@ -242,11 +242,11 @@
 		"pufiles_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
 		},
-		"blob_customers_clustering_folder_properties_typeProperties_fileName": {
-			"value": ""
+		"blob_customers_clustering_json_file_list_properties_typeProperties_fileName": {
+			"value": "*.json"
 		},
-		"blob_customers_clustering_folder_properties_typeProperties_folderPath": {
-			"value": "rawdata/export_file/customers_clustering/"
+		"blob_customers_clustering_json_file_list_properties_typeProperties_folderPath": {
+			"value": "rawdata/export_file/customers_clustering/file_list.json"
 		},
 		"containerUri": {
 			"value": ""

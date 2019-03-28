@@ -83,13 +83,13 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
-		"blob_customers_clustering_folder_properties_typeProperties_fileName": {
+		"blob_customers_clustering_json_file_list_properties_typeProperties_fileName": {
 			"type": "string",
-			"defaultValue": ""
+			"defaultValue": "*.json"
 		},
-		"blob_customers_clustering_folder_properties_typeProperties_folderPath": {
+		"blob_customers_clustering_json_file_list_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "rawdata/export_file/customers_clustering/"
+			"defaultValue": "rawdata/export_file/customers_clustering/file_list.json"
 		}
 	},
 	"variables": {
@@ -269,7 +269,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/blob_customers_clustering_folder')]",
+			"name": "[concat(parameters('factoryName'), '/blob_customers_clustering_json_file_list')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -284,31 +284,20 @@
 				"type": "AzureBlob",
 				"structure": [
 					{
-						"name": "AccountNumber",
-						"type": "String"
-					},
-					{
-						"name": "cluster_type",
-						"type": "String"
-					},
-					{
-						"name": "update_date",
+						"name": "file",
 						"type": "String"
 					}
 				],
 				"typeProperties": {
 					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": true
+						"type": "JsonFormat",
+						"filePattern": "setOfObjects",
+						"jsonPathDefinition": {
+							"file": "$.['_1']"
+						}
 					},
-					"fileName": "[parameters('blob_customers_clustering_folder_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('blob_customers_clustering_folder_properties_typeProperties_folderPath')]"
+					"fileName": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_folderPath')]"
 				}
 			},
 			"dependsOn": []

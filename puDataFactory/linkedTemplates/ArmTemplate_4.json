@@ -961,8 +961,8 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy_csv_to_STG",
-						"type": "Copy",
+						"name": "LK_file_name",
+						"type": "Lookup",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
@@ -977,62 +977,84 @@
 								"type": "BlobSource",
 								"recursive": true
 							},
-							"sink": {
-								"type": "SqlSink",
-								"writeBatchSize": 10000
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"AccountNumber": "AccountNumber",
-									"cluster_type": "cluster_type",
-									"update_date": "update_date"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "blob_customers_clustering",
+							"dataset": {
+								"referenceName": "blob_customers_clustering_json_file_list",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
-						],
-						"outputs": [
-							{
-								"referenceName": "STG_mrr_customers_clustering",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
+						}
 					},
 					{
-						"name": "delete_all_file",
-						"type": "Delete",
+						"name": "ForEach_file",
+						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "Copy_csv_to_STG",
+								"activity": "LK_file_name",
 								"dependencyConditions": [
 									"Succeeded"
 								]
 							}
 						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
 						"userProperties": [],
 						"typeProperties": {
-							"dataset": {
-								"referenceName": "blob_customers_clustering_folder",
-								"type": "DatasetReference",
-								"parameters": {}
+							"items": {
+								"value": "@activity('LK_file_name').output.value",
+								"type": "Expression"
 							},
-							"recursive": true,
-							"enableLogging": false
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "copy_file",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "BlobSource",
+											"recursive": true
+										},
+										"sink": {
+											"type": "SqlSink",
+											"writeBatchSize": 10000
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"columnMappings": {
+												"AccountNumber": "AccountNumber",
+												"cluster_type": "cluster_type",
+												"update_date": "update_date"
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "blob_customers_clustering",
+											"type": "DatasetReference",
+											"parameters": {
+												"folder_name": {
+													"value": "@activity('LK_file_name').output",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "STG_mrr_customers_clustering",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									]
+								}
+							]
 						}
 					}
 				],

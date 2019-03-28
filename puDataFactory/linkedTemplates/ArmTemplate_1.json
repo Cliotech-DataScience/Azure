@@ -45,7 +45,7 @@
 		},
 		"blob_customers_clustering_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "rawdata/export_file/customers_clustering/"
+			"defaultValue": "@concat('rawdata/export_file/customers_clustering/',dataset().folder_name)"
 		},
 		"blob_platfrom_merge_file_des_properties_typeProperties_fileName": {
 			"type": "string",
@@ -233,6 +233,11 @@
 					"referenceName": "AzureBlobStorage1",
 					"type": "LinkedServiceReference"
 				},
+				"parameters": {
+					"folder_name": {
+						"type": "String"
+					}
+				},
 				"folder": {
 					"name": "sync"
 				},
@@ -263,8 +268,14 @@
 						"skipLineCount": 0,
 						"firstRowAsHeader": true
 					},
-					"fileName": "[parameters('blob_customers_clustering_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('blob_customers_clustering_properties_typeProperties_folderPath')]"
+					"fileName": {
+						"value": "[parameters('blob_customers_clustering_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": {
+						"value": "[parameters('blob_customers_clustering_properties_typeProperties_folderPath')]",
+						"type": "Expression"
+					}
 				}
 			},
 			"dependsOn": []

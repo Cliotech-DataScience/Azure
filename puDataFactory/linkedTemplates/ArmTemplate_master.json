@@ -189,7 +189,7 @@
 		},
 		"blob_customers_clustering_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "rawdata/export_file/customers_clustering/"
+			"defaultValue": "@concat('rawdata/export_file/customers_clustering/',dataset().folder_name)"
 		},
 		"blob_platfrom_merge_file_des_properties_typeProperties_fileName": {
 			"type": "string",
@@ -323,13 +323,13 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
-		"blob_customers_clustering_folder_properties_typeProperties_fileName": {
+		"blob_customers_clustering_json_file_list_properties_typeProperties_fileName": {
 			"type": "string",
-			"defaultValue": ""
+			"defaultValue": "*.json"
 		},
-		"blob_customers_clustering_folder_properties_typeProperties_folderPath": {
+		"blob_customers_clustering_json_file_list_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "rawdata/export_file/customers_clustering/"
+			"defaultValue": "rawdata/export_file/customers_clustering/file_list.json"
 		},
 		"containerUri": {
 			"type": "string",
@@ -624,11 +624,11 @@
 					"pufiles_properties_typeProperties_userId": {
 						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
 					},
-					"blob_customers_clustering_folder_properties_typeProperties_fileName": {
-						"value": "[parameters('blob_customers_clustering_folder_properties_typeProperties_fileName')]"
+					"blob_customers_clustering_json_file_list_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_fileName')]"
 					},
-					"blob_customers_clustering_folder_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_customers_clustering_folder_properties_typeProperties_folderPath')]"
+					"blob_customers_clustering_json_file_list_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
