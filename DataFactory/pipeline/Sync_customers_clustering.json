@@ -140,7 +140,7 @@
 							},
 							"typeProperties": {
 								"dataset": {
-									"referenceName": "blob_customers_clustering_folder_hd",
+									"referenceName": "blob_customers_clustering_folder_hd_file",
 									"type": "DatasetReference",
 									"parameters": {
 										"folder_name": "@item()._1"
