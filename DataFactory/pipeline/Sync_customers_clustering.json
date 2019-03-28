@@ -24,7 +24,7 @@
 				}
 			},
 			{
-				"name": "ForEach1",
+				"name": "ForEach_file",
 				"type": "ForEach",
 				"dependsOn": [
 					{
