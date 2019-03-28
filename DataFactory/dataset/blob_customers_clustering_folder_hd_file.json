@@ -1,5 +1,5 @@
 {
-	"name": "blob_customers_clustering_folder_hd",
+	"name": "blob_customers_clustering_folder_hd_file",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureBlobStorage1",
