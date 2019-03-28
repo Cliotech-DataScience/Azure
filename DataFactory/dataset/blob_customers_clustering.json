@@ -5,6 +5,11 @@
 			"referenceName": "AzureBlobStorage1",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"folder_name": {
+				"type": "String"
+			}
+		},
 		"folder": {
 			"name": "sync"
 		},
@@ -34,7 +39,10 @@
 				"skipLineCount": 0,
 				"firstRowAsHeader": true
 			},
-			"fileName": "*.csv",
+			"fileName": {
+				"value": "*.csv",
+				"type": "Expression"
+			},
 			"folderPath": "rawdata/export_file/customers_clustering/"
 		}
 	}
