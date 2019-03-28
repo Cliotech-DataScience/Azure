@@ -7,7 +7,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Lookup1",
+						"activity": "LK_file_name",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -80,7 +80,7 @@
 				}
 			},
 			{
-				"name": "Lookup1",
+				"name": "LK_file_name",
 				"type": "Lookup",
 				"policy": {
 					"timeout": "7.00:00:00",
