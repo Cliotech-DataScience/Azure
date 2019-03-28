@@ -77,7 +77,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"folder_name": {
-											"value": "@activity('LK_file_name').output",
+											"value": "@item()._1",
 											"type": "Expression"
 										}
 									}
