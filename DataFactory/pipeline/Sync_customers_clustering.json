@@ -110,11 +110,8 @@
 							},
 							"typeProperties": {
 								"dataset": {
-									"referenceName": "blob_customers_clustering",
-									"type": "DatasetReference",
-									"parameters": {
-										"folder_name": "@item()._1"
-									}
+									"referenceName": "blob_customers_clustering_folder",
+									"type": "DatasetReference"
 								},
 								"recursive": true,
 								"enableLogging": false
