@@ -26,7 +26,19 @@
 			{
 				"name": "ForEach1",
 				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "LK_file_name",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"typeProperties": {
+					"items": {
+						"value": "@activity('LK_file_name').output.value",
+						"type": "Expression"
+					},
 					"isSequential": true,
 					"activities": [
 						{
