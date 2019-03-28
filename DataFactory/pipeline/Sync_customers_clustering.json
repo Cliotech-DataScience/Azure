@@ -116,7 +116,7 @@
 										"folder_name": "@item()._1"
 									}
 								},
-								"enableLogging": true
+								"enableLogging": false
 							}
 						}
 					]
