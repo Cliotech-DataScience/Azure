@@ -5,14 +5,6 @@
 			{
 				"name": "Copy_csv_to_STG",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "LK_file_name",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -55,14 +47,6 @@
 			{
 				"name": "delete_all_file",
 				"type": "Delete",
-				"dependsOn": [
-					{
-						"activity": "Copy_csv_to_STG",
-						"dependencyConditions": [
-							"Skipped"
-						]
-					}
-				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -98,6 +82,84 @@
 						"referenceName": "blob_customers_clustering_json_file_list",
 						"type": "DatasetReference"
 					}
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"typeProperties": {
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "copy_file",
+							"type": "Copy",
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"typeProperties": {
+								"source": {
+									"type": "BlobSource",
+									"recursive": true
+								},
+								"sink": {
+									"type": "SqlSink",
+									"writeBatchSize": 10000
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"columnMappings": {
+										"AccountNumber": "AccountNumber",
+										"cluster_type": "cluster_type",
+										"update_date": "update_date"
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "blob_customers_clustering",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "STG_mrr_customers_clustering",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Delete_the_file",
+							"type": "Delete",
+							"dependsOn": [
+								{
+									"activity": "copy_file",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "blob_customers_clustering_json_file_list",
+									"type": "DatasetReference"
+								},
+								"recursive": true,
+								"enableLogging": false
+							}
+						}
+					]
 				}
 			}
 		],
