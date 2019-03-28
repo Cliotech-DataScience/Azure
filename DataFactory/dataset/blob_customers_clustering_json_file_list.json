@@ -11,31 +11,20 @@
 		"type": "AzureBlob",
 		"structure": [
 			{
-				"name": "AccountNumber",
-				"type": "String"
-			},
-			{
-				"name": "cluster_type",
-				"type": "String"
-			},
-			{
-				"name": "update_date",
+				"name": "file",
 				"type": "String"
 			}
 		],
 		"typeProperties": {
 			"format": {
-				"type": "TextFormat",
-				"columnDelimiter": ",",
-				"rowDelimiter": "",
-				"nullValue": "\\N",
-				"encodingName": null,
-				"treatEmptyAsNull": true,
-				"skipLineCount": 0,
-				"firstRowAsHeader": true
+				"type": "JsonFormat",
+				"filePattern": "setOfObjects",
+				"jsonPathDefinition": {
+					"file": "$.['_1']"
+				}
 			},
 			"fileName": "*.json",
-			"folderPath": "rawdata/export_file/customers_clustering/file_list/"
+			"folderPath": "rawdata/export_file/customers_clustering/file_list.json"
 		}
 	}
 }
