@@ -116,6 +116,7 @@
 										"folder_name": "@item()._1"
 									}
 								},
+								"recursive": true,
 								"enableLogging": false
 							}
 						}
