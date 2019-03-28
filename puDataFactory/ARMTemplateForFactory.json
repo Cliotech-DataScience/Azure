@@ -3422,7 +3422,14 @@
 								{
 									"name": "Delete1",
 									"type": "Delete",
-									"dependsOn": [],
+									"dependsOn": [
+										{
+											"activity": "copy_file",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
 									"policy": {
 										"timeout": "7.00:00:00",
 										"retry": 0,
@@ -3432,7 +3439,14 @@
 									},
 									"userProperties": [],
 									"typeProperties": {
-										"enableLogging": true
+										"dataset": {
+											"referenceName": "blob_customers_clustering",
+											"type": "DatasetReference",
+											"parameters": {
+												"folder_name": "@item()._1"
+											}
+										},
+										"enableLogging": false
 									}
 								}
 							]
