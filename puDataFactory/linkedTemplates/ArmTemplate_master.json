@@ -235,6 +235,14 @@
 			"type": "string",
 			"defaultValue": "@dataset().folder_name"
 		},
+		"blob_serials_row_folder_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "*.csv"
+		},
+		"blob_serials_row_folder_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "rawdata/Serials/"
+		},
 		"dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "@CONCAT('Customer_Questionnaires_', pipeline().TriggerTime, '.csv.bz2')"
@@ -508,6 +516,12 @@
 					},
 					"blob_platfrom_unzip_file_1_properties_typeProperties_folderPath": {
 						"value": "[parameters('blob_platfrom_unzip_file_1_properties_typeProperties_folderPath')]"
+					},
+					"blob_serials_row_folder_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_serials_row_folder_properties_typeProperties_fileName')]"
+					},
+					"blob_serials_row_folder_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_serials_row_folder_properties_typeProperties_folderPath')]"
 					},
 					"dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName')]"

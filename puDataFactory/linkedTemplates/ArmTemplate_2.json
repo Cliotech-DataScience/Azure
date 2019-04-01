@@ -121,6 +121,140 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/serials_dim_dwh')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase_dwh",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "BI"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "Serial",
+						"type": "Int64"
+					},
+					{
+						"name": "Client_Id",
+						"type": "String"
+					},
+					{
+						"name": "Client_Numerator",
+						"type": "Int32"
+					},
+					{
+						"name": "Client_Name",
+						"type": "String"
+					},
+					{
+						"name": "Product_Numerator",
+						"type": "Int32"
+					},
+					{
+						"name": "Product_Name",
+						"type": "String"
+					},
+					{
+						"name": "Product_Full_Name",
+						"type": "String"
+					},
+					{
+						"name": "Campaign_Numerator",
+						"type": "Int32"
+					},
+					{
+						"name": "Campaign_Name",
+						"type": "String"
+					},
+					{
+						"name": "Targetmarket_Id",
+						"type": "Int32"
+					},
+					{
+						"name": "Targetmarket",
+						"type": "String"
+					},
+					{
+						"name": "Supplier_Numerator",
+						"type": "Int32"
+					},
+					{
+						"name": "Supplier",
+						"type": "String"
+					},
+					{
+						"name": "Supplier_Group",
+						"type": "String"
+					},
+					{
+						"name": "Mediabuyer_Numerator",
+						"type": "Int32"
+					},
+					{
+						"name": "Mediabuyer",
+						"type": "String"
+					},
+					{
+						"name": "Format",
+						"type": "String"
+					},
+					{
+						"name": "Site_Numerator",
+						"type": "Int32"
+					},
+					{
+						"name": "Site_Name",
+						"type": "String"
+					},
+					{
+						"name": "Proposition_Id",
+						"type": "Int32"
+					},
+					{
+						"name": "Proposition",
+						"type": "String"
+					},
+					{
+						"name": "Banner_Name",
+						"type": "String"
+					},
+					{
+						"name": "Banner_Path",
+						"type": "String"
+					},
+					{
+						"name": "TypeExt",
+						"type": "String"
+					},
+					{
+						"name": "Landing_Page",
+						"type": "String"
+					},
+					{
+						"name": "Language",
+						"type": "String"
+					},
+					{
+						"name": "SelfActivation",
+						"type": "Int32"
+					},
+					{
+						"name": "Content",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[concat('[', 'dbo].[dim_serials]')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/unzip_platfrom_file')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -450,7 +584,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/serials_dim_dwh')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/fact events')]",
@@ -928,243 +1064,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/Dwhpr')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Fact_Transactions')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "TransactionNumber",
-						"type": "Int32"
-					},
-					{
-						"name": "PositionNumber",
-						"type": "Int32"
-					},
-					{
-						"name": "AccountNumber",
-						"type": "Int32"
-					},
-					{
-						"name": "CustomerHistory_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "CustomersExtendedHistory_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "DealAttirbute_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "Instrument_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "TransactionType_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "Direction_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "Source_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "DealType_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "ExecutionDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "ExecutionDay",
-						"type": "DateTime"
-					},
-					{
-						"name": "ExecutionTime",
-						"type": "TimeSpan"
-					},
-					{
-						"name": "TransactionCloseDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "ValueDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "ValueDay",
-						"type": "DateTime"
-					},
-					{
-						"name": "BaseAmount",
-						"type": "Decimal"
-					},
-					{
-						"name": "OtherAmount",
-						"type": "Decimal"
-					},
-					{
-						"name": "SpotRate",
-						"type": "Decimal"
-					},
-					{
-						"name": "ForwardPips",
-						"type": "Double"
-					},
-					{
-						"name": "TotRate",
-						"type": "Decimal"
-					},
-					{
-						"name": "Volume_USD",
-						"type": "Decimal"
-					},
-					{
-						"name": "ServerRate",
-						"type": "Decimal"
-					},
-					{
-						"name": "OtherServerRate",
-						"type": "Decimal"
-					},
-					{
-						"name": "ExecutedLimit",
-						"type": "Int16"
-					},
-					{
-						"name": "PL",
-						"type": "Decimal"
-					},
-					{
-						"name": "IsFirstBOP",
-						"type": "Boolean"
-					},
-					{
-						"name": "IsFirstForex",
-						"type": "Boolean"
-					},
-					{
-						"name": "IsFirstDeal",
-						"type": "Boolean"
-					},
-					{
-						"name": "Deleted",
-						"type": "Boolean"
-					},
-					{
-						"name": "PositionClosed",
-						"type": "Int16"
-					},
-					{
-						"name": "DealPL_USD",
-						"type": "Decimal"
-					},
-					{
-						"name": "PL_SymbolId",
-						"type": "Int16"
-					},
-					{
-						"name": "AccountBasesymbolId",
-						"type": "Int16"
-					},
-					{
-						"name": "EtlUpdatedDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "SpreadCost",
-						"type": "Decimal"
-					},
-					{
-						"name": "Folder_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "Broker_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "AccountNumber_modo",
-						"type": "Int32"
-					},
-					{
-						"name": "PositionNumber_modo",
-						"type": "Int32"
-					},
-					{
-						"name": "PL_AccountBase",
-						"type": "Decimal"
-					},
-					{
-						"name": "Customer_Favor_Rate_diff",
-						"type": "Decimal"
-					},
-					{
-						"name": "Channel_Bucket_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "Sessions_ID",
-						"type": "Int64"
-					},
-					{
-						"name": "DealCountTotal",
-						"type": "Int32"
-					},
-					{
-						"name": "Retention_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "ConversionRate",
-						"type": "Decimal"
-					},
-					{
-						"name": "CommissionInAccountBase",
-						"type": "Decimal"
-					},
-					{
-						"name": "SpreadCostInAccountBase",
-						"type": "Decimal"
-					},
-					{
-						"name": "RolloverSpreadCostInAccountBase",
-						"type": "Decimal"
-					},
-					{
-						"name": "CommissionInOther",
-						"type": "Decimal"
-					},
-					{
-						"name": "SpreadCostInOther",
-						"type": "Decimal"
-					},
-					{
-						"name": "RolloverSpreadCostInOther",
-						"type": "Decimal"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[concat('[', 'azure].[AZ_Fact_Transactions]')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
 			]
 		}
 	]

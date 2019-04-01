@@ -25,6 +25,241 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Fact_Transactions')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "TransactionNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "PositionNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "AccountNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "CustomerHistory_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "CustomersExtendedHistory_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "DealAttirbute_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "Instrument_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "TransactionType_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "Direction_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "Source_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "DealType_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "ExecutionDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "ExecutionDay",
+						"type": "DateTime"
+					},
+					{
+						"name": "ExecutionTime",
+						"type": "TimeSpan"
+					},
+					{
+						"name": "TransactionCloseDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "ValueDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "ValueDay",
+						"type": "DateTime"
+					},
+					{
+						"name": "BaseAmount",
+						"type": "Decimal"
+					},
+					{
+						"name": "OtherAmount",
+						"type": "Decimal"
+					},
+					{
+						"name": "SpotRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "ForwardPips",
+						"type": "Double"
+					},
+					{
+						"name": "TotRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "Volume_USD",
+						"type": "Decimal"
+					},
+					{
+						"name": "ServerRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "OtherServerRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "ExecutedLimit",
+						"type": "Int16"
+					},
+					{
+						"name": "PL",
+						"type": "Decimal"
+					},
+					{
+						"name": "IsFirstBOP",
+						"type": "Boolean"
+					},
+					{
+						"name": "IsFirstForex",
+						"type": "Boolean"
+					},
+					{
+						"name": "IsFirstDeal",
+						"type": "Boolean"
+					},
+					{
+						"name": "Deleted",
+						"type": "Boolean"
+					},
+					{
+						"name": "PositionClosed",
+						"type": "Int16"
+					},
+					{
+						"name": "DealPL_USD",
+						"type": "Decimal"
+					},
+					{
+						"name": "PL_SymbolId",
+						"type": "Int16"
+					},
+					{
+						"name": "AccountBasesymbolId",
+						"type": "Int16"
+					},
+					{
+						"name": "EtlUpdatedDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "SpreadCost",
+						"type": "Decimal"
+					},
+					{
+						"name": "Folder_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "Broker_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "AccountNumber_modo",
+						"type": "Int32"
+					},
+					{
+						"name": "PositionNumber_modo",
+						"type": "Int32"
+					},
+					{
+						"name": "PL_AccountBase",
+						"type": "Decimal"
+					},
+					{
+						"name": "Customer_Favor_Rate_diff",
+						"type": "Decimal"
+					},
+					{
+						"name": "Channel_Bucket_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Sessions_ID",
+						"type": "Int64"
+					},
+					{
+						"name": "DealCountTotal",
+						"type": "Int32"
+					},
+					{
+						"name": "Retention_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "ConversionRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "CommissionInAccountBase",
+						"type": "Decimal"
+					},
+					{
+						"name": "SpreadCostInAccountBase",
+						"type": "Decimal"
+					},
+					{
+						"name": "RolloverSpreadCostInAccountBase",
+						"type": "Decimal"
+					},
+					{
+						"name": "CommissionInOther",
+						"type": "Decimal"
+					},
+					{
+						"name": "SpreadCostInOther",
+						"type": "Decimal"
+					},
+					{
+						"name": "RolloverSpreadCostInOther",
+						"type": "Decimal"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[concat('[', 'azure].[AZ_Fact_Transactions]')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Mng_azure_ETL')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1536,188 +1771,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Mng_azure_ETL')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DWH_Calls')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "LK_new_max_Date",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT Next_Call_Day=DATEADD(DAY,-1,MAX(callday))\nFROM dwh.azure.AZ_Calls"
-							},
-							"dataset": {
-								"referenceName": "dwh_calls_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "copy_to_blob",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "LK_new_max_Date",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "LK_Last_Date_Mng_azure_ETL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "select * \nFROM dwh.azure.AZ_calls\nwhere callday> '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Incremental_Date}' and callday<= '@{activity('LK_new_max_Date').output.firstRow.Next_Call_Day}'",
-									"type": "Expression"
-								}
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"Call_ID": "Call_ID",
-									"Call_Details": "Call_Details",
-									"CallDay": "CallDay"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "dwh_calls_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "dwh_calls_blob",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "LK_Last_Date_Mng_azure_ETL",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureTableSource",
-								"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq 'DWH_Calls'",
-								"azureTableSourceIgnoreTableNotFound": false
-							},
-							"dataset": {
-								"referenceName": "etl_manage",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "Load Calls to Events",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "merge tbl store",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/Calls/Load Calls"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "merge tbl store",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "MergeTableStore",
-								"type": "PipelineReference"
-							},
-							"parameters": {
-								"PartitionKey": "Upload Data",
-								"RowKey": "DWH_Calls",
-								"PropertyName": "Last_Incremental_Date",
-								"PropertyValue": {
-									"value": "@{activity('LK_new_max_Date').output.firstRow.Next_Call_Day}",
-									"type": "Expression"
-								}
-							}
-						}
-					}
-				],
-				"folder": {
-					"name": "Data_from_SQL"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dwh_calls_src')]"
 			]
 		}
 	]

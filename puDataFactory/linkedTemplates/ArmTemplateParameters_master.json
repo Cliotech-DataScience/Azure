@@ -176,6 +176,12 @@
 		"blob_platfrom_unzip_file_1_properties_typeProperties_folderPath": {
 			"value": "@dataset().folder_name"
 		},
+		"blob_serials_row_folder_properties_typeProperties_fileName": {
+			"value": "*.csv"
+		},
+		"blob_serials_row_folder_properties_typeProperties_folderPath": {
+			"value": "rawdata/Serials/"
+		},
 		"dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName": {
 			"value": "@CONCAT('Customer_Questionnaires_', pipeline().TriggerTime, '.csv.bz2')"
 		},
