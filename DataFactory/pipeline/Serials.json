@@ -28,13 +28,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "LK_Last_Id_Mng_azure_ETL",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "LK_new_max_id",
+						"activity": "Delete_serials_file",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -161,6 +155,34 @@
 				"linkedServiceName": {
 					"referenceName": "Analysis",
 					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Delete_serials_file",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "LK_Last_Id_Mng_azure_ETL",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "LK_new_max_id",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"enableLogging": false
 				}
 			}
 		],
