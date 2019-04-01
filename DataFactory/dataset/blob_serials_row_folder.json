@@ -5,11 +5,6 @@
 			"referenceName": "AzureBlobStorage1",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"folder_name": {
-				"type": "String"
-			}
-		},
 		"folder": {
 			"name": "DWH"
 		},
