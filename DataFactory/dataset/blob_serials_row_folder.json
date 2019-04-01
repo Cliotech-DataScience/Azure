@@ -11,7 +11,7 @@
 			}
 		},
 		"folder": {
-			"name": "sync"
+			"name": "DWH"
 		},
 		"type": "AzureBlob",
 		"typeProperties": {
