@@ -182,6 +182,10 @@
 					"secureInput": false
 				},
 				"typeProperties": {
+					"dataset": {
+						"referenceName": "blob_serials_row_folder",
+						"type": "DatasetReference"
+					},
 					"enableLogging": false
 				}
 			}
