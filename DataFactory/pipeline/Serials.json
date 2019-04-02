@@ -188,6 +188,32 @@
 					},
 					"enableLogging": false
 				}
+			},
+			{
+				"name": "Serials_after_delete",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Delete_serials_file",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"notebookPath": "/Load Data/Dimensions/serials"
+				},
+				"linkedServiceName": {
+					"referenceName": "Analysis",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"folder": {
