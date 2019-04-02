@@ -28,7 +28,13 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Delete_serials_file",
+						"activity": "LK_Last_Id_Mng_azure_ETL",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "LK_new_max_id",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -162,15 +168,9 @@
 				"type": "Delete",
 				"dependsOn": [
 					{
-						"activity": "LK_Last_Id_Mng_azure_ETL",
+						"activity": "Serials",
 						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "LK_new_max_id",
-						"dependencyConditions": [
-							"Succeeded"
+							"Failed"
 						]
 					}
 				],
