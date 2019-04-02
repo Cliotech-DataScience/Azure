@@ -1,0 +1,55 @@
+{
+	"name": "BI_Logins_By_Country",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "dwhdb_blob",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "BI"
+		},
+		"type": "AzureBlob",
+		"structure": [
+			{
+				"name": "event_date_day",
+				"type": "DateTime"
+			},
+			{
+				"name": "Broker",
+				"type": "String"
+			},
+			{
+				"name": "FolderType",
+				"type": "String"
+			},
+			{
+				"name": "Folder",
+				"type": "String"
+			},
+			{
+				"name": "Accountnumber",
+				"type": "Int64"
+			},
+			{
+				"name": "Account_Country",
+				"type": "String"
+			},
+			{
+				"name": "ipcountry",
+				"type": "String"
+			},
+			{
+				"name": "logins",
+				"type": "Int64"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "ParquetFormat"
+			},
+			"fileName": "*.parquet",
+			"folderPath": "bi-db/logins_by_country"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
