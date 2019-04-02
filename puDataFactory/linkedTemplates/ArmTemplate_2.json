@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "pudatafactory"
+			"defaultValue": "puDataFactory"
 		},
 		"DWH_connectionString": {
 			"type": "secureString",
@@ -114,6 +114,14 @@
 		"pufiles_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
+		},
+		"BI_Logins_By_Country_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "*.parquet"
+		},
+		"BI_Logins_By_Country_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "bi-db/logins_by_country"
 		}
 	},
 	"variables": {
@@ -496,6 +504,64 @@
 				"connectVia": {
 					"referenceName": "alldbgateway",
 					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BI_Logins_By_Country')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "dwhdb_blob",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "BI"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "event_date_day",
+						"type": "DateTime"
+					},
+					{
+						"name": "Broker",
+						"type": "String"
+					},
+					{
+						"name": "FolderType",
+						"type": "String"
+					},
+					{
+						"name": "Folder",
+						"type": "String"
+					},
+					{
+						"name": "Accountnumber",
+						"type": "Int64"
+					},
+					{
+						"name": "Account_Country",
+						"type": "String"
+					},
+					{
+						"name": "ipcountry",
+						"type": "String"
+					},
+					{
+						"name": "logins",
+						"type": "Int64"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "ParquetFormat"
+					},
+					"fileName": "[parameters('BI_Logins_By_Country_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('BI_Logins_By_Country_properties_typeProperties_folderPath')]"
 				}
 			},
 			"dependsOn": []
@@ -1031,39 +1097,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/EMERP_DB_Events')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Dwhpr",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "RAWDB_Id",
-						"type": "Int64"
-					},
-					{
-						"name": "datails",
-						"type": "String"
-					},
-					{
-						"name": "Fixed_Timestamp",
-						"type": "DateTime"
-					}
-				],
-				"typeProperties": {
-					"tableName": "emerp_db.azure.AZ_EMERP_DB_Events"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Dwhpr')]"
 			]
 		}
 	]

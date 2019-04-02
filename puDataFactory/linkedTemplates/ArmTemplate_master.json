@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "pudatafactory"
+			"defaultValue": "puDataFactory"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -355,6 +355,14 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"BI_Logins_By_Country_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "*.parquet"
+		},
+		"BI_Logins_By_Country_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "bi-db/logins_by_country"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -671,6 +679,12 @@
 					},
 					"pufiles_properties_typeProperties_userId": {
 						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
+					},
+					"BI_Logins_By_Country_properties_typeProperties_fileName": {
+						"value": "[parameters('BI_Logins_By_Country_properties_typeProperties_fileName')]"
+					},
+					"BI_Logins_By_Country_properties_typeProperties_folderPath": {
+						"value": "[parameters('BI_Logins_By_Country_properties_typeProperties_folderPath')]"
 					}
 				}
 			},

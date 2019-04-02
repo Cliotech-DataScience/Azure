@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "pudatafactory"
+			"defaultValue": "puDataFactory"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -354,6 +354,14 @@
 		"pufiles_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
+		},
+		"BI_Logins_By_Country_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "*.parquet"
+		},
+		"BI_Logins_By_Country_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "bi-db/logins_by_country"
 		}
 	},
 	"variables": {
@@ -6967,6 +6975,66 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BI_Logins_By_Country')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "dwhdb_blob",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "BI"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "event_date_day",
+						"type": "DateTime"
+					},
+					{
+						"name": "Broker",
+						"type": "String"
+					},
+					{
+						"name": "FolderType",
+						"type": "String"
+					},
+					{
+						"name": "Folder",
+						"type": "String"
+					},
+					{
+						"name": "Accountnumber",
+						"type": "Int64"
+					},
+					{
+						"name": "Account_Country",
+						"type": "String"
+					},
+					{
+						"name": "ipcountry",
+						"type": "String"
+					},
+					{
+						"name": "logins",
+						"type": "Int64"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "ParquetFormat"
+					},
+					"fileName": "[parameters('BI_Logins_By_Country_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('BI_Logins_By_Country_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/dwhdb_blob')]"
+			]
 		}
 	]
 }
