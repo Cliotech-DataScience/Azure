@@ -21,7 +21,7 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"notebookPath": "/Users/mihaib@cliotech.com/Sessions Reports",
+					"notebookPath": "/Load Data/Reports/Sessions Reports",
 					"baseParameters": {
 						"Last_Date": {
 							"value": "@activity('GetLast_Date').output.firstRow.Last_Date",
