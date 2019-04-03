@@ -5,6 +5,9 @@
 			"referenceName": "AzureSqlDatabase_events",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "BI"
+		},
 		"type": "AzureSqlTable",
 		"structure": [
 			{
@@ -41,7 +44,7 @@
 			}
 		],
 		"typeProperties": {
-			"tableName": "[dbo].[Logins_By_Country]"
+			"tableName": "[Reports].[Logins_By_Country]"
 		}
 	}
 }

@@ -48,7 +48,7 @@
 				"type": "ParquetFormat"
 			},
 			"fileName": "*.parquet",
-			"folderPath": "bi-db/logins_by_country"
+			"folderPath": "bi-db/mrr_logins_by_country"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
