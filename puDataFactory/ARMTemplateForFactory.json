@@ -3811,7 +3811,7 @@
 					},
 					{
 						"name": "AccountNumber",
-						"type": "Int64"
+						"type": "Int32"
 					},
 					{
 						"name": "Broker",
@@ -3839,7 +3839,7 @@
 					},
 					{
 						"name": "Sessions",
-						"type": "Int64"
+						"type": "Int32"
 					}
 				],
 				"typeProperties": {
