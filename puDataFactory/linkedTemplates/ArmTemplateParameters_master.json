@@ -80,11 +80,20 @@
 		"pufiles_password": {
 			"value": ""
 		},
+		"AzureSqlDatabase_events_connectionString": {
+			"value": ""
+		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"value": "*.parquet"
 		},
 		"BI_Events_blob_properties_typeProperties_folderPath": {
 			"value": "bi-db/fact_events"
+		},
+		"BI_Logins_By_Country_properties_typeProperties_fileName": {
+			"value": "*.parquet"
+		},
+		"BI_Logins_By_Country_properties_typeProperties_folderPath": {
+			"value": "bi-db/logins_by_country"
 		},
 		"BI_Serials_blob_properties_typeProperties_fileName": {
 			"value": "*.parquet"
@@ -265,12 +274,6 @@
 		},
 		"pufiles_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
-		},
-		"BI_Logins_By_Country_properties_typeProperties_fileName": {
-			"value": "*.parquet"
-		},
-		"BI_Logins_By_Country_properties_typeProperties_folderPath": {
-			"value": "bi-db/logins_by_country"
 		},
 		"containerUri": {
 			"value": ""

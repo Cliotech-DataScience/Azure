@@ -107,6 +107,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
 		},
+		"AzureSqlDatabase_events_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase_events'"
+		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "*.parquet"
@@ -114,6 +118,14 @@
 		"BI_Events_blob_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "bi-db/fact_events"
+		},
+		"BI_Logins_By_Country_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "*.parquet"
+		},
+		"BI_Logins_By_Country_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "bi-db/logins_by_country"
 		},
 		"BI_Serials_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -355,14 +367,6 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
-		"BI_Logins_By_Country_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "*.parquet"
-		},
-		"BI_Logins_By_Country_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "bi-db/logins_by_country"
-		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -417,6 +421,9 @@
 					"dwhdb_blob_connectionString": {
 						"value": "[parameters('dwhdb_blob_connectionString')]"
 					},
+					"AzureSqlDatabase_events_connectionString": {
+						"value": "[parameters('AzureSqlDatabase_events_connectionString')]"
+					},
 					"TableServiceStoree_properties_typeProperties_url": {
 						"value": "[parameters('TableServiceStoree_properties_typeProperties_url')]"
 					},
@@ -425,6 +432,12 @@
 					},
 					"BI_Events_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('BI_Events_blob_properties_typeProperties_folderPath')]"
+					},
+					"BI_Logins_By_Country_properties_typeProperties_fileName": {
+						"value": "[parameters('BI_Logins_By_Country_properties_typeProperties_fileName')]"
+					},
+					"BI_Logins_By_Country_properties_typeProperties_folderPath": {
+						"value": "[parameters('BI_Logins_By_Country_properties_typeProperties_folderPath')]"
 					},
 					"BI_Serials_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('BI_Serials_blob_properties_typeProperties_fileName')]"
@@ -443,18 +456,6 @@
 					},
 					"Blob_Serials_properties_typeProperties_folderPath": {
 						"value": "[parameters('Blob_Serials_properties_typeProperties_folderPath')]"
-					},
-					"Communication_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('Communication_blob_properties_typeProperties_fileName')]"
-					},
-					"Communication_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('Communication_blob_properties_typeProperties_folderPath')]"
-					},
-					"DWH_Dim_Customers_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_fileName')]"
-					},
-					"DWH_Dim_Customers_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -473,6 +474,18 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Communication_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('Communication_blob_properties_typeProperties_fileName')]"
+					},
+					"Communication_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('Communication_blob_properties_typeProperties_folderPath')]"
+					},
+					"DWH_Dim_Customers_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_fileName')]"
+					},
+					"DWH_Dim_Customers_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_folderPath')]"
 					},
 					"blob_EMERP_Events_properties_typeProperties_fileName": {
 						"value": "[parameters('blob_EMERP_Events_properties_typeProperties_fileName')]"
@@ -566,18 +579,6 @@
 					},
 					"fxnet_deals_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('fxnet_deals_blob_properties_typeProperties_folderPath')]"
-					},
-					"platformusage_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('platformusage_blob_properties_typeProperties_fileName')]"
-					},
-					"platformusage_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('platformusage_blob_properties_typeProperties_folderPath')]"
-					},
-					"scmm_activities_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('scmm_activities_blob_properties_typeProperties_fileName')]"
-					},
-					"scmm_activities_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('scmm_activities_blob_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -647,6 +648,18 @@
 					"pufiles_password": {
 						"value": "[parameters('pufiles_password')]"
 					},
+					"platformusage_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('platformusage_blob_properties_typeProperties_fileName')]"
+					},
+					"platformusage_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('platformusage_blob_properties_typeProperties_folderPath')]"
+					},
+					"scmm_activities_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('scmm_activities_blob_properties_typeProperties_fileName')]"
+					},
+					"scmm_activities_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('scmm_activities_blob_properties_typeProperties_folderPath')]"
+					},
 					"unzip_platfrom_file_properties_typeProperties_fileName": {
 						"value": "[parameters('unzip_platfrom_file_properties_typeProperties_fileName')]"
 					},
@@ -679,12 +692,6 @@
 					},
 					"pufiles_properties_typeProperties_userId": {
 						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
-					},
-					"BI_Logins_By_Country_properties_typeProperties_fileName": {
-						"value": "[parameters('BI_Logins_By_Country_properties_typeProperties_fileName')]"
-					},
-					"BI_Logins_By_Country_properties_typeProperties_folderPath": {
-						"value": "[parameters('BI_Logins_By_Country_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -739,6 +746,26 @@
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_3')]"
+			]
+		},
+		{
+			"name": "ArmTemplate_5",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_5.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_4')]"
 			]
 		}
 	]

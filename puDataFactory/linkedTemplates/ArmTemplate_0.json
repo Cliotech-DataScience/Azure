@@ -43,6 +43,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'dwhdb_blob'"
 		},
+		"AzureSqlDatabase_events_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase_events'"
+		},
 		"TableServiceStoree_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://dataloadestore.table.core.windows.net/"
@@ -54,6 +58,14 @@
 		"BI_Events_blob_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "bi-db/fact_events"
+		},
+		"BI_Logins_By_Country_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "*.parquet"
+		},
+		"BI_Logins_By_Country_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "bi-db/logins_by_country"
 		},
 		"BI_Serials_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -78,22 +90,6 @@
 		"Blob_Serials_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "rawdata/Serials"
-		},
-		"Communication_blob_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('Communication_', pipeline().TriggerTime, '.csv.bz2')"
-		},
-		"Communication_blob_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@concat('rawdata/Communication/Received=',utcnow('s'))"
-		},
-		"DWH_Dim_Customers_blob_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('Customers_', pipeline().RunId, '.csv')"
-		},
-		"DWH_Dim_Customers_blob_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "rawdata/Customers"
 		}
 	},
 	"variables": {
@@ -322,6 +318,19 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase_events')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSqlDatabase_events_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/04_PU_ods_to_events')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -399,6 +408,66 @@
 					},
 					"fileName": "[parameters('BI_Events_blob_properties_typeProperties_fileName')]",
 					"folderPath": "[parameters('BI_Events_blob_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/dwhdb_blob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BI_Logins_By_Country')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "dwhdb_blob",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "BI"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "Event_date_Day",
+						"type": "DateTime"
+					},
+					{
+						"name": "AccountNumber",
+						"type": "Int64"
+					},
+					{
+						"name": "Broker",
+						"type": "String"
+					},
+					{
+						"name": "Folder",
+						"type": "String"
+					},
+					{
+						"name": "FolderType",
+						"type": "String"
+					},
+					{
+						"name": "Login_From_Country",
+						"type": "String"
+					},
+					{
+						"name": "CustomerCountry",
+						"type": "String"
+					},
+					{
+						"name": "Sessions",
+						"type": "Int64"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "ParquetFormat"
+					},
+					"fileName": "[parameters('BI_Logins_By_Country_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('BI_Logins_By_Country_properties_typeProperties_folderPath')]"
 				}
 			},
 			"dependsOn": [
@@ -635,104 +704,6 @@
 						"type": "Expression"
 					},
 					"folderPath": "[parameters('Blob_Serials_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Communication_blob')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DataloadStore",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "MessageID",
-						"type": "Int32"
-					},
-					{
-						"name": "Event_Date",
-						"type": "DateTime"
-					},
-					{
-						"name": "details",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": "\t",
-						"rowDelimiter": "",
-						"quoteChar": "",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"compression": {
-						"type": "BZip2"
-					},
-					"fileName": {
-						"value": "[parameters('Communication_blob_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": {
-						"value": "[parameters('Communication_blob_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/DataloadStore')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DWH_Dim_Customers_blob')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"folder_name": {
-						"type": "String",
-						"defaultValue": "Dim_AccountContacts"
-					}
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"nullValue": "\\N",
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": true
-					},
-					"fileName": {
-						"value": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_folderPath')]"
 				}
 			},
 			"dependsOn": [

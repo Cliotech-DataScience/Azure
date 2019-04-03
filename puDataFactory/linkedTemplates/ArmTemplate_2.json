@@ -71,6 +71,22 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
 		},
+		"platformusage_blob_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@dataset().file_name"
+		},
+		"platformusage_blob_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@dataset().folder_name"
+		},
+		"scmm_activities_blob_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@CONCAT('SCMM_Activities_', pipeline().TriggerTime, '.csv.bz2')"
+		},
+		"scmm_activities_blob_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@concat('rawdata/SCMM_Activities/Received=',utcnow('s'))"
+		},
 		"unzip_platfrom_file_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": ""
@@ -114,20 +130,106 @@
 		"pufiles_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
-		},
-		"BI_Logins_By_Country_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "*.parquet"
-		},
-		"BI_Logins_By_Country_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "bi-db/logins_by_country"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/platformusage_blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"folder_name": {
+						"type": "String"
+					},
+					"file_name": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Platform Usage"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"typeProperties": {
+					"compression": {
+						"type": "ZipDeflate",
+						"level": "Optimal"
+					},
+					"fileName": {
+						"value": "[parameters('platformusage_blob_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": {
+						"value": "[parameters('platformusage_blob_properties_typeProperties_folderPath')]",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/scmm_activities_blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DataloadStore",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "Activity_Id",
+						"type": "Int32"
+					},
+					{
+						"name": "Activity_Date",
+						"type": "DateTime"
+					},
+					{
+						"name": "details",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": "\t",
+						"rowDelimiter": "",
+						"quoteChar": "",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"compression": {
+						"type": "BZip2"
+					},
+					"fileName": {
+						"value": "[parameters('scmm_activities_blob_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": {
+						"value": "[parameters('scmm_activities_blob_properties_typeProperties_folderPath')]",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/serials_dim_dwh')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -509,30 +611,27 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/BI_Logins_By_Country')]",
+			"name": "[concat(parameters('factoryName'), '/AzureSQL_Logins_By_Country')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "dwhdb_blob",
+					"referenceName": "AzureSqlDatabase_events",
 					"type": "LinkedServiceReference"
 				},
-				"folder": {
-					"name": "BI"
-				},
 				"annotations": [],
-				"type": "AzureBlob",
+				"type": "AzureSqlTable",
 				"structure": [
 					{
-						"name": "event_date_day",
-						"type": "DateTime"
+						"name": "Event_date_Day",
+						"type": "Date"
+					},
+					{
+						"name": "AccountNumber",
+						"type": "Int32"
 					},
 					{
 						"name": "Broker",
-						"type": "String"
-					},
-					{
-						"name": "FolderType",
 						"type": "String"
 					},
 					{
@@ -540,28 +639,24 @@
 						"type": "String"
 					},
 					{
-						"name": "Accountnumber",
-						"type": "Int64"
-					},
-					{
-						"name": "Account_Country",
+						"name": "FolderType",
 						"type": "String"
 					},
 					{
-						"name": "ipcountry",
+						"name": "Login_From_Country",
 						"type": "String"
 					},
 					{
-						"name": "logins",
-						"type": "Int64"
+						"name": "CustomerCountry",
+						"type": "String"
+					},
+					{
+						"name": "Sessions",
+						"type": "Int32"
 					}
 				],
 				"typeProperties": {
-					"format": {
-						"type": "ParquetFormat"
-					},
-					"fileName": "[parameters('BI_Logins_By_Country_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('BI_Logins_By_Country_properties_typeProperties_folderPath')]"
+					"tableName": "[concat('[', 'dbo].[Logins_By_Country]')]"
 				}
 			},
 			"dependsOn": []
@@ -820,283 +915,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/DWH')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DWH_pu_list_files')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Platform Usage"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "TransactionNumber",
-						"type": "Int32"
-					},
-					{
-						"name": "PositionNumber",
-						"type": "Int32"
-					},
-					{
-						"name": "AccountNumber",
-						"type": "Int32"
-					},
-					{
-						"name": "CustomerHistory_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "CustomersExtendedHistory_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "DealAttirbute_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "Instrument_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "TransactionType_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "Direction_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "Source_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "DealType_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "ExecutionDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "ExecutionDay",
-						"type": "DateTime"
-					},
-					{
-						"name": "ExecutionTime",
-						"type": "TimeSpan"
-					},
-					{
-						"name": "TransactionCloseDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "ValueDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "ValueDay",
-						"type": "DateTime"
-					},
-					{
-						"name": "BaseAmount",
-						"type": "Decimal"
-					},
-					{
-						"name": "OtherAmount",
-						"type": "Decimal"
-					},
-					{
-						"name": "SpotRate",
-						"type": "Decimal"
-					},
-					{
-						"name": "ForwardPips",
-						"type": "Double"
-					},
-					{
-						"name": "TotRate",
-						"type": "Decimal"
-					},
-					{
-						"name": "Volume_USD",
-						"type": "Decimal"
-					},
-					{
-						"name": "ServerRate",
-						"type": "Decimal"
-					},
-					{
-						"name": "OtherServerRate",
-						"type": "Decimal"
-					},
-					{
-						"name": "ExecutedLimit",
-						"type": "Int16"
-					},
-					{
-						"name": "PL",
-						"type": "Decimal"
-					},
-					{
-						"name": "IsFirstBOP",
-						"type": "Boolean"
-					},
-					{
-						"name": "IsFirstForex",
-						"type": "Boolean"
-					},
-					{
-						"name": "IsFirstDeal",
-						"type": "Boolean"
-					},
-					{
-						"name": "Deleted",
-						"type": "Boolean"
-					},
-					{
-						"name": "PositionClosed",
-						"type": "Int16"
-					},
-					{
-						"name": "DealPL_USD",
-						"type": "Decimal"
-					},
-					{
-						"name": "PL_SymbolId",
-						"type": "Int16"
-					},
-					{
-						"name": "AccountBasesymbolId",
-						"type": "Int16"
-					},
-					{
-						"name": "EtlUpdatedDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "SpreadCost",
-						"type": "Decimal"
-					},
-					{
-						"name": "Folder_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "Broker_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "AccountNumber_modo",
-						"type": "Int32"
-					},
-					{
-						"name": "PositionNumber_modo",
-						"type": "Int32"
-					},
-					{
-						"name": "PL_AccountBase",
-						"type": "Decimal"
-					},
-					{
-						"name": "Customer_Favor_Rate_diff",
-						"type": "Decimal"
-					},
-					{
-						"name": "Channel_Bucket_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "Sessions_ID",
-						"type": "Int64"
-					},
-					{
-						"name": "DealCountTotal",
-						"type": "Int32"
-					},
-					{
-						"name": "Retention_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "ConversionRate",
-						"type": "Decimal"
-					},
-					{
-						"name": "CommissionInAccountBase",
-						"type": "Decimal"
-					},
-					{
-						"name": "SpreadCostInAccountBase",
-						"type": "Decimal"
-					},
-					{
-						"name": "RolloverSpreadCostInAccountBase",
-						"type": "Decimal"
-					},
-					{
-						"name": "CommissionInOther",
-						"type": "Decimal"
-					},
-					{
-						"name": "SpreadCostInOther",
-						"type": "Decimal"
-					},
-					{
-						"name": "RolloverSpreadCostInOther",
-						"type": "Decimal"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[concat('[', 'azure].[platfrom_usage_log_file]')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Dim_AccountContacts')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "AccountNumber",
-						"type": "Int32"
-					},
-					{
-						"name": "ContactID",
-						"type": "Int64"
-					},
-					{
-						"name": "LastUpdate",
-						"type": "DateTime"
-					},
-					{
-						"name": "SsisUpdatedDate",
-						"type": "DateTime"
-					}
-				],
-				"typeProperties": {
-					"tableName": "dwh.azure.AZ_Dim_AccountContacts"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
 			]
 		}
 	]
