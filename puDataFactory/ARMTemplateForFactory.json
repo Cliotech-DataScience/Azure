@@ -2764,6 +2764,9 @@
 						"type": "String"
 					}
 				},
+				"folder": {
+					"name": "BI"
+				},
 				"annotations": []
 			},
 			"dependsOn": [
