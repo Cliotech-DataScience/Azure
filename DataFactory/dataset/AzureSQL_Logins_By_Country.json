@@ -1,22 +1,19 @@
 {
-	"name": "BI_Logins_By_Country",
+	"name": "AzureSQL_Logins_By_Country",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "dwhdb_blob",
+			"referenceName": "AzureSqlDatabase_events",
 			"type": "LinkedServiceReference"
 		},
-		"folder": {
-			"name": "BI"
-		},
-		"type": "AzureBlob",
+		"type": "AzureSqlTable",
 		"structure": [
 			{
 				"name": "Event_date_Day",
-				"type": "DateTime"
+				"type": "Date"
 			},
 			{
 				"name": "AccountNumber",
-				"type": "Int64"
+				"type": "Int32"
 			},
 			{
 				"name": "Broker",
@@ -40,16 +37,11 @@
 			},
 			{
 				"name": "Sessions",
-				"type": "Int64"
+				"type": "Int32"
 			}
 		],
 		"typeProperties": {
-			"format": {
-				"type": "ParquetFormat"
-			},
-			"fileName": "*.parquet",
-			"folderPath": "bi-db/logins_by_country"
+			"tableName": "[dbo].[Logins_By_Country]"
 		}
-	},
-	"type": "Microsoft.DataFactory/factories/datasets"
+	}
 }
