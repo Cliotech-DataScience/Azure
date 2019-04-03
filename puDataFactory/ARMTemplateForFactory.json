@@ -2739,6 +2739,7 @@
 									"FolderType": "FolderType",
 									"Login_From_Country": "Login_From_Country",
 									"CustomerCountry": "CustomerCountry",
+									"AMLComplianceStatus": "AMLComplianceStatus",
 									"Sessions": "Sessions"
 								}
 							}
@@ -2759,11 +2760,6 @@
 						]
 					}
 				],
-				"variables": {
-					"Last_Date": {
-						"type": "String"
-					}
-				},
 				"folder": {
 					"name": "BI"
 				},
@@ -3815,7 +3811,7 @@
 					},
 					{
 						"name": "AccountNumber",
-						"type": "Int32"
+						"type": "Int64"
 					},
 					{
 						"name": "Broker",
@@ -3838,8 +3834,12 @@
 						"type": "String"
 					},
 					{
+						"name": "AMLComplianceStatus",
+						"type": "String"
+					},
+					{
 						"name": "Sessions",
-						"type": "Int32"
+						"type": "Int64"
 					}
 				],
 				"typeProperties": {
@@ -3939,6 +3939,10 @@
 					},
 					{
 						"name": "CustomerCountry",
+						"type": "String"
+					},
+					{
+						"name": "AMLComplianceStatus",
 						"type": "String"
 					},
 					{
