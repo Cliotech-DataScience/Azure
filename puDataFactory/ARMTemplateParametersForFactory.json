@@ -20,6 +20,9 @@
 		"AzureSqlDatabase_dwh_connectionString": {
 			"value": ""
 		},
+		"AzureSqlDatabase_events_connectionString": {
+			"value": ""
+		},
 		"DWH_connectionString": {
 			"value": ""
 		},
@@ -80,9 +83,6 @@
 		"pufiles_password": {
 			"value": ""
 		},
-		"AzureSqlDatabase_events_connectionString": {
-			"value": ""
-		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"value": "*.parquet"
 		},
@@ -93,7 +93,7 @@
 			"value": "*.parquet"
 		},
 		"BI_Logins_By_Country_properties_typeProperties_folderPath": {
-			"value": "bi-db/logins_by_country"
+			"value": "bi-db/mrr_logins_by_country"
 		},
 		"BI_Serials_blob_properties_typeProperties_fileName": {
 			"value": "*.parquet"

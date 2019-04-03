@@ -27,6 +27,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase_dwh'"
 		},
+		"AzureSqlDatabase_events_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase_events'"
+		},
 		"DWH_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'DWH'"
@@ -107,10 +111,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
 		},
-		"AzureSqlDatabase_events_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase_events'"
-		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "*.parquet"
@@ -125,7 +125,7 @@
 		},
 		"BI_Logins_By_Country_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "bi-db/logins_by_country"
+			"defaultValue": "bi-db/mrr_logins_by_country"
 		},
 		"BI_Serials_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -409,6 +409,9 @@
 					"AzureSqlDatabase_dwh_connectionString": {
 						"value": "[parameters('AzureSqlDatabase_dwh_connectionString')]"
 					},
+					"AzureSqlDatabase_events_connectionString": {
+						"value": "[parameters('AzureSqlDatabase_events_connectionString')]"
+					},
 					"DataLoadStorageAccount_connectionString": {
 						"value": "[parameters('DataLoadStorageAccount_connectionString')]"
 					},
@@ -420,9 +423,6 @@
 					},
 					"dwhdb_blob_connectionString": {
 						"value": "[parameters('dwhdb_blob_connectionString')]"
-					},
-					"AzureSqlDatabase_events_connectionString": {
-						"value": "[parameters('AzureSqlDatabase_events_connectionString')]"
 					},
 					"TableServiceStoree_properties_typeProperties_url": {
 						"value": "[parameters('TableServiceStoree_properties_typeProperties_url')]"
@@ -450,12 +450,6 @@
 					},
 					"Blob_Contacts_properties_typeProperties_folderPath": {
 						"value": "[parameters('Blob_Contacts_properties_typeProperties_folderPath')]"
-					},
-					"Blob_Serials_properties_typeProperties_fileName": {
-						"value": "[parameters('Blob_Serials_properties_typeProperties_fileName')]"
-					},
-					"Blob_Serials_properties_typeProperties_folderPath": {
-						"value": "[parameters('Blob_Serials_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -474,6 +468,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Blob_Serials_properties_typeProperties_fileName": {
+						"value": "[parameters('Blob_Serials_properties_typeProperties_fileName')]"
+					},
+					"Blob_Serials_properties_typeProperties_folderPath": {
+						"value": "[parameters('Blob_Serials_properties_typeProperties_folderPath')]"
 					},
 					"Communication_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('Communication_blob_properties_typeProperties_fileName')]"
@@ -573,12 +573,6 @@
 					},
 					"fxnet_accounting_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_folderPath')]"
-					},
-					"fxnet_deals_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('fxnet_deals_blob_properties_typeProperties_fileName')]"
-					},
-					"fxnet_deals_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('fxnet_deals_blob_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -647,6 +641,12 @@
 					},
 					"pufiles_password": {
 						"value": "[parameters('pufiles_password')]"
+					},
+					"fxnet_deals_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('fxnet_deals_blob_properties_typeProperties_fileName')]"
+					},
+					"fxnet_deals_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('fxnet_deals_blob_properties_typeProperties_folderPath')]"
 					},
 					"platformusage_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('platformusage_blob_properties_typeProperties_fileName')]"
