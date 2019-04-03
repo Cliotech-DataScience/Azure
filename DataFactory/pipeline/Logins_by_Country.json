@@ -93,6 +93,7 @@
 							"FolderType": "FolderType",
 							"Login_From_Country": "Login_From_Country",
 							"CustomerCountry": "CustomerCountry",
+							"AMLComplianceStatus": "AMLComplianceStatus",
 							"Sessions": "Sessions"
 						}
 					}
@@ -111,11 +112,6 @@
 				]
 			}
 		],
-		"variables": {
-			"Last_Date": {
-				"type": "String"
-			}
-		},
 		"folder": {
 			"name": "BI"
 		}

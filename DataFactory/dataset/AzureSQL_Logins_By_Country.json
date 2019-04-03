@@ -16,7 +16,7 @@
 			},
 			{
 				"name": "AccountNumber",
-				"type": "Int32"
+				"type": "Int64"
 			},
 			{
 				"name": "Broker",
@@ -39,8 +39,12 @@
 				"type": "String"
 			},
 			{
+				"name": "AMLComplianceStatus",
+				"type": "String"
+			},
+			{
 				"name": "Sessions",
-				"type": "Int32"
+				"type": "Int64"
 			}
 		],
 		"typeProperties": {

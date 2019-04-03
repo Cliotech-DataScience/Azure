@@ -39,6 +39,10 @@
 				"type": "String"
 			},
 			{
+				"name": "AMLComplianceStatus",
+				"type": "String"
+			},
+			{
 				"name": "Sessions",
 				"type": "Int64"
 			}
