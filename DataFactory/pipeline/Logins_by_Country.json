@@ -115,6 +115,9 @@
 			"Last_Date": {
 				"type": "String"
 			}
+		},
+		"folder": {
+			"name": "BI"
 		}
 	}
 }
