@@ -1,0 +1,54 @@
+{
+	"name": "SqlServer_Reports_Logins_By_Country",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DWH",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "BI"
+		},
+		"type": "SqlServerTable",
+		"structure": [
+			{
+				"name": "Event_date_Day",
+				"type": "Date"
+			},
+			{
+				"name": "AccountNumber",
+				"type": "Int32"
+			},
+			{
+				"name": "Broker",
+				"type": "String"
+			},
+			{
+				"name": "Folder",
+				"type": "String"
+			},
+			{
+				"name": "FolderType",
+				"type": "String"
+			},
+			{
+				"name": "Login_From_Country",
+				"type": "String"
+			},
+			{
+				"name": "CustomerCountry",
+				"type": "String"
+			},
+			{
+				"name": "AMLComplianceStatus",
+				"type": "String"
+			},
+			{
+				"name": "Sessions",
+				"type": "Int32"
+			}
+		],
+		"typeProperties": {
+			"tableName": "[azure].[Reports_Logins_By_Country]"
+		}
+	}
+}
