@@ -2772,6 +2772,72 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Logins_by_Country_SQLServer_Amsterdam')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "copy Parq to SQL Server",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BlobSource",
+								"recursive": true
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Event_date_Day": "Event_date_Day",
+									"AccountNumber": "AccountNumber",
+									"Broker": "Broker",
+									"Folder": "Folder",
+									"FolderType": "FolderType",
+									"Login_From_Country": "Login_From_Country",
+									"CustomerCountry": "CustomerCountry",
+									"AMLComplianceStatus": "AMLComplianceStatus",
+									"Sessions": "Sessions"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "BI_Logins_By_Country",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SqlServer_Reports_Logins_By_Country",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/BI_Logins_By_Country')]",
+				"[concat(variables('factoryId'), '/datasets/SqlServer_Reports_Logins_By_Country')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/MergeTableStore')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -5061,6 +5127,66 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/fileserver1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SqlServer_Reports_Logins_By_Country')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWH",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "BI"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "Event_date_Day",
+						"type": "Date"
+					},
+					{
+						"name": "AccountNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "Broker",
+						"type": "String"
+					},
+					{
+						"name": "Folder",
+						"type": "String"
+					},
+					{
+						"name": "FolderType",
+						"type": "String"
+					},
+					{
+						"name": "Login_From_Country",
+						"type": "String"
+					},
+					{
+						"name": "CustomerCountry",
+						"type": "String"
+					},
+					{
+						"name": "AMLComplianceStatus",
+						"type": "String"
+					},
+					{
+						"name": "Sessions",
+						"type": "Int32"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[concat('[', 'azure].[Reports_Logins_By_Country]')]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/DWH')]"
 			]
 		},
 		{

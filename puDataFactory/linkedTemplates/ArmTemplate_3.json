@@ -705,6 +705,64 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/SqlServer_Reports_Logins_By_Country')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWH",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "BI"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "Event_date_Day",
+						"type": "Date"
+					},
+					{
+						"name": "AccountNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "Broker",
+						"type": "String"
+					},
+					{
+						"name": "Folder",
+						"type": "String"
+					},
+					{
+						"name": "FolderType",
+						"type": "String"
+					},
+					{
+						"name": "Login_From_Country",
+						"type": "String"
+					},
+					{
+						"name": "CustomerCountry",
+						"type": "String"
+					},
+					{
+						"name": "AMLComplianceStatus",
+						"type": "String"
+					},
+					{
+						"name": "Sessions",
+						"type": "Int32"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[concat('[', 'azure].[Reports_Logins_By_Country]')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/dwh_Customer_Questionnaires_src')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1256,122 +1314,6 @@
 								"file_name": {
 									"value": {
 										"value": "@activity('lookup_file_to_unzip').output.firstRow.file_name",
-										"type": "Expression"
-									},
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "alldbdwh",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Platfrom_Usage"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DWH_pu_list_files')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/03_PU_Load_ods_data')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "PU_Load_ods_data",
-						"description": "create one daily file from all daily files ",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "Lookup_file_to_create",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/Platform Usage/PU Load ods data",
-							"baseParameters": {
-								"input_file_path": {
-									"value": "@activity('Lookup_file_to_create').output.firstRow.file_name",
-									"type": "Expression"
-								},
-								"ods": "/mnt/dataloadestore/platformusage/ods/",
-								"zippath": "/mnt/dataloadestore/platformusage/unzip/",
-								"folder_name": {
-									"value": "@activity('Lookup_file_to_create').output.firstRow.folder",
-									"type": "Expression"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "Lookup_file_to_create",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "   SELECT file_name,\n        folder,daily_file\nFROM azure.platfrom_usage_log_file\nWHERE 1=1\nAND move_to_blob =1 \nAND unzip_file=1\nAND  ISNULL(daily_file,0)<>1\n"
-							},
-							"dataset": {
-								"referenceName": "DWH_pu_list_files",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "Update_Create_Daily_File",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "PU_Load_ods_data",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[concat('[', 'azure].[SP_Update_platfrom_usage_log_file_create_daily_file]')]",
-							"storedProcedureParameters": {
-								"file_name": {
-									"value": {
-										"value": "@activity('Lookup_file_to_create').output.firstRow.file_name",
 										"type": "Expression"
 									},
 									"type": "String"
