@@ -5,7 +5,18 @@
 			"referenceName": "alldbdwh",
 			"type": "LinkedServiceReference"
 		},
-		"type": "SqlServerTable"
+		"type": "SqlServerTable",
+		"structure": [
+			{
+				"name": "Acc",
+				"type": "Int32",
+				"precision": 10,
+				"scale": 255
+			}
+		],
+		"typeProperties": {
+			"tableName": "[dbo].[testazuretab]"
+		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
 }
