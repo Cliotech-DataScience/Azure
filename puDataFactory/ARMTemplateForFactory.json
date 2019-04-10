@@ -5190,6 +5190,33 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/alldbsp')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "Acc",
+						"type": "Int32",
+						"precision": 10,
+						"scale": 255
+					}
+				],
+				"typeProperties": {
+					"tableName": "[concat('[', 'dbo].[testazuretab]')]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/blob_EMERP_Events')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -7273,6 +7300,44 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Reports Logins by Country Daily')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Logins_by_Country",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-04-10T11:07:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								30
+							],
+							"hours": [
+								9
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Logins_by_Country')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SCMM_Activities Daily')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -7366,12 +7431,7 @@
 				"type": "Managed",
 				"typeProperties": {
 					"computeProperties": {
-						"location": "West Europe",
-						"dataFlowRuntime": {
-							"computeType": "General",
-							"coreCount": 8,
-							"timeToLiveInMinutes": 60
-						}
+						"location": "West Europe"
 					}
 				}
 			},
