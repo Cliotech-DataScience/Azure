@@ -19,7 +19,7 @@
 					},
 					{
 						"name": "Destination",
-						"value": "acc_tab"
+						"value": "testazuretab"
 					}
 				],
 				"typeProperties": {
