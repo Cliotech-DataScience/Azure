@@ -6,6 +6,12 @@
 			"type": "LinkedServiceReference"
 		},
 		"type": "SqlServerTable",
+		"structure": [
+			{
+				"name": "acc",
+				"type": "Int64"
+			}
+		],
 		"typeProperties": {
 			"tableName": "acc_tab"
 		}
