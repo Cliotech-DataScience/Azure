@@ -9,13 +9,13 @@
 		"structure": [
 			{
 				"name": "Acc",
-				"type": "Int64",
+				"type": "Int32",
 				"precision": 10,
 				"scale": 255
 			}
 		],
 		"typeProperties": {
-			"tableName": "acc_tab"
+			"tableName": "AccountListType"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
