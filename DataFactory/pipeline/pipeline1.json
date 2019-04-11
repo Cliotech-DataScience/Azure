@@ -15,7 +15,7 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "bi-db/dim_serials/*.parquet"
+						"value": "[azure].[Reports_Logins_By_Country]"
 					},
 					{
 						"name": "Destination",

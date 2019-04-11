@@ -15,7 +15,7 @@
 			}
 		],
 		"typeProperties": {
-			"tableName": "[dbo].[testazuretab]"
+			"tableName": "acc_tab"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
