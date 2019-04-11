@@ -42,7 +42,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SqlServer_Reports_Logins_By_Country",
+						"referenceName": "Customers_Models_Data",
 						"type": "DatasetReference"
 					}
 				],
