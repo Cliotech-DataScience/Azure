@@ -12,15 +12,9 @@
 		"structure": [
 			{
 				"name": "AccountNumber",
-				"type": "Int64"
-			},
-			{
-				"name": "cluster_type",
-				"type": "String"
-			},
-			{
-				"name": "update_date",
-				"type": "DateTime"
+				"type": "Int64",
+				"precision": 19,
+				"scale": 255
 			}
 		],
 		"typeProperties": {
