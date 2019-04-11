@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -567,12 +567,6 @@
 					},
 					"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_folderPath')]"
-					},
-					"fxnet_accounting_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_fileName')]"
-					},
-					"fxnet_accounting_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -641,6 +635,12 @@
 					},
 					"pufiles_password": {
 						"value": "[parameters('pufiles_password')]"
+					},
+					"fxnet_accounting_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_fileName')]"
+					},
+					"fxnet_accounting_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_folderPath')]"
 					},
 					"fxnet_deals_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('fxnet_deals_blob_properties_typeProperties_fileName')]"

@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
 		},
 		"Blob_Serials_properties_typeProperties_fileName": {
 			"type": "string",
@@ -138,14 +138,6 @@
 		"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "@concat('rawdata/DWH_Lead_Assignments/Received=',utcnow('s'))"
-		},
-		"fxnet_accounting_blob_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('FXNET_Accounting_', pipeline().TriggerTime, '.csv.bz2')"
-		},
-		"fxnet_accounting_blob_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@concat('rawdata/FXNET_Accounting/Received=',utcnow('s'))"
 		}
 	},
 	"variables": {
@@ -239,6 +231,33 @@
 						"value": "[parameters('Communication_blob_properties_typeProperties_folderPath')]",
 						"type": "Expression"
 					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Customers_Models_Data')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase_events",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "AccountNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "Broker",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": "Customers_Models_Data"
 				}
 			},
 			"dependsOn": []
@@ -1068,65 +1087,6 @@
 				],
 				"typeProperties": {
 					"tableName": "[concat('[', 'dbo].[fact_events]')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/fxnet_accounting_blob')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DataloadStore",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "fact_account_trans_id",
-						"type": "Int64"
-					},
-					{
-						"name": "ActionDay",
-						"type": "DateTime"
-					},
-					{
-						"name": "ActionDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "Details",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": "\t",
-						"rowDelimiter": "",
-						"quoteChar": "",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"compression": {
-						"type": "BZip2"
-					},
-					"fileName": {
-						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": {
-						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
 				}
 			},
 			"dependsOn": []

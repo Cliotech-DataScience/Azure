@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -3857,6 +3857,75 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/sync_customers_clusters')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "customers_clusters",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "Customers_Models_Data"
+							},
+							{
+								"name": "Destination",
+								"value": "acc_tab"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "SELECT TOP 1  AccountNumber  FROM Customers_Models_Data"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"sqlWriterStoredProcedureName": "[concat('[', 'dbo].[testazuresp]')]",
+								"sqlWriterTableType": "AccType"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"AccountNumber": "Acc"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Customers_Models_Data",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "alldbsp",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Customers_Models_Data')]",
+				"[concat(variables('factoryId'), '/datasets/alldbsp')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureSQL_Logins_By_Country')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -4388,6 +4457,35 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/Dwhpr')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Customers_Models_Data')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase_events",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "AccountNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "Broker",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": "Customers_Models_Data"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase_events')]"
 			]
 		},
 		{
@@ -5209,7 +5307,7 @@
 					}
 				],
 				"typeProperties": {
-					"tableName": "[concat('[', 'dbo].[testazuretab]')]"
+					"tableName": "acc_tab"
 				}
 			},
 			"dependsOn": [
