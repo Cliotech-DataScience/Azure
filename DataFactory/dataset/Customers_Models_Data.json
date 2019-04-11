@@ -9,9 +9,11 @@
 		"structure": [
 			{
 				"name": "AccountNumber",
-				"type": "Int32",
-				"precision": 10,
-				"scale": 255
+				"type": "Int32"
+			},
+			{
+				"name": "Broker",
+				"type": "String"
 			}
 		],
 		"typeProperties": {
