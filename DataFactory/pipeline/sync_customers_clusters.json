@@ -25,7 +25,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT  cast(AccountNumber as int)  FROM [dbo].[mrr_customers_clustering]"
+						"sqlReaderQuery": "SELECT AccountNumber   FROM [dbo].[mrr_customers_clustering]"
 					},
 					"sink": {
 						"type": "SqlSink",
