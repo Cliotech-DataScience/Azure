@@ -24,7 +24,8 @@
 				],
 				"typeProperties": {
 					"source": {
-						"type": "SqlSource"
+						"type": "SqlSource",
+						"sqlReaderQuery": "SELECT TOP 1  AccountNumber  FROM Customers_Models_Data"
 					},
 					"sink": {
 						"type": "SqlSink",
