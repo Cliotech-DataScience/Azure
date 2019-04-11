@@ -15,7 +15,7 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "Customers_Models_Data"
+						"value": "[dbo].[mrr_customers_clustering]"
 					},
 					{
 						"name": "Destination",
@@ -24,7 +24,8 @@
 				],
 				"typeProperties": {
 					"source": {
-						"type": "SqlSource"
+						"type": "SqlSource",
+						"sqlReaderQuery": "SELECT  cast(AccountNumber as int)  FROM [dbo].[mrr_customers_clustering]"
 					},
 					"sink": {
 						"type": "SqlSink",
