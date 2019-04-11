@@ -9,7 +9,7 @@
 		"structure": [
 			{
 				"name": "Acc",
-				"type": "Int32",
+				"type": "Int64",
 				"precision": 10,
 				"scale": 255
 			}
