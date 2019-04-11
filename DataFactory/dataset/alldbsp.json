@@ -8,12 +8,10 @@
 		"type": "SqlServerTable",
 		"structure": [
 			{
-				"name": "acc",
-				"type": "Int64"
-			},
-			{
-				"name": "dt",
-				"type": "DateTime"
+				"name": "Acc",
+				"type": "Int32",
+				"precision": 10,
+				"scale": 255
 			}
 		],
 		"typeProperties": {
