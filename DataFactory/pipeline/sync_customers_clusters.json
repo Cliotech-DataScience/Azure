@@ -34,7 +34,6 @@
 						"sqlWriterTableType": "AccType"
 					},
 					"enableStaging": false,
-					"parallelCopies": 4,
 					"translator": {
 						"type": "TabularTranslator",
 						"columnMappings": {
