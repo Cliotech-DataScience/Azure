@@ -6,18 +6,8 @@
 			"type": "LinkedServiceReference"
 		},
 		"type": "SqlServerTable",
-		"structure": [
-			{
-				"name": "acc",
-				"type": "Int64"
-			},
-			{
-				"name": "dt",
-				"type": "DateTime"
-			}
-		],
 		"typeProperties": {
-			"tableName": "testazuretab"
+			"tableName": "acc_tab"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
