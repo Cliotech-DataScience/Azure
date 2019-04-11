@@ -8,14 +8,16 @@
 		"type": "SqlServerTable",
 		"structure": [
 			{
-				"name": "Acc",
-				"type": "Int64",
-				"precision": 10,
-				"scale": 255
+				"name": "acc",
+				"type": "Int64"
+			},
+			{
+				"name": "dt",
+				"type": "DateTime"
 			}
 		],
 		"typeProperties": {
-			"tableName": "acc_tab"
+			"tableName": "testazuretab"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
