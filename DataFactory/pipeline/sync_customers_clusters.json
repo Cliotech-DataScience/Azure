@@ -24,8 +24,7 @@
 				],
 				"typeProperties": {
 					"source": {
-						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT TOP 1  AccountNumber  FROM Customers_Models_Data"
+						"type": "SqlSource"
 					},
 					"sink": {
 						"type": "SqlSink",
@@ -43,7 +42,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SqlServer_Reports_Logins_By_Country",
+						"referenceName": "STG_mrr_customers_clustering",
 						"type": "DatasetReference"
 					}
 				],
