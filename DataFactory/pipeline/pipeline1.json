@@ -24,8 +24,7 @@
 				],
 				"typeProperties": {
 					"source": {
-						"type": "BlobSource",
-						"recursive": true
+						"type": "SqlSource"
 					},
 					"sink": {
 						"type": "SqlSink",
@@ -37,13 +36,13 @@
 					"translator": {
 						"type": "TabularTranslator",
 						"columnMappings": {
-							"Serial": "Acc"
+							"AccountNumber": "Acc"
 						}
 					}
 				},
 				"inputs": [
 					{
-						"referenceName": "BI_Serials_blob",
+						"referenceName": "SqlServer_Reports_Logins_By_Country",
 						"type": "DatasetReference"
 					}
 				],
