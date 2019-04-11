@@ -15,17 +15,16 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "[dbo].[mrr_customers_clustering]"
+						"value": "Customers_Models_Data"
 					},
 					{
 						"name": "Destination",
-						"value": "testazuretab"
+						"value": "acc_tab"
 					}
 				],
 				"typeProperties": {
 					"source": {
-						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT AccountNumber   FROM [dbo].[mrr_customers_clustering]"
+						"type": "SqlSource"
 					},
 					"sink": {
 						"type": "SqlSink",
@@ -43,7 +42,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "STG_mrr_customers_clustering",
+						"referenceName": "Customers_Models_Data",
 						"type": "DatasetReference"
 					}
 				],
