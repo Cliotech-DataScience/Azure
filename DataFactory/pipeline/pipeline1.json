@@ -15,7 +15,7 @@
 				"userProperties": [
 					{
 						"name": "Source",
-						"value": "[azure].[Reports_Logins_By_Country]"
+						"value": "Customers_Models_Data"
 					},
 					{
 						"name": "Destination",

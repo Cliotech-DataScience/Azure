@@ -6,6 +6,20 @@
 			"type": "LinkedServiceReference"
 		},
 		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "AccountNumber",
+				"type": "Int32",
+				"precision": 10,
+				"scale": 255
+			},
+			{
+				"name": "Broker",
+				"type": "String",
+				"precision": 255,
+				"scale": 255
+			}
+		],
 		"typeProperties": {
 			"tableName": "Customers_Models_Data"
 		}
