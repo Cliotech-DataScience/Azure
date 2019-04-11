@@ -31,13 +31,13 @@
 						"type": "SqlSink",
 						"writeBatchSize": 10000,
 						"sqlWriterStoredProcedureName": "[dbo].[testazuresp]",
-						"sqlWriterTableType": "AccType"
+						"sqlWriterTableType": "AccountListType"
 					},
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
 						"columnMappings": {
-							"AccountNumber": "Acc"
+							"AccountNumber": "AccountNumber"
 						}
 					}
 				},

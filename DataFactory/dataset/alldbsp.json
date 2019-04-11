@@ -8,14 +8,14 @@
 		"type": "SqlServerTable",
 		"structure": [
 			{
-				"name": "Acc",
-				"type": "Int32",
-				"precision": 10,
+				"name": "AccountNumber",
+				"type": "Int64",
+				"precision": 19,
 				"scale": 255
 			}
 		],
 		"typeProperties": {
-			"tableName": "AccountListType"
+			"tableName": "acc_tab"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
