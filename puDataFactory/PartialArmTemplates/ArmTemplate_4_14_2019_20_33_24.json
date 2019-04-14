@@ -1,0 +1,349 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "puDataFactory"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Sync_customers_clustering')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LK_file_name",
+						"type": "Lookup",
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"typeProperties": {
+							"source": {
+								"type": "BlobSource",
+								"recursive": true
+							},
+							"dataset": {
+								"referenceName": "blob_customers_clustering_json_file_list",
+								"type": "DatasetReference"
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach_file",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "LK_file_name",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('LK_file_name').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "copy_file",
+									"type": "Copy",
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"typeProperties": {
+										"source": {
+											"type": "BlobSource",
+											"recursive": true
+										},
+										"sink": {
+											"type": "SqlSink",
+											"writeBatchSize": 10000
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"columnMappings": {
+												"AccountNumber": "AccountNumber"
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "blob_customers_clustering",
+											"type": "DatasetReference",
+											"parameters": {
+												"folder_name": {
+													"value": "@item()._1",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "STG_mrr_customers_clustering",
+											"type": "DatasetReference"
+										}
+									]
+								},
+								{
+									"name": "Delete_folder",
+									"type": "Delete",
+									"dependsOn": [
+										{
+											"activity": "copy_file",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"typeProperties": {
+										"dataset": {
+											"referenceName": "blob_customers_clustering_folder",
+											"type": "DatasetReference",
+											"parameters": {
+												"folder_name": "@item()._1"
+											}
+										},
+										"recursive": true,
+										"enableLogging": false
+									}
+								},
+								{
+									"name": "Delete file",
+									"type": "Delete",
+									"dependsOn": [
+										{
+											"activity": "Delete_folder",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"typeProperties": {
+										"dataset": {
+											"referenceName": "blob_customers_clustering_folder_hd_file",
+											"type": "DatasetReference",
+											"parameters": {
+												"folder_name": "@item()._1"
+											}
+										},
+										"recursive": true,
+										"enableLogging": false
+									}
+								}
+							]
+						}
+					}
+				],
+				"folder": {
+					"name": "Data_to_SQL"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/STG_mrr_customers_clustering')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/____sync_customers_clusters')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "customers_clusters",
+						"type": "Copy",
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "Customers_Models_Data"
+							},
+							{
+								"name": "Destination",
+								"value": "acc_tab"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"sqlWriterStoredProcedureName": "[concat('[', 'dbo].[testazuresp]')]",
+								"sqlWriterTableType": "AccountListType"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"AccountNumber": "AccountNumber"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Customers_Models_Data",
+								"type": "DatasetReference"
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "alldbsp",
+								"type": "DatasetReference"
+							}
+						]
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/alldbsp')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/STG_mrr_customers_clustering')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "STG",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "sync"
+				},
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "AccountNumber",
+						"type": "Int64",
+						"precision": 19,
+						"scale": 255
+					}
+				],
+				"typeProperties": {
+					"tableName": "[concat('[', 'dbo].[mrr_customers_clustering]')]"
+				}
+			}
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/alldbsp')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "AccountNumber",
+						"type": "Int64",
+						"precision": 19,
+						"scale": 255
+					}
+				],
+				"typeProperties": {
+					"tableName": "acc_tab"
+				}
+			}
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/fxnet_deals_blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DataloadStore",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "TransactionNumber",
+						"type": "String"
+					},
+					{
+						"name": "ExecutionDay",
+						"type": "String"
+					},
+					{
+						"name": "ExecutionDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "Trans_Details",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": "\t",
+						"rowDelimiter": "",
+						"quoteChar": "",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"compression": {
+						"type": "BZip2"
+					},
+					"fileName": {
+						"value": "@CONCAT('FXNET_Deals_', pipeline().TriggerTime, '.csv.bz2')",
+						"type": "Expression"
+					},
+					"folderPath": {
+						"value": "@concat('rawdata/FXNET_Deals/Received=',utcnow('s'))",
+						"type": "Expression"
+					}
+				}
+			}
+		}
+	]
+}

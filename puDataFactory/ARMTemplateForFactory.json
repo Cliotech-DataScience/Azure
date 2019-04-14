@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "pudatafactory"
+			"defaultValue": "puDataFactory"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -3685,9 +3685,7 @@
 										"translator": {
 											"type": "TabularTranslator",
 											"columnMappings": {
-												"AccountNumber": "AccountNumber",
-												"cluster_type": "cluster_type",
-												"update_date": "update_date"
+												"AccountNumber": "AccountNumber"
 											}
 										}
 									},
@@ -3791,6 +3789,74 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/____sync_customers_clusters')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "customers_clusters",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "Customers_Models_Data"
+							},
+							{
+								"name": "Destination",
+								"value": "acc_tab"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000,
+								"sqlWriterStoredProcedureName": "[concat('[', 'dbo].[testazuresp]')]",
+								"sqlWriterTableType": "AccountListType"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"AccountNumber": "AccountNumber"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Customers_Models_Data",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "alldbsp",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Customers_Models_Data')]",
+				"[concat(variables('factoryId'), '/datasets/alldbsp')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/fact events')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -3854,75 +3920,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/BI_Events_blob')]",
 				"[concat(variables('factoryId'), '/datasets/fact_events_dwh')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sync_customers_clusters')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "customers_clusters",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "Customers_Models_Data"
-							},
-							{
-								"name": "Destination",
-								"value": "acc_tab"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT TOP 1  AccountNumber  FROM Customers_Models_Data"
-							},
-							"sink": {
-								"type": "SqlSink",
-								"writeBatchSize": 10000,
-								"sqlWriterStoredProcedureName": "[concat('[', 'dbo].[testazuresp]')]",
-								"sqlWriterTableType": "AccType"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"AccountNumber": "Acc"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Customers_Models_Data",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "alldbsp",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Customers_Models_Data')]",
-				"[concat(variables('factoryId'), '/datasets/alldbsp')]"
 			]
 		},
 		{
@@ -5148,15 +5145,9 @@
 				"structure": [
 					{
 						"name": "AccountNumber",
-						"type": "Int64"
-					},
-					{
-						"name": "cluster_type",
-						"type": "String"
-					},
-					{
-						"name": "update_date",
-						"type": "DateTime"
+						"type": "Int64",
+						"precision": 19,
+						"scale": 255
 					}
 				],
 				"typeProperties": {
@@ -5300,9 +5291,9 @@
 				"type": "SqlServerTable",
 				"structure": [
 					{
-						"name": "Acc",
-						"type": "Int32",
-						"precision": 10,
+						"name": "AccountNumber",
+						"type": "Int64",
+						"precision": 19,
 						"scale": 255
 					}
 				],
@@ -6418,7 +6409,7 @@
 						"type": "TextFormat",
 						"columnDelimiter": "\t",
 						"rowDelimiter": "",
-						"quoteChar": "\"",
+						"quoteChar": "",
 						"nullValue": "\\N",
 						"encodingName": null,
 						"treatEmptyAsNull": true,

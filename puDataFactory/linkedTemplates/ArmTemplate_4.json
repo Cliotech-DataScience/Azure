@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "pudatafactory"
+			"defaultValue": "puDataFactory"
 		}
 	},
 	"variables": {
@@ -2729,9 +2729,7 @@
 										"translator": {
 											"type": "TabularTranslator",
 											"columnMappings": {
-												"AccountNumber": "AccountNumber",
-												"cluster_type": "cluster_type",
-												"update_date": "update_date"
+												"AccountNumber": "AccountNumber"
 											}
 										}
 									},
@@ -2829,7 +2827,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/sync_customers_clusters')]",
+			"name": "[concat(parameters('factoryName'), '/____sync_customers_clusters')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -2857,20 +2855,19 @@
 						],
 						"typeProperties": {
 							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT TOP 1  AccountNumber  FROM Customers_Models_Data"
+								"type": "SqlSource"
 							},
 							"sink": {
 								"type": "SqlSink",
 								"writeBatchSize": 10000,
 								"sqlWriterStoredProcedureName": "[concat('[', 'dbo].[testazuresp]')]",
-								"sqlWriterTableType": "AccType"
+								"sqlWriterTableType": "AccountListType"
 							},
 							"enableStaging": false,
 							"translator": {
 								"type": "TabularTranslator",
 								"columnMappings": {
-									"AccountNumber": "Acc"
+									"AccountNumber": "AccountNumber"
 								}
 							}
 						},

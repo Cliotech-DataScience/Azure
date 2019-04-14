@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "pudatafactory"
+			"defaultValue": "puDataFactory"
 		},
 		"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 			"type": "string",
@@ -662,15 +662,9 @@
 				"structure": [
 					{
 						"name": "AccountNumber",
-						"type": "Int64"
-					},
-					{
-						"name": "cluster_type",
-						"type": "String"
-					},
-					{
-						"name": "update_date",
-						"type": "DateTime"
+						"type": "Int64",
+						"precision": 19,
+						"scale": 255
 					}
 				],
 				"typeProperties": {
@@ -806,9 +800,9 @@
 				"type": "SqlServerTable",
 				"structure": [
 					{
-						"name": "Acc",
-						"type": "Int32",
-						"precision": 10,
+						"name": "AccountNumber",
+						"type": "Int64",
+						"precision": 19,
 						"scale": 255
 					}
 				],

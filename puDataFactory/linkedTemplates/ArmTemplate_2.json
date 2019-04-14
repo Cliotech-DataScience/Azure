@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "pudatafactory"
+			"defaultValue": "puDataFactory"
 		},
 		"DWH_connectionString": {
 			"type": "secureString",
@@ -248,7 +248,7 @@
 						"type": "TextFormat",
 						"columnDelimiter": "\t",
 						"rowDelimiter": "",
-						"quoteChar": "\"",
+						"quoteChar": "",
 						"nullValue": "\\N",
 						"encodingName": null,
 						"treatEmptyAsNull": true,
