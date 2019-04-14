@@ -65,9 +65,7 @@
 								"translator": {
 									"type": "TabularTranslator",
 									"columnMappings": {
-										"AccountNumber": "AccountNumber",
-										"cluster_type": "cluster_type",
-										"update_date": "update_date"
+										"AccountNumber": "AccountNumber"
 									}
 								}
 							},
