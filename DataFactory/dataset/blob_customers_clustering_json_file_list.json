@@ -1,0 +1,30 @@
+{
+	"name": "blob_customers_clustering_json_file_list",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "sync"
+		},
+		"type": "AzureBlob",
+		"structure": [
+			{
+				"name": "file",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "JsonFormat",
+				"filePattern": "setOfObjects",
+				"jsonPathDefinition": {
+					"file": "$.['_1']"
+				}
+			},
+			"fileName": "*.json",
+			"folderPath": "rawdata/export_file/customers_clustering/file_list.json"
+		}
+	}
+}

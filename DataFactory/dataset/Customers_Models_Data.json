@@ -1,0 +1,23 @@
+{
+	"name": "Customers_Models_Data",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase_events",
+			"type": "LinkedServiceReference"
+		},
+		"type": "AzureSqlTable",
+		"structure": [
+			{
+				"name": "AccountNumber",
+				"type": "Int32"
+			},
+			{
+				"name": "Broker",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"tableName": "Customers_Models_Data"
+		}
+	}
+}

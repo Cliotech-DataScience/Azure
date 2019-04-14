@@ -1,0 +1,159 @@
+{
+	"name": "Sync_customers_clustering",
+	"properties": {
+		"activities": [
+			{
+				"name": "LK_file_name",
+				"type": "Lookup",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"source": {
+						"type": "BlobSource",
+						"recursive": true
+					},
+					"dataset": {
+						"referenceName": "blob_customers_clustering_json_file_list",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach_file",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "LK_file_name",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('LK_file_name').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "copy_file",
+							"type": "Copy",
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"typeProperties": {
+								"source": {
+									"type": "BlobSource",
+									"recursive": true
+								},
+								"sink": {
+									"type": "SqlSink",
+									"writeBatchSize": 10000
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"columnMappings": {
+										"AccountNumber": "AccountNumber"
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "blob_customers_clustering",
+									"type": "DatasetReference",
+									"parameters": {
+										"folder_name": {
+											"value": "@item()._1",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "STG_mrr_customers_clustering",
+									"type": "DatasetReference"
+								}
+							]
+						},
+						{
+							"name": "Delete_folder",
+							"type": "Delete",
+							"dependsOn": [
+								{
+									"activity": "copy_file",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "blob_customers_clustering_folder",
+									"type": "DatasetReference",
+									"parameters": {
+										"folder_name": "@item()._1"
+									}
+								},
+								"recursive": true,
+								"enableLogging": false
+							}
+						},
+						{
+							"name": "Delete file",
+							"type": "Delete",
+							"dependsOn": [
+								{
+									"activity": "Delete_folder",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "blob_customers_clustering_folder_hd_file",
+									"type": "DatasetReference",
+									"parameters": {
+										"folder_name": "@item()._1"
+									}
+								},
+								"recursive": true,
+								"enableLogging": false
+							}
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "Data_to_SQL"
+		}
+	}
+}

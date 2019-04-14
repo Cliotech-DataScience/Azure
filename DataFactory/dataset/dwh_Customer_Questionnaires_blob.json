@@ -1,5 +1,5 @@
 {
-	"name": "fxnet_deals_blob",
+	"name": "dwh_Customer_Questionnaires_blob",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "DataloadStore",
@@ -9,24 +9,6 @@
 			"name": "DWH"
 		},
 		"type": "AzureBlob",
-		"structure": [
-			{
-				"name": "TransactionNumber",
-				"type": "String"
-			},
-			{
-				"name": "ExecutionDay",
-				"type": "String"
-			},
-			{
-				"name": "ExecutionDate",
-				"type": "DateTime"
-			},
-			{
-				"name": "Trans_Details",
-				"type": "String"
-			}
-		],
 		"typeProperties": {
 			"format": {
 				"type": "TextFormat",
@@ -43,11 +25,11 @@
 				"type": "BZip2"
 			},
 			"fileName": {
-				"value": "@CONCAT('FXNET_Deals_', pipeline().TriggerTime, '.csv.bz2')",
+				"value": "@CONCAT('Customer_Questionnaires_', pipeline().TriggerTime, '.csv.bz2')",
 				"type": "Expression"
 			},
 			"folderPath": {
-				"value": "@concat('rawdata/FXNET_Deals/Received=',utcnow('s'))",
+				"value": "@concat('rawdata/Customer_Questionnaires/Received=',utcnow('s'))",
 				"type": "Expression"
 			}
 		}

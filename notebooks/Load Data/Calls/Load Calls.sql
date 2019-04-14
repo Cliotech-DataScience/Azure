@@ -133,7 +133,7 @@ select
 		"c4x_Price", get_json_object(Call_details, "$.c4x_Price"),
 		"omn_Price", get_json_object(Call_details, "$.omn_Price"),
 		"pccw_Price",get_json_object(Call_details, "$.pccw_Price"),
-		"cpk_Price ", get_json_object(Call_details, "$.cpk_Price "),
+		"cpk_Price", get_json_object(Call_details, "$.cpk_Price"),
 		"res_Price", get_json_object(Call_details, "$.res_Price"),
 		"N2P_Call_Price",get_json_object(Call_details, "$.N2P_Call_Price"),
 		"VXB_Call_Price", get_json_object(Call_details, "$.VXB_Call_Price"),

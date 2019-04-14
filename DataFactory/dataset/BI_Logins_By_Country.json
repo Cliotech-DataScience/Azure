@@ -1,0 +1,59 @@
+{
+	"name": "BI_Logins_By_Country",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "dwhdb_blob",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "BI"
+		},
+		"type": "AzureBlob",
+		"structure": [
+			{
+				"name": "Event_date_Day",
+				"type": "DateTime"
+			},
+			{
+				"name": "AccountNumber",
+				"type": "Int64"
+			},
+			{
+				"name": "Broker",
+				"type": "String"
+			},
+			{
+				"name": "Folder",
+				"type": "String"
+			},
+			{
+				"name": "FolderType",
+				"type": "String"
+			},
+			{
+				"name": "Login_From_Country",
+				"type": "String"
+			},
+			{
+				"name": "CustomerCountry",
+				"type": "String"
+			},
+			{
+				"name": "AMLComplianceStatus",
+				"type": "String"
+			},
+			{
+				"name": "Sessions",
+				"type": "Int64"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "ParquetFormat"
+			},
+			"fileName": "*.parquet",
+			"folderPath": "bi-db/mrr_logins_by_country"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

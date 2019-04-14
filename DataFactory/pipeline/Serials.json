@@ -162,6 +162,58 @@
 					"referenceName": "Analysis",
 					"type": "LinkedServiceReference"
 				}
+			},
+			{
+				"name": "Delete_serials_file",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Serials",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "blob_serials_row_folder",
+						"type": "DatasetReference"
+					},
+					"enableLogging": false
+				}
+			},
+			{
+				"name": "Serials_after_delete",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Delete_serials_file",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"notebookPath": "/Load Data/Dimensions/serials"
+				},
+				"linkedServiceName": {
+					"referenceName": "Analysis",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"folder": {
