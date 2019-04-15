@@ -97,6 +97,12 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
+					},
+					{
+						"activity": "RUN - Customer_Questionnaires",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
 				],
 				"typeProperties": {
@@ -154,6 +160,16 @@
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "DWH_Dim_Users",
+						"type": "PipelineReference"
+					}
+				}
+			},
+			{
+				"name": "RUN - Customer_Questionnaires",
+				"type": "ExecutePipeline",
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Customer_Questionnaires",
 						"type": "PipelineReference"
 					}
 				}
