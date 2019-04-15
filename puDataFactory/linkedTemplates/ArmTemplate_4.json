@@ -3092,6 +3092,12 @@
 								"dependencyConditions": [
 									"Succeeded"
 								]
+							},
+							{
+								"activity": "RUN - Customer Questionnaires",
+								"dependencyConditions": [
+									"Succeeded"
+								]
 							}
 						],
 						"userProperties": [],
@@ -3165,6 +3171,19 @@
 							},
 							"parameters": {}
 						}
+					},
+					{
+						"name": "RUN - Customer Questionnaires",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Customer_Questionnaires",
+								"type": "PipelineReference"
+							},
+							"parameters": {}
+						}
 					}
 				],
 				"annotations": []
@@ -3177,7 +3196,8 @@
 				"[concat(variables('factoryId'), '/pipelines/Serials')]",
 				"[concat(variables('factoryId'), '/pipelines/EMERP_Events')]",
 				"[concat(variables('factoryId'), '/pipelines/Contacts')]",
-				"[concat(variables('factoryId'), '/pipelines/DWH_Dim_Users')]"
+				"[concat(variables('factoryId'), '/pipelines/DWH_Dim_Users')]",
+				"[concat(variables('factoryId'), '/pipelines/Customer_Questionnaires')]"
 			]
 		}
 	]
