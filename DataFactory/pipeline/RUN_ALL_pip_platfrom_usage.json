@@ -99,7 +99,7 @@
 						]
 					},
 					{
-						"activity": "RUN - Customer_Questionnaires",
+						"activity": "RUN - Customer Questionnaires",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -165,7 +165,7 @@
 				}
 			},
 			{
-				"name": "RUN - Customer_Questionnaires",
+				"name": "RUN - Customer Questionnaires",
 				"type": "ExecutePipeline",
 				"typeProperties": {
 					"pipeline": {
