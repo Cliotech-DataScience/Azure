@@ -2226,69 +2226,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Logins_by_Country_SQLServer_Amsterdam')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "copy Parq to SQL Server",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BlobSource",
-								"recursive": true
-							},
-							"sink": {
-								"type": "SqlSink",
-								"writeBatchSize": 10000
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"Event_date_Day": "Event_date_Day",
-									"AccountNumber": "AccountNumber",
-									"Broker": "Broker",
-									"Folder": "Folder",
-									"FolderType": "FolderType",
-									"Login_From_Country": "Login_From_Country",
-									"CustomerCountry": "CustomerCountry",
-									"AMLComplianceStatus": "AMLComplianceStatus",
-									"Sessions": "Sessions"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "BI_Logins_By_Country",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SqlServer_Reports_Logins_By_Country",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/SCMM_Activities')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -3198,6 +3135,44 @@
 				"[concat(variables('factoryId'), '/pipelines/Contacts')]",
 				"[concat(variables('factoryId'), '/pipelines/DWH_Dim_Users')]",
 				"[concat(variables('factoryId'), '/pipelines/Customer_Questionnaires')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Communication Daily')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Communication",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-03-07T17:45:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								30
+							],
+							"hours": [
+								8
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Communication')]"
 			]
 		}
 	]
