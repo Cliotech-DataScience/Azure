@@ -3,7 +3,7 @@
 	"contentVersion": "1.0.0.0",
 	"parameters": {
 		"factoryName": {
-			"value": "puDataFactory"
+			"value": "pudatafactory"
 		},
 		"Analysis_accessToken": {
 			"value": ""
@@ -195,7 +195,7 @@
 			"value": "@CONCAT('Customer_Questionnaires_', pipeline().TriggerTime, '.csv.bz2')"
 		},
 		"dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath": {
-			"value": "@concat('rawdata/Customer_Questionnaires/Received=',utcnow('s'))"
+			"value": "rawdata/Customer_Questionnaires/"
 		},
 		"dwh_Dim_Users_blob_properties_typeProperties_fileName": {
 			"value": "Users.csv"

@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
 		}
 	},
 	"variables": {
@@ -905,7 +905,7 @@
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "copy_to_blob",
+								"activity": "run_Load Customer_Questionnaires",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -929,6 +929,61 @@
 									"type": "Expression"
 								}
 							}
+						}
+					},
+					{
+						"name": "run_Load Customer_Questionnaires",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "copy_to_blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Load Data/Dimensions/Load Customer_Questionnaires"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Delete_copy_file",
+						"type": "Delete",
+						"dependsOn": [
+							{
+								"activity": "Update Manage Table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "dwh_Customer_Questionnaires_blob",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"enableLogging": false
 						}
 					}
 				],

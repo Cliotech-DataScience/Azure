@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -261,7 +261,7 @@
 		},
 		"dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "@concat('rawdata/Customer_Questionnaires/Received=',utcnow('s'))"
+			"defaultValue": "rawdata/Customer_Questionnaires/"
 		},
 		"dwh_Dim_Users_blob_properties_typeProperties_fileName": {
 			"type": "string",
