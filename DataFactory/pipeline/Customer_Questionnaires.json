@@ -179,6 +179,7 @@
 						"referenceName": "dwh_Customer_Questionnaires_blob",
 						"type": "DatasetReference"
 					},
+					"recursive": false,
 					"enableLogging": false
 				}
 			}
