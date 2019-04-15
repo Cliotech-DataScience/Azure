@@ -5229,66 +5229,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SqlServer_Reports_Logins_By_Country')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DWH",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "BI"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "Event_date_Day",
-						"type": "Date"
-					},
-					{
-						"name": "AccountNumber",
-						"type": "Int32"
-					},
-					{
-						"name": "Broker",
-						"type": "String"
-					},
-					{
-						"name": "Folder",
-						"type": "String"
-					},
-					{
-						"name": "FolderType",
-						"type": "String"
-					},
-					{
-						"name": "Login_From_Country",
-						"type": "String"
-					},
-					{
-						"name": "CustomerCountry",
-						"type": "String"
-					},
-					{
-						"name": "AMLComplianceStatus",
-						"type": "String"
-					},
-					{
-						"name": "Sessions",
-						"type": "Int32"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[concat('[', 'azure].[Reports_Logins_By_Country]')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/DWH')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/alldbsp')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
