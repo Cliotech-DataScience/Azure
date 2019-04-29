@@ -2,6 +2,14 @@
 	"name": "Get Customers List For Clustering Model Daily",
 	"properties": {
 		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Get_Customers_List_For_Model",
+					"type": "PipelineReference"
+				}
+			}
+		],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
