@@ -444,12 +444,6 @@
 					},
 					"BI_Serials_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('BI_Serials_blob_properties_typeProperties_folderPath')]"
-					},
-					"Blob_Contacts_properties_typeProperties_fileName": {
-						"value": "[parameters('Blob_Contacts_properties_typeProperties_fileName')]"
-					},
-					"Blob_Contacts_properties_typeProperties_folderPath": {
-						"value": "[parameters('Blob_Contacts_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -468,6 +462,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Blob_Contacts_properties_typeProperties_fileName": {
+						"value": "[parameters('Blob_Contacts_properties_typeProperties_fileName')]"
+					},
+					"Blob_Contacts_properties_typeProperties_folderPath": {
+						"value": "[parameters('Blob_Contacts_properties_typeProperties_folderPath')]"
 					},
 					"Blob_Serials_properties_typeProperties_fileName": {
 						"value": "[parameters('Blob_Serials_properties_typeProperties_fileName')]"

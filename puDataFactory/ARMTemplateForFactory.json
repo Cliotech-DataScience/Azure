@@ -912,7 +912,7 @@
 							"source": {
 								"type": "SqlSource",
 								"sqlReaderQuery": {
-									"value": "select * \nFROM EMERP_LM.azure.AZ_Communication\nwhere Event_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Event_Date <= '@{activity('LK_new_max_Date').output.firstRow.Last_Event_Date}'",
+									"value": "select * \nFROM EMERP_LM.azure.AZ_Communication\nwhere Event_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Event_Date <= '@{activity('LK_new_max_date').output.firstRow.Last_Event_Date}'",
 									"type": "Expression"
 								}
 							},
@@ -1297,7 +1297,7 @@
 							"source": {
 								"type": "SqlSource",
 								"sqlReaderQuery": {
-									"value": "select * \nFROM azure.AZ_Customer_Questionnaires\nwhere Last_Update > '@{activity('LK_Last_date_Mng_azure_ETL').output.firstRow.Last_Incremental_Date}' \n  and Last_Update <= '@{activity('LK_new_max_Date').output.firstRow.Last_Update}'\n",
+									"value": "select * \nFROM azure.AZ_Customer_Questionnaires\nwhere Last_Update > '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Incremental_Date}' \n  and Last_Update <= '@{activity('LK_new_max_date').output.firstRow.Last_Update}'\n",
 									"type": "Expression"
 								}
 							},
@@ -1987,7 +1987,7 @@
 							"source": {
 								"type": "SqlSource",
 								"sqlReaderQuery": {
-									"value": "SELECT * \nFROM azure.AZ_Lead_Assignments\nwhere Assignment_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' \n  and Assignment_Date <= '@{activity('LK_new_max_Date').output.firstRow.Last_Date}'\n  and Assignment_Day > dateadd(day,-1,cast('@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' as date))\n  and Assignment_Day < dateadd(day,1,cast('@{activity('LK_new_max_Date').output.firstRow.Last_Date}' as date))\n",
+									"value": "SELECT * \nFROM azure.AZ_Lead_Assignments\nwhere Assignment_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' \n  and Assignment_Date <= '@{activity('LK_new_max_date').output.firstRow.Last_Date}'\n  and Assignment_Day > dateadd(day,-1,cast('@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' as date))\n  and Assignment_Day < dateadd(day,1,cast('@{activity('LK_new_max_date').output.firstRow.Last_Date}' as date))\n",
 									"type": "Expression"
 								}
 							},
@@ -2382,7 +2382,7 @@
 							"source": {
 								"type": "SqlSource",
 								"sqlReaderQuery": {
-									"value": "select * \nFROM azure.AZ_Accounting\nwhere ActionDate > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' \n  and ActionDate <= '@{activity('LK_new_max_Date').output.firstRow.Last_Activity_Date}'\n  and ActionDay > dateadd(day,-1,cast('@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' as date))\n  and ActionDay < dateadd(day,1,cast('@{activity('LK_new_max_Date').output.firstRow.Last_Activity_Date}' as date))",
+									"value": "select * \nFROM azure.AZ_Accounting\nwhere ActionDate > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' \n  and ActionDate <= '@{activity('LK_new_max_date').output.firstRow.Last_Activity_Date}'\n  and ActionDay > dateadd(day,-1,cast('@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' as date))\n  and ActionDay < dateadd(day,1,cast('@{activity('LK_new_max_date').output.firstRow.Last_Activity_Date}' as date))",
 									"type": "Expression"
 								}
 							},
@@ -2690,6 +2690,42 @@
 				"[concat(variables('factoryId'), '/datasets/fxnet_deals_src')]",
 				"[concat(variables('factoryId'), '/datasets/fxnet_deals_blob')]",
 				"[concat(variables('factoryId'), '/pipelines/MergeTableStore')]",
+				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Get_Customers_List_For_Model')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "run Get Customers List For Model",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/10. Customers 2 Days -  10. Get Customers List For Model"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Dm_Models"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
 			]
 		},
@@ -3182,7 +3218,7 @@
 							"source": {
 								"type": "SqlSource",
 								"sqlReaderQuery": {
-									"value": "select * \nFROM EMERP_LM.azure.AZ_SCMM_Activities\nwhere Activity_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Activity_Date <= '@{activity('LK_new_max_Date').output.firstRow.Last_Activity_Date}'",
+									"value": "select * \nFROM EMERP_LM.azure.AZ_SCMM_Activities\nwhere Activity_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Activity_Date <= '@{activity('LK_new_max_date').output.firstRow.Last_Activity_Date}'",
 									"type": "Expression"
 								}
 							},
@@ -7336,6 +7372,44 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/FXNET_Deals')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Get Customers List For Clustering Model Daily')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Get_Customers_List_For_Model",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-04-29T14:38:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								9
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Get_Customers_List_For_Model')]"
 			]
 		},
 		{

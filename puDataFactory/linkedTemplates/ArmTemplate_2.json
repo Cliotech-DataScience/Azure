@@ -153,6 +153,48 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/fact_events_dwh')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase_dwh",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "BI"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "Event_Date_day",
+						"type": "DateTime"
+					},
+					{
+						"name": "Source",
+						"type": "String"
+					},
+					{
+						"name": "Event_Name",
+						"type": "String"
+					},
+					{
+						"name": "Event_Details",
+						"type": "String"
+					},
+					{
+						"name": "Event_Count",
+						"type": "Int64"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[concat('[', 'dbo].[fact_events]')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/fxnet_accounting_blob')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1023,42 +1065,8 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Communication_src')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "MessageID",
-						"type": "Int32"
-					},
-					{
-						"name": "Event_Date",
-						"type": "DateTime"
-					},
-					{
-						"name": "details",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"tableName": "emerp_lm.azure.AZ_Communication"
-				}
-			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+				"[concat(variables('factoryId'), '/datasets/fact_events_dwh')]"
 			]
 		}
 	]

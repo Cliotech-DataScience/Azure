@@ -13,6 +13,206 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Get Customers List For Clustering Model Daily')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Get_Customers_List_For_Model",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-04-29T14:38:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								9
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/01_platfromusage_files_copy_to_blob')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LK_file",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "run_sp_add_new_file_name",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "\t  SELECT file_name,\n        folder\n\tFROM azure.platfrom_usage_log_file\n WHERE ISNULL(move_to_blob,0) <>1 \n  \n  IF @@ROWCOUNT=0 THROW 50000 ,'No file to move',1"
+							},
+							"dataset": {
+								"referenceName": "DWH_pu_list_files",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "Copy to blob",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "LK_file",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "FileSystemSource",
+								"recursive": true
+							},
+							"sink": {
+								"type": "BlobSink"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0
+						},
+						"inputs": [
+							{
+								"referenceName": "Source_file_avi",
+								"type": "DatasetReference",
+								"parameters": {
+									"file_name": {
+										"value": "@activity('LK_file').output.firstRow.file_name",
+										"type": "Expression"
+									},
+									"folder": {
+										"value": "@substring(activity('LK_file').output.firstRow.FILE_NAME,0,8)",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "platformusage_blob",
+								"type": "DatasetReference",
+								"parameters": {
+									"folder_name": {
+										"value": "@concat('platformusage/rawdata/',activity('LK_file').output.firstRow.folder,'/')\n ",
+										"type": "Expression"
+									},
+									"file_name": {
+										"value": "@concat(substring(activity('LK_file').output.firstRow.FILE_NAME,0,8),'.zip')",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "update_platfrom_usage_log_file",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Copy to blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[concat('[', 'azure].[SP_Update_platfrom_usage_log_file]')]",
+							"storedProcedureParameters": {
+								"file_name": {
+									"value": {
+										"value": "@activity('LK_file').output.firstRow.file_name",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "alldbdwh",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "run_sp_add_new_file_name",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[concat('[', 'azure].[SP_add_new_file_to_table]')]"
+						},
+						"linkedServiceName": {
+							"referenceName": "alldbdwh",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Platfrom_Usage"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/02_platfromusage_unzip_zip_blob_files')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -338,7 +538,7 @@
 							"source": {
 								"type": "SqlSource",
 								"sqlReaderQuery": {
-									"value": "select * \nFROM EMERP_LM.azure.AZ_Communication\nwhere Event_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Event_Date <= '@{activity('LK_new_max_Date').output.firstRow.Last_Event_Date}'",
+									"value": "select * \nFROM EMERP_LM.azure.AZ_Communication\nwhere Event_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Event_Date <= '@{activity('LK_new_max_date').output.firstRow.Last_Event_Date}'",
 									"type": "Expression"
 								}
 							},
@@ -711,7 +911,7 @@
 							"source": {
 								"type": "SqlSource",
 								"sqlReaderQuery": {
-									"value": "select * \nFROM azure.AZ_Customer_Questionnaires\nwhere Last_Update > '@{activity('LK_Last_date_Mng_azure_ETL').output.firstRow.Last_Incremental_Date}' \n  and Last_Update <= '@{activity('LK_new_max_Date').output.firstRow.Last_Update}'\n",
+									"value": "select * \nFROM azure.AZ_Customer_Questionnaires\nwhere Last_Update > '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Incremental_Date}' \n  and Last_Update <= '@{activity('LK_new_max_date').output.firstRow.Last_Update}'\n",
 									"type": "Expression"
 								}
 							},
@@ -1379,7 +1579,7 @@
 							"source": {
 								"type": "SqlSource",
 								"sqlReaderQuery": {
-									"value": "SELECT * \nFROM azure.AZ_Lead_Assignments\nwhere Assignment_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' \n  and Assignment_Date <= '@{activity('LK_new_max_Date').output.firstRow.Last_Date}'\n  and Assignment_Day > dateadd(day,-1,cast('@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' as date))\n  and Assignment_Day < dateadd(day,1,cast('@{activity('LK_new_max_Date').output.firstRow.Last_Date}' as date))\n",
+									"value": "SELECT * \nFROM azure.AZ_Lead_Assignments\nwhere Assignment_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' \n  and Assignment_Date <= '@{activity('LK_new_max_date').output.firstRow.Last_Date}'\n  and Assignment_Day > dateadd(day,-1,cast('@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' as date))\n  and Assignment_Day < dateadd(day,1,cast('@{activity('LK_new_max_date').output.firstRow.Last_Date}' as date))\n",
 									"type": "Expression"
 								}
 							},
@@ -1762,7 +1962,7 @@
 							"source": {
 								"type": "SqlSource",
 								"sqlReaderQuery": {
-									"value": "select * \nFROM azure.AZ_Accounting\nwhere ActionDate > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' \n  and ActionDate <= '@{activity('LK_new_max_Date').output.firstRow.Last_Activity_Date}'\n  and ActionDay > dateadd(day,-1,cast('@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' as date))\n  and ActionDay < dateadd(day,1,cast('@{activity('LK_new_max_Date').output.firstRow.Last_Activity_Date}' as date))",
+									"value": "select * \nFROM azure.AZ_Accounting\nwhere ActionDate > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' \n  and ActionDate <= '@{activity('LK_new_max_date').output.firstRow.Last_Activity_Date}'\n  and ActionDay > dateadd(day,-1,cast('@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' as date))\n  and ActionDay < dateadd(day,1,cast('@{activity('LK_new_max_date').output.firstRow.Last_Activity_Date}' as date))",
 									"type": "Expression"
 								}
 							},
@@ -2146,7 +2346,7 @@
 							"source": {
 								"type": "SqlSource",
 								"sqlReaderQuery": {
-									"value": "select * \nFROM EMERP_LM.azure.AZ_SCMM_Activities\nwhere Activity_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Activity_Date <= '@{activity('LK_new_max_Date').output.firstRow.Last_Activity_Date}'",
+									"value": "select * \nFROM EMERP_LM.azure.AZ_SCMM_Activities\nwhere Activity_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Activity_Date <= '@{activity('LK_new_max_date').output.firstRow.Last_Activity_Date}'",
 									"type": "Expression"
 								}
 							},
@@ -2965,87 +3165,12 @@
 				"[concat(variables('factoryId'), '/pipelines/02_platfromusage_unzip_zip_blob_files')]",
 				"[concat(variables('factoryId'), '/pipelines/03_PU_Load_ods_data')]",
 				"[concat(variables('factoryId'), '/pipelines/Customers')]",
+				"[concat(variables('factoryId'), '/pipelines/01_platfromusage_files_copy_to_blob')]",
 				"[concat(variables('factoryId'), '/pipelines/Serials')]",
 				"[concat(variables('factoryId'), '/pipelines/EMERP_Events')]",
 				"[concat(variables('factoryId'), '/pipelines/Contacts')]",
 				"[concat(variables('factoryId'), '/pipelines/DWH_Dim_Users')]",
 				"[concat(variables('factoryId'), '/pipelines/Customer_Questionnaires')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Communication Daily')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "Communication",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-03-07T17:45:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								30
-							],
-							"hours": [
-								8
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Communication')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DWH Calls Daily')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "DWH_Calls",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-03-14T18:56:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								5
-							],
-							"hours": [
-								8
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/DWH_Calls')]"
 			]
 		}
 	]
