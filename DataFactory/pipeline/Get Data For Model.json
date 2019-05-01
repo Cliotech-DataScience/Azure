@@ -1,0 +1,8 @@
+{
+	"name": "Get Data For Model",
+	"properties": {
+		"folder": {
+			"name": "Dm_Models"
+		}
+	}
+}
