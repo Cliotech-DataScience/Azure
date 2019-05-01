@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Notebook1",
+				"name": "2 Days 11  Get Data For Model",
 				"type": "DatabricksNotebook",
 				"policy": {
 					"timeout": "7.00:00:00",
