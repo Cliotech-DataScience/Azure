@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
 		},
 		"DWH_connectionString": {
 			"type": "secureString",
@@ -787,6 +787,74 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/2 day 02 - Get Data For Model')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "2 Days 11  Get Data For Model",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/10. Customers 2 Days -  11. Get Data For Model"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Dm_Models"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/2 day 03 - Execute Model')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Customers 2 Days  12 Execute Model",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/10. Customers 2 Days - 12. Execute Model"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Dm_Models"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Logins_by_Country')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -915,159 +983,6 @@
 				"annotations": []
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Serials Dim')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "copy_to_sql",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BlobSource",
-								"recursive": true
-							},
-							"sink": {
-								"type": "SqlSink",
-								"writeBatchSize": 10000
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"Serial": "Serial",
-									"Client_Id": "Client_Id",
-									"Client_Numerator": "Client_Numerator",
-									"Client_Name": "Client_Name",
-									"Product_Numerator": "Product_Numerator",
-									"Product_Name": "Product_Name",
-									"Product_Full_Name": "Product_Full_Name",
-									"Campaign_Numerator": "Campaign_Numerator",
-									"Campaign_Name": "Campaign_Name",
-									"Targetmarket_Id": "Targetmarket_Id",
-									"Targetmarket": "Targetmarket",
-									"Supplier_Numerator": "Supplier_Numerator",
-									"Supplier": "Supplier",
-									"Supplier_Group": "Supplier_Group",
-									"Mediabuyer_Numerator": "Mediabuyer_Numerator",
-									"Mediabuyer": "Mediabuyer",
-									"Format": "Format",
-									"Site_Numerator": "Site_Numerator",
-									"Site_Name": "Site_Name",
-									"Proposition_Id": "Proposition_Id",
-									"Proposition": "Proposition",
-									"Banner_Name": "Banner_Name",
-									"Banner_Path": "Banner_Path",
-									"TypeExt": "TypeExt",
-									"Landing_Page": "Landing_Page",
-									"Language": "Language",
-									"SelfActivation": "SelfActivation",
-									"Content": "Content"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "BI_Serials_blob",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "serials_dim_dwh",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"folder": {
-					"name": "BI"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/serials_dim_dwh')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/fact events')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "copy_to_sql",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BlobSource",
-								"recursive": true
-							},
-							"sink": {
-								"type": "SqlSink",
-								"writeBatchSize": 10000
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"Event_Date_day": "Event_Date_day",
-									"Source": "Source",
-									"Event_Name": "Event_Name",
-									"Event_Details": "Event_Details",
-									"Event_Count": "Event_Count"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "BI_Events_blob",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "fact_events_dwh",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"folder": {
-					"name": "BI"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/fact_events_dwh')]"
-			]
 		}
 	]
 }
