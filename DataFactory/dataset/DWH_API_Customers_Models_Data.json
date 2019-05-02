@@ -1,5 +1,5 @@
 {
-	"name": "DWH_API_Customers_Modlels_Data",
+	"name": "DWH_API_Customers_Models_Data",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "DWH",
