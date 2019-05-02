@@ -1,46 +1,23 @@
 {
-	"name": "Customers_Models_Data",
+	"name": "Customers_Models_Data_old",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "Azure BI db",
+			"referenceName": "AzureSqlDatabase_events",
 			"type": "LinkedServiceReference"
 		},
 		"type": "AzureSqlTable",
-		"schema": [
-			{
-				"name": "ID",
-				"type": "int",
-				"precision": 10
-			},
+		"structure": [
 			{
 				"name": "AccountNumber",
-				"type": "bigint",
-				"precision": 19
+				"type": "Int32"
 			},
 			{
-				"name": "ModelID",
-				"type": "int",
-				"precision": 10
-			},
-			{
-				"name": "Model_Result",
-				"type": "nvarchar"
-			},
-			{
-				"name": "Last_Update_Date",
-				"type": "datetime",
-				"precision": 23,
-				"scale": 3
-			},
-			{
-				"name": "Last_Sync_Date",
-				"type": "datetime",
-				"precision": 23,
-				"scale": 3
+				"name": "Broker",
+				"type": "String"
 			}
 		],
 		"typeProperties": {
-			"tableName": "[dbo].[Customers_Models_Data]"
+			"tableName": "Customers_Models_Data"
 		}
 	}
 }
