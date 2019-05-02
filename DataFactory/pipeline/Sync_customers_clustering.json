@@ -163,7 +163,7 @@
 				}
 			},
 			{
-				"name": "Copy Data1",
+				"name": "Copy data to dwh",
 				"type": "Copy",
 				"policy": {
 					"timeout": "7.00:00:00",
