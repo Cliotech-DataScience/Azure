@@ -18,8 +18,8 @@
 		"typeProperties": {
 			"format": {
 				"type": "TextFormat",
-				"columnDelimiter": ",",
-				"rowDelimiter": "",
+				"columnDelimiter": "\u0001",
+				"rowDelimiter": "\n",
 				"quoteChar": "",
 				"nullValue": "\\N",
 				"treatEmptyAsNull": true,
