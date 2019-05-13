@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "pudatafactory"
+			"defaultValue": "puDataFactory"
 		},
 		"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 			"type": "string",
@@ -24,6 +24,136 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Logins_by_Country')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Login Sessions",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "GetLast_Date",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/BI/Reports/Sessions Reports",
+							"baseParameters": {
+								"Last_Date": {
+									"value": "@activity('GetLast_Date').output.firstRow.Last_Date",
+									"type": "Expression"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "GetLast_Date",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderStoredProcedureName": "[[Reports].[Get_LastDate]"
+							},
+							"dataset": {
+								"referenceName": "AzureSQL_Logins_By_Country",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "Copy mrr to Azure SQL",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Login Sessions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BlobSource",
+								"recursive": true
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Event_date_Day": "Event_date_Day",
+									"AccountNumber": "AccountNumber",
+									"Broker": "Broker",
+									"Folder": "Folder",
+									"FolderType": "FolderType",
+									"Login_From_Country": "Login_From_Country",
+									"CustomerCountry": "CustomerCountry",
+									"AMLComplianceStatus": "AMLComplianceStatus",
+									"Sessions": "Sessions"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "BI_Logins_By_Country",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AzureSQL_Logins_By_Country",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"folder": {
+					"name": "BI"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Serials Dim')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -111,69 +241,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/fact events')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "copy_to_sql",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BlobSource",
-								"recursive": true
-							},
-							"sink": {
-								"type": "SqlSink",
-								"writeBatchSize": 10000
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"Event_Date_day": "Event_Date_day",
-									"Source": "Source",
-									"Event_Name": "Event_Name",
-									"Event_Details": "Event_Details",
-									"Event_Count": "Event_Count"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "BI_Events_blob",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "fact_events_dwh",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"folder": {
-					"name": "BI"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Communication_src')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -239,6 +306,56 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DWH_API_Customers_Models_Data')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWH",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "AccountNumber",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "ModelID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Model_Result",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Last_Update_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "Last_Sync_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[Azure_Customers_Models_Data]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DWH_Dim_Customers_src')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -267,7 +384,7 @@
 					}
 				],
 				"typeProperties": {
-					"tableName": "[concat('[', 'azure].[AZ_Customers]')]"
+					"tableName": "[[azure].[AZ_Customers]"
 				}
 			},
 			"dependsOn": []
@@ -505,7 +622,7 @@
 					}
 				],
 				"typeProperties": {
-					"tableName": "[concat('[', 'azure].[platfrom_usage_log_file]')]"
+					"tableName": "[[azure].[platfrom_usage_log_file]"
 				}
 			},
 			"dependsOn": []
@@ -806,7 +923,7 @@
 					}
 				],
 				"typeProperties": {
-					"tableName": "[concat('[', 'azure].[AZ_Fact_Transactions]')]"
+					"tableName": "[[azure].[AZ_Fact_Transactions]"
 				}
 			},
 			"dependsOn": []
@@ -823,7 +940,7 @@
 				"annotations": [],
 				"type": "SqlServerTable",
 				"typeProperties": {
-					"tableName": "[concat('[', 'azure].[Mng_azure_ETL]')]"
+					"tableName": "[[azure].[Mng_azure_ETL]"
 				}
 			},
 			"dependsOn": []
@@ -851,7 +968,7 @@
 					}
 				],
 				"typeProperties": {
-					"tableName": "[concat('[', 'dbo].[mrr_customers_clustering]')]"
+					"tableName": "[[dbo].[mrr_customers_clustering]"
 				}
 			},
 			"dependsOn": []
@@ -966,7 +1083,7 @@
 					}
 				],
 				"typeProperties": {
-					"tableName": "[concat('[', 'azure].[AZ_Customer_Questionnaires]')]"
+					"tableName": "[[azure].[AZ_Customer_Questionnaires]"
 				}
 			},
 			"dependsOn": []
@@ -996,7 +1113,7 @@
 					}
 				],
 				"typeProperties": {
-					"tableName": "[concat('[', 'azure].[AZ_Users]')]"
+					"tableName": "[[azure].[AZ_Users]"
 				}
 			},
 			"dependsOn": []
@@ -1030,7 +1147,7 @@
 					}
 				],
 				"typeProperties": {
-					"tableName": "[concat('[', 'azure].[AZ_Calls]')]"
+					"tableName": "[[azure].[AZ_Calls]"
 				}
 			},
 			"dependsOn": []
@@ -1068,7 +1185,7 @@
 					}
 				],
 				"typeProperties": {
-					"tableName": "[concat('[', 'azure].[AZ_Lead_assignments]')]"
+					"tableName": "[[azure].[AZ_Lead_assignments]"
 				}
 			},
 			"dependsOn": []
@@ -1106,45 +1223,7 @@
 					}
 				],
 				"typeProperties": {
-					"tableName": "[concat('[', 'azure].[AZ_Accounting]')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/fxnet_deals_src')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DWH",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "TransactionNumber",
-						"type": "Int32"
-					},
-					{
-						"name": "ExecutionDay",
-						"type": "Date"
-					},
-					{
-						"name": "ExecutionDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "Trans_Details",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[concat('[', 'azure].[AZ_Deals]')]"
+					"tableName": "[[azure].[AZ_Accounting]"
 				}
 			},
 			"dependsOn": []

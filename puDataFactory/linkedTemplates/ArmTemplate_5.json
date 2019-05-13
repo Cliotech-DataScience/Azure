@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "pudatafactory"
+			"defaultValue": "puDataFactory"
 		}
 	},
 	"variables": {
@@ -136,30 +136,6 @@
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "RUN - Customers",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "RUN - Serials",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "RUN - Contacts",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "RUN - Users",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
 								"activity": "RUN - Customer Questionnaires",
 								"dependencyConditions": [
 									"Succeeded"
@@ -179,7 +155,14 @@
 					{
 						"name": "RUN - Serials",
 						"type": "ExecutePipeline",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "RUN - Customers",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -214,7 +197,14 @@
 					{
 						"name": "RUN - Contacts",
 						"type": "ExecutePipeline",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "RUN - Serials",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -228,7 +218,14 @@
 					{
 						"name": "RUN - Users",
 						"type": "ExecutePipeline",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "RUN - Contacts",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -241,7 +238,14 @@
 					{
 						"name": "RUN - Customer Questionnaires",
 						"type": "ExecutePipeline",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "RUN - Users",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {

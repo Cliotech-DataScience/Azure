@@ -3,9 +3,12 @@
 	"contentVersion": "1.0.0.0",
 	"parameters": {
 		"factoryName": {
-			"value": "pudatafactory"
+			"value": "puDataFactory"
 		},
 		"Analysis_accessToken": {
+			"value": ""
+		},
+		"Azure BI db_connectionString": {
 			"value": ""
 		},
 		"AzureBlobStorage1_connectionString": {
