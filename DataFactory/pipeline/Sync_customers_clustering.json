@@ -150,6 +150,116 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "Stored Procedure1",
+				"type": "SqlServerStoredProcedure",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				}
+			},
+			{
+				"name": "Copy data to dwh",
+				"type": "Copy",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT * \nFROM dbo.Customers_Models_Data\nWHERE Last_Update_Date > ISNULL(Last_Sync_Date,'1900-01-01')\nORDER BY Last_Update_Date"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBatchSize": 10000
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "ID",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "ID",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "AccountNumber",
+									"type": "Int64"
+								},
+								"sink": {
+									"name": "AccountNumber",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"name": "ModelID",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "ModelID",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "Model_Result",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Model_Result",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Last_Update_Date",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "Last_Update_Date",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "Last_Sync_Date",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "Last_Sync_Date",
+									"type": "DateTime"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Customers_Models_Data",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DWH_API_Customers_Models_Data",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"folder": {

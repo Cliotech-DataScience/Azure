@@ -1,5 +1,5 @@
 {
-	"name": "Customers_Models_Data",
+	"name": "Customers_Models_Data_old",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabase_events",

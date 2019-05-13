@@ -29,7 +29,7 @@
 				"type": "Expression"
 			},
 			"folderPath": {
-				"value": "@concat('rawdata/Customer_Questionnaires/Received=',utcnow('s'))",
+				"value": "rawdata/Customer_Questionnaires/",
 				"type": "Expression"
 			}
 		}
