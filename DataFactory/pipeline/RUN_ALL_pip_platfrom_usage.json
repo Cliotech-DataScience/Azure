@@ -75,30 +75,6 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "RUN - Customers",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "RUN - Serials",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "RUN - Contacts",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "RUN - Users",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
 						"activity": "RUN - Customer Questionnaires",
 						"dependencyConditions": [
 							"Succeeded"
@@ -116,6 +92,14 @@
 			{
 				"name": "RUN - Serials",
 				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "RUN - Customers",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "Serials",
@@ -146,6 +130,14 @@
 			{
 				"name": "RUN - Contacts",
 				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "RUN - Serials",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "Contacts",
@@ -157,6 +149,14 @@
 			{
 				"name": "RUN - Users",
 				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "RUN - Contacts",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "DWH_Dim_Users",
@@ -167,6 +167,14 @@
 			{
 				"name": "RUN - Customer Questionnaires",
 				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "RUN - Users",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "Customer_Questionnaires",
