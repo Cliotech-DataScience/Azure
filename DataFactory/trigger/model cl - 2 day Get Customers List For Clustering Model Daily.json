@@ -5,7 +5,7 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "2 day 01 - Get_Customers_List_For_Model",
+					"referenceName": "Get_Customers_List_For__All_Models",
 					"type": "PipelineReference"
 				}
 			}
