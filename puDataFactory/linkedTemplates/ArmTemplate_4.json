@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory Name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
 		}
 	},
 	"variables": {
@@ -152,7 +152,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/model - 2 day Get Customers List For Clustering Model Daily')]",
+			"name": "[concat(parameters('factoryName'), '/model cl - 2 day Get Customers List For Clustering Model Daily')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -172,7 +172,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2019-04-29T14:38:00.000Z",
+						"startTime": "2019-05-14T08:57:00.000Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [

@@ -3,7 +3,7 @@
 	"contentVersion": "1.0.0.0",
 	"parameters": {
 		"factoryName": {
-			"value": "puDataFactory"
+			"value": "pudatafactory"
 		},
 		"Analysis_accessToken": {
 			"value": ""
