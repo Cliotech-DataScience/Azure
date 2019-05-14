@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "run Get Customers List For Model 7",
+				"name": "run Get Customers List For Model 30",
 				"type": "DatabricksNotebook",
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -13,7 +13,7 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"notebookPath": "/Analysis/Clustering/11. Customers 7 Days -  10. Get Customers List For Model"
+					"notebookPath": "/Analysis/Clustering/12. Customers 30 Days -  10. Get Customers List For Model"
 				},
 				"linkedServiceName": {
 					"referenceName": "Analysis",
