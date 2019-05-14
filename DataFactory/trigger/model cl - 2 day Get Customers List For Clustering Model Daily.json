@@ -5,7 +5,7 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "Get_Customers_List_For__All_Models",
+					"referenceName": "01 Get Customers List For All Models",
 					"type": "PipelineReference"
 				}
 			}
