@@ -1,7 +1,7 @@
 {
 	"name": "model - 2 day Get Customers List For Clustering Model Daily",
 	"properties": {
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
