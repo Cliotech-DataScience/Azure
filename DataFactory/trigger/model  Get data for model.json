@@ -5,7 +5,7 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "2 day 02 - Get Data For Model",
+					"referenceName": "Get Data For All Models",
 					"type": "PipelineReference"
 				}
 			}
