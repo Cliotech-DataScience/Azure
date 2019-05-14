@@ -25,74 +25,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/7 day 01 - Get_Customers_List_For_Model')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "run Get Customers List For Model 7",
-						"type": "DatabricksNotebook",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/11. Customers 7 Days -  10. Get Customers List For Model"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Dm_Models"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/30 day 01 - Get_Customers_List_For_Mode')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "run Get Customers List For Model 30",
-						"type": "DatabricksNotebook",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/12. Customers 30 Days -  10. Get Customers List For Model"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Dm_Models"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Logins_by_Country')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1216,6 +1148,82 @@
 				],
 				"typeProperties": {
 					"tableName": "[[azure].[AZ_Calls]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dwh_lead_assignments_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWH",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "Fact_Lead_Assignments_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Assignment_Day",
+						"type": "Date"
+					},
+					{
+						"name": "Assignment_Date",
+						"type": "DateTime"
+					},
+					{
+						"name": "Details",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[azure].[AZ_Lead_assignments]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/fxnet_accounting_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWH",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "fact_account_trans_id",
+						"type": "Int64"
+					},
+					{
+						"name": "ActionDay",
+						"type": "Date"
+					},
+					{
+						"name": "ActionDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "Details",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[azure].[AZ_Accounting]"
 				}
 			},
 			"dependsOn": []
