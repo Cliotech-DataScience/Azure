@@ -377,6 +377,96 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/01 Get Customers List For All Models')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "run Get Customers List For Model",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/10. Customers 2 Days -  10. Get Customers List For Model"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "7 day 01 - Get_Customers_List_For_Model",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "run Get Customers List For Model",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/11. Customers 7 Days -  10. Get Customers List For Model"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "30 day 01 - Get_Customers_List_For_Mode",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "7 day 01 - Get_Customers_List_For_Model",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/12. Customers 30 Days -  10. Get Customers List For Model"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Dm_Models"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/01_platfromusage_files_copy_to_blob')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -543,6 +633,96 @@
 				"[concat(variables('factoryId'), '/datasets/Source_file_avi')]",
 				"[concat(variables('factoryId'), '/datasets/platformusage_blob')]",
 				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/02 Get Data For Model 2 and 30')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "2 Days 11  Get Data For Model",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/10. Customers 2 Days -  11. Get Data For Model"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "30 Days 11  Get Data For Model",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "7 Days 11 Get Data For Model",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/12. Customers 30 Days -  11. Get Data For Model"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "7 Days 11 Get Data For Model",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "2 Days 11  Get Data For Model",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/11. Customers 7 Days -  11. Get Data For Model"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Dm_Models"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
 			]
 		},
 		{
@@ -824,69 +1004,6 @@
 				],
 				"folder": {
 					"name": "Platfrom_Usage"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/02 Get Data For Model 2 and 30')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "2 Days 11  Get Data For Model",
-						"type": "DatabricksNotebook",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/10. Customers 2 Days -  11. Get Data For Model"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "30 Days 11  Get Data For Model",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "2 Days 11  Get Data For Model",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/12. Customers 30 Days -  11. Get Data For Model"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Dm_Models"
 				},
 				"annotations": []
 			},
@@ -2793,96 +2910,6 @@
 				"[concat(variables('factoryId'), '/datasets/fxnet_deals_src')]",
 				"[concat(variables('factoryId'), '/datasets/fxnet_deals_blob')]",
 				"[concat(variables('factoryId'), '/pipelines/MergeTableStore')]",
-				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/01 Get Customers List For All Models')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "run Get Customers List For Model",
-						"type": "DatabricksNotebook",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/10. Customers 2 Days -  10. Get Customers List For Model"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "7 day 01 - Get_Customers_List_For_Model",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "run Get Customers List For Model",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/11. Customers 7 Days -  10. Get Customers List For Model"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "30 day 01 - Get_Customers_List_For_Mode",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "7 day 01 - Get_Customers_List_For_Model",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/12. Customers 30 Days -  10. Get Customers List For Model"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Dm_Models"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
 			]
 		},
