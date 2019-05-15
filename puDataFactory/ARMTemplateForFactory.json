@@ -636,7 +636,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/02 Get Data For Model 2 and 30')]",
+			"name": "[concat(parameters('factoryName'), '/02 Get Data For Models')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -7439,7 +7439,7 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "02 Get Data For Model 2 and 30",
+							"referenceName": "02 Get Data For Models",
 							"type": "PipelineReference"
 						},
 						"parameters": {}
@@ -7464,7 +7464,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/02 Get Data For Model 2 and 30')]"
+				"[concat(variables('factoryId'), '/pipelines/02 Get Data For Models')]"
 			]
 		},
 		{

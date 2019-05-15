@@ -398,7 +398,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/02 Get Data For Model 2 and 30')]",
+			"name": "[concat(parameters('factoryName'), '/02 Get Data For Models')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
