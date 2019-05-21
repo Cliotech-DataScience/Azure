@@ -556,12 +556,6 @@
 					},
 					"dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath')]"
-					},
-					"dwh_Dim_Users_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_fileName')]"
-					},
-					"dwh_Dim_Users_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -628,8 +622,11 @@
 					"fileserver1_password": {
 						"value": "[parameters('fileserver1_password')]"
 					},
-					"pufiles_password": {
-						"value": "[parameters('pufiles_password')]"
+					"dwh_Dim_Users_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_fileName')]"
+					},
+					"dwh_Dim_Users_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_folderPath')]"
 					},
 					"dwh_calls_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('dwh_calls_blob_properties_typeProperties_fileName')]"
@@ -696,9 +693,6 @@
 					},
 					"fileserver1_properties_typeProperties_userId": {
 						"value": "[parameters('fileserver1_properties_typeProperties_userId')]"
-					},
-					"pufiles_properties_typeProperties_userId": {
-						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
 					}
 				}
 			},
@@ -719,6 +713,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"pufiles_password": {
+						"value": "[parameters('pufiles_password')]"
+					},
+					"pufiles_properties_typeProperties_userId": {
+						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
 					},
 					"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 						"value": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"

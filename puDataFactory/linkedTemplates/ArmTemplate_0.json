@@ -578,6 +578,96 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/04 - sync to azure sql')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "sync 2 day models result",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/10. Customers 2 Days - 13. sync models result"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "sync 7 day models result",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "sync 2 day models result",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/11. Customers 7 Days - 13. sync models result"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "sync 30 day models result",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "sync 7 day models result",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/12. Customers 30 Days - 13. sync models result"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Dm_Models"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/04_PU_ods_to_events')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -611,66 +701,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureSQL_Logins_By_Country')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase_events",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "BI"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"structure": [
-					{
-						"name": "Event_date_Day",
-						"type": "Date"
-					},
-					{
-						"name": "AccountNumber",
-						"type": "Int32"
-					},
-					{
-						"name": "Broker",
-						"type": "String"
-					},
-					{
-						"name": "Folder",
-						"type": "String"
-					},
-					{
-						"name": "FolderType",
-						"type": "String"
-					},
-					{
-						"name": "Login_From_Country",
-						"type": "String"
-					},
-					{
-						"name": "CustomerCountry",
-						"type": "String"
-					},
-					{
-						"name": "AMLComplianceStatus",
-						"type": "String"
-					},
-					{
-						"name": "Sessions",
-						"type": "Int32"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[[Reports].[Logins_By_Country]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase_events')]"
 			]
 		}
 	]

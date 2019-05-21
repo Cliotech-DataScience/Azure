@@ -146,20 +146,70 @@
 		"dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "rawdata/Customer_Questionnaires/"
-		},
-		"dwh_Dim_Users_blob_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "Users.csv"
-		},
-		"dwh_Dim_Users_blob_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "rawdata/DWH_Users"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSQL_Logins_By_Country')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase_events",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "BI"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "Event_date_Day",
+						"type": "Date"
+					},
+					{
+						"name": "AccountNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "Broker",
+						"type": "String"
+					},
+					{
+						"name": "Folder",
+						"type": "String"
+					},
+					{
+						"name": "FolderType",
+						"type": "String"
+					},
+					{
+						"name": "Login_From_Country",
+						"type": "String"
+					},
+					{
+						"name": "CustomerCountry",
+						"type": "String"
+					},
+					{
+						"name": "AMLComplianceStatus",
+						"type": "String"
+					},
+					{
+						"name": "Sessions",
+						"type": "Int32"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[Reports].[Logins_By_Country]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/BI_Events_blob')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -1160,49 +1210,6 @@
 						"value": "[parameters('dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath')]",
 						"type": "Expression"
 					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dwh_Dim_Users_blob')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DataloadStore",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "User_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "details",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": "\u0001",
-						"rowDelimiter": "\n",
-						"nullValue": "\\N",
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": true
-					},
-					"fileName": {
-						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_folderPath')]"
 				}
 			},
 			"dependsOn": []
