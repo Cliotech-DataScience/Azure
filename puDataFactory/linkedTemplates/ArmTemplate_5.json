@@ -13,6 +13,199 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/FXNET_Deals')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LK_Last_Date_Mng_azure_ETL",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureTableSource",
+								"azureTableSourceQuery": {
+									"value": "PartitionKey eq 'Upload Data' and RowKey eq '@{variables('Table_Name')}'",
+									"type": "Expression"
+								},
+								"azureTableSourceIgnoreTableNotFound": false
+							},
+							"dataset": {
+								"referenceName": "etl_manage",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "LK_new_max_Date",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "SELECT Last_Date=MAX(ExecutionDate)\nFROM azure.AZ_Deals\nWHERE executionDay BETWEEN\nCAST(GETDATE() - 100 AS DATE) AND CAST(GETDATE() - 1 AS DATE) "
+							},
+							"dataset": {
+								"referenceName": "fxnet_deals_src",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "copy_to_blob",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "LK_Last_Date_Mng_azure_ETL",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "LK_new_max_Date",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "select * \nFROM azure.AZ_Deals\nwhere executionDate > '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Incremental_Date}' \nand executionDate <= '@{activity('LK_new_max_Date').output.firstRow.Last_Date}'\nand executionDay > dateadd(day,-1,cast('@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Incremental_Date}' as date))\nand executionDay < dateadd(day,1,cast('@{activity('LK_new_max_Date').output.firstRow.Last_Date}' as date))",
+									"type": "Expression"
+								}
+							},
+							"sink": {
+								"type": "BlobSink"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"TransactionNumber": "TransactionNumber",
+									"ExecutionDay": "ExecutionDay",
+									"ExecutionDate": "ExecutionDate",
+									"Trans_Details": "Trans_Details"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "fxnet_deals_src",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "fxnet_deals_blob",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Update mng ETL table storage",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "copy_to_blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "MergeTableStore",
+								"type": "PipelineReference"
+							},
+							"parameters": {
+								"PartitionKey": "Upload Data",
+								"RowKey": {
+									"value": "@variables('Table_Name')",
+									"type": "Expression"
+								},
+								"PropertyName": "Last_Incremental_Date",
+								"PropertyValue": {
+									"value": "@activity('LK_new_max_Date').output.firstRow.Last_Date",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Load Deals",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Update mng ETL table storage",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Load Data/FXNET/Load Deals"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"variables": {
+					"Table_Name": {
+						"type": "String",
+						"defaultValue": "FXNET_Deals"
+					}
+				},
+				"folder": {
+					"name": "Data_from_SQL"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SCMM_Activities')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -861,7 +1054,9 @@
 					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/FXNET_Deals')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/SCMM_Activities Daily')]",

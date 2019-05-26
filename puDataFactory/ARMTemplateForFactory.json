@@ -7384,44 +7384,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Execute Clustering Models')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "03 - Execute Models",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-05-20T12:21:00.000Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								15
-							],
-							"hours": [
-								10
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/03 - Execute Models')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/FXNET Accounting Daily')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -7612,7 +7574,45 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/model  Get data for model')]",
+			"name": "[concat(parameters('factoryName'), '/model cl 01- 2 day Get Customers List For Clustering Model Daily')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "01 Get Customers List For All Models",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-05-14T08:57:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								9
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/01 Get Customers List For All Models')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/model cl 02 model  Get data for model')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -7650,7 +7650,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/model cl - 2 day Get Customers List For Clustering Model Daily')]",
+			"name": "[concat(parameters('factoryName'), '/model cl 03 -Execute Clustering Models')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -7659,7 +7659,7 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "01 Get Customers List For All Models",
+							"referenceName": "03 - Execute Models",
 							"type": "PipelineReference"
 						},
 						"parameters": {}
@@ -7670,21 +7670,59 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2019-05-14T08:57:00.000Z",
+						"startTime": "2019-05-20T12:21:00.000Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
-								0
+								15
 							],
 							"hours": [
-								9
+								10
 							]
 						}
 					}
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/01 Get Customers List For All Models')]"
+				"[concat(variables('factoryId'), '/pipelines/03 - Execute Models')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/model cl 04 Sync Models To Azre SQL')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "04 - sync to azure sql",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2019-05-23T13:54:00.000Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								40
+							],
+							"hours": [
+								10
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/04 - sync to azure sql')]"
 			]
 		},
 		{
