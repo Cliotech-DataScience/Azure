@@ -39,7 +39,7 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"notebookPath": "/Analysis/Clustering/7_DAYS/11. Customers 7 Days - 12. Execute Model"
+					"notebookPath": "/Analysis/Clustering/RUN/11. 7 DAYS -  RUN 03 - Execute model"
 				},
 				"linkedServiceName": {
 					"referenceName": "Analysis",
