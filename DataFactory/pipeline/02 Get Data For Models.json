@@ -39,7 +39,7 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"notebookPath": "/Analysis/Clustering/12. Customers 30 Days -  11. Get Data For Model"
+					"notebookPath": "/Analysis/Clustering/30_DAYS/12. Customers 30 Days -  11. Get Data For Model"
 				},
 				"linkedServiceName": {
 					"referenceName": "Analysis",
