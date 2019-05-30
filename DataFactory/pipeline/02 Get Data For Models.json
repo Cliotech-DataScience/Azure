@@ -13,7 +13,7 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"notebookPath": "/Analysis/Clustering/10. Customers 2 Days -  11. Get Data For Model"
+					"notebookPath": "/Analysis/Clustering/2_DAYS/10. Customers 2 Days -  11. Get Data For Model"
 				},
 				"linkedServiceName": {
 					"referenceName": "Analysis",
