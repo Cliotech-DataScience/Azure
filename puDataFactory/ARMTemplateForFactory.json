@@ -876,7 +876,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/10. Customers 2 Days - 12. Execute Model"
+							"notebookPath": "/Analysis/Clustering/RUN/11. 2 DAYS -  RUN 03 - Execute model"
 						},
 						"linkedServiceName": {
 							"referenceName": "Analysis",
@@ -903,7 +903,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/11. Customers 7 Days - 12. Execute Model"
+							"notebookPath": "/Analysis/Clustering/RUN/11. 7 DAYS -  RUN 03 - Execute model"
 						},
 						"linkedServiceName": {
 							"referenceName": "Analysis",
@@ -930,7 +930,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/12. Customers 30 Days - 12. Execute Model"
+							"notebookPath": "/Analysis/Clustering/RUN/11. 30 DAYS -  RUN 03 - Execute model"
 						},
 						"linkedServiceName": {
 							"referenceName": "Analysis",
