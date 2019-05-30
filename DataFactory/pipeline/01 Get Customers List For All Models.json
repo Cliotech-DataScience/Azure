@@ -13,7 +13,7 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"notebookPath": "/Analysis/Clustering/RUN/10. 2 DAYS - RUN 01 -  Get Customers"
+					"notebookPath": "/Analysis/Clustering/2_DAYS/10. Customers 2 Days -  10. Get Customers List For Model"
 				},
 				"linkedServiceName": {
 					"referenceName": "Analysis",
@@ -39,7 +39,7 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"notebookPath": "/Analysis/Clustering/RUN/11. 7 DAYS - RUN 01 -  Get Customers"
+					"notebookPath": "/Analysis/Clustering/7_DAYS/11. Customers 7 Days -  10. Get Customers List For Model"
 				},
 				"linkedServiceName": {
 					"referenceName": "Analysis",
@@ -65,7 +65,7 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"notebookPath": "/Analysis/Clustering/RUN/12. 30 DAYS - RUN 01 -  Get Customers"
+					"notebookPath": "/Analysis/Clustering/30_DAYS/12. Customers 30 Days -  10. Get Customers List For Model"
 				},
 				"linkedServiceName": {
 					"referenceName": "Analysis",
