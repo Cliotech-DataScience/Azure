@@ -63,6 +63,10 @@
 					}
 				],
 				"typeProperties": {
+					"pipeline": {
+						"referenceName": "04 - sync to azure sql",
+						"type": "PipelineReference"
+					},
 					"waitOnCompletion": true
 				}
 			}
