@@ -12,6 +12,25 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "02 Get Data For Models",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "01 Get Customers",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "02 Get Data For Models",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"folder": {
