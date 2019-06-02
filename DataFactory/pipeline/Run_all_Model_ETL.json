@@ -1,6 +1,19 @@
 {
 	"name": "Run_all_Model_ETL",
 	"properties": {
+		"activities": [
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "01 Get Customers List For All Models",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
 		"folder": {
 			"name": "Dm_Models"
 		}
