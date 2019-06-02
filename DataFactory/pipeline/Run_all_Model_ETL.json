@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Execute Pipeline1",
+				"name": "01 Get Customers",
 				"type": "ExecutePipeline",
 				"typeProperties": {
 					"pipeline": {
