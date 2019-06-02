@@ -596,7 +596,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/10. Customers 2 Days - 13. sync models result"
+							"notebookPath": "/Analysis/Clustering/2_DAYS/10. Customers 2 Days - 13. sync models result"
 						},
 						"linkedServiceName": {
 							"referenceName": "Analysis",
@@ -623,7 +623,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/11. Customers 7 Days - 13. sync models result"
+							"notebookPath": "/Analysis/Clustering/7_DAYS/11. Customers 7 Days - 13. sync models result"
 						},
 						"linkedServiceName": {
 							"referenceName": "Analysis",
@@ -650,7 +650,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/12. Customers 30 Days - 13. sync models result"
+							"notebookPath": "/Analysis/Clustering/30_DAYS/12. Customers 30 Days - 13. sync models result"
 						},
 						"linkedServiceName": {
 							"referenceName": "Analysis",
