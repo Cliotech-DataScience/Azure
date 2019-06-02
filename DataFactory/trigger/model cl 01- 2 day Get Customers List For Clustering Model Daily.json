@@ -2,14 +2,6 @@
 	"name": "model cl 01- 2 day Get Customers List For Clustering Model Daily",
 	"properties": {
 		"runtimeState": "Started",
-		"pipelines": [
-			{
-				"pipelineReference": {
-					"referenceName": "01 Get Customers List For All Models",
-					"type": "PipelineReference"
-				}
-			}
-		],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
