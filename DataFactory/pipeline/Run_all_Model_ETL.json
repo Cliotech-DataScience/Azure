@@ -50,6 +50,21 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "04 sync to azure sql",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "03  Execute Models",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"folder": {
