@@ -2,14 +2,6 @@
 	"name": "model cl 03 -Execute Clustering Models",
 	"properties": {
 		"runtimeState": "Started",
-		"pipelines": [
-			{
-				"pipelineReference": {
-					"referenceName": "03 - Execute Models",
-					"type": "PipelineReference"
-				}
-			}
-		],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
