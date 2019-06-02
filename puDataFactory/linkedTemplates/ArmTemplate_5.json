@@ -49,7 +49,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/model cl 01- 2 day Get Customers List For Clustering Model Daily')]",
+			"name": "[concat(parameters('factoryName'), '/Run Clustering Model Daily')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
