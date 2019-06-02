@@ -1,5 +1,5 @@
 {
-	"name": "model cl 01- 2 day Get Customers List For Clustering Model Daily",
+	"name": "Run Clustering Model Daily",
 	"properties": {
 		"runtimeState": "Started",
 		"pipelines": [
