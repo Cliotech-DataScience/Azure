@@ -31,6 +31,25 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "03  Execute Models",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "02 Get Data For Models",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "03 - Execute Models",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"folder": {
