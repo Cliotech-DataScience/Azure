@@ -65,7 +65,7 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"notebookPath": "/Analysis/Clustering/12. Customers 30 Days - 13. sync models result"
+					"notebookPath": "/Analysis/Clustering/30_DAYS/12. Customers 30 Days - 13. sync models result"
 				},
 				"linkedServiceName": {
 					"referenceName": "Analysis",
