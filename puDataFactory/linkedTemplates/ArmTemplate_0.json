@@ -326,61 +326,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/2_DAYS/10. Customers 2 Days -  10. Get Customers List For Model"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "7 day 01 - Get_Customers_List_For_Model",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "run Get Customers List For Model",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/7_DAYS/11. Customers 7 Days -  10. Get Customers List For Model"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "30 day 01 - Get_Customers_List_For_Mode",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "7 day 01 - Get_Customers_List_For_Model",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/30_DAYS/12. Customers 30 Days -  10. Get Customers List For Model"
+							"notebookPath": "/Analysis/Clustering/Get Customers List For Models  2 7 30"
 						},
 						"linkedServiceName": {
 							"referenceName": "Analysis",
