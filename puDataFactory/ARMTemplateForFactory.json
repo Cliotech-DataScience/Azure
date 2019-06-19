@@ -297,7 +297,7 @@
 		},
 		"fxnet_accounting_blob_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "@concat('rawdata/FXNET_Accounting/Received=',utcnow('s'))"
+			"defaultValue": "rawdata/FXNET_Accounting/Received_bug_fix_2018"
 		},
 		"fxnet_deals_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -4028,6 +4028,79 @@
 				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]",
 				"[concat(variables('factoryId'), '/linkedServices/Analysis')]",
 				"[concat(variables('factoryId'), '/datasets/blob_serials_row_folder')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/_bug_fix_accouting_pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "copy_to_blob",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "select top 100 *\nFROM azure.AZ_Accounting\nwhere 1=1\n and ActionDay >='2018-01-01'\n AND  ActionDay < '2019-01-01'\n",
+									"type": "Expression"
+								}
+							},
+							"sink": {
+								"type": "BlobSink"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"fact_account_trans_id": "fact_account_trans_id",
+									"ActionDay": "ActionDay",
+									"ActionDate": "ActionDate",
+									"Details": "Details"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "fxnet_accounting_src",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "fxnet_accounting_blob",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"variables": {
+					"Table_Name": {
+						"type": "String",
+						"defaultValue": "FXNET_Accounting"
+					}
+				},
+				"folder": {
+					"name": "Data_from_SQL"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/fxnet_accounting_src')]",
+				"[concat(variables('factoryId'), '/datasets/fxnet_accounting_blob')]"
 			]
 		},
 		{
