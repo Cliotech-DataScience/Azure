@@ -4052,7 +4052,7 @@
 							"source": {
 								"type": "SqlSource",
 								"sqlReaderQuery": {
-									"value": "select *\nFROM azure.AZ_Accounting\nwhere 1=1\n and ActionDay >='2018-01-01'\n AND  ActionDay < '2019-01-01'\n",
+									"value": "select *\nFROM azure.AZ_Accounting\nwhere 1=1\n and ActionDay >='2018-01-01'\n AND  ActionDay < '2019-01-01'",
 									"type": "Expression"
 								}
 							},
