@@ -297,7 +297,7 @@
 		},
 		"fxnet_accounting_blob_properties_typeProperties_folderPath": {
 			"type": "string",
-			"defaultValue": "rawdata/FXNET_Accounting/Received=',utcnow('s'))"
+			"defaultValue": "@concat('rawdata/FXNET_Accounting/Received=',utcnow('s'))"
 		},
 		"fxnet_deals_blob_properties_typeProperties_fileName": {
 			"type": "string",

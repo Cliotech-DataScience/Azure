@@ -222,7 +222,7 @@
 			"value": "@CONCAT('FXNET_Accounting_', pipeline().TriggerTime, '.csv.bz2')"
 		},
 		"fxnet_accounting_blob_properties_typeProperties_folderPath": {
-			"value": "rawdata/FXNET_Accounting/Received=',utcnow('s'))"
+			"value": "@concat('rawdata/FXNET_Accounting/Received=',utcnow('s'))"
 		},
 		"fxnet_deals_blob_properties_typeProperties_fileName": {
 			"value": "@CONCAT('FXNET_Deals_', pipeline().TriggerTime, '.csv.bz2')"
