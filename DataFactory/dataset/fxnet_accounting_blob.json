@@ -47,7 +47,7 @@
 				"type": "Expression"
 			},
 			"folderPath": {
-				"value": "rawdata/FXNET_Accounting/Received=',utcnow('s'))",
+				"value": "@concat('rawdata/FXNET_Accounting/Received=',utcnow('s'))",
 				"type": "Expression"
 			}
 		}
