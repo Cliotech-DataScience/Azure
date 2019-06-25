@@ -47,7 +47,7 @@
 				"type": "Expression"
 			},
 			"folderPath": {
-				"value": "rawdata/FXNET_Accounting/Received_bug_fix_2018",
+				"value": "rawdata/FXNET_Accounting/Received=',utcnow('s'))",
 				"type": "Expression"
 			}
 		}
