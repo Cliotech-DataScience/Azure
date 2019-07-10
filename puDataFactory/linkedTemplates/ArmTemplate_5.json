@@ -707,6 +707,117 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/RUN_ALL_pip_platfrom_usage')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/run loop only pu')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "loop 1 pu",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "RUN ONLY PU",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "loop 2  pu",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "loop 1 pu",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "RUN ONLY PU",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "loop 3  pu",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "loop 2  pu",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "RUN ONLY PU",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "loop 4  pu",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "loop 3  pu",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "RUN ONLY PU",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "ExecutePipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "loop 4  pu",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "RUN ONLY PU",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/RUN ONLY PU')]"
+			]
 		}
 	]
 }
