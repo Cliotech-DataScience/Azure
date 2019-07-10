@@ -7754,6 +7754,99 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/RUN ONLY PU')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "RUN - 02_platfromusage_unzip_zip_blob_files",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - 01_platfromusage_files_copy_to_blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "02_platfromusage_unzip_zip_blob_files",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "RUN - 03_PU_Load_ods_data",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - 02_platfromusage_unzip_zip_blob_files",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "03_PU_Load_ods_data",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "RUN - 04_PU_ods_to_events",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - 03_PU_Load_ods_data",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "04_PU_ods_to_events",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "RUN - 01_platfromusage_files_copy_to_blob",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "01_platfromusage_files_copy_to_blob",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/02_platfromusage_unzip_zip_blob_files')]",
+				"[concat(variables('factoryId'), '/pipelines/03_PU_Load_ods_data')]",
+				"[concat(variables('factoryId'), '/pipelines/04_PU_ods_to_events')]",
+				"[concat(variables('factoryId'), '/pipelines/01_platfromusage_files_copy_to_blob')]"
+			]
 		}
 	]
 }
