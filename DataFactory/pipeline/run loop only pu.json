@@ -34,6 +34,46 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "loop 3  pu",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "loop 2  pu",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "RUN ONLY PU",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "loop 4  pu",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "loop 3  pu",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "RUN ONLY PU",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"annotations": []
