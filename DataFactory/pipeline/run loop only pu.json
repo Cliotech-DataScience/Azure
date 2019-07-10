@@ -74,6 +74,26 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "ExecutePipeline1",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "loop 4  pu",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "RUN ONLY PU",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"annotations": []
