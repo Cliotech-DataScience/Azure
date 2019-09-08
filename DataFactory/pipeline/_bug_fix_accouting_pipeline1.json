@@ -1,0 +1,63 @@
+{
+	"name": "_bug_fix_accouting_pipeline1",
+	"properties": {
+		"activities": [
+			{
+				"name": "copy_to_blob",
+				"type": "Copy",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"source": {
+						"type": "SqlSource",
+						"sqlReaderQuery": {
+							"value": "select *\nFROM azure.AZ_Accounting\nwhere 1=1\n and ActionDay >='2018-01-01'\n AND  ActionDay < '2019-01-01'",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "BlobSink"
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 0,
+					"translator": {
+						"type": "TabularTranslator",
+						"columnMappings": {
+							"fact_account_trans_id": "fact_account_trans_id",
+							"ActionDay": "ActionDay",
+							"ActionDate": "ActionDate",
+							"Details": "Details"
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "fxnet_accounting_src",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "fxnet_accounting_blob",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"variables": {
+			"Table_Name": {
+				"type": "String",
+				"defaultValue": "FXNET_Accounting"
+			}
+		},
+		"folder": {
+			"name": "Data_from_SQL"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

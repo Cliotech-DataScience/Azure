@@ -1,11 +1,11 @@
 {
-	"name": "model - 2 day Get Customers List For Clustering Model Daily",
+	"name": "Run Clustering Model Daily",
 	"properties": {
 		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "2 day 01 - Get_Customers_List_For_Model",
+					"referenceName": "Run_all_Model_ETL",
 					"type": "PipelineReference"
 				}
 			}
@@ -15,7 +15,7 @@
 			"recurrence": {
 				"frequency": "Day",
 				"interval": 1,
-				"startTime": "2019-04-29T14:38:00.000Z",
+				"startTime": "2019-05-14T08:57:00.000Z",
 				"timeZone": "UTC",
 				"schedule": {
 					"minutes": [

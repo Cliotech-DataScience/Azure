@@ -1,9 +1,9 @@
 {
-	"name": "2 day 03 - Execute Model",
+	"name": "01 Get Customers List For All Models",
 	"properties": {
 		"activities": [
 			{
-				"name": "Customers 2 Days  12 Execute Model",
+				"name": "run Get Customers List For Model",
 				"type": "DatabricksNotebook",
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -13,7 +13,7 @@
 					"secureInput": false
 				},
 				"typeProperties": {
-					"notebookPath": "/Analysis/Clustering/10. Customers 2 Days - 12. Execute Model"
+					"notebookPath": "/Analysis/Clustering/Get Customers List For Models  2 7 30"
 				},
 				"linkedServiceName": {
 					"referenceName": "Analysis",

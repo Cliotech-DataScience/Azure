@@ -1,0 +1,78 @@
+{
+	"name": "Run_all_Model_ETL",
+	"properties": {
+		"activities": [
+			{
+				"name": "01 Get Customers",
+				"type": "ExecutePipeline",
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "01 Get Customers List For All Models",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "02 Get Data For Models",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "01 Get Customers",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "02 Get Data For Models",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "03  Execute Models",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "02 Get Data For Models",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "03 - Execute Models",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "04 sync to azure sql",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "03  Execute Models",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "04 - sync to azure sql",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "Dm_Models"
+		}
+	}
+}

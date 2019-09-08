@@ -1,0 +1,41 @@
+{
+	"name": "run pu loop",
+	"properties": {
+		"activities": [
+			{
+				"name": "loop 1 pu",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "RUN ONLY PU",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "loop 2  pu",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "loop 1 pu",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "RUN ONLY PU",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"annotations": []
+	}
+}
