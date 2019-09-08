@@ -143,7 +143,7 @@ spark.conf.set("spark.sql.shuffle.partitions", "2")  # keep the size of shuffles
 query_raw = (
   dfStreamCustomersRaw
     .writeStream
-    .trigger(processingTime = "10 seconds")    #.trigger(processingTime = "10 seconds") for continuos    #.trigger(once = True) for ontime
+    .trigger(processingTime = "1 minute")    #.trigger(processingTime = "10 seconds") for continuos    #.trigger(once = True) for ontime
     .format("delta")        
     .partitionBy("Received_Day")
     .option("path", raw_db_path + "customers")
@@ -238,7 +238,7 @@ spark.conf.set("spark.sql.shuffle.partitions", "2")  # keep the size of shuffles
 query_dim = (
   dfStreamCustomersDim
     .writeStream
-    .trigger(processingTime = "10 seconds")    #.trigger(processingTime = "10 seconds") for continuos .trigger(once = True)
+    .trigger(processingTime = "1 minute")    #.trigger(processingTime = "10 seconds") for continuos .trigger(once = True)
     .foreachBatch(mergeCustomersToDim)
     .outputMode("update")
     .option("checkpointLocation", dwh_db_checkpointLocation + 'dim_customers' )
