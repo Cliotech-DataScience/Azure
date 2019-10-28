@@ -4,7 +4,7 @@
 	"parameters": {
 		"factoryName": {
 			"type": "string",
-			"metadata": "Data Factory Name",
+			"metadata": "Data Factory name",
 			"defaultValue": "pudatafactory"
 		},
 		"Analysis_accessToken": {
@@ -300,7 +300,7 @@
 						"dataFlowProperties": {
 							"computeType": "General",
 							"coreCount": 8,
-							"timeToLiveInMinutes": 60
+							"timeToLive": 0
 						}
 					}
 				}

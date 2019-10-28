@@ -254,6 +254,9 @@
 		"Dwhpr_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"
 		},
+		"Events_Collector_PlatfromUsage_log_properties_typeProperties_host": {
+			"value": "\\\\netapp-ams-cifs\\db\\Events_Collector\\az_test_processed"
+		},
 		"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
 		},
@@ -272,8 +275,14 @@
 		"emerpdbpr_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"
 		},
+		"fileserver1_properties_typeProperties_host": {
+			"value": "\\\\netapp-ams-cifs\\db\\Events_Collector\\Archived"
+		},
 		"fileserver1_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
+		},
+		"pufiles_properties_typeProperties_host": {
+			"value": "D:\\\\pufiles"
 		},
 		"pufiles_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"

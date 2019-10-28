@@ -4,7 +4,7 @@
 	"parameters": {
 		"factoryName": {
 			"type": "string",
-			"metadata": "Data Factory Name",
+			"metadata": "Data Factory name",
 			"defaultValue": "pudatafactory"
 		},
 		"DWH_connectionString": {
@@ -139,6 +139,10 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"Events_Collector_PlatfromUsage_log_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\netapp-ams-cifs\\db\\Events_Collector\\az_test_processed"
+		},
 		"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -158,6 +162,10 @@
 		"emerpdbpr_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
+		},
+		"fileserver1_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\netapp-ams-cifs\\db\\Events_Collector\\Archived"
 		},
 		"fileserver1_properties_typeProperties_userId": {
 			"type": "string",
@@ -841,7 +849,7 @@
 				"annotations": [],
 				"type": "FileServer",
 				"typeProperties": {
-					"host": "\\\\netapp-ams-cifs\\db\\Events_Collector\\az_test_processed",
+					"host": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_host')]",
 					"userId": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_userId')]",
 					"password": {
 						"type": "SecureString",
@@ -969,7 +977,7 @@
 				"annotations": [],
 				"type": "FileServer",
 				"typeProperties": {
-					"host": "\\\\netapp-ams-cifs\\db\\Events_Collector\\Archived",
+					"host": "[parameters('fileserver1_properties_typeProperties_host')]",
 					"userId": "[parameters('fileserver1_properties_typeProperties_userId')]",
 					"password": {
 						"type": "SecureString",

@@ -4,12 +4,16 @@
 	"parameters": {
 		"factoryName": {
 			"type": "string",
-			"metadata": "Data Factory Name",
+			"metadata": "Data Factory name",
 			"defaultValue": "pudatafactory"
 		},
 		"pufiles_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
+		},
+		"pufiles_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "D:\\\\pufiles"
 		},
 		"pufiles_properties_typeProperties_userId": {
 			"type": "string",
@@ -40,7 +44,7 @@
 				"annotations": [],
 				"type": "FileServer",
 				"typeProperties": {
-					"host": "D:\\\\pufiles",
+					"host": "[parameters('pufiles_properties_typeProperties_host')]",
 					"userId": "[parameters('pufiles_properties_typeProperties_userId')]",
 					"password": {
 						"type": "SecureString",

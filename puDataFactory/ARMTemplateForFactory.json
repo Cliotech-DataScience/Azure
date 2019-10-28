@@ -4,7 +4,7 @@
 	"parameters": {
 		"factoryName": {
 			"type": "string",
-			"metadata": "Data Factory Name",
+			"metadata": "Data Factory name",
 			"defaultValue": "pudatafactory"
 		},
 		"Analysis_accessToken": {
@@ -339,6 +339,10 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"Events_Collector_PlatfromUsage_log_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\netapp-ams-cifs\\db\\Events_Collector\\az_test_processed"
+		},
 		"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -363,9 +367,17 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"fileserver1_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\netapp-ams-cifs\\db\\Events_Collector\\Archived"
+		},
 		"fileserver1_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
+		},
+		"pufiles_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "D:\\\\pufiles"
 		},
 		"pufiles_properties_typeProperties_userId": {
 			"type": "string",
@@ -1759,7 +1771,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "\n  \nSELECT  LastIncrementalDate=DATEADD(MINUTE,65,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  [localdb].[azure].[Mng_azure_ETL]\n  WHERE TableName='Customers'\n"
+								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(DAY,-1,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  [localdb].[azure].[Mng_azure_ETL]\n  WHERE TableName='Customers'"
 							},
 							"dataset": {
 								"referenceName": "Mng_azure_ETL",
@@ -4285,6 +4297,54 @@
 						"dependsOn": [
 							{
 								"activity": "loop 4  pu",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "RUN ONLY PU",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/RUN ONLY PU')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/run pu loop')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "loop 1 pu",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "RUN ONLY PU",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "loop 2  pu",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "loop 1 pu",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -7367,7 +7427,7 @@
 				"annotations": [],
 				"type": "FileServer",
 				"typeProperties": {
-					"host": "\\\\netapp-ams-cifs\\db\\Events_Collector\\az_test_processed",
+					"host": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_host')]",
 					"userId": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_userId')]",
 					"password": {
 						"type": "SecureString",
@@ -7548,7 +7608,7 @@
 				"annotations": [],
 				"type": "FileServer",
 				"typeProperties": {
-					"host": "\\\\netapp-ams-cifs\\db\\Events_Collector\\Archived",
+					"host": "[parameters('fileserver1_properties_typeProperties_host')]",
 					"userId": "[parameters('fileserver1_properties_typeProperties_userId')]",
 					"password": {
 						"type": "SecureString",
@@ -7572,7 +7632,7 @@
 				"annotations": [],
 				"type": "FileServer",
 				"typeProperties": {
-					"host": "D:\\\\pufiles",
+					"host": "[parameters('pufiles_properties_typeProperties_host')]",
 					"userId": "[parameters('pufiles_properties_typeProperties_userId')]",
 					"password": {
 						"type": "SecureString",
@@ -7952,60 +8012,12 @@
 						"dataFlowProperties": {
 							"computeType": "General",
 							"coreCount": 8,
-							"timeToLiveInMinutes": 60
+							"timeToLive": 0
 						}
 					}
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/run pu loop')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "loop 1 pu",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "RUN ONLY PU",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "loop 2  pu",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "loop 1 pu",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "RUN ONLY PU",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/RUN ONLY PU')]"
-			]
 		}
 	]
 }
