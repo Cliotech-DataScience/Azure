@@ -4136,14 +4136,14 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/_bug_fix_accouting_pipeline1')]",
+			"name": "[concat(parameters('factoryName'), '/___Customers_past_sunc')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "copy_to_blob",
-						"type": "Copy",
+						"name": "LK_Last_Id_Mng_azure_ETL",
+						"type": "Lookup",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
@@ -4156,8 +4156,69 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
+								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(DAY,-1,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  [localdb].[azure].[Mng_azure_ETL]\n  WHERE TableName='Customers'"
+							},
+							"dataset": {
+								"referenceName": "Mng_azure_ETL",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "LK_new_max_id",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": "SELECT ExecutionDate=MAX(SsisUpdatedDate)\n FROM dwh.azure.AZ_Customers\n"
+							},
+							"dataset": {
+								"referenceName": "Mng_azure_ETL",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "copy_to_blob",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "LK_Last_Id_Mng_azure_ETL",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "LK_new_max_id",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
 								"sqlReaderQuery": {
-									"value": "select *\nFROM azure.AZ_Accounting\nwhere 1=1\n and ActionDay >='2018-01-01'\n AND  ActionDay < '2019-01-01'",
+									"value": "select * from  dwh.azure.AZ_Customers\n where SsisUpdatedDate < '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' ",
 									"type": "Expression"
 								}
 							},
@@ -4165,47 +4226,108 @@
 								"type": "BlobSink"
 							},
 							"enableStaging": false,
-							"dataIntegrationUnits": 0,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"fact_account_trans_id": "fact_account_trans_id",
-									"ActionDay": "ActionDay",
-									"ActionDate": "ActionDate",
-									"Details": "Details"
-								}
-							}
+							"dataIntegrationUnits": 0
 						},
 						"inputs": [
 							{
-								"referenceName": "fxnet_accounting_src",
+								"referenceName": "DWH_Dim_Customers_src",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "fxnet_accounting_blob",
+								"referenceName": "DWH_Dim_Customers_blob",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"folder_name": "Customers"
+								}
 							}
 						]
+					},
+					{
+						"name": "update_mng_azure",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "copy_to_blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[azure].[SP_Update_Mng_azure_ETL]",
+							"storedProcedureParameters": {
+								"LastId": {
+									"value": "-1",
+									"type": "Int64"
+								},
+								"LastIncrementalDate": {
+									"value": {
+										"value": "@{activity('LK_new_max_id').output.firstRow.ExecutionDate}",
+										"type": "Expression"
+									},
+									"type": "DateTime"
+								},
+								"TableName": {
+									"value": "Customers",
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "alldbdwh",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Customers",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "update_mng_azure",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Load Data/Dimensions/Customers"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
-				"variables": {
-					"Table_Name": {
-						"type": "String",
-						"defaultValue": "FXNET_Accounting"
-					}
-				},
 				"folder": {
 					"name": "Data_from_SQL"
 				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/fxnet_accounting_src')]",
-				"[concat(variables('factoryId'), '/datasets/fxnet_accounting_blob')]"
+				"[concat(variables('factoryId'), '/datasets/Mng_azure_ETL')]",
+				"[concat(variables('factoryId'), '/datasets/DWH_Dim_Customers_src')]",
+				"[concat(variables('factoryId'), '/datasets/DWH_Dim_Customers_blob')]",
+				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]",
+				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
 			]
 		},
 		{
