@@ -5,6 +5,8 @@
 			{
 				"name": "01 Get Customers",
 				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "01 Get Customers List For All Models",
@@ -24,6 +26,7 @@
 						]
 					}
 				],
+				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "02 Get Data For Models",
@@ -43,6 +46,7 @@
 						]
 					}
 				],
+				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "03 - Execute Models",
@@ -62,9 +66,10 @@
 						]
 					}
 				],
+				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "04 - sync to azure sql",
+						"referenceName": "999 - sync to azure sql",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
@@ -73,6 +78,7 @@
 		],
 		"folder": {
 			"name": "Dm_Models"
-		}
+		},
+		"annotations": []
 	}
 }
