@@ -145,7 +145,7 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/__04 - sync to azure sql Backup')]",
+			"name": "[concat(parameters('factoryName'), '/04 - sync to azure sql')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
