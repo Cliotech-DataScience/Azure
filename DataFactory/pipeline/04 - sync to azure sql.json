@@ -1,5 +1,5 @@
 {
-	"name": "__04 - sync to azure sql",
+	"name": "04 - sync to azure sql",
 	"properties": {
 		"activities": [
 			{
