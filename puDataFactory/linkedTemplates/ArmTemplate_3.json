@@ -7,9 +7,21 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "puDataFactory"
 		},
+		"fileserver1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'fileserver1'"
+		},
 		"pufiles_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
+		},
+		"fileserver1_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\netapp-ams-cifs\\db\\Events_Collector\\Archived"
+		},
+		"fileserver1_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
 		},
 		"pufiles_properties_typeProperties_host": {
 			"type": "string",
@@ -37,6 +49,28 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/fileserver1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('fileserver1_properties_typeProperties_host')]",
+					"userId": "[parameters('fileserver1_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('fileserver1_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/pufiles')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -55,94 +89,6 @@
 					"referenceName": "alldbgateway",
 					"type": "IntegrationRuntimeReference"
 				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/04 - sync to azure sql Backup')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "sync 2 day models result",
-						"type": "DatabricksNotebook",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/2_DAYS/10. Customers 2 Days - 13. sync models result"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "sync 7 day models result",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "sync 2 day models result",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/7_DAYS/11. Customers 7 Days - 13. sync models result"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "sync 30 day models result",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "sync 7 day models result",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/30_DAYS/12. Customers 30 Days - 13. sync models result"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Dm_Models"
-				},
-				"annotations": []
 			},
 			"dependsOn": []
 		},
@@ -1240,7 +1186,9 @@
 					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/fileserver1')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/alldbsp')]",

@@ -63,9 +63,13 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'emerpdbpr'"
 		},
-		"fileserver1_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'fileserver1'"
+		"dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@CONCAT('Customer_Questionnaires_', pipeline().TriggerTime, '.csv.bz2')"
+		},
+		"dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "rawdata/Customer_Questionnaires/"
 		},
 		"dwh_Dim_Users_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -162,20 +166,53 @@
 		"emerpdbpr_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
-		},
-		"fileserver1_properties_typeProperties_host": {
-			"type": "string",
-			"defaultValue": "\\\\netapp-ams-cifs\\db\\Events_Collector\\Archived"
-		},
-		"fileserver1_properties_typeProperties_userId": {
-			"type": "string",
-			"defaultValue": "efix\\az_etl"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/dwh_Customer_Questionnaires_blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DataloadStore",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": "\t",
+						"rowDelimiter": "",
+						"quoteChar": "",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"compression": {
+						"type": "BZip2"
+					},
+					"fileName": {
+						"value": "[parameters('dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": {
+						"value": "[parameters('dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath')]",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/dwh_Dim_Users_blob')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -960,28 +997,6 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('emerpdbpr_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "alldbgateway",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/fileserver1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "FileServer",
-				"typeProperties": {
-					"host": "[parameters('fileserver1_properties_typeProperties_host')]",
-					"userId": "[parameters('fileserver1_properties_typeProperties_userId')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('fileserver1_password')]"
 					}
 				},
 				"connectVia": {
