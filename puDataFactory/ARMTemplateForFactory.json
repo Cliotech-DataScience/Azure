@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory name",
-			"defaultValue": "pudatafactory"
+			"defaultValue": "puDataFactory"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -1030,7 +1030,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "sync 2 day models result",
+						"name": "sync models result",
 						"type": "DatabricksNotebook",
 						"dependsOn": [],
 						"policy": {
@@ -1042,61 +1042,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/2_DAYS/10. Customers 2 Days - 13. sync models result"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "sync 7 day models result",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "sync 2 day models result",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/7_DAYS/11. Customers 7 Days - 13. sync models result"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "sync 30 day models result",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "sync 7 day models result",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/30_DAYS/12. Customers 30 Days - 13. sync models result"
+							"notebookPath": "/Analysis/99. Sync Models Results"
 						},
 						"linkedServiceName": {
 							"referenceName": "Analysis",
@@ -4377,48 +4323,6 @@
 						"dependsOn": [
 							{
 								"activity": "loop 2  pu",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "RUN ONLY PU",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "loop 4  pu",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "loop 3  pu",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "RUN ONLY PU",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "loop 5  pu",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "loop 4  pu",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -8140,6 +8044,96 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/04 - sync to azure sql Backup')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "sync 2 day models result",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/2_DAYS/10. Customers 2 Days - 13. sync models result"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "sync 7 day models result",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "sync 2 day models result",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/7_DAYS/11. Customers 7 Days - 13. sync models result"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "sync 30 day models result",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "sync 7 day models result",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/30_DAYS/12. Customers 30 Days - 13. sync models result"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Dm_Models"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
+			]
 		}
 	]
 }
