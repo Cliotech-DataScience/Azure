@@ -400,7 +400,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
-								"referenceName": "01 Get Customers List For All Models",
+								"referenceName": "999 - sync to azure sql",
 								"type": "PipelineReference"
 							},
 							"waitOnCompletion": true,
