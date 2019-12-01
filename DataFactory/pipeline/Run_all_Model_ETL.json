@@ -129,7 +129,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "03 - Execute Models",
+						"referenceName": "303 Execute Models",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
