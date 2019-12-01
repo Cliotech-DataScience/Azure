@@ -109,7 +109,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "02 Get Data For Models",
+						"referenceName": "302 Get Data For Model",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
