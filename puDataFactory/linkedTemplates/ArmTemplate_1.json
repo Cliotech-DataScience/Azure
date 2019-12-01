@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -118,26 +118,6 @@
 		"blob_platfrom_merge_file_des_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "rawdata/platfrom_merged_by_day"
-		},
-		"blob_platfrom_unzip_file_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@dataset().folder_name"
-		},
-		"blob_platfrom_unzip_file_1_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@dataset().file_name"
-		},
-		"blob_platfrom_unzip_file_1_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@dataset().folder_name"
-		},
-		"blob_serials_row_folder_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "*.csv"
-		},
-		"blob_serials_row_folder_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "rawdata/Serials/"
 		}
 	},
 	"variables": {
@@ -145,13 +125,13 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/04 - sync to azure sql')]",
+			"name": "[concat(parameters('factoryName'), '/301 Get Customers List For Model')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "sync 2 day models result",
+						"name": "run Get Customers List For Model",
 						"type": "DatabricksNotebook",
 						"dependsOn": [],
 						"policy": {
@@ -163,24 +143,31 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/2_DAYS/10. Customers 2 Days - 13. sync models result"
+							"notebookPath": "/Analysis/Clustering V2/10. Get Customers List For Models 302 307 330"
 						},
 						"linkedServiceName": {
 							"referenceName": "Analysis",
 							"type": "LinkedServiceReference"
 						}
-					},
+					}
+				],
+				"folder": {
+					"name": "Dm_Models"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/302 Get Data For Model')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
 					{
-						"name": "sync 7 day models result",
+						"name": "Get Data For Models",
 						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "sync 2 day models result",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
+						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
@@ -190,24 +177,31 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/7_DAYS/11. Customers 7 Days - 13. sync models result"
+							"notebookPath": "/Analysis/Clustering V2/11. Get Data For Model 302 307 330"
 						},
 						"linkedServiceName": {
 							"referenceName": "Analysis",
 							"type": "LinkedServiceReference"
 						}
-					},
+					}
+				],
+				"folder": {
+					"name": "Dm_Models"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/303 Execute Models')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
 					{
-						"name": "sync 30 day models result",
+						"name": "Execute Models",
 						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "sync 7 day models result",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
+						"dependsOn": [],
 						"policy": {
 							"timeout": "7.00:00:00",
 							"retry": 0,
@@ -217,7 +211,41 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering/30_DAYS/12. Customers 30 Days - 13. sync models result"
+							"notebookPath": "/Analysis/Clustering V2/12. Get cluster for Model 302 307 330"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Dm_Models"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/999 - sync to azure sql')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "sync models result",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/99. Sync Models Results"
 						},
 						"linkedServiceName": {
 							"referenceName": "Analysis",
@@ -1050,205 +1078,6 @@
 						"type": "Expression"
 					},
 					"folderPath": "[parameters('blob_platfrom_merge_file_des_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/blob_platfrom_unzip_file')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"folder_name": {
-						"type": "String"
-					},
-					"file_name": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "Platform Usage"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "ip",
-						"type": "String"
-					},
-					{
-						"name": "hyphen_1",
-						"type": "String"
-					},
-					{
-						"name": "hyphen_2",
-						"type": "String"
-					},
-					{
-						"name": "datetime",
-						"type": "String"
-					},
-					{
-						"name": "time",
-						"type": "String"
-					},
-					{
-						"name": "url_parm",
-						"type": "String"
-					},
-					{
-						"name": "Prop_6",
-						"type": "String"
-					},
-					{
-						"name": "Prop_7",
-						"type": "String"
-					},
-					{
-						"name": "server",
-						"type": "String"
-					},
-					{
-						"name": "user_agent",
-						"type": "String"
-					},
-					{
-						"name": "log_parm",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"folderPath": {
-						"value": "[parameters('blob_platfrom_unzip_file_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/blob_platfrom_unzip_file_1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"folder_name": {
-						"type": "String"
-					},
-					"file_name": {
-						"type": "String"
-					}
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "ip",
-						"type": "String"
-					},
-					{
-						"name": "hyphen_1",
-						"type": "String"
-					},
-					{
-						"name": "hyphen_2",
-						"type": "String"
-					},
-					{
-						"name": "datetime",
-						"type": "String"
-					},
-					{
-						"name": "time",
-						"type": "String"
-					},
-					{
-						"name": "url_parm",
-						"type": "String"
-					},
-					{
-						"name": "Prop_6",
-						"type": "String"
-					},
-					{
-						"name": "Prop_7",
-						"type": "String"
-					},
-					{
-						"name": "server",
-						"type": "String"
-					},
-					{
-						"name": "user_agent",
-						"type": "String"
-					},
-					{
-						"name": "log_parm",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": " ",
-						"rowDelimiter": "\n",
-						"quoteChar": "\"",
-						"nullValue": "\\N",
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"fileName": {
-						"value": "[parameters('blob_platfrom_unzip_file_1_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": {
-						"value": "[parameters('blob_platfrom_unzip_file_1_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/blob_serials_row_folder')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": true
-					},
-					"fileName": "[parameters('blob_serials_row_folder_properties_typeProperties_fileName')]",
-					"folderPath": {
-						"value": "[parameters('blob_serials_row_folder_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
 				}
 			},
 			"dependsOn": []

@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -547,21 +547,6 @@
 					},
 					"blob_platfrom_merge_file_des_properties_typeProperties_folderPath": {
 						"value": "[parameters('blob_platfrom_merge_file_des_properties_typeProperties_folderPath')]"
-					},
-					"blob_platfrom_unzip_file_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_platfrom_unzip_file_properties_typeProperties_folderPath')]"
-					},
-					"blob_platfrom_unzip_file_1_properties_typeProperties_fileName": {
-						"value": "[parameters('blob_platfrom_unzip_file_1_properties_typeProperties_fileName')]"
-					},
-					"blob_platfrom_unzip_file_1_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_platfrom_unzip_file_1_properties_typeProperties_folderPath')]"
-					},
-					"blob_serials_row_folder_properties_typeProperties_fileName": {
-						"value": "[parameters('blob_serials_row_folder_properties_typeProperties_fileName')]"
-					},
-					"blob_serials_row_folder_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_serials_row_folder_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -610,20 +595,20 @@
 					"alldbdwh_password": {
 						"value": "[parameters('alldbdwh_password')]"
 					},
-					"destpufiles_connectionString": {
-						"value": "[parameters('destpufiles_connectionString')]"
+					"blob_platfrom_unzip_file_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_platfrom_unzip_file_properties_typeProperties_folderPath')]"
 					},
-					"emerp_lm_connectionString": {
-						"value": "[parameters('emerp_lm_connectionString')]"
+					"blob_platfrom_unzip_file_1_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_platfrom_unzip_file_1_properties_typeProperties_fileName')]"
 					},
-					"emerp_lm_password": {
-						"value": "[parameters('emerp_lm_password')]"
+					"blob_platfrom_unzip_file_1_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_platfrom_unzip_file_1_properties_typeProperties_folderPath')]"
 					},
-					"emerpdbpr_connectionString": {
-						"value": "[parameters('emerpdbpr_connectionString')]"
+					"blob_serials_row_folder_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_serials_row_folder_properties_typeProperties_fileName')]"
 					},
-					"emerpdbpr_password": {
-						"value": "[parameters('emerpdbpr_password')]"
+					"blob_serials_row_folder_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_serials_row_folder_properties_typeProperties_folderPath')]"
 					},
 					"dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName')]"
@@ -696,12 +681,6 @@
 					},
 					"alldbdwh_properties_typeProperties_userName": {
 						"value": "[parameters('alldbdwh_properties_typeProperties_userName')]"
-					},
-					"emerp_lm_properties_typeProperties_userName": {
-						"value": "[parameters('emerp_lm_properties_typeProperties_userName')]"
-					},
-					"emerpdbpr_properties_typeProperties_userName": {
-						"value": "[parameters('emerpdbpr_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -723,11 +702,32 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"destpufiles_connectionString": {
+						"value": "[parameters('destpufiles_connectionString')]"
+					},
+					"emerp_lm_connectionString": {
+						"value": "[parameters('emerp_lm_connectionString')]"
+					},
+					"emerp_lm_password": {
+						"value": "[parameters('emerp_lm_password')]"
+					},
+					"emerpdbpr_connectionString": {
+						"value": "[parameters('emerpdbpr_connectionString')]"
+					},
+					"emerpdbpr_password": {
+						"value": "[parameters('emerpdbpr_password')]"
+					},
 					"fileserver1_password": {
 						"value": "[parameters('fileserver1_password')]"
 					},
 					"pufiles_password": {
 						"value": "[parameters('pufiles_password')]"
+					},
+					"emerp_lm_properties_typeProperties_userName": {
+						"value": "[parameters('emerp_lm_properties_typeProperties_userName')]"
+					},
+					"emerpdbpr_properties_typeProperties_userName": {
+						"value": "[parameters('emerpdbpr_properties_typeProperties_userName')]"
 					},
 					"fileserver1_properties_typeProperties_host": {
 						"value": "[parameters('fileserver1_properties_typeProperties_host')]"
