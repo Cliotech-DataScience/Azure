@@ -4349,6 +4349,168 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/___test_run')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "01 Get Customers",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "01 Get Customers List For All Models",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "02 Get Data For Models",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "01 Get Customers",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "02 Get Data For Models",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "03  Execute Models",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "02 Get Data For Models",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "03 - Execute Models",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "999 sync to azure sql",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "303  Execute Models",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "999 - sync to azure sql",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "301 Get Customers",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "03  Execute Models",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "301 Get Customers List For Model",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "302 Get Data For Models",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "301 Get Customers",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "302 Get Data For Model",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "303  Execute Models",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "302 Get Data For Models",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "303 Execute Models",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"folder": {
+					"name": "Dm_Models"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/01 Get Customers List For All Models')]",
+				"[concat(variables('factoryId'), '/pipelines/02 Get Data For Models')]",
+				"[concat(variables('factoryId'), '/pipelines/03 - Execute Models')]",
+				"[concat(variables('factoryId'), '/pipelines/999 - sync to azure sql')]",
+				"[concat(variables('factoryId'), '/pipelines/301 Get Customers List For Model')]",
+				"[concat(variables('factoryId'), '/pipelines/302 Get Data For Model')]",
+				"[concat(variables('factoryId'), '/pipelines/303 Execute Models')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/run loop only pu')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -8071,14 +8233,14 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2019-01-20T15:52:00Z",
+						"startTime": "2019-01-20T15:52:00.000Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
 								30
 							],
 							"hours": [
-								5
+								3
 							]
 						}
 					}
