@@ -206,6 +206,10 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SCMM_Activities",
+						"type": "PipelineReference"
+					},
 					"waitOnCompletion": true
 				}
 			}
