@@ -3646,6 +3646,27 @@
 							},
 							"parameters": {}
 						}
+					},
+					{
+						"name": "RUN SCMM_Activities",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "RUN - emerp_events",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SCMM_Activities",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
 					}
 				],
 				"annotations": []
@@ -3660,7 +3681,8 @@
 				"[concat(variables('factoryId'), '/pipelines/EMERP_Events')]",
 				"[concat(variables('factoryId'), '/pipelines/Contacts')]",
 				"[concat(variables('factoryId'), '/pipelines/DWH_Dim_Users')]",
-				"[concat(variables('factoryId'), '/pipelines/Customer_Questionnaires')]"
+				"[concat(variables('factoryId'), '/pipelines/Customer_Questionnaires')]",
+				"[concat(variables('factoryId'), '/pipelines/SCMM_Activities')]"
 			]
 		},
 		{
