@@ -1,6 +1,7 @@
 {
 	"name": "FXNET Accounting Daily",
 	"properties": {
+		"annotations": [],
 		"runtimeState": "Started",
 		"pipelines": [
 			{
@@ -22,7 +23,7 @@
 						15
 					],
 					"hours": [
-						8
+						6
 					]
 				}
 			}
