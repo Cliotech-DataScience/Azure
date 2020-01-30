@@ -1,6 +1,7 @@
 {
 	"name": "Communication Daily",
 	"properties": {
+		"annotations": [],
 		"runtimeState": "Started",
 		"pipelines": [
 			{
@@ -19,10 +20,10 @@
 				"timeZone": "UTC",
 				"schedule": {
 					"minutes": [
-						30
+						20
 					],
 					"hours": [
-						8
+						6
 					]
 				}
 			}
