@@ -1,6 +1,7 @@
 {
 	"name": "Run Clustering Model Daily",
 	"properties": {
+		"annotations": [],
 		"runtimeState": "Started",
 		"pipelines": [
 			{
@@ -22,7 +23,7 @@
 						0
 					],
 					"hours": [
-						9
+						7
 					]
 				}
 			}
