@@ -13,6 +13,7 @@
 						]
 					}
 				],
+				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "02_platfromusage_unzip_zip_blob_files",
@@ -32,6 +33,7 @@
 						]
 					}
 				],
+				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "03_PU_Load_ods_data",
@@ -43,6 +45,8 @@
 			{
 				"name": "RUN - Customers",
 				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "Customers",
@@ -62,6 +66,7 @@
 						]
 					}
 				],
+				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "04_PU_ods_to_events",
@@ -81,6 +86,7 @@
 						]
 					}
 				],
+				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "01_platfromusage_files_copy_to_blob",
@@ -100,6 +106,7 @@
 						]
 					}
 				],
+				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "Serials",
@@ -119,6 +126,7 @@
 						]
 					}
 				],
+				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "EMERP_Events",
@@ -138,6 +146,7 @@
 						]
 					}
 				],
+				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "Contacts",
@@ -157,6 +166,7 @@
 						]
 					}
 				],
+				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "DWH_Dim_Users",
@@ -175,14 +185,25 @@
 						]
 					}
 				],
+				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "Customer_Questionnaires",
 						"type": "PipelineReference"
 					}
 				}
+			},
+			{
+				"name": "RUN SCMM_Activities",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"waitOnCompletion": true
+				}
 			}
-		]
+		],
+		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
