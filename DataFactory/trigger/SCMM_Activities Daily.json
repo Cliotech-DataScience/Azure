@@ -1,6 +1,7 @@
 {
 	"name": "SCMM_Activities Daily",
 	"properties": {
+		"annotations": [],
 		"runtimeState": "Started",
 		"pipelines": [
 			{
@@ -22,7 +23,7 @@
 						0
 					],
 					"hours": [
-						8
+						6
 					]
 				}
 			}
