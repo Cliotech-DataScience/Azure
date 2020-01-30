@@ -196,7 +196,14 @@
 			{
 				"name": "RUN SCMM_Activities",
 				"type": "ExecutePipeline",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "RUN - emerp_events",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
 					"waitOnCompletion": true
