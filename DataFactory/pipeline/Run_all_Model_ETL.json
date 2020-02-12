@@ -3,59 +3,6 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "01 Get Customers",
-				"type": "ExecutePipeline",
-				"dependsOn": [],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "01 Get Customers List For All Models",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
-				"name": "02 Get Data For Models",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "01 Get Customers",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "02 Get Data For Models",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
-				"name": "03  Execute Models",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "02 Get Data For Models",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "03 - Execute Models",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
 				"name": "999 sync to azure sql",
 				"type": "ExecutePipeline",
 				"dependsOn": [
@@ -78,14 +25,7 @@
 			{
 				"name": "301 Get Customers",
 				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "03  Execute Models",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
