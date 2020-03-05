@@ -58,10 +58,6 @@
 		"pufiles_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
-		},
-		"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "processed"
 		}
 	},
 	"variables": {
@@ -171,6 +167,40 @@
 					"referenceName": "alldbgateway",
 					"type": "IntegrationRuntimeReference"
 				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/load_pu_rows_files_to_row')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "load_pu_rows_files",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Load Data/Platform Usage/version 2/01 load  platform usage rows files to platformusage row data table  daily"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Platfrom_Usage/V2"
+				},
+				"annotations": []
 			},
 			"dependsOn": []
 		},
@@ -299,6 +329,76 @@
 				],
 				"folder": {
 					"name": "BI"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/RUN_All_old_clustering_model_203')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "01 Get Customers",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "01 Get Customers List For All Models",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "02 Get Data For Models",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "01 Get Customers",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "02 Get Data For Models",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "03  Execute Models",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "02 Get Data For Models",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "03 - Execute Models",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"folder": {
+					"name": "Dm_Models"
 				},
 				"annotations": []
 			},
@@ -1336,51 +1436,6 @@
 				"type": "SqlServerTable",
 				"typeProperties": {
 					"tableName": "[[azure].[Mng_azure_ETL]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/STG_mrr_customers_clustering')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "STG",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "sync"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "AccountNumber",
-						"type": "Int64",
-						"precision": 19,
-						"scale": 255
-					}
-				],
-				"typeProperties": {
-					"tableName": "[[dbo].[mrr_customers_clustering]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_PlatfromUsagePROD')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Events_Collector_PlatfromUsage_log",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "FileShare",
-				"typeProperties": {
-					"folderPath": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"
 				}
 			},
 			"dependsOn": []

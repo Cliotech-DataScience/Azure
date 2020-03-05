@@ -740,9 +740,6 @@
 					},
 					"pufiles_properties_typeProperties_userId": {
 						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
-					},
-					"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
-						"value": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -763,6 +760,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
+						"value": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"
 					},
 					"Source_file_avi_properties_typeProperties_fileName": {
 						"value": "[parameters('Source_file_avi_properties_typeProperties_fileName')]"

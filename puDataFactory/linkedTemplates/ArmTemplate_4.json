@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "pudatafactory"
 		},
+		"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "processed"
+		},
 		"Source_file_avi_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "@dataset().file_name"
@@ -20,6 +24,51 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/STG_mrr_customers_clustering')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "STG",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "sync"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "AccountNumber",
+						"type": "Int64",
+						"precision": 19,
+						"scale": 255
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[mrr_customers_clustering]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_PlatfromUsagePROD')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Events_Collector_PlatfromUsage_log",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "FileShare",
+				"typeProperties": {
+					"folderPath": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Source_file_avi')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -358,76 +407,6 @@
 				"typeProperties": {
 					"tableName": "azure.az_serials"
 				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/RUN_All_old_clustering_model_203')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "01 Get Customers",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "01 Get Customers List For All Models",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "02 Get Data For Models",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "01 Get Customers",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "02 Get Data For Models",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "03  Execute Models",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "02 Get Data For Models",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "03 - Execute Models",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"folder": {
-					"name": "Dm_Models"
-				},
-				"annotations": []
 			},
 			"dependsOn": []
 		},
@@ -1792,93 +1771,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/dwh_calls_src')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DWH_Dim_Users')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "copy_to_blob",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource"
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"User_ID": "User_ID",
-									"details": "details"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "dwh_Dim_Users_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "dwh_Dim_Users_blob",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Load_Users",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/Dimensions/Users"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Data_from_SQL"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dwh_Dim_Users_src')]"
 			]
 		}
 	]

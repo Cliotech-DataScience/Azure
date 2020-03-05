@@ -13,6 +13,91 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/DWH_Dim_Users')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "copy_to_blob",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource"
+							},
+							"sink": {
+								"type": "BlobSink"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"User_ID": "User_ID",
+									"details": "details"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "dwh_Dim_Users_src",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "dwh_Dim_Users_blob",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Load_Users",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "copy_to_blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Load Data/Dimensions/Users"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"folder": {
+					"name": "Data_from_SQL"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DWH_Lead_Assignments')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1598,6 +1683,7 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/Serials')]",
 				"[concat(variables('factoryId'), '/pipelines/EMERP_Events')]",
+				"[concat(variables('factoryId'), '/pipelines/DWH_Dim_Users')]",
 				"[concat(variables('factoryId'), '/pipelines/SCMM_Activities')]"
 			]
 		},
