@@ -15,7 +15,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/Load Data/Platform Usage/version 2/01 load  platform usage rows files to platformusage row data table  daily"
+					"notebookPath": "/Load Data/Platform Usage/version 2/01 load  platform usage rows files to platformusage row data table daily"
 				},
 				"linkedServiceName": {
 					"referenceName": "Analysis",
