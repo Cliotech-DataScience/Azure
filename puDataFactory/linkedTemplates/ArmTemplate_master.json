@@ -541,12 +541,6 @@
 					},
 					"blob_customers_clustering_json_file_list_properties_typeProperties_folderPath": {
 						"value": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_folderPath')]"
-					},
-					"blob_platfrom_merge_file_des_properties_typeProperties_fileName": {
-						"value": "[parameters('blob_platfrom_merge_file_des_properties_typeProperties_fileName')]"
-					},
-					"blob_platfrom_merge_file_des_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_platfrom_merge_file_des_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -589,11 +583,11 @@
 					"STG_password": {
 						"value": "[parameters('STG_password')]"
 					},
-					"alldbdwh_connectionString": {
-						"value": "[parameters('alldbdwh_connectionString')]"
+					"blob_platfrom_merge_file_des_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_platfrom_merge_file_des_properties_typeProperties_fileName')]"
 					},
-					"alldbdwh_password": {
-						"value": "[parameters('alldbdwh_password')]"
+					"blob_platfrom_merge_file_des_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_platfrom_merge_file_des_properties_typeProperties_folderPath')]"
 					},
 					"blob_platfrom_unzip_file_properties_typeProperties_folderPath": {
 						"value": "[parameters('blob_platfrom_unzip_file_properties_typeProperties_folderPath')]"
@@ -678,9 +672,6 @@
 					},
 					"STG_properties_typeProperties_userName": {
 						"value": "[parameters('STG_properties_typeProperties_userName')]"
-					},
-					"alldbdwh_properties_typeProperties_userName": {
-						"value": "[parameters('alldbdwh_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -702,6 +693,12 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"alldbdwh_connectionString": {
+						"value": "[parameters('alldbdwh_connectionString')]"
+					},
+					"alldbdwh_password": {
+						"value": "[parameters('alldbdwh_password')]"
+					},
 					"destpufiles_connectionString": {
 						"value": "[parameters('destpufiles_connectionString')]"
 					},
@@ -722,6 +719,9 @@
 					},
 					"pufiles_password": {
 						"value": "[parameters('pufiles_password')]"
+					},
+					"alldbdwh_properties_typeProperties_userName": {
+						"value": "[parameters('alldbdwh_properties_typeProperties_userName')]"
 					},
 					"emerp_lm_properties_typeProperties_userName": {
 						"value": "[parameters('emerp_lm_properties_typeProperties_userName')]"

@@ -124,7 +124,12 @@
 						"type": "SecureString",
 						"value": "[parameters('Analysis_accessToken')]"
 					},
-					"existingClusterId": "0120-125803-reach437"
+					"newClusterNodeType": "Standard_DS3_v2",
+					"newClusterNumOfWorker": "2",
+					"newClusterSparkEnvVars": {
+						"PYSPARK_PYTHON": "/databricks/python3/bin/python3"
+					},
+					"newClusterVersion": "6.1.x-cpu-ml-scala2.11"
 				}
 			},
 			"dependsOn": []
