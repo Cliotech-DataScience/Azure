@@ -383,6 +383,10 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://databrickskeys.vault.azure.net/"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -445,6 +449,9 @@
 					},
 					"TableServiceStoree_properties_typeProperties_url": {
 						"value": "[parameters('TableServiceStoree_properties_typeProperties_url')]"
+					},
+					"AzureKeyVault1_properties_typeProperties_baseUrl": {
+						"value": "[parameters('AzureKeyVault1_properties_typeProperties_baseUrl')]"
 					}
 				}
 			},
@@ -535,12 +542,6 @@
 					},
 					"blob_customers_clustering_folder_hd_file_properties_typeProperties_folderPath": {
 						"value": "[parameters('blob_customers_clustering_folder_hd_file_properties_typeProperties_folderPath')]"
-					},
-					"blob_customers_clustering_json_file_list_properties_typeProperties_fileName": {
-						"value": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_fileName')]"
-					},
-					"blob_customers_clustering_json_file_list_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -577,11 +578,11 @@
 					"Events_Collector_PlatfromUsage_log_password": {
 						"value": "[parameters('Events_Collector_PlatfromUsage_log_password')]"
 					},
-					"STG_connectionString": {
-						"value": "[parameters('STG_connectionString')]"
+					"blob_customers_clustering_json_file_list_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_fileName')]"
 					},
-					"STG_password": {
-						"value": "[parameters('STG_password')]"
+					"blob_customers_clustering_json_file_list_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_folderPath')]"
 					},
 					"blob_platfrom_merge_file_des_properties_typeProperties_fileName": {
 						"value": "[parameters('blob_platfrom_merge_file_des_properties_typeProperties_fileName')]"
@@ -669,9 +670,6 @@
 					},
 					"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
 						"value": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_userId')]"
-					},
-					"STG_properties_typeProperties_userName": {
-						"value": "[parameters('STG_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -692,6 +690,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"STG_connectionString": {
+						"value": "[parameters('STG_connectionString')]"
+					},
+					"STG_password": {
+						"value": "[parameters('STG_password')]"
 					},
 					"alldbdwh_connectionString": {
 						"value": "[parameters('alldbdwh_connectionString')]"
@@ -719,6 +723,9 @@
 					},
 					"pufiles_password": {
 						"value": "[parameters('pufiles_password')]"
+					},
+					"STG_properties_typeProperties_userName": {
+						"value": "[parameters('STG_properties_typeProperties_userName')]"
 					},
 					"alldbdwh_properties_typeProperties_userName": {
 						"value": "[parameters('alldbdwh_properties_typeProperties_userName')]"

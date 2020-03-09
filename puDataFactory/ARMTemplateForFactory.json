@@ -382,6 +382,10 @@
 		"pufiles_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://databrickskeys.vault.azure.net/"
 		}
 	},
 	"variables": {
@@ -7584,12 +7588,7 @@
 						"type": "SecureString",
 						"value": "[parameters('Analysis_accessToken')]"
 					},
-					"newClusterNodeType": "Standard_DS3_v2",
-					"newClusterNumOfWorker": "2",
-					"newClusterSparkEnvVars": {
-						"PYSPARK_PYTHON": "/databricks/python3/bin/python3"
-					},
-					"newClusterVersion": "6.1.x-cpu-ml-scala2.11"
+					"existingClusterId": "0120-125803-reach437"
 				}
 			},
 			"dependsOn": []
@@ -8308,6 +8307,19 @@
 							"timeToLive": 0
 						}
 					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureKeyVault1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('AzureKeyVault1_properties_typeProperties_baseUrl')]"
 				}
 			},
 			"dependsOn": []
