@@ -1,6 +1,7 @@
 {
 	"name": "FXNET Deals Daily",
 	"properties": {
+		"annotations": [],
 		"runtimeState": "Started",
 		"pipelines": [
 			{
@@ -22,7 +23,7 @@
 						10
 					],
 					"hours": [
-						8
+						7
 					]
 				}
 			}
