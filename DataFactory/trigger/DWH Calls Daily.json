@@ -1,6 +1,7 @@
 {
 	"name": "DWH Calls Daily",
 	"properties": {
+		"annotations": [],
 		"runtimeState": "Started",
 		"pipelines": [
 			{
@@ -22,7 +23,7 @@
 						5
 					],
 					"hours": [
-						8
+						7
 					]
 				}
 			}
