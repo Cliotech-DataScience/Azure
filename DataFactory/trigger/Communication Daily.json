@@ -1,6 +1,7 @@
 {
 	"name": "Communication Daily",
 	"properties": {
+		"annotations": [],
 		"runtimeState": "Started",
 		"pipelines": [
 			{
@@ -22,7 +23,7 @@
 						30
 					],
 					"hours": [
-						8
+						7
 					]
 				}
 			}
