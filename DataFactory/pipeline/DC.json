@@ -1,0 +1,71 @@
+{
+	"name": "DC",
+	"properties": {
+		"activities": [
+			{
+				"name": "Resume SQL",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SQL DW Resume",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Notebook1",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Resume SQL",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/barak@skylabs.co.il/ETL DWH/DC ETL"
+				},
+				"linkedServiceName": {
+					"referenceName": "Databricks Job Cluster",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Pause SQL",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Notebook1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SQL DW Pause",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "BI"
+		},
+		"annotations": []
+	}
+}
