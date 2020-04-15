@@ -1,0 +1,101 @@
+{
+	"name": "SQL DW Pause",
+	"properties": {
+		"activities": [
+			{
+				"name": "SQL DW Pause",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@pipeline().parameters.SQLDWPause",
+						"type": "Expression"
+					},
+					"method": "POST"
+				}
+			},
+			{
+				"name": "Until SQL DW Pause",
+				"type": "Until",
+				"dependsOn": [
+					{
+						"activity": "SQL DW Pause",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals('Paused', coalesce(activity('SQL DW State').output.properties.status, 'null'))",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "SQL DW State",
+							"type": "WebActivity",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"url": {
+									"value": "@pipeline().parameters.SQLDWState",
+									"type": "Expression"
+								},
+								"method": "GET",
+								"linkedServices": [],
+								"datasets": []
+							}
+						},
+						{
+							"name": "Wait 30 seconds",
+							"type": "Wait",
+							"dependsOn": [
+								{
+									"activity": "SQL DW State",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 30
+							}
+						}
+					],
+					"timeout": "7.00:00:00"
+				}
+			}
+		],
+		"parameters": {
+			"SQLDWPause": {
+				"type": "string",
+				"defaultValue": "https://prod-100.westeurope.logic.azure.com:443/workflows/708dd34df90141fcad50d252ec3c4cb7/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=fAqyBbZSKoAIhtoSW6xav9S051JCiNAOiU2xubW6nMo"
+			},
+			"SQLDWState": {
+				"type": "string",
+				"defaultValue": "https://prod-106.westeurope.logic.azure.com:443/workflows/cc339fb6f2654d299a149fa97671c64b/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZUVyPHo0GSfxWhdSfEyQtEfi3L5AS8d1GvtoQAIiRlY"
+			}
+		},
+		"folder": {
+			"name": "Infra"
+		},
+		"annotations": []
+	}
+}
