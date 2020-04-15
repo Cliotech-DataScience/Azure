@@ -16,7 +16,7 @@
 				}
 			},
 			{
-				"name": "Notebook1",
+				"name": "DC ETL",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
@@ -47,7 +47,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Notebook1",
+						"activity": "DC ETL",
 						"dependencyConditions": [
 							"Succeeded"
 						]
