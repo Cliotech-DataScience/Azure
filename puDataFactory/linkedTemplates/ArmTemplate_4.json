@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory name",
-			"defaultValue": "pudatafactory"
+			"defaultValue": "puDataFactory"
 		},
 		"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 			"type": "string",
@@ -24,6 +24,272 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/EMERP_DB_Events')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Dwhpr",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "RAWDB_Id",
+						"type": "Int64"
+					},
+					{
+						"name": "datails",
+						"type": "String"
+					},
+					{
+						"name": "Fixed_Timestamp",
+						"type": "DateTime"
+					}
+				],
+				"typeProperties": {
+					"tableName": "emerp_db.azure.AZ_EMERP_DB_Events"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Fact_Transactions')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "TransactionNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "PositionNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "AccountNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "CustomerHistory_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "CustomersExtendedHistory_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "DealAttirbute_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "Instrument_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "TransactionType_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "Direction_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "Source_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "DealType_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "ExecutionDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "ExecutionDay",
+						"type": "DateTime"
+					},
+					{
+						"name": "ExecutionTime",
+						"type": "TimeSpan"
+					},
+					{
+						"name": "TransactionCloseDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "ValueDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "ValueDay",
+						"type": "DateTime"
+					},
+					{
+						"name": "BaseAmount",
+						"type": "Decimal"
+					},
+					{
+						"name": "OtherAmount",
+						"type": "Decimal"
+					},
+					{
+						"name": "SpotRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "ForwardPips",
+						"type": "Double"
+					},
+					{
+						"name": "TotRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "Volume_USD",
+						"type": "Decimal"
+					},
+					{
+						"name": "ServerRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "OtherServerRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "ExecutedLimit",
+						"type": "Int16"
+					},
+					{
+						"name": "PL",
+						"type": "Decimal"
+					},
+					{
+						"name": "IsFirstBOP",
+						"type": "Boolean"
+					},
+					{
+						"name": "IsFirstForex",
+						"type": "Boolean"
+					},
+					{
+						"name": "IsFirstDeal",
+						"type": "Boolean"
+					},
+					{
+						"name": "Deleted",
+						"type": "Boolean"
+					},
+					{
+						"name": "PositionClosed",
+						"type": "Int16"
+					},
+					{
+						"name": "DealPL_USD",
+						"type": "Decimal"
+					},
+					{
+						"name": "PL_SymbolId",
+						"type": "Int16"
+					},
+					{
+						"name": "AccountBasesymbolId",
+						"type": "Int16"
+					},
+					{
+						"name": "EtlUpdatedDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "SpreadCost",
+						"type": "Decimal"
+					},
+					{
+						"name": "Folder_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "Broker_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "AccountNumber_modo",
+						"type": "Int32"
+					},
+					{
+						"name": "PositionNumber_modo",
+						"type": "Int32"
+					},
+					{
+						"name": "PL_AccountBase",
+						"type": "Decimal"
+					},
+					{
+						"name": "Customer_Favor_Rate_diff",
+						"type": "Decimal"
+					},
+					{
+						"name": "Channel_Bucket_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Sessions_ID",
+						"type": "Int64"
+					},
+					{
+						"name": "DealCountTotal",
+						"type": "Int32"
+					},
+					{
+						"name": "Retention_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "ConversionRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "CommissionInAccountBase",
+						"type": "Decimal"
+					},
+					{
+						"name": "SpreadCostInAccountBase",
+						"type": "Decimal"
+					},
+					{
+						"name": "RolloverSpreadCostInAccountBase",
+						"type": "Decimal"
+					},
+					{
+						"name": "CommissionInOther",
+						"type": "Decimal"
+					},
+					{
+						"name": "SpreadCostInOther",
+						"type": "Decimal"
+					},
+					{
+						"name": "RolloverSpreadCostInOther",
+						"type": "Decimal"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[azure].[AZ_Fact_Transactions]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Mng_azure_ETL')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -1190,412 +1456,6 @@
 						"userProperties": [],
 						"typeProperties": {
 							"notebookPath": "/Load Data/Dimensions/contacts"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Data_from_SQL"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Mng_azure_ETL')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Customer_Questionnaires')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "LK_Last_Date_Mng_azure_ETL",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureTableSource",
-								"azureTableSourceQuery": {
-									"value": "PartitionKey eq 'Upload Data' and RowKey eq '@{variables('Table_Name')}'",
-									"type": "Expression"
-								},
-								"azureTableSourceIgnoreTableNotFound": false
-							},
-							"dataset": {
-								"referenceName": "etl_manage",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": true
-						}
-					},
-					{
-						"name": "LK_new_max_date",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": " SELECT Last_Update= MAX(Last_Update)\nFROM azure.AZ_Customer_Questionnaires"
-							},
-							"dataset": {
-								"referenceName": "dwh_Customer_Questionnaires_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "copy_to_blob",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "LK_Last_Date_Mng_azure_ETL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "LK_new_max_date",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "select * \nFROM azure.AZ_Customer_Questionnaires\nwhere Last_Update > '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Incremental_Date}' \n  and Last_Update <= '@{activity('LK_new_max_date').output.firstRow.Last_Update}'\n",
-									"type": "Expression"
-								}
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0
-						},
-						"inputs": [
-							{
-								"referenceName": "dwh_Customer_Questionnaires_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "dwh_Customer_Questionnaires_blob",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Update Manage Table",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "run_Load Customer_Questionnaires",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "MergeTableStore",
-								"type": "PipelineReference"
-							},
-							"parameters": {
-								"PartitionKey": "Upload Data",
-								"RowKey": {
-									"value": "@variables('Table_Name')",
-									"type": "Expression"
-								},
-								"PropertyName": "Last_Incremental_Date",
-								"PropertyValue": {
-									"value": "@activity('LK_new_max_date').output.firstRow.Last_Update",
-									"type": "Expression"
-								}
-							}
-						}
-					},
-					{
-						"name": "run_Load Customer_Questionnaires",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/Dimensions/Load Customer_Questionnaires"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "Delete_copy_file",
-						"type": "Delete",
-						"dependsOn": [
-							{
-								"activity": "Update Manage Table",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "dwh_Customer_Questionnaires_blob",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"enableLogging": false
-						}
-					}
-				],
-				"variables": {
-					"Table_Name": {
-						"type": "String",
-						"defaultValue": "Customer_Questionnaires"
-					}
-				},
-				"folder": {
-					"name": "Data_from_SQL"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dwh_Customer_Questionnaires_src')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Customers')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "LK_Last_Id_Mng_azure_ETL",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(DAY,-1,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  [localdb].[azure].[Mng_azure_ETL]\n  WHERE TableName='Customers'"
-							},
-							"dataset": {
-								"referenceName": "Mng_azure_ETL",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "LK_new_max_id",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT ExecutionDate=MAX(SsisUpdatedDate)\n FROM dwh.azure.AZ_Customers\n"
-							},
-							"dataset": {
-								"referenceName": "Mng_azure_ETL",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "copy_to_blob",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "LK_Last_Id_Mng_azure_ETL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "LK_new_max_id",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "select * from  dwh.azure.AZ_Customers\n where SsisUpdatedDate > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' ",
-									"type": "Expression"
-								}
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0
-						},
-						"inputs": [
-							{
-								"referenceName": "DWH_Dim_Customers_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DWH_Dim_Customers_blob",
-								"type": "DatasetReference",
-								"parameters": {
-									"folder_name": "Customers"
-								}
-							}
-						]
-					},
-					{
-						"name": "update_mng_azure",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[azure].[SP_Update_Mng_azure_ETL]",
-							"storedProcedureParameters": {
-								"LastId": {
-									"value": "-1",
-									"type": "Int64"
-								},
-								"LastIncrementalDate": {
-									"value": {
-										"value": "@{activity('LK_new_max_id').output.firstRow.ExecutionDate}",
-										"type": "Expression"
-									},
-									"type": "DateTime"
-								},
-								"TableName": {
-									"value": "Customers",
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "alldbdwh",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "Customers",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "update_mng_azure",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/Dimensions/Customers"
 						},
 						"linkedServiceName": {
 							"referenceName": "Analysis",

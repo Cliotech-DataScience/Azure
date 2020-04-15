@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory name",
-			"defaultValue": "pudatafactory"
+			"defaultValue": "puDataFactory"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -331,6 +331,10 @@
 			"type": "string",
 			"defaultValue": "platformusage/rawdata/201810"
 		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://databrickskeys.vault.azure.net/"
+		},
 		"DWH_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -382,10 +386,6 @@
 		"pufiles_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
-		},
-		"AzureKeyVault1_properties_typeProperties_baseUrl": {
-			"type": "string",
-			"defaultValue": "https://databrickskeys.vault.azure.net/"
 		},
 		"containerUri": {
 			"type": "string",
@@ -447,11 +447,11 @@
 					"dwhdb_blob_connectionString": {
 						"value": "[parameters('dwhdb_blob_connectionString')]"
 					},
-					"TableServiceStoree_properties_typeProperties_url": {
-						"value": "[parameters('TableServiceStoree_properties_typeProperties_url')]"
-					},
 					"AzureKeyVault1_properties_typeProperties_baseUrl": {
 						"value": "[parameters('AzureKeyVault1_properties_typeProperties_baseUrl')]"
+					},
+					"TableServiceStoree_properties_typeProperties_url": {
+						"value": "[parameters('TableServiceStoree_properties_typeProperties_url')]"
 					}
 				}
 			},
@@ -530,18 +530,6 @@
 					},
 					"blob_customers_clustering_properties_typeProperties_folderPath": {
 						"value": "[parameters('blob_customers_clustering_properties_typeProperties_folderPath')]"
-					},
-					"blob_customers_clustering_folder_properties_typeProperties_fileName": {
-						"value": "[parameters('blob_customers_clustering_folder_properties_typeProperties_fileName')]"
-					},
-					"blob_customers_clustering_folder_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_customers_clustering_folder_properties_typeProperties_folderPath')]"
-					},
-					"blob_customers_clustering_folder_hd_file_properties_typeProperties_fileName": {
-						"value": "[parameters('blob_customers_clustering_folder_hd_file_properties_typeProperties_fileName')]"
-					},
-					"blob_customers_clustering_folder_hd_file_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_customers_clustering_folder_hd_file_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -569,14 +557,17 @@
 					"DWH_password": {
 						"value": "[parameters('DWH_password')]"
 					},
-					"Dwhpr_connectionString": {
-						"value": "[parameters('Dwhpr_connectionString')]"
+					"blob_customers_clustering_folder_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_customers_clustering_folder_properties_typeProperties_fileName')]"
 					},
-					"Dwhpr_password": {
-						"value": "[parameters('Dwhpr_password')]"
+					"blob_customers_clustering_folder_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_customers_clustering_folder_properties_typeProperties_folderPath')]"
 					},
-					"Events_Collector_PlatfromUsage_log_password": {
-						"value": "[parameters('Events_Collector_PlatfromUsage_log_password')]"
+					"blob_customers_clustering_folder_hd_file_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_customers_clustering_folder_hd_file_properties_typeProperties_fileName')]"
+					},
+					"blob_customers_clustering_folder_hd_file_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_customers_clustering_folder_hd_file_properties_typeProperties_folderPath')]"
 					},
 					"blob_customers_clustering_json_file_list_properties_typeProperties_fileName": {
 						"value": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_fileName')]"
@@ -661,15 +652,6 @@
 					},
 					"DWH_properties_typeProperties_userName": {
 						"value": "[parameters('DWH_properties_typeProperties_userName')]"
-					},
-					"Dwhpr_properties_typeProperties_userName": {
-						"value": "[parameters('Dwhpr_properties_typeProperties_userName')]"
-					},
-					"Events_Collector_PlatfromUsage_log_properties_typeProperties_host": {
-						"value": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_host')]"
-					},
-					"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
-						"value": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_userId')]"
 					}
 				}
 			},
@@ -690,6 +672,15 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Dwhpr_connectionString": {
+						"value": "[parameters('Dwhpr_connectionString')]"
+					},
+					"Dwhpr_password": {
+						"value": "[parameters('Dwhpr_password')]"
+					},
+					"Events_Collector_PlatfromUsage_log_password": {
+						"value": "[parameters('Events_Collector_PlatfromUsage_log_password')]"
 					},
 					"STG_connectionString": {
 						"value": "[parameters('STG_connectionString')]"
@@ -723,6 +714,15 @@
 					},
 					"pufiles_password": {
 						"value": "[parameters('pufiles_password')]"
+					},
+					"Dwhpr_properties_typeProperties_userName": {
+						"value": "[parameters('Dwhpr_properties_typeProperties_userName')]"
+					},
+					"Events_Collector_PlatfromUsage_log_properties_typeProperties_host": {
+						"value": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_host')]"
+					},
+					"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
+						"value": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_userId')]"
 					},
 					"STG_properties_typeProperties_userName": {
 						"value": "[parameters('STG_properties_typeProperties_userName')]"
@@ -801,6 +801,26 @@
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_4')]"
+			]
+		},
+		{
+			"name": "ArmTemplate_6",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_6.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_5')]"
 			]
 		}
 	]
