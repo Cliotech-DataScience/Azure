@@ -36,7 +36,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "equals(‘Online’, coalesce(activity(‘SQL DW State’).output.properties.status, ‘null’))",
+						"value": "@equals('Online', coalesce(activity('SQL DW State').output.properties.status, 'null'))",
 						"type": "Expression"
 					},
 					"activities": [
@@ -94,7 +94,7 @@
 			}
 		},
 		"folder": {
-			"name": "BI"
+			"name": "Infra"
 		},
 		"annotations": []
 	}
