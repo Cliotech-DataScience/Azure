@@ -1,0 +1,101 @@
+{
+	"name": "SQL DW Resume",
+	"properties": {
+		"activities": [
+			{
+				"name": "SQL DW Resume",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@pipeline().parameters.SQLDWResume",
+						"type": "Expression"
+					},
+					"method": "POST"
+				}
+			},
+			{
+				"name": "Until SQL DW Resumed",
+				"type": "Until",
+				"dependsOn": [
+					{
+						"activity": "SQL DW Resume",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "equals(‘Online’, coalesce(activity(‘SQL DW State’).output.properties.status, ‘null’))",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "SQL DW State",
+							"type": "WebActivity",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"url": {
+									"value": "@pipeline().parameters.SQLDWState",
+									"type": "Expression"
+								},
+								"method": "GET",
+								"linkedServices": [],
+								"datasets": []
+							}
+						},
+						{
+							"name": "Wait 30 seconds",
+							"type": "Wait",
+							"dependsOn": [
+								{
+									"activity": "SQL DW State",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 30
+							}
+						}
+					],
+					"timeout": "7.00:00:00"
+				}
+			}
+		],
+		"parameters": {
+			"SQLDWResume": {
+				"type": "string",
+				"defaultValue": "https://prod-22.westeurope.logic.azure.com:443/workflows/caf383084e544585bee0ba4783d29493/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=HYJ9iFO1DxYkebd_Jtg6g5SHhGSdZkQUeEFJ-Xdc2fQ"
+			},
+			"SQLDWState": {
+				"type": "string",
+				"defaultValue": "https://prod-106.westeurope.logic.azure.com:443/workflows/cc339fb6f2654d299a149fa97671c64b/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ZUVyPHo0GSfxWhdSfEyQtEfi3L5AS8d1GvtoQAIiRlY"
+			}
+		},
+		"folder": {
+			"name": "BI"
+		},
+		"annotations": []
+	}
+}
