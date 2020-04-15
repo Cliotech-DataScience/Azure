@@ -115,6 +115,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
 		},
+		"Databricks Job Cluster_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'Databricks Job Cluster'"
+		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "*.parquet"
@@ -331,10 +335,6 @@
 			"type": "string",
 			"defaultValue": "platformusage/rawdata/201810"
 		},
-		"AzureKeyVault1_properties_typeProperties_baseUrl": {
-			"type": "string",
-			"defaultValue": "https://databrickskeys.vault.azure.net/"
-		},
 		"DWH_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -386,6 +386,10 @@
 		"pufiles_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
+		},
+		"Key Vault Databrickskeys_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://databrickskeys.vault.azure.net/"
 		},
 		"containerUri": {
 			"type": "string",
@@ -447,11 +451,14 @@
 					"dwhdb_blob_connectionString": {
 						"value": "[parameters('dwhdb_blob_connectionString')]"
 					},
-					"AzureKeyVault1_properties_typeProperties_baseUrl": {
-						"value": "[parameters('AzureKeyVault1_properties_typeProperties_baseUrl')]"
+					"Databricks Job Cluster_accessToken": {
+						"value": "[parameters('Databricks Job Cluster_accessToken')]"
 					},
 					"TableServiceStoree_properties_typeProperties_url": {
 						"value": "[parameters('TableServiceStoree_properties_typeProperties_url')]"
+					},
+					"Key Vault Databrickskeys_properties_typeProperties_baseUrl": {
+						"value": "[parameters('Key Vault Databrickskeys_properties_typeProperties_baseUrl')]"
 					}
 				}
 			},
@@ -524,12 +531,6 @@
 					},
 					"blob_Fact_Transactions_properties_typeProperties_folderPath": {
 						"value": "[parameters('blob_Fact_Transactions_properties_typeProperties_folderPath')]"
-					},
-					"blob_customers_clustering_properties_typeProperties_fileName": {
-						"value": "[parameters('blob_customers_clustering_properties_typeProperties_fileName')]"
-					},
-					"blob_customers_clustering_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_customers_clustering_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -551,11 +552,11 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"DWH_connectionString": {
-						"value": "[parameters('DWH_connectionString')]"
+					"blob_customers_clustering_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_customers_clustering_properties_typeProperties_fileName')]"
 					},
-					"DWH_password": {
-						"value": "[parameters('DWH_password')]"
+					"blob_customers_clustering_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_customers_clustering_properties_typeProperties_folderPath')]"
 					},
 					"blob_customers_clustering_folder_properties_typeProperties_fileName": {
 						"value": "[parameters('blob_customers_clustering_folder_properties_typeProperties_fileName')]"
@@ -649,9 +650,6 @@
 					},
 					"unzip_platfrom_file_properties_typeProperties_folderPath": {
 						"value": "[parameters('unzip_platfrom_file_properties_typeProperties_folderPath')]"
-					},
-					"DWH_properties_typeProperties_userName": {
-						"value": "[parameters('DWH_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -672,6 +670,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"DWH_connectionString": {
+						"value": "[parameters('DWH_connectionString')]"
+					},
+					"DWH_password": {
+						"value": "[parameters('DWH_password')]"
 					},
 					"Dwhpr_connectionString": {
 						"value": "[parameters('Dwhpr_connectionString')]"
@@ -714,6 +718,9 @@
 					},
 					"pufiles_password": {
 						"value": "[parameters('pufiles_password')]"
+					},
+					"DWH_properties_typeProperties_userName": {
+						"value": "[parameters('DWH_properties_typeProperties_userName')]"
 					},
 					"Dwhpr_properties_typeProperties_userName": {
 						"value": "[parameters('Dwhpr_properties_typeProperties_userName')]"

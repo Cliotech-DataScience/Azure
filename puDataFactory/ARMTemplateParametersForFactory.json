@@ -86,6 +86,9 @@
 		"pufiles_password": {
 			"value": ""
 		},
+		"Databricks Job Cluster_accessToken": {
+			"value": ""
+		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"value": "*.parquet"
 		},
@@ -248,9 +251,6 @@
 		"unzip_platfrom_file_properties_typeProperties_folderPath": {
 			"value": "platformusage/rawdata/201810"
 		},
-		"AzureKeyVault1_properties_typeProperties_baseUrl": {
-			"value": "https://databrickskeys.vault.azure.net/"
-		},
 		"DWH_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"
 		},
@@ -289,6 +289,9 @@
 		},
 		"pufiles_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
+		},
+		"Key Vault Databrickskeys_properties_typeProperties_baseUrl": {
+			"value": "https://databrickskeys.vault.azure.net/"
 		}
 	}
 }

@@ -7,6 +7,14 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "puDataFactory"
 		},
+		"DWH_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'DWH'"
+		},
+		"DWH_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'DWH'"
+		},
 		"Dwhpr_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'Dwhpr'"
@@ -63,6 +71,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
 		},
+		"DWH_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
 		"Dwhpr_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -112,6 +124,28 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/DWH')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('DWH_connectionString')]",
+					"userName": "[parameters('DWH_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('DWH_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Dwhpr')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -303,6 +337,82 @@
 					"referenceName": "alldbgateway",
 					"type": "IntegrationRuntimeReference"
 				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DC')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Resume SQL",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SQL DW Resume",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "DC ETL",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Resume SQL",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Users/barak@skylabs.co.il/ETL DWH/DC ETL"
+						},
+						"linkedServiceName": {
+							"referenceName": "Databricks Job Cluster",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Pause SQL",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DC ETL",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SQL DW Pause",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"folder": {
+					"name": "BI"
+				},
+				"annotations": []
 			},
 			"dependsOn": []
 		},
@@ -954,7 +1064,9 @@
 					"tableName": "[[dbo].[Azure_Customers_Models_Data]"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/DWH')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DWH_Dim_Customers_src')]",
@@ -988,283 +1100,8 @@
 					"tableName": "[[azure].[AZ_Customers]"
 				}
 			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DWH_pu_list_files')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "Platform Usage"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "TransactionNumber",
-						"type": "Int32"
-					},
-					{
-						"name": "PositionNumber",
-						"type": "Int32"
-					},
-					{
-						"name": "AccountNumber",
-						"type": "Int32"
-					},
-					{
-						"name": "CustomerHistory_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "CustomersExtendedHistory_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "DealAttirbute_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "Instrument_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "TransactionType_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "Direction_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "Source_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "DealType_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "ExecutionDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "ExecutionDay",
-						"type": "DateTime"
-					},
-					{
-						"name": "ExecutionTime",
-						"type": "TimeSpan"
-					},
-					{
-						"name": "TransactionCloseDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "ValueDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "ValueDay",
-						"type": "DateTime"
-					},
-					{
-						"name": "BaseAmount",
-						"type": "Decimal"
-					},
-					{
-						"name": "OtherAmount",
-						"type": "Decimal"
-					},
-					{
-						"name": "SpotRate",
-						"type": "Decimal"
-					},
-					{
-						"name": "ForwardPips",
-						"type": "Double"
-					},
-					{
-						"name": "TotRate",
-						"type": "Decimal"
-					},
-					{
-						"name": "Volume_USD",
-						"type": "Decimal"
-					},
-					{
-						"name": "ServerRate",
-						"type": "Decimal"
-					},
-					{
-						"name": "OtherServerRate",
-						"type": "Decimal"
-					},
-					{
-						"name": "ExecutedLimit",
-						"type": "Int16"
-					},
-					{
-						"name": "PL",
-						"type": "Decimal"
-					},
-					{
-						"name": "IsFirstBOP",
-						"type": "Boolean"
-					},
-					{
-						"name": "IsFirstForex",
-						"type": "Boolean"
-					},
-					{
-						"name": "IsFirstDeal",
-						"type": "Boolean"
-					},
-					{
-						"name": "Deleted",
-						"type": "Boolean"
-					},
-					{
-						"name": "PositionClosed",
-						"type": "Int16"
-					},
-					{
-						"name": "DealPL_USD",
-						"type": "Decimal"
-					},
-					{
-						"name": "PL_SymbolId",
-						"type": "Int16"
-					},
-					{
-						"name": "AccountBasesymbolId",
-						"type": "Int16"
-					},
-					{
-						"name": "EtlUpdatedDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "SpreadCost",
-						"type": "Decimal"
-					},
-					{
-						"name": "Folder_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "Broker_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "AccountNumber_modo",
-						"type": "Int32"
-					},
-					{
-						"name": "PositionNumber_modo",
-						"type": "Int32"
-					},
-					{
-						"name": "PL_AccountBase",
-						"type": "Decimal"
-					},
-					{
-						"name": "Customer_Favor_Rate_diff",
-						"type": "Decimal"
-					},
-					{
-						"name": "Channel_Bucket_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "Sessions_ID",
-						"type": "Int64"
-					},
-					{
-						"name": "DealCountTotal",
-						"type": "Int32"
-					},
-					{
-						"name": "Retention_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "ConversionRate",
-						"type": "Decimal"
-					},
-					{
-						"name": "CommissionInAccountBase",
-						"type": "Decimal"
-					},
-					{
-						"name": "SpreadCostInAccountBase",
-						"type": "Decimal"
-					},
-					{
-						"name": "RolloverSpreadCostInAccountBase",
-						"type": "Decimal"
-					},
-					{
-						"name": "CommissionInOther",
-						"type": "Decimal"
-					},
-					{
-						"name": "SpreadCostInOther",
-						"type": "Decimal"
-					},
-					{
-						"name": "RolloverSpreadCostInOther",
-						"type": "Decimal"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[[azure].[platfrom_usage_log_file]"
-				}
-			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Dim_AccountContacts')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "AccountNumber",
-						"type": "Int32"
-					},
-					{
-						"name": "ContactID",
-						"type": "Int64"
-					},
-					{
-						"name": "LastUpdate",
-						"type": "DateTime"
-					},
-					{
-						"name": "SsisUpdatedDate",
-						"type": "DateTime"
-					}
-				],
-				"typeProperties": {
-					"tableName": "dwh.azure.AZ_Dim_AccountContacts"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+				"[concat(variables('factoryId'), '/linkedServices/DWH')]"
 			]
 		}
 	]
