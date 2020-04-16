@@ -35,7 +35,14 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/Users/barak@skylabs.co.il/ETL DWH/DC ETL"
+					"notebookPath": "/Users/barak@skylabs.co.il/ETL DWH/DC ETL",
+					"libraries": [
+						{
+							"maven": {
+								"coordinates": "com.microsoft.azure:azure-sqldb-spark:1.0.2"
+							}
+						}
+					]
 				},
 				"linkedServiceName": {
 					"referenceName": "Databricks Job Cluster",
@@ -49,7 +56,7 @@
 					{
 						"activity": "DC ETL",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					}
 				],
