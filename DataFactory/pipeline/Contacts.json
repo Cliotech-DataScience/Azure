@@ -5,6 +5,7 @@
 			{
 				"name": "LK_Last_Id_Mng_azure_ETL",
 				"type": "Lookup",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -12,6 +13,7 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
@@ -47,6 +49,7 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
@@ -59,6 +62,7 @@
 						"type": "BlobSink"
 					},
 					"enableStaging": false,
+					"parallelCopies": 10,
 					"dataIntegrationUnits": 0
 				},
 				"inputs": [
@@ -95,6 +99,7 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"storedProcedureName": "[azure].[SP_Update_Mng_azure_ETL]",
 					"storedProcedureParameters": {
@@ -123,6 +128,7 @@
 			{
 				"name": "LK_new_max_id",
 				"type": "Lookup",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -130,6 +136,7 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
@@ -159,6 +166,7 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"notebookPath": "/Load Data/Dimensions/contacts"
 				},
@@ -170,7 +178,8 @@
 		],
 		"folder": {
 			"name": "Data_from_SQL"
-		}
+		},
+		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
