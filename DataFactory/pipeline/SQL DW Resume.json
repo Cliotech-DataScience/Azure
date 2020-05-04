@@ -57,9 +57,7 @@
 									"value": "@pipeline().parameters.SQLDWState",
 									"type": "Expression"
 								},
-								"method": "GET",
-								"linkedServices": [],
-								"datasets": []
+								"method": "GET"
 							}
 						},
 						{
