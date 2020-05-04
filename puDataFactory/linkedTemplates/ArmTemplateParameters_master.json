@@ -3,7 +3,7 @@
 	"contentVersion": "1.0.0.0",
 	"parameters": {
 		"factoryName": {
-			"value": "puDataFactory"
+			"value": "pudatafactory"
 		},
 		"Analysis_accessToken": {
 			"value": ""
@@ -35,6 +35,9 @@
 		"DataLoadStorageAccount_connectionString": {
 			"value": ""
 		},
+		"Databricks Job Cluster_accessToken": {
+			"value": ""
+		},
 		"DataloadStore_connectionString": {
 			"value": ""
 		},
@@ -51,6 +54,12 @@
 			"value": ""
 		},
 		"STG_password": {
+			"value": ""
+		},
+		"alldb communications temp_connectionString": {
+			"value": ""
+		},
+		"alldb communications temp_password": {
 			"value": ""
 		},
 		"alldbdwh_connectionString": {
@@ -84,9 +93,6 @@
 			"value": ""
 		},
 		"pufiles_password": {
-			"value": ""
-		},
-		"Databricks Job Cluster_accessToken": {
 			"value": ""
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
@@ -263,11 +269,17 @@
 		"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
 		},
+		"Key Vault Databrickskeys_properties_typeProperties_baseUrl": {
+			"value": "https://databrickskeys.vault.azure.net/"
+		},
 		"STG_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"
 		},
 		"TableServiceStoree_properties_typeProperties_url": {
 			"value": "https://dataloadestore.table.core.windows.net/"
+		},
+		"alldb communications temp_properties_typeProperties_userName": {
+			"value": "efix\\barak"
 		},
 		"alldbdwh_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"
@@ -289,9 +301,6 @@
 		},
 		"pufiles_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
-		},
-		"Key Vault Databrickskeys_properties_typeProperties_baseUrl": {
-			"value": "https://databrickskeys.vault.azure.net/"
 		},
 		"containerUri": {
 			"value": ""

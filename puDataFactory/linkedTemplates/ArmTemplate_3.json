@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
 		},
 		"DWH_connectionString": {
 			"type": "secureString",
@@ -34,6 +34,14 @@
 		"STG_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'STG'"
+		},
+		"alldb communications temp_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'alldb communications temp'"
+		},
+		"alldb communications temp_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'alldb communications temp'"
 		},
 		"alldbdwh_connectionString": {
 			"type": "secureString",
@@ -71,6 +79,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
 		},
+		"unzip_platfrom_file_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"unzip_platfrom_file_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "platformusage/rawdata/201810"
+		},
 		"DWH_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -90,6 +106,10 @@
 		"STG_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
+		},
+		"alldb communications temp_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\barak"
 		},
 		"alldbdwh_properties_typeProperties_userName": {
 			"type": "string",
@@ -124,6 +144,36 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/unzip_platfrom_file')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"nullValue": "\\N",
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"compression": {
+						"type": "ZipDeflate"
+					},
+					"fileName": "[parameters('unzip_platfrom_file_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('unzip_platfrom_file_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DWH')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -203,6 +253,28 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('STG_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/alldb communications temp')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('alldb communications temp_connectionString')]",
+					"userName": "[parameters('alldb communications temp_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('alldb communications temp_password')]"
 					}
 				},
 				"connectVia": {
@@ -337,89 +409,6 @@
 					"referenceName": "alldbgateway",
 					"type": "IntegrationRuntimeReference"
 				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DC')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Resume SQL",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL DW Resume",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "DC ETL",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "Resume SQL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Users/barak@skylabs.co.il/ETL DWH/DC ETL",
-							"libraries": [
-								{
-									"maven": {
-										"coordinates": "com.microsoft.azure:azure-sqldb-spark:1.0.2"
-									}
-								}
-							]
-						},
-						"linkedServiceName": {
-							"referenceName": "Databricks Job Cluster",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "Pause SQL",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "DC ETL",
-								"dependencyConditions": [
-									"Completed"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL DW Pause",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"folder": {
-					"name": "BI"
-				},
-				"annotations": []
 			},
 			"dependsOn": []
 		},
@@ -1069,42 +1058,6 @@
 				],
 				"typeProperties": {
 					"tableName": "[[dbo].[Azure_Customers_Models_Data]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/DWH')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DWH_Dim_Customers_src')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DWH",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "AccountNumber",
-						"type": "Int32"
-					},
-					{
-						"name": "datails",
-						"type": "String"
-					},
-					{
-						"name": "SsisUpdatedDate",
-						"type": "DateTime"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[[azure].[AZ_Customers]"
 				}
 			},
 			"dependsOn": [

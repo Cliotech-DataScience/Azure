@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -47,6 +47,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'DataLoadStorageAccount'"
 		},
+		"Databricks Job Cluster_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'Databricks Job Cluster'"
+		},
 		"DataloadStore_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'DataloadStore'"
@@ -70,6 +74,14 @@
 		"STG_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'STG'"
+		},
+		"alldb communications temp_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'alldb communications temp'"
+		},
+		"alldb communications temp_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'alldb communications temp'"
 		},
 		"alldbdwh_connectionString": {
 			"type": "secureString",
@@ -114,10 +126,6 @@
 		"pufiles_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
-		},
-		"Databricks Job Cluster_accessToken": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accessToken' of 'Databricks Job Cluster'"
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -351,6 +359,10 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"Key Vault Databrickskeys_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://databrickskeys.vault.azure.net/"
+		},
 		"STG_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -358,6 +370,10 @@
 		"TableServiceStoree_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://dataloadestore.table.core.windows.net/"
+		},
+		"alldb communications temp_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\barak"
 		},
 		"alldbdwh_properties_typeProperties_userName": {
 			"type": "string",
@@ -386,10 +402,6 @@
 		"pufiles_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
-		},
-		"Key Vault Databrickskeys_properties_typeProperties_baseUrl": {
-			"type": "string",
-			"defaultValue": "https://databrickskeys.vault.azure.net/"
 		},
 		"containerUri": {
 			"type": "string",
@@ -442,6 +454,9 @@
 					"DataLoadStorageAccount_connectionString": {
 						"value": "[parameters('DataLoadStorageAccount_connectionString')]"
 					},
+					"Databricks Job Cluster_accessToken": {
+						"value": "[parameters('Databricks Job Cluster_accessToken')]"
+					},
 					"DataloadStore_connectionString": {
 						"value": "[parameters('DataloadStore_connectionString')]"
 					},
@@ -451,14 +466,11 @@
 					"dwhdb_blob_connectionString": {
 						"value": "[parameters('dwhdb_blob_connectionString')]"
 					},
-					"Databricks Job Cluster_accessToken": {
-						"value": "[parameters('Databricks Job Cluster_accessToken')]"
+					"Key Vault Databrickskeys_properties_typeProperties_baseUrl": {
+						"value": "[parameters('Key Vault Databrickskeys_properties_typeProperties_baseUrl')]"
 					},
 					"TableServiceStoree_properties_typeProperties_url": {
 						"value": "[parameters('TableServiceStoree_properties_typeProperties_url')]"
-					},
-					"Key Vault Databrickskeys_properties_typeProperties_baseUrl": {
-						"value": "[parameters('Key Vault Databrickskeys_properties_typeProperties_baseUrl')]"
 					}
 				}
 			},
@@ -525,12 +537,6 @@
 					},
 					"blob_EMERP_Events_properties_typeProperties_folderPath": {
 						"value": "[parameters('blob_EMERP_Events_properties_typeProperties_folderPath')]"
-					},
-					"blob_Fact_Transactions_properties_typeProperties_fileName": {
-						"value": "[parameters('blob_Fact_Transactions_properties_typeProperties_fileName')]"
-					},
-					"blob_Fact_Transactions_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_Fact_Transactions_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -551,6 +557,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"blob_Fact_Transactions_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_Fact_Transactions_properties_typeProperties_fileName')]"
+					},
+					"blob_Fact_Transactions_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_Fact_Transactions_properties_typeProperties_folderPath')]"
 					},
 					"blob_customers_clustering_properties_typeProperties_fileName": {
 						"value": "[parameters('blob_customers_clustering_properties_typeProperties_fileName')]"
@@ -644,12 +656,6 @@
 					},
 					"scmm_activities_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('scmm_activities_blob_properties_typeProperties_folderPath')]"
-					},
-					"unzip_platfrom_file_properties_typeProperties_fileName": {
-						"value": "[parameters('unzip_platfrom_file_properties_typeProperties_fileName')]"
-					},
-					"unzip_platfrom_file_properties_typeProperties_folderPath": {
-						"value": "[parameters('unzip_platfrom_file_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -692,6 +698,12 @@
 					"STG_password": {
 						"value": "[parameters('STG_password')]"
 					},
+					"alldb communications temp_connectionString": {
+						"value": "[parameters('alldb communications temp_connectionString')]"
+					},
+					"alldb communications temp_password": {
+						"value": "[parameters('alldb communications temp_password')]"
+					},
 					"alldbdwh_connectionString": {
 						"value": "[parameters('alldbdwh_connectionString')]"
 					},
@@ -719,6 +731,12 @@
 					"pufiles_password": {
 						"value": "[parameters('pufiles_password')]"
 					},
+					"unzip_platfrom_file_properties_typeProperties_fileName": {
+						"value": "[parameters('unzip_platfrom_file_properties_typeProperties_fileName')]"
+					},
+					"unzip_platfrom_file_properties_typeProperties_folderPath": {
+						"value": "[parameters('unzip_platfrom_file_properties_typeProperties_folderPath')]"
+					},
 					"DWH_properties_typeProperties_userName": {
 						"value": "[parameters('DWH_properties_typeProperties_userName')]"
 					},
@@ -733,6 +751,9 @@
 					},
 					"STG_properties_typeProperties_userName": {
 						"value": "[parameters('STG_properties_typeProperties_userName')]"
+					},
+					"alldb communications temp_properties_typeProperties_userName": {
+						"value": "[parameters('alldb communications temp_properties_typeProperties_userName')]"
 					},
 					"alldbdwh_properties_typeProperties_userName": {
 						"value": "[parameters('alldbdwh_properties_typeProperties_userName')]"

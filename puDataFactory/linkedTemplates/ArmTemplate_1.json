@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -70,14 +70,6 @@
 		"blob_EMERP_Events_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "rawdata/EMERP_Events"
-		},
-		"blob_Fact_Transactions_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('test_pu-', pipeline().RunId, '.txt')"
-		},
-		"blob_Fact_Transactions_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "rawdata/Fact_Transactions"
 		}
 	},
 	"variables": {
@@ -516,6 +508,89 @@
 				],
 				"folder": {
 					"name": "Dm_Models"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DC')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Resume SQL",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SQL DW Resume",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "DC ETL",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Resume SQL",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Users/barak@skylabs.co.il/ETL DWH/DC ETL",
+							"libraries": [
+								{
+									"maven": {
+										"coordinates": "com.microsoft.azure:azure-sqldb-spark:1.0.2"
+									}
+								}
+							]
+						},
+						"linkedServiceName": {
+							"referenceName": "Databricks Job Cluster",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Pause SQL",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DC ETL",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SQL DW Pause",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"folder": {
+					"name": "BI"
 				},
 				"annotations": []
 			},
@@ -1104,42 +1179,6 @@
 						"type": "Expression"
 					},
 					"folderPath": "[parameters('blob_EMERP_Events_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/blob_Fact_Transactions')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"folder_name": {
-						"type": "String",
-						"defaultValue": "Fact_Transactions"
-					}
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"nullValue": "\\N",
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": true
-					},
-					"fileName": {
-						"value": "[parameters('blob_Fact_Transactions_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": "[parameters('blob_Fact_Transactions_properties_typeProperties_folderPath')]"
 				}
 			},
 			"dependsOn": []

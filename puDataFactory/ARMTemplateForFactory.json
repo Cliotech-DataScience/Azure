@@ -5,7 +5,7 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory name",
-			"defaultValue": "puDataFactory"
+			"defaultValue": "pudatafactory"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -47,6 +47,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'DataLoadStorageAccount'"
 		},
+		"Databricks Job Cluster_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'Databricks Job Cluster'"
+		},
 		"DataloadStore_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'DataloadStore'"
@@ -70,6 +74,14 @@
 		"STG_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'STG'"
+		},
+		"alldb communications temp_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'alldb communications temp'"
+		},
+		"alldb communications temp_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'alldb communications temp'"
 		},
 		"alldbdwh_connectionString": {
 			"type": "secureString",
@@ -114,10 +126,6 @@
 		"pufiles_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
-		},
-		"Databricks Job Cluster_accessToken": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accessToken' of 'Databricks Job Cluster'"
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -351,6 +359,10 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"Key Vault Databrickskeys_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://databrickskeys.vault.azure.net/"
+		},
 		"STG_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -358,6 +370,10 @@
 		"TableServiceStoree_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://dataloadestore.table.core.windows.net/"
+		},
+		"alldb communications temp_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\barak"
 		},
 		"alldbdwh_properties_typeProperties_userName": {
 			"type": "string",
@@ -386,10 +402,6 @@
 		"pufiles_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
-		},
-		"Key Vault Databrickskeys_properties_typeProperties_baseUrl": {
-			"type": "string",
-			"defaultValue": "https://databrickskeys.vault.azure.net/"
 		}
 	},
 	"variables": {
@@ -1558,7 +1570,7 @@
 								"type": "BlobSink"
 							},
 							"enableStaging": false,
-							"dataIntegrationUnits": 0
+							"parallelCopies": 6
 						},
 						"inputs": [
 							{
@@ -2098,6 +2110,93 @@
 				"[concat(variables('factoryId'), '/datasets/DWH_Dim_Customers_blob')]",
 				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]",
 				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DC')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Resume SQL",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SQL DW Resume",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "DC ETL",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Resume SQL",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Users/barak@skylabs.co.il/ETL DWH/DC ETL",
+							"libraries": [
+								{
+									"maven": {
+										"coordinates": "com.microsoft.azure:azure-sqldb-spark:1.0.2"
+									}
+								}
+							]
+						},
+						"linkedServiceName": {
+							"referenceName": "Databricks Job Cluster",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Pause SQL",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "DC ETL",
+								"dependencyConditions": [
+									"Completed"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "SQL DW Pause",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"folder": {
+					"name": "BI"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/SQL DW Resume')]",
+				"[concat(variables('factoryId'), '/linkedServices/Databricks Job Cluster')]",
+				"[concat(variables('factoryId'), '/pipelines/SQL DW Pause')]"
 			]
 		},
 		{
@@ -3329,9 +3428,7 @@
 							"body": {
 								"value": "@concat('{ \"PartitionKey\":\"',pipeline().parameters.PartitionKey,'\",   \"RowKey\":\"',pipeline().parameters.RowKey,'\"  , \"PropertyName\":\"',pipeline().parameters.PropertyName,'\", \"PropertyValue\":\"',pipeline().parameters.PropertyValue,'\" }')",
 								"type": "Expression"
-							},
-							"linkedServices": [],
-							"datasets": []
+							}
 						}
 					}
 				],
@@ -4221,9 +4318,7 @@
 											"type": "Expression"
 										},
 										"method": "GET",
-										"headers": {},
-										"linkedServices": [],
-										"datasets": []
+										"headers": {}
 									}
 								},
 								{
@@ -7931,6 +8026,29 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Databricks Job Cluster')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://westeurope.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('Databricks Job Cluster_accessToken')]"
+					},
+					"newClusterNodeType": "Standard_DS3_v2",
+					"newClusterNumOfWorker": "2:5",
+					"newClusterSparkEnvVars": {
+						"PYSPARK_PYTHON": "/databricks/python3/bin/python3"
+					},
+					"newClusterVersion": "6.5.x-scala2.11"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DataloadStore')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -7992,6 +8110,19 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Key Vault Databrickskeys')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('Key Vault Databrickskeys_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/STG')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -8029,6 +8160,30 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/alldb communications temp')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('alldb communications temp_connectionString')]",
+					"userName": "[parameters('alldb communications temp_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('alldb communications temp_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/alldbgateway')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/alldbdwh')]",
@@ -8525,129 +8680,6 @@
 							"timeToLive": 0
 						}
 					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DC')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Resume SQL",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL DW Resume",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "DC ETL",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "Resume SQL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Users/barak@skylabs.co.il/ETL DWH/DC ETL",
-							"libraries": [
-								{
-									"maven": {
-										"coordinates": "com.microsoft.azure:azure-sqldb-spark:1.0.2"
-									}
-								}
-							]
-						},
-						"linkedServiceName": {
-							"referenceName": "Databricks Job Cluster",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "Pause SQL",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "DC ETL",
-								"dependencyConditions": [
-									"Completed"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SQL DW Pause",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"folder": {
-					"name": "BI"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/SQL DW Resume')]",
-				"[concat(variables('factoryId'), '/linkedServices/Databricks Job Cluster')]",
-				"[concat(variables('factoryId'), '/pipelines/SQL DW Pause')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Databricks Job Cluster')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureDatabricks",
-				"typeProperties": {
-					"domain": "https://westeurope.azuredatabricks.net",
-					"accessToken": {
-						"type": "SecureString",
-						"value": "[parameters('Databricks Job Cluster_accessToken')]"
-					},
-					"newClusterNodeType": "Standard_DS3_v2",
-					"newClusterNumOfWorker": "2:5",
-					"newClusterSparkEnvVars": {
-						"PYSPARK_PYTHON": "/databricks/python3/bin/python3"
-					},
-					"newClusterVersion": "6.5.x-scala2.11"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Key Vault Databrickskeys')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureKeyVault",
-				"typeProperties": {
-					"baseUrl": "[parameters('Key Vault Databrickskeys_properties_typeProperties_baseUrl')]"
 				}
 			},
 			"dependsOn": []
