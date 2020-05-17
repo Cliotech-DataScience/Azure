@@ -2416,10 +2416,10 @@
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
-								0
+								45
 							],
 							"hours": [
-								6
+								5
 							]
 						}
 					}
@@ -2784,7 +2784,7 @@
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
-								20
+								7
 							],
 							"hours": [
 								5
@@ -2822,10 +2822,10 @@
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
-								5
+								50
 							],
 							"hours": [
-								5
+								4
 							]
 						}
 					}
@@ -2860,7 +2860,7 @@
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
-								20
+								5
 							],
 							"hours": [
 								5
