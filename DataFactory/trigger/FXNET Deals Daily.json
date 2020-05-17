@@ -20,10 +20,10 @@
 				"timeZone": "UTC",
 				"schedule": {
 					"minutes": [
-						10
+						55
 					],
 					"hours": [
-						5
+						4
 					]
 				}
 			}
