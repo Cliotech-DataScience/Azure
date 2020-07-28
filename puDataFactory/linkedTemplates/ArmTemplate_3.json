@@ -350,7 +350,7 @@
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "emerp-db-pr,2555",
+				"description": "dwh-pr\\emerp,1433",
 				"annotations": [],
 				"type": "SqlServer",
 				"typeProperties": {

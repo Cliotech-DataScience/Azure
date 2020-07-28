@@ -343,6 +343,10 @@
 			"type": "string",
 			"defaultValue": "platformusage/rawdata/201810"
 		},
+		"AzureFunction1_properties_typeProperties_functionAppUrl": {
+			"type": "string",
+			"defaultValue": "MERGE https://myaccount.table.core.windows.net/mytable(PartitionKey='myPartitionKey',RowKey='myRowKey')  "
+		},
 		"DWH_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -465,6 +469,9 @@
 					},
 					"dwhdb_blob_connectionString": {
 						"value": "[parameters('dwhdb_blob_connectionString')]"
+					},
+					"AzureFunction1_properties_typeProperties_functionAppUrl": {
+						"value": "[parameters('AzureFunction1_properties_typeProperties_functionAppUrl')]"
 					},
 					"Key Vault Databrickskeys_properties_typeProperties_baseUrl": {
 						"value": "[parameters('Key Vault Databrickskeys_properties_typeProperties_baseUrl')]"
