@@ -2,12 +2,13 @@
 	"name": "emerpdbpr",
 	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
-		"description": "emerp-db-pr,2555",
+		"description": "dwh-pr\\emerp,1433",
+		"annotations": [],
 		"type": "SqlServer",
 		"typeProperties": {
-			"connectionString": "integrated security=True;data source=emerp-db-pr,2555;initial catalog=EmErp_CM",
+			"connectionString": "integrated security=True;data source=dwh-pr\\emerp,1433;initial catalog=EmErp_CM",
 			"userName": "efix\\az_etl",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI2NTk0YmUxZS05ZTI4LTRjYTktOTk2NS1jYWFjNzVkZGY1OWEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJhMWRlNjBjYy1hMjQ3LTQ5NTUtOTY2Ni0wYzdmY2MxMDU2MDUiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "alldbgateway",
