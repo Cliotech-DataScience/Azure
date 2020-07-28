@@ -5,6 +5,7 @@
 			"referenceName": "emerpdbpr",
 			"type": "LinkedServiceReference"
 		},
+		"annotations": [],
 		"type": "SqlServerTable",
 		"structure": [
 			{
