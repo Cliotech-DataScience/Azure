@@ -14,6 +14,46 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "run pu 02",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "run pu 01",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "RUN ONLY PU",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "run pu 03",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "run pu 02",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "RUN ONLY PU",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"annotations": []
