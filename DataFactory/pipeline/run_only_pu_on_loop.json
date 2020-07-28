@@ -1,0 +1,21 @@
+{
+	"name": "run_only_pu_on_loop",
+	"properties": {
+		"activities": [
+			{
+				"name": "run pu 01",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "RUN ONLY PU",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"annotations": []
+	}
+}
