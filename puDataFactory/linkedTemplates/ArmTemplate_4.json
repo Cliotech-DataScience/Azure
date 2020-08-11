@@ -1028,7 +1028,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "\t  SELECT file_name,\n        folder\n\tFROM azure.platfrom_usage_log_file\n WHERE ISNULL(move_to_blob,0) <>1 \n  \n  IF @@ROWCOUNT=0 THROW 50000 ,'No file to move',1"
+								"sqlReaderQuery": "\t  SELECT file_name,\n        folder\n\tFROM azure.platfrom_usage_log_file\n WHERE ISNULL(move_to_blob,0) <>1 \n  \n  IF @@ROWCOUNT=0 THROW 50000 ,'No file to move',1",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "DWH_pu_list_files",
@@ -1188,7 +1189,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "      SELECT file_name,\n        folder,unzip_file\n\tFROM azure.platfrom_usage_log_file\n WHERE ISNULL(unzip_file,0) <>1 AND move_to_blob=1\n  \n  IF @@ROWCOUNT=0 THROW 50000 ,'No file to move',1"
+								"sqlReaderQuery": "      SELECT file_name,\n        folder,unzip_file\n\tFROM azure.platfrom_usage_log_file\n WHERE ISNULL(unzip_file,0) <>1 AND move_to_blob=1\n  \n  IF @@ROWCOUNT=0 THROW 50000 ,'No file to move',1",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "DWH_pu_list_files",

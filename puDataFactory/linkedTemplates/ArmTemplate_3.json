@@ -350,7 +350,7 @@
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "dwh-pr\\emerp,1433",
+				"description": "dwh-pr\\emerp",
 				"annotations": [],
 				"type": "SqlServer",
 				"typeProperties": {
@@ -466,7 +466,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderStoredProcedureName": "[[Reports].[Get_LastDate]"
+								"sqlReaderStoredProcedureName": "[[Reports].[Get_LastDate]",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "AzureSQL_Logins_By_Country",

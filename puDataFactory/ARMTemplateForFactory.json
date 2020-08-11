@@ -476,7 +476,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "\t  SELECT file_name,\n        folder\n\tFROM azure.platfrom_usage_log_file\n WHERE ISNULL(move_to_blob,0) <>1 \n  \n  IF @@ROWCOUNT=0 THROW 50000 ,'No file to move',1"
+								"sqlReaderQuery": "\t  SELECT file_name,\n        folder\n\tFROM azure.platfrom_usage_log_file\n WHERE ISNULL(move_to_blob,0) <>1 \n  \n  IF @@ROWCOUNT=0 THROW 50000 ,'No file to move',1",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "DWH_pu_list_files",
@@ -728,7 +729,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "      SELECT file_name,\n        folder,unzip_file\n\tFROM azure.platfrom_usage_log_file\n WHERE ISNULL(unzip_file,0) <>1 AND move_to_blob=1\n  \n  IF @@ROWCOUNT=0 THROW 50000 ,'No file to move',1"
+								"sqlReaderQuery": "      SELECT file_name,\n        folder,unzip_file\n\tFROM azure.platfrom_usage_log_file\n WHERE ISNULL(unzip_file,0) <>1 AND move_to_blob=1\n  \n  IF @@ROWCOUNT=0 THROW 50000 ,'No file to move',1",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "DWH_pu_list_files",
@@ -990,7 +992,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "   SELECT file_name,\n        folder,daily_file\nFROM azure.platfrom_usage_log_file\nWHERE 1=1\nAND move_to_blob =1 \nAND unzip_file=1\nAND  ISNULL(daily_file,0)<>1\n"
+								"sqlReaderQuery": "   SELECT file_name,\n        folder,daily_file\nFROM azure.platfrom_usage_log_file\nWHERE 1=1\nAND move_to_blob =1 \nAND unzip_file=1\nAND  ISNULL(daily_file,0)<>1\n",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "DWH_pu_list_files",
@@ -1367,7 +1370,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": " SELECT Last_Event_Date = MAX(Event_Date)\nFROM EMERP_LM.azure.AZ_Communication\nWHERE Event_Date < CAST(GETDATE() AS DATE)"
+								"sqlReaderQuery": " SELECT Last_Event_Date = MAX(Event_Date)\nFROM EMERP_LM.azure.AZ_Communication\nWHERE Event_Date < CAST(GETDATE() AS DATE)",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "Communication_src",
@@ -1407,7 +1411,8 @@
 								"sqlReaderQuery": {
 									"value": "select * \nFROM EMERP_LM.azure.AZ_Communication\nwhere Event_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Event_Date <= '@{activity('LK_new_max_date').output.firstRow.Last_Event_Date}'",
 									"type": "Expression"
-								}
+								},
+								"partitionOption": "None"
 							},
 							"sink": {
 								"type": "BlobSink"
@@ -1528,7 +1533,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT  LastIncrementalDate=LastId \n  ---- remove to use incremental\n FROM  [localdb].[azure].[Mng_azure_ETL]\n  WHERE TableName='Contacts'"
+								"sqlReaderQuery": "SELECT  LastIncrementalDate=LastId \n  ---- remove to use incremental\n FROM  [localdb].[azure].[Mng_azure_ETL]\n  WHERE TableName='Contacts'",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "Mng_azure_ETL",
@@ -1568,7 +1574,8 @@
 								"sqlReaderQuery": {
 									"value": "SELECT * from   EmErp_LM.azure.scmm_contacts\n where update_date > CAST(CAST('@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' AS bigint) AS VARBINARY(8))\n",
 									"type": "Expression"
-								}
+								},
+								"partitionOption": "None"
 							},
 							"sink": {
 								"type": "BlobSink"
@@ -1652,7 +1659,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT last_id= MAX(timeStampINT)\nFROM EmErp_LM.azure.scmm_contacts\n"
+								"sqlReaderQuery": "SELECT last_id= MAX(timeStampINT)\nFROM EmErp_LM.azure.scmm_contacts\n",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "Contacts",
@@ -1752,7 +1760,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": " SELECT Last_Update= MAX(Last_Update)\nFROM azure.AZ_Customer_Questionnaires"
+								"sqlReaderQuery": " SELECT Last_Update= MAX(Last_Update)\nFROM azure.AZ_Customer_Questionnaires",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "dwh_Customer_Questionnaires_src",
@@ -1792,7 +1801,8 @@
 								"sqlReaderQuery": {
 									"value": "select * \nFROM azure.AZ_Customer_Questionnaires\nwhere Last_Update > '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Incremental_Date}' \n  and Last_Update <= '@{activity('LK_new_max_date').output.firstRow.Last_Update}'\n",
 									"type": "Expression"
-								}
+								},
+								"partitionOption": "None"
 							},
 							"sink": {
 								"type": "BlobSink"
@@ -1942,7 +1952,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(DAY,-1,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  [localdb].[azure].[Mng_azure_ETL]\n  WHERE TableName='Customers'"
+								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(DAY,-1,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  [localdb].[azure].[Mng_azure_ETL]\n  WHERE TableName='Customers'",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "Mng_azure_ETL",
@@ -1966,7 +1977,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT ExecutionDate=MAX(SsisUpdatedDate)\n FROM dwh.azure.AZ_Customers\n"
+								"sqlReaderQuery": "SELECT ExecutionDate=MAX(SsisUpdatedDate)\n FROM dwh.azure.AZ_Customers\n",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "Mng_azure_ETL",
@@ -2006,7 +2018,8 @@
 								"sqlReaderQuery": {
 									"value": "select * from  dwh.azure.AZ_Customers\n where SsisUpdatedDate > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' ",
 									"type": "Expression"
-								}
+								},
+								"partitionOption": "None"
 							},
 							"sink": {
 								"type": "BlobSink"
@@ -2224,7 +2237,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT Next_Call_Day=DATEADD(DAY,-1,MAX(callday))\nFROM dwh.azure.AZ_Calls"
+								"sqlReaderQuery": "SELECT Next_Call_Day=DATEADD(DAY,-1,MAX(callday))\nFROM dwh.azure.AZ_Calls",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "dwh_calls_src",
@@ -2264,7 +2278,8 @@
 								"sqlReaderQuery": {
 									"value": "select * \nFROM dwh.azure.AZ_calls\nwhere callday> '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Incremental_Date}' and callday<= '@{activity('LK_new_max_Date').output.firstRow.Next_Call_Day}'",
 									"type": "Expression"
-								}
+								},
+								"partitionOption": "None"
 							},
 							"sink": {
 								"type": "BlobSink"
@@ -2409,7 +2424,8 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "SqlSource"
+								"type": "SqlSource",
+								"partitionOption": "None"
 							},
 							"sink": {
 								"type": "BlobSink"
@@ -2529,7 +2545,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT Last_Date=MAX(Assignment_Date)\nFROM azure.AZ_Lead_Assignments \nWHERE Assignment_Day BETWEEN\nCAST(GETDATE() - 100 AS DATE) AND CAST(GETDATE() - 1 AS DATE) \n"
+								"sqlReaderQuery": "SELECT Last_Date=MAX(Assignment_Date)\nFROM azure.AZ_Lead_Assignments \nWHERE Assignment_Day BETWEEN\nCAST(GETDATE() - 100 AS DATE) AND CAST(GETDATE() - 1 AS DATE) \n",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "dwh_lead_assignments_src",
@@ -2569,7 +2586,8 @@
 								"sqlReaderQuery": {
 									"value": "SELECT * \nFROM azure.AZ_Lead_Assignments\nwhere Assignment_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' \n  and Assignment_Date <= '@{activity('LK_new_max_date').output.firstRow.Last_Date}'\n  and Assignment_Day > dateadd(day,-1,cast('@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' as date))\n  and Assignment_Day < dateadd(day,1,cast('@{activity('LK_new_max_date').output.firstRow.Last_Date}' as date))\n",
 									"type": "Expression"
-								}
+								},
+								"partitionOption": "None"
 							},
 							"sink": {
 								"type": "BlobSink"
@@ -2700,7 +2718,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,65,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  localdb.azure.Mng_azure_ETL\n  WHERE TableName='EMERP_DB_Events'"
+								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,65,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  localdb.azure.Mng_azure_ETL\n  WHERE TableName='EMERP_DB_Events'",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "Mng_azure_ETL",
@@ -2724,7 +2743,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": " SELECT ExecutionDate=MAX(Event_Date)\n FROM EmErp_DB.azure.AZ_EMERP_DB_Events"
+								"sqlReaderQuery": " SELECT ExecutionDate=MAX(Event_Date)\n FROM EmErp_DB.azure.AZ_EMERP_DB_Events",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "EMERP_DB_Events",
@@ -2764,7 +2784,8 @@
 								"sqlReaderQuery": {
 									"value": "select * from  EmErp_DB.azure.AZ_EMERP_DB_Events\n where Event_Date > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' \n AND Event_Date <= '@{activity('LK_new_max_id').output.firstRow.ExecutionDate}'",
 									"type": "Expression"
-								}
+								},
+								"partitionOption": "None"
 							},
 							"sink": {
 								"type": "BlobSink"
@@ -2924,7 +2945,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT Last_Activity_Date = MAX(ActionDate)\nFROM azure.AZ_Accounting\nWHERE ActionDay BETWEEN CAST(GETDATE() - 100 AS DATE) AND CAST(GETDATE() - 1 AS DATE) "
+								"sqlReaderQuery": "SELECT Last_Activity_Date = MAX(ActionDate)\nFROM azure.AZ_Accounting\nWHERE ActionDay BETWEEN CAST(GETDATE() - 100 AS DATE) AND CAST(GETDATE() - 1 AS DATE) ",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "fxnet_accounting_src",
@@ -2964,7 +2986,8 @@
 								"sqlReaderQuery": {
 									"value": "select * \nFROM azure.AZ_Accounting\nwhere ActionDate > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' \n  and ActionDate <= '@{activity('LK_new_max_date').output.firstRow.Last_Activity_Date}'\n  and ActionDay > dateadd(day,-1,cast('@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' as date))\n  and ActionDay < dateadd(day,1,cast('@{activity('LK_new_max_date').output.firstRow.Last_Activity_Date}' as date))",
 									"type": "Expression"
-								}
+								},
+								"partitionOption": "None"
 							},
 							"sink": {
 								"type": "BlobSink"
@@ -3123,7 +3146,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT Last_Date=MAX(ExecutionDate)\nFROM azure.AZ_Deals\nWHERE executionDay BETWEEN\nCAST(GETDATE() - 100 AS DATE) AND CAST(GETDATE() - 1 AS DATE) "
+								"sqlReaderQuery": "SELECT Last_Date=MAX(ExecutionDate)\nFROM azure.AZ_Deals\nWHERE executionDay BETWEEN\nCAST(GETDATE() - 100 AS DATE) AND CAST(GETDATE() - 1 AS DATE) ",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "fxnet_deals_src",
@@ -3163,7 +3187,8 @@
 								"sqlReaderQuery": {
 									"value": "select * \nFROM azure.AZ_Deals\nwhere executionDate > '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Incremental_Date}' \nand executionDate <= '@{activity('LK_new_max_Date').output.firstRow.Last_Date}'\nand executionDay > dateadd(day,-1,cast('@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Incremental_Date}' as date))\nand executionDay < dateadd(day,1,cast('@{activity('LK_new_max_Date').output.firstRow.Last_Date}' as date))",
 									"type": "Expression"
-								}
+								},
+								"partitionOption": "None"
 							},
 							"sink": {
 								"type": "BlobSink"
@@ -3327,7 +3352,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderStoredProcedureName": "[[Reports].[Get_LastDate]"
+								"sqlReaderStoredProcedureName": "[[Reports].[Get_LastDate]",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "AzureSQL_Logins_By_Country",
@@ -4013,7 +4039,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT Last_Activity_Date = MAX(Activity_Date)\nFROM azure.AZ_SCMM_Activities\n"
+								"sqlReaderQuery": "SELECT Last_Activity_Date = MAX(Activity_Date)\nFROM azure.AZ_SCMM_Activities\n",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "scmm_activities_src",
@@ -4053,7 +4080,8 @@
 								"sqlReaderQuery": {
 									"value": "select * \nFROM EMERP_LM.azure.AZ_SCMM_Activities\nwhere Activity_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Activity_Date <= '@{activity('LK_new_max_date').output.firstRow.Last_Activity_Date}'",
 									"type": "Expression"
-								}
+								},
+								"partitionOption": "None"
 							},
 							"sink": {
 								"type": "BlobSink"
@@ -4473,7 +4501,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,65,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  [localdb].[azure].[Mng_azure_ETL]\n  WHERE TableName='Serials'"
+								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,65,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  [localdb].[azure].[Mng_azure_ETL]\n  WHERE TableName='Serials'",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "Mng_azure_ETL",
@@ -4509,7 +4538,8 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "SqlSource"
+								"type": "SqlSource",
+								"partitionOption": "None"
 							},
 							"sink": {
 								"type": "BlobSink"
@@ -4593,7 +4623,8 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": " SELECT ExecutionDate=MAX(update_date)\n FROM azure.az_serials"
+								"sqlReaderQuery": " SELECT ExecutionDate=MAX(update_date)\n FROM azure.az_serials",
+								"partitionOption": "None"
 							},
 							"dataset": {
 								"referenceName": "serials",
@@ -4898,13 +4929,13 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/run loop only pu')]",
+			"name": "[concat(parameters('factoryName'), '/run_only_pu_on_loop')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "loop 1 pu",
+						"name": "run pu 01",
 						"type": "ExecutePipeline",
 						"dependsOn": [],
 						"userProperties": [],
@@ -4918,11 +4949,11 @@
 						}
 					},
 					{
-						"name": "loop 2  pu",
+						"name": "run pu 02",
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "loop 1 pu",
+								"activity": "run pu 01",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -4939,11 +4970,11 @@
 						}
 					},
 					{
-						"name": "loop 3  pu",
+						"name": "run pu 03",
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "loop 2  pu",
+								"activity": "run pu 02",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -4958,24 +4989,18 @@
 							"waitOnCompletion": true,
 							"parameters": {}
 						}
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/RUN ONLY PU')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/run pu loop')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
+					},
 					{
-						"name": "loop 1 pu",
+						"name": "run pu 04",
 						"type": "ExecutePipeline",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "run pu 03",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -4987,11 +5012,11 @@
 						}
 					},
 					{
-						"name": "loop 2  pu",
+						"name": "run pu 05",
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "loop 1 pu",
+								"activity": "run pu 04",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -8287,7 +8312,7 @@
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "dwh-pr\\emerp,1433",
+				"description": "dwh-pr\\emerp",
 				"annotations": [],
 				"type": "SqlServer",
 				"typeProperties": {
@@ -8687,117 +8712,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/run_only_pu_on_loop')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "run pu 01",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "RUN ONLY PU",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "run pu 02",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "run pu 01",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "RUN ONLY PU",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "run pu 03",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "run pu 02",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "RUN ONLY PU",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "run pu 04",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "run pu 03",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "RUN ONLY PU",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "run pu 05",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "run pu 04",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "RUN ONLY PU",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/RUN ONLY PU')]"
-			]
 		}
 	]
 }
