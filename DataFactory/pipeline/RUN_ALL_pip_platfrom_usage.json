@@ -56,26 +56,6 @@
 				}
 			},
 			{
-				"name": "RUN - 04_PU_ods_to_events",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "RUN - 03_PU_Load_ods_data",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "04_PU_ods_to_events",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
 				"name": "RUN - 01_platfromusage_files_copy_to_blob",
 				"type": "ExecutePipeline",
 				"dependsOn": [
@@ -120,7 +100,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "RUN - 04_PU_ods_to_events",
+						"activity": "RUN - 03_PU_Load_ods_data",
 						"dependencyConditions": [
 							"Succeeded"
 						]
