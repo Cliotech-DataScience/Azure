@@ -2404,7 +2404,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2019-04-10T11:07:00.000Z",
+						"startTime": "2019-04-10T11:07:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -2440,7 +2440,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2019-05-14T08:57:00.000Z",
+						"startTime": "2019-05-14T08:57:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -2608,27 +2608,6 @@
 						}
 					},
 					{
-						"name": "RUN - 04_PU_ods_to_events",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - 03_PU_Load_ods_data",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "04_PU_ods_to_events",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "RUN - 01_platfromusage_files_copy_to_blob",
 						"type": "ExecutePipeline",
 						"dependsOn": [
@@ -2675,7 +2654,7 @@
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "RUN - 04_PU_ods_to_events",
+								"activity": "RUN - 03_PU_Load_ods_data",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -2808,7 +2787,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2019-03-07T17:45:00.000Z",
+						"startTime": "2019-03-07T17:45:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -2846,7 +2825,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2019-03-14T18:56:00.000Z",
+						"startTime": "2019-03-14T18:56:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -2884,7 +2863,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2019-03-16T22:04:00.000Z",
+						"startTime": "2019-03-16T22:04:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [

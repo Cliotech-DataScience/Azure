@@ -33,7 +33,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2019-03-12T17:34:00.000Z",
+						"startTime": "2019-03-12T17:34:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -69,7 +69,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2019-03-13T14:40:00.000Z",
+						"startTime": "2019-03-13T14:40:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
@@ -214,7 +214,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2019-01-20T15:52:00.000Z",
+						"startTime": "2019-01-20T15:52:00Z",
 						"timeZone": "UTC",
 						"schedule": {
 							"minutes": [
