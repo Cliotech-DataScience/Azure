@@ -1,5 +1,5 @@
 {
-	"name": "Communication_Channels",
+	"name": "Communication_Channels_Scmm",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "emerp_lm",
