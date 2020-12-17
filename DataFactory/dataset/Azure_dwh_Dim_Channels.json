@@ -1,5 +1,5 @@
 {
-	"name": "AzureSqlDb_dwh_Dim_Channels",
+	"name": "Azure_dwh_Dim_Channels",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabase_dwh",
