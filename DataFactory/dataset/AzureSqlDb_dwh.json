@@ -1,0 +1,16 @@
+{
+	"name": "AzureSqlDb_dwh",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase_dwh",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Dim_Channels"
+		}
+	}
+}
