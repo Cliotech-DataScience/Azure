@@ -1,0 +1,123 @@
+{
+	"name": "Communication_Channels",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "emerp_lm",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DC"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "ChannelID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ChannelTypeID",
+				"type": "tinyint",
+				"precision": 3
+			},
+			{
+				"name": "ChannelType",
+				"type": "varchar"
+			},
+			{
+				"name": "ChannelName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ChannelStatus",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SendingMethodID",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "SendingMethodName",
+				"type": "varchar"
+			},
+			{
+				"name": "ChannelPopulationFilterId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ChannelPopulationFilter",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Channel_Event",
+				"type": "varchar"
+			},
+			{
+				"name": "ChannelDeliveryScheduleType",
+				"type": "varchar"
+			},
+			{
+				"name": "CampaignID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CampaignName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CampaignCategory",
+				"type": "varchar"
+			},
+			{
+				"name": "Campaign_System",
+				"type": "varchar"
+			},
+			{
+				"name": "Campaign_Schedule_Type",
+				"type": "varchar"
+			},
+			{
+				"name": "EmailSubject",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CampaignStatus",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CampaignPopulationFilterId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CampaignPopulationFilter",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ExpectedCustomerResponse",
+				"type": "varchar"
+			},
+			{
+				"name": "RewardID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "RewardName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Channel_Group",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "azure",
+			"table": "Communication_Channels_Stream"
+		}
+	}
+}
