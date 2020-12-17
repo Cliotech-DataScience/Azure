@@ -1,9 +1,12 @@
 {
-	"name": "AzureSqlDb_dwh",
+	"name": "AzureSqlDb_dwh_Dim_Channels",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabase_dwh",
 			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DC"
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",

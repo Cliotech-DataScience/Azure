@@ -24,8 +24,7 @@
 					},
 					"sink": {
 						"type": "SqlSink",
-						"writeBatchSize": 10000,
-						"tableOption": "autoCreate"
+						"writeBatchSize": 10000
 					},
 					"enableStaging": false,
 					"dataIntegrationUnits": 0,
@@ -277,13 +276,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Communication_Channels_Scmm",
+						"referenceName": "Scmm_Communication_Channels",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureSqlDb_dwh",
+						"referenceName": "AzureSqlDb_dwh_Dim_Channels",
 						"type": "DatasetReference"
 					}
 				]
