@@ -1,5 +1,5 @@
 {
-	"name": "Copy data from on premise SQL Server to SQL Azure",
+	"name": "Dim_Communication_Channels",
 	"properties": {
 		"description": "Copy data from on premise SQL Server to SQL Azure.\n\nYou can also go to \"Copy Data Tool\" to get the pipeline for more connectors and scenarios.",
 		"activities": [
@@ -282,12 +282,15 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "AzureSqlDb_dwh_Dim_Channels",
+						"referenceName": "Azure_dwh_Dim_Channels",
 						"type": "DatasetReference"
 					}
 				]
 			}
 		],
+		"folder": {
+			"name": "DC"
+		},
 		"annotations": []
 	}
 }
