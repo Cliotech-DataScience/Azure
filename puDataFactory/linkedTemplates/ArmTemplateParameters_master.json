@@ -56,6 +56,9 @@
 		"STG_password": {
 			"value": ""
 		},
+		"adls2 dwh_accountKey": {
+			"value": ""
+		},
 		"alldb communications temp_connectionString": {
 			"value": ""
 		},
@@ -93,6 +96,9 @@
 			"value": ""
 		},
 		"pufiles_password": {
+			"value": ""
+		},
+		"Analysis_spark_3_accessToken": {
 			"value": ""
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
@@ -280,6 +286,9 @@
 		},
 		"TableServiceStoree_properties_typeProperties_url": {
 			"value": "https://dataloadestore.table.core.windows.net/"
+		},
+		"adls2 dwh_properties_typeProperties_url": {
+			"value": "https://byldatalakeqa.dfs.core.windows.net"
 		},
 		"alldb communications temp_properties_typeProperties_userName": {
 			"value": "efix\\barak"

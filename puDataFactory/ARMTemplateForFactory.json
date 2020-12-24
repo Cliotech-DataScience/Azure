@@ -75,6 +75,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'STG'"
 		},
+		"adls2 dwh_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'adls2 dwh'"
+		},
 		"alldb communications temp_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'alldb communications temp'"
@@ -126,6 +130,10 @@
 		"pufiles_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
+		},
+		"Analysis_spark_3_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'Analysis_spark_3'"
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -374,6 +382,10 @@
 		"TableServiceStoree_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://dataloadestore.table.core.windows.net/"
+		},
+		"adls2 dwh_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://byldatalakeqa.dfs.core.windows.net"
 		},
 		"alldb communications temp_properties_typeProperties_userName": {
 			"type": "string",
@@ -1234,7 +1246,7 @@
 							"notebookPath": "/Analysis/Clustering V2/11. Get Data For Model 302 307 330"
 						},
 						"linkedServiceName": {
-							"referenceName": "Analysis",
+							"referenceName": "Analysis_spark_3",
 							"type": "LinkedServiceReference"
 						}
 					}
@@ -1245,7 +1257,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
+				"[concat(variables('factoryId'), '/linkedServices/Analysis_spark_3')]"
 			]
 		},
 		{
@@ -2698,6 +2710,310 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Dim_Communication_Channels')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Copy data from on premise SQL Server to SQL Azure.\n\nYou can also go to \"Copy Data Tool\" to get the pipeline for more connectors and scenarios.",
+				"activities": [
+					{
+						"name": "SQL_to_SQLAzure",
+						"description": "Copy data from SQL server to SQL Azure",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "ChannelID",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "ChannelID",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "ChannelTypeID",
+											"type": "Byte"
+										},
+										"sink": {
+											"name": "ChannelTypeID",
+											"type": "Byte"
+										}
+									},
+									{
+										"source": {
+											"name": "ChannelType",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ChannelType",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ChannelName",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ChannelName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ChannelStatus",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ChannelStatus",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "SendingMethodID",
+											"type": "Int16"
+										},
+										"sink": {
+											"name": "SendingMethodID",
+											"type": "Int16"
+										}
+									},
+									{
+										"source": {
+											"name": "SendingMethodName",
+											"type": "String"
+										},
+										"sink": {
+											"name": "SendingMethodName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ChannelPopulationFilterId",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "ChannelPopulationFilterId",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "ChannelPopulationFilter",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ChannelPopulationFilter",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Channel_Event",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Channel_Event",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ChannelDeliveryScheduleType",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ChannelDeliveryScheduleType",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CampaignID",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "CampaignID",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "CampaignName",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CampaignName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CampaignCategory",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CampaignCategory",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Campaign_System",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Campaign_System",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Campaign_Schedule_Type",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Campaign_Schedule_Type",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "EmailSubject",
+											"type": "String"
+										},
+										"sink": {
+											"name": "EmailSubject",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CampaignStatus",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CampaignStatus",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "CampaignPopulationFilterId",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "CampaignPopulationFilterId",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "CampaignPopulationFilter",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CampaignPopulationFilter",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "ExpectedCustomerResponse",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ExpectedCustomerResponse",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "RewardID",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "RewardID",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "RewardName",
+											"type": "String"
+										},
+										"sink": {
+											"name": "RewardName",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Channel_Group",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Channel_Group",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Scmm_Communication_Channels",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Azure_dwh_Dim_Channels",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"folder": {
+					"name": "DC"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Scmm_Communication_Channels')]",
+				"[concat(variables('factoryId'), '/datasets/Azure_dwh_Dim_Channels')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/EMERP_Events')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -3533,27 +3849,6 @@
 						}
 					},
 					{
-						"name": "RUN - 04_PU_ods_to_events",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - 03_PU_Load_ods_data",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "04_PU_ods_to_events",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "RUN - 01_platfromusage_files_copy_to_blob",
 						"type": "ExecutePipeline",
 						"dependsOn": [],
@@ -3573,7 +3868,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/02_platfromusage_unzip_zip_blob_files')]",
 				"[concat(variables('factoryId'), '/pipelines/03_PU_Load_ods_data')]",
-				"[concat(variables('factoryId'), '/pipelines/04_PU_ods_to_events')]",
 				"[concat(variables('factoryId'), '/pipelines/01_platfromusage_files_copy_to_blob')]"
 			]
 		},
@@ -5078,6 +5372,30 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Azure_dwh_Dim_Channels')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase_dwh",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DC"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Dim_Channels"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase_dwh')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/BI_Events_blob')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -5347,6 +5665,44 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/dwhdb_blob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BlobInputFolder')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"filename": {
+						"type": "string",
+						"defaultValue": "DimProducts.csv"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().filename",
+							"type": "Expression"
+						},
+						"folderPath": "SampleData/AW",
+						"container": "mycontainer"
+					},
+					"columnDelimiter": "|",
+					"encodingName": "UTF-8",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
 			]
 		},
 		{
@@ -5950,6 +6306,75 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DimEmp')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Azure BI db",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "EmpID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "surrogatekey",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Region",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Status",
+						"type": "nvarchar"
+					},
+					{
+						"name": "EmpFunction",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Level",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Role",
+						"type": "nvarchar"
+					},
+					{
+						"name": "StartDate",
+						"type": "date"
+					},
+					{
+						"name": "EndDate",
+						"type": "date"
+					},
+					{
+						"name": "iscurrent",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "processtime",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[DimEmp]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Azure BI db')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Dim_AccountContacts')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -6017,6 +6442,26 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/Dwhpr')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FactTable2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Azure BI db",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"tableName": "dbo.FactTable2"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Azure BI db')]"
 			]
 		},
 		{
@@ -6257,6 +6702,50 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Facts')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "mycontainer"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "employeeID",
+						"type": "String"
+					},
+					{
+						"name": "Hours",
+						"type": "String"
+					},
+					{
+						"name": "Amount",
+						"type": "String"
+					},
+					{
+						"name": "ProjDate",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Mng_azure_ETL')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -6273,6 +6762,36 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParameterTable')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Azure BI db",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tablename": {
+						"type": "string",
+						"defaultValue": "DimProducts"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": {
+						"value": "@dataset().tablename",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Azure BI db')]"
 			]
 		},
 		{
@@ -6303,6 +6822,134 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/STG')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Scmm_Communication_Channels')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "emerp_lm",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DC"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "ChannelID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ChannelTypeID",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "ChannelType",
+						"type": "varchar"
+					},
+					{
+						"name": "ChannelName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ChannelStatus",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SendingMethodID",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "SendingMethodName",
+						"type": "varchar"
+					},
+					{
+						"name": "ChannelPopulationFilterId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ChannelPopulationFilter",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Channel_Event",
+						"type": "varchar"
+					},
+					{
+						"name": "ChannelDeliveryScheduleType",
+						"type": "varchar"
+					},
+					{
+						"name": "CampaignID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CampaignName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CampaignCategory",
+						"type": "varchar"
+					},
+					{
+						"name": "Campaign_System",
+						"type": "varchar"
+					},
+					{
+						"name": "Campaign_Schedule_Type",
+						"type": "varchar"
+					},
+					{
+						"name": "EmailSubject",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CampaignStatus",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CampaignPopulationFilterId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CampaignPopulationFilter",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ExpectedCustomerResponse",
+						"type": "varchar"
+					},
+					{
+						"name": "RewardID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "RewardName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Channel_Group",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "azure",
+					"table": "Communication_Channels_Stream"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/emerp_lm')]"
 			]
 		},
 		{
@@ -8169,6 +8816,23 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/adls2 dwh')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('adls2 dwh_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('adls2 dwh_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/alldb communications temp')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -8687,6 +9351,25 @@
 							"timeToLive": 0
 						}
 					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Analysis_spark_3')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "rt 7.5",
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-194285697588541.1.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('Analysis_spark_3_accessToken')]"
+					},
+					"existingClusterId": "1224-085455-babel544"
 				}
 			},
 			"dependsOn": []
