@@ -18,7 +18,7 @@
 					"notebookPath": "/Analysis/Clustering V2/11. Get Data For Model 302 307 330"
 				},
 				"linkedServiceName": {
-					"referenceName": "Analysis",
+					"referenceName": "Analysis_spark_3",
 					"type": "LinkedServiceReference"
 				}
 			}
