@@ -8,6 +8,9 @@
 		"Analysis_accessToken": {
 			"value": ""
 		},
+		"Analysis_spark_3_accessToken": {
+			"value": ""
+		},
 		"Azure BI db_connectionString": {
 			"value": ""
 		},
@@ -24,6 +27,9 @@
 			"value": ""
 		},
 		"AzureSqlDatabase_events_connectionString": {
+			"value": ""
+		},
+		"CosmosDb1_connectionString": {
 			"value": ""
 		},
 		"DWH_connectionString": {
@@ -96,9 +102,6 @@
 			"value": ""
 		},
 		"pufiles_password": {
-			"value": ""
-		},
-		"Analysis_spark_3_accessToken": {
 			"value": ""
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {

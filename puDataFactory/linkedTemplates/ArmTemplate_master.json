@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'Analysis'"
 		},
+		"Analysis_spark_3_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'Analysis_spark_3'"
+		},
 		"Azure BI db_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'Azure BI db'"
@@ -34,6 +38,10 @@
 		"AzureSqlDatabase_events_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase_events'"
+		},
+		"CosmosDb1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'CosmosDb1'"
 		},
 		"DWH_connectionString": {
 			"type": "secureString",
@@ -130,10 +138,6 @@
 		"pufiles_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pufiles'"
-		},
-		"Analysis_spark_3_accessToken": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accessToken' of 'Analysis_spark_3'"
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -449,6 +453,9 @@
 					"Analysis_accessToken": {
 						"value": "[parameters('Analysis_accessToken')]"
 					},
+					"Analysis_spark_3_accessToken": {
+						"value": "[parameters('Analysis_spark_3_accessToken')]"
+					},
 					"Azure BI db_connectionString": {
 						"value": "[parameters('Azure BI db_connectionString')]"
 					},
@@ -466,6 +473,9 @@
 					},
 					"AzureSqlDatabase_events_connectionString": {
 						"value": "[parameters('AzureSqlDatabase_events_connectionString')]"
+					},
+					"CosmosDb1_connectionString": {
+						"value": "[parameters('CosmosDb1_connectionString')]"
 					},
 					"DataLoadStorageAccount_connectionString": {
 						"value": "[parameters('DataLoadStorageAccount_connectionString')]"
@@ -515,9 +525,6 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"Analysis_spark_3_accessToken": {
-						"value": "[parameters('Analysis_spark_3_accessToken')]"
-					},
 					"BI_Events_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('BI_Events_blob_properties_typeProperties_fileName')]"
 					},
@@ -541,12 +548,6 @@
 					},
 					"Blob_Contacts_properties_typeProperties_folderPath": {
 						"value": "[parameters('Blob_Contacts_properties_typeProperties_folderPath')]"
-					},
-					"Blob_Serials_properties_typeProperties_fileName": {
-						"value": "[parameters('Blob_Serials_properties_typeProperties_fileName')]"
-					},
-					"Blob_Serials_properties_typeProperties_folderPath": {
-						"value": "[parameters('Blob_Serials_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -567,6 +568,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Blob_Serials_properties_typeProperties_fileName": {
+						"value": "[parameters('Blob_Serials_properties_typeProperties_fileName')]"
+					},
+					"Blob_Serials_properties_typeProperties_folderPath": {
+						"value": "[parameters('Blob_Serials_properties_typeProperties_folderPath')]"
 					},
 					"Communication_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('Communication_blob_properties_typeProperties_fileName')]"
@@ -648,12 +655,6 @@
 					},
 					"dwh_Dim_Users_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_folderPath')]"
-					},
-					"dwh_calls_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('dwh_calls_blob_properties_typeProperties_fileName')]"
-					},
-					"dwh_calls_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('dwh_calls_blob_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -726,8 +727,11 @@
 					"fileserver1_password": {
 						"value": "[parameters('fileserver1_password')]"
 					},
-					"pufiles_password": {
-						"value": "[parameters('pufiles_password')]"
+					"dwh_calls_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('dwh_calls_blob_properties_typeProperties_fileName')]"
+					},
+					"dwh_calls_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('dwh_calls_blob_properties_typeProperties_folderPath')]"
 					},
 					"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_fileName')]"
@@ -797,12 +801,6 @@
 					},
 					"fileserver1_properties_typeProperties_userId": {
 						"value": "[parameters('fileserver1_properties_typeProperties_userId')]"
-					},
-					"pufiles_properties_typeProperties_host": {
-						"value": "[parameters('pufiles_properties_typeProperties_host')]"
-					},
-					"pufiles_properties_typeProperties_userId": {
-						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
 					}
 				}
 			},
@@ -823,6 +821,15 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"pufiles_password": {
+						"value": "[parameters('pufiles_password')]"
+					},
+					"pufiles_properties_typeProperties_host": {
+						"value": "[parameters('pufiles_properties_typeProperties_host')]"
+					},
+					"pufiles_properties_typeProperties_userId": {
+						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
 					},
 					"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 						"value": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"

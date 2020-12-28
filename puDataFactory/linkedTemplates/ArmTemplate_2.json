@@ -7,6 +7,14 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "pudatafactory"
 		},
+		"Blob_Serials_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@CONCAT('Serials', pipeline().RunId, '.csv')"
+		},
+		"Blob_Serials_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "rawdata/Serials"
+		},
 		"Communication_blob_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "@CONCAT('Communication_', pipeline().TriggerTime, '.csv.bz2')"
@@ -114,20 +122,48 @@
 		"dwh_Dim_Users_blob_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "rawdata/DWH_Users"
-		},
-		"dwh_calls_blob_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('Calls_', pipeline().TriggerTime, '.csv.bz2')"
-		},
-		"dwh_calls_blob_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@concat('rawdata/DWH_Calls/Received=',utcnow('s'))"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Blob_Serials')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"folder_name": {
+						"type": "String",
+						"defaultValue": "Dim_AccountContacts"
+					}
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": "\u0001",
+						"rowDelimiter": "\n",
+						"nullValue": "\\N",
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"fileName": {
+						"value": "[parameters('Blob_Serials_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": "[parameters('Blob_Serials_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Communication_blob')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -988,61 +1024,6 @@
 						"type": "Expression"
 					},
 					"folderPath": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dwh_calls_blob')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DataloadStore",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "Call_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "Call_Details",
-						"type": "String"
-					},
-					{
-						"name": "CallDay",
-						"type": "DateTime"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": "\t",
-						"rowDelimiter": "",
-						"quoteChar": "",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"compression": {
-						"type": "BZip2"
-					},
-					"fileName": {
-						"value": "[parameters('dwh_calls_blob_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": {
-						"value": "[parameters('dwh_calls_blob_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
 				}
 			},
 			"dependsOn": []
