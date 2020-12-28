@@ -548,6 +548,18 @@
 					},
 					"Blob_Contacts_properties_typeProperties_folderPath": {
 						"value": "[parameters('Blob_Contacts_properties_typeProperties_folderPath')]"
+					},
+					"Blob_Serials_properties_typeProperties_fileName": {
+						"value": "[parameters('Blob_Serials_properties_typeProperties_fileName')]"
+					},
+					"Blob_Serials_properties_typeProperties_folderPath": {
+						"value": "[parameters('Blob_Serials_properties_typeProperties_folderPath')]"
+					},
+					"Communication_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('Communication_blob_properties_typeProperties_fileName')]"
+					},
+					"Communication_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('Communication_blob_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -568,18 +580,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"Blob_Serials_properties_typeProperties_fileName": {
-						"value": "[parameters('Blob_Serials_properties_typeProperties_fileName')]"
-					},
-					"Blob_Serials_properties_typeProperties_folderPath": {
-						"value": "[parameters('Blob_Serials_properties_typeProperties_folderPath')]"
-					},
-					"Communication_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('Communication_blob_properties_typeProperties_fileName')]"
-					},
-					"Communication_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('Communication_blob_properties_typeProperties_folderPath')]"
 					},
 					"DWH_Dim_Customers_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_fileName')]"
@@ -655,6 +655,12 @@
 					},
 					"dwh_Dim_Users_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_folderPath')]"
+					},
+					"dwh_calls_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('dwh_calls_blob_properties_typeProperties_fileName')]"
+					},
+					"dwh_calls_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('dwh_calls_blob_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -727,11 +733,8 @@
 					"fileserver1_password": {
 						"value": "[parameters('fileserver1_password')]"
 					},
-					"dwh_calls_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('dwh_calls_blob_properties_typeProperties_fileName')]"
-					},
-					"dwh_calls_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('dwh_calls_blob_properties_typeProperties_folderPath')]"
+					"pufiles_password": {
+						"value": "[parameters('pufiles_password')]"
 					},
 					"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_fileName')]"
@@ -801,6 +804,12 @@
 					},
 					"fileserver1_properties_typeProperties_userId": {
 						"value": "[parameters('fileserver1_properties_typeProperties_userId')]"
+					},
+					"pufiles_properties_typeProperties_host": {
+						"value": "[parameters('pufiles_properties_typeProperties_host')]"
+					},
+					"pufiles_properties_typeProperties_userId": {
+						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
 					}
 				}
 			},
@@ -821,15 +830,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"pufiles_password": {
-						"value": "[parameters('pufiles_password')]"
-					},
-					"pufiles_properties_typeProperties_host": {
-						"value": "[parameters('pufiles_properties_typeProperties_host')]"
-					},
-					"pufiles_properties_typeProperties_userId": {
-						"value": "[parameters('pufiles_properties_typeProperties_userId')]"
 					},
 					"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 						"value": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"
