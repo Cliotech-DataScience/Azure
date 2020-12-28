@@ -147,7 +147,7 @@
 					}
 				},
 				"linkedServiceName": {
-					"referenceName": "alldbdwh",
+					"referenceName": "Azure BI db",
 					"type": "LinkedServiceReference"
 				}
 			},
