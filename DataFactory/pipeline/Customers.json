@@ -16,11 +16,13 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(DAY,-1,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  [localdb].[azure].[Mng_azure_ETL]\n  WHERE TableName='Customers'"
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(DAY,-1,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  Mng_data_factory_ETL\n  WHERE TableName='Customers'",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "Mng_azure_ETL",
+						"referenceName": "Mng_data_factory_etl",
 						"type": "DatasetReference"
 					}
 				}
@@ -40,7 +42,8 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT ExecutionDate=MAX(SsisUpdatedDate)\n FROM dwh.azure.AZ_Customers\n"
+						"sqlReaderQuery": "SELECT ExecutionDate=MAX(SsisUpdatedDate)\n FROM dwh.azure.AZ_Customers\n",
+						"partitionOption": "None"
 					},
 					"dataset": {
 						"referenceName": "Mng_azure_ETL",
@@ -79,7 +82,8 @@
 						"sqlReaderQuery": {
 							"value": "select * from  dwh.azure.AZ_Customers\n where SsisUpdatedDate > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' ",
 							"type": "Expression"
-						}
+						},
+						"partitionOption": "None"
 					},
 					"sink": {
 						"type": "BlobSink"
