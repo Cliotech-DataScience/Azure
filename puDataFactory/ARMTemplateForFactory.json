@@ -2081,7 +2081,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"storedProcedureName": "[[azure].[SP_Update_Mng_azure_ETL]",
+							"storedProcedureName": "SP_Update_Mng_data_factory_ETL",
 							"storedProcedureParameters": {
 								"LastId": {
 									"value": "-1",
@@ -2101,7 +2101,7 @@
 							}
 						},
 						"linkedServiceName": {
-							"referenceName": "alldbdwh",
+							"referenceName": "Azure BI db",
 							"type": "LinkedServiceReference"
 						}
 					},
@@ -2143,7 +2143,7 @@
 				"[concat(variables('factoryId'), '/datasets/Mng_azure_ETL')]",
 				"[concat(variables('factoryId'), '/datasets/DWH_Dim_Customers_src')]",
 				"[concat(variables('factoryId'), '/datasets/DWH_Dim_Customers_blob')]",
-				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]",
+				"[concat(variables('factoryId'), '/linkedServices/Azure BI db')]",
 				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
 			]
 		},
