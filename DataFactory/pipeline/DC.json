@@ -3,29 +3,9 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Resume SQL",
-				"type": "ExecutePipeline",
-				"dependsOn": [],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "SQL DW Resume",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
 				"name": "DC ETL",
 				"type": "DatabricksNotebook",
-				"dependsOn": [
-					{
-						"activity": "Resume SQL",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -47,26 +27,6 @@
 				"linkedServiceName": {
 					"referenceName": "Databricks Job Cluster",
 					"type": "LinkedServiceReference"
-				}
-			},
-			{
-				"name": "Pause SQL",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "DC ETL",
-						"dependencyConditions": [
-							"Completed"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "SQL DW Pause",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
 				}
 			}
 		],
