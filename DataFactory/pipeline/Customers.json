@@ -127,7 +127,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[azure].[SP_Update_Mng_azure_ETL]",
+					"storedProcedureName": "SP_Update_Mng_data_factory_ETL",
 					"storedProcedureParameters": {
 						"LastId": {
 							"value": "-1",
