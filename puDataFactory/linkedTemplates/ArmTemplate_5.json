@@ -2239,12 +2239,13 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,65,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  localdb.azure.Mng_azure_ETL\n  WHERE TableName='EMERP_DB_Events'",
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,65,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM dbo.Mng_data_factory_ETL\n  WHERE TableName='EMERP_DB_Events'",
+								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "Mng_azure_ETL",
+								"referenceName": "Mng_data_factory_etl",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -2352,7 +2353,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"storedProcedureName": "[[azure].[SP_Update_Mng_azure_ETL]",
+							"storedProcedureName": "SP_Update_Mng_data_factory_ETL",
 							"storedProcedureParameters": {
 								"LastId": {
 									"value": "-1",
@@ -2372,7 +2373,7 @@
 							}
 						},
 						"linkedServiceName": {
-							"referenceName": "alldbdwh",
+							"referenceName": "Azure BI db",
 							"type": "LinkedServiceReference"
 						}
 					},
