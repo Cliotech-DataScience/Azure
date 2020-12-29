@@ -16,11 +16,13 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT  LastIncrementalDate=LastId \n  ---- remove to use incremental\n FROM  [localdb].[azure].[Mng_azure_ETL]\n  WHERE TableName='Contacts'"
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "  SELECT  LastIncrementalDate=LastId \n  ---- remove to use incremental\n FROM  Mng_data_factory_ETL\n  WHERE TableName='Contacts'\n",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "Mng_azure_ETL",
+						"referenceName": "Mng_data_factory_etl",
 						"type": "DatasetReference"
 					}
 				}
@@ -56,7 +58,8 @@
 						"sqlReaderQuery": {
 							"value": "SELECT * from   EmErp_LM.azure.scmm_contacts\n where update_date > CAST(CAST('@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' AS bigint) AS VARBINARY(8))\n",
 							"type": "Expression"
-						}
+						},
+						"partitionOption": "None"
 					},
 					"sink": {
 						"type": "BlobSink"
@@ -139,7 +142,8 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT last_id= MAX(timeStampINT)\nFROM EmErp_LM.azure.scmm_contacts\n"
+						"sqlReaderQuery": "SELECT last_id= MAX(timeStampINT)\nFROM EmErp_LM.azure.scmm_contacts\n",
+						"partitionOption": "None"
 					},
 					"dataset": {
 						"referenceName": "Contacts",
