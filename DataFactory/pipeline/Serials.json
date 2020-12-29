@@ -5,6 +5,7 @@
 			{
 				"name": "LK_Last_Id_Mng_azure_ETL",
 				"type": "Lookup",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -12,13 +13,16 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "SqlSource",
-						"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,65,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  [localdb].[azure].[Mng_azure_ETL]\n  WHERE TableName='Serials'"
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,65,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  Mng_data_factory_ETL\n  WHERE TableName='Serials'",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "Mng_azure_ETL",
+						"referenceName": "Mng_data_factory_etl",
 						"type": "DatasetReference"
 					}
 				}
@@ -47,9 +51,11 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "SqlSource"
+						"type": "SqlSource",
+						"partitionOption": "None"
 					},
 					"sink": {
 						"type": "BlobSink"
@@ -91,6 +97,7 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"storedProcedureName": "[azure].[SP_Update_Mng_azure_ETL]",
 					"storedProcedureParameters": {
@@ -119,6 +126,7 @@
 			{
 				"name": "LK_new_max_id",
 				"type": "Lookup",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -126,10 +134,12 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderQuery": " SELECT ExecutionDate=MAX(update_date)\n FROM azure.az_serials"
+						"sqlReaderQuery": " SELECT ExecutionDate=MAX(update_date)\n FROM azure.az_serials",
+						"partitionOption": "None"
 					},
 					"dataset": {
 						"referenceName": "serials",
@@ -155,6 +165,7 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"notebookPath": "/Load Data/Dimensions/serials"
 				},
@@ -181,6 +192,7 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
 						"referenceName": "blob_serials_row_folder",
@@ -207,6 +219,7 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"notebookPath": "/Load Data/Dimensions/serials"
 				},
@@ -218,7 +231,8 @@
 		],
 		"folder": {
 			"name": "Data_from_SQL"
-		}
+		},
+		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
