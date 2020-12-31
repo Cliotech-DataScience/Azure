@@ -1,0 +1,17 @@
+{
+	"name": "all_db_dm",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=True;data source=all-db-pr,2555;initial catalog=dm",
+			"userName": "efix\\barak",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI3OGFjOTMyYi1iY2VlLTQwMTYtYjAwYy1iODdjMDcxOTk4ZGUiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "alldbgateway",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
