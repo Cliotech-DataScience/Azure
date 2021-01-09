@@ -1,5 +1,5 @@
 {
-	"name": "DestinationDataset_kit",
+	"name": "ADLS_Model_Data",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ADLS Byl",
@@ -13,7 +13,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "adata",
+				"fileName": "Model_Data",
+				"folderPath": "Assignment",
 				"fileSystem": "mirrordatafs"
 			},
 			"compressionCodec": "gzip"
