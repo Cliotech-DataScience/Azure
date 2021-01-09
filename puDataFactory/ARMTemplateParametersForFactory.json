@@ -3,7 +3,10 @@
 	"contentVersion": "1.0.0.0",
 	"parameters": {
 		"factoryName": {
-			"value": "pudatafactory"
+			"value": "puDataFactory"
+		},
+		"ADLS Byl_accountKey": {
+			"value": ""
 		},
 		"Analysis_accessToken": {
 			"value": ""
@@ -17,25 +20,22 @@
 		"AzureBlobStorage1_connectionString": {
 			"value": ""
 		},
-		"AzureBlobStorage2_connectionString": {
-			"value": ""
-		},
-		"AzureFunction1_functionKey": {
-			"value": ""
-		},
 		"AzureSqlDatabase_dwh_connectionString": {
 			"value": ""
 		},
 		"AzureSqlDatabase_events_connectionString": {
 			"value": ""
 		},
-		"CosmosDb1_connectionString": {
-			"value": ""
-		},
 		"DWH_connectionString": {
 			"value": ""
 		},
 		"DWH_password": {
+			"value": ""
+		},
+		"DWH12_connectionString": {
+			"value": ""
+		},
+		"DWH12_password": {
 			"value": ""
 		},
 		"DataLoadStorageAccount_connectionString": {
@@ -62,25 +62,10 @@
 		"STG_password": {
 			"value": ""
 		},
-		"adls2 dwh_accountKey": {
-			"value": ""
-		},
-		"alldb communications temp_connectionString": {
-			"value": ""
-		},
-		"alldb communications temp_password": {
-			"value": ""
-		},
 		"alldbdwh_connectionString": {
 			"value": ""
 		},
 		"alldbdwh_password": {
-			"value": ""
-		},
-		"cliotestingstore_connectionString": {
-			"value": ""
-		},
-		"destpufiles_connectionString": {
 			"value": ""
 		},
 		"dwhdb_blob_connectionString": {
@@ -99,9 +84,6 @@
 			"value": ""
 		},
 		"fileserver1_password": {
-			"value": ""
-		},
-		"pufiles_password": {
 			"value": ""
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
@@ -266,11 +248,14 @@
 		"unzip_platfrom_file_properties_typeProperties_folderPath": {
 			"value": "platformusage/rawdata/201810"
 		},
-		"AzureFunction1_properties_typeProperties_functionAppUrl": {
-			"value": "MERGE https://myaccount.table.core.windows.net/mytable(PartitionKey='myPartitionKey',RowKey='myRowKey')  "
+		"ADLS Byl_properties_typeProperties_url": {
+			"value": "https://byldatalakeqa.dfs.core.windows.net"
 		},
 		"DWH_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"
+		},
+		"DWH12_properties_typeProperties_userName": {
+			"value": "efix\\Barak"
 		},
 		"Dwhpr_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"
@@ -281,20 +266,8 @@
 		"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
 		},
-		"Key Vault Databrickskeys_properties_typeProperties_baseUrl": {
-			"value": "https://databrickskeys.vault.azure.net/"
-		},
 		"STG_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"
-		},
-		"TableServiceStoree_properties_typeProperties_url": {
-			"value": "https://dataloadestore.table.core.windows.net/"
-		},
-		"adls2 dwh_properties_typeProperties_url": {
-			"value": "https://byldatalakeqa.dfs.core.windows.net"
-		},
-		"alldb communications temp_properties_typeProperties_userName": {
-			"value": "efix\\barak"
 		},
 		"alldbdwh_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"
@@ -309,12 +282,6 @@
 			"value": "\\\\netapp-ams-cifs\\db\\Events_Collector\\Archived"
 		},
 		"fileserver1_properties_typeProperties_userId": {
-			"value": "efix\\az_etl"
-		},
-		"pufiles_properties_typeProperties_host": {
-			"value": "D:\\\\pufiles"
-		},
-		"pufiles_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
 		}
 	}

@@ -5,7 +5,11 @@
 		"factoryName": {
 			"type": "string",
 			"metadata": "Data Factory name",
-			"defaultValue": "pudatafactory"
+			"defaultValue": "puDataFactory"
+		},
+		"ADLS Byl_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ADLS Byl'"
 		},
 		"Analysis_accessToken": {
 			"type": "secureString",
@@ -23,14 +27,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
 		},
-		"AzureBlobStorage2_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage2'"
-		},
-		"AzureFunction1_functionKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'functionKey' of 'AzureFunction1'"
-		},
 		"AzureSqlDatabase_dwh_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase_dwh'"
@@ -39,10 +35,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase_events'"
 		},
-		"CosmosDb1_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'CosmosDb1'"
-		},
 		"DWH_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'DWH'"
@@ -50,6 +42,14 @@
 		"DWH_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'DWH'"
+		},
+		"DWH12_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'DWH12'"
+		},
+		"DWH12_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'DWH12'"
 		},
 		"DataLoadStorageAccount_connectionString": {
 			"type": "secureString",
@@ -83,18 +83,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'STG'"
 		},
-		"adls2 dwh_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'adls2 dwh'"
-		},
-		"alldb communications temp_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'alldb communications temp'"
-		},
-		"alldb communications temp_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'alldb communications temp'"
-		},
 		"alldbdwh_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'alldbdwh'"
@@ -102,14 +90,6 @@
 		"alldbdwh_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'alldbdwh'"
-		},
-		"cliotestingstore_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'cliotestingstore'"
-		},
-		"destpufiles_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'destpufiles'"
 		},
 		"dwhdb_blob_connectionString": {
 			"type": "secureString",
@@ -134,10 +114,6 @@
 		"fileserver1_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'fileserver1'"
-		},
-		"pufiles_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'pufiles'"
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -355,13 +331,17 @@
 			"type": "string",
 			"defaultValue": "platformusage/rawdata/201810"
 		},
-		"AzureFunction1_properties_typeProperties_functionAppUrl": {
+		"ADLS Byl_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "MERGE https://myaccount.table.core.windows.net/mytable(PartitionKey='myPartitionKey',RowKey='myRowKey')  "
+			"defaultValue": "https://byldatalakeqa.dfs.core.windows.net"
 		},
 		"DWH_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
+		},
+		"DWH12_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\Barak"
 		},
 		"Dwhpr_properties_typeProperties_userName": {
 			"type": "string",
@@ -375,25 +355,9 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
-		"Key Vault Databrickskeys_properties_typeProperties_baseUrl": {
-			"type": "string",
-			"defaultValue": "https://databrickskeys.vault.azure.net/"
-		},
 		"STG_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
-		},
-		"TableServiceStoree_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://dataloadestore.table.core.windows.net/"
-		},
-		"adls2 dwh_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://byldatalakeqa.dfs.core.windows.net"
-		},
-		"alldb communications temp_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "efix\\barak"
 		},
 		"alldbdwh_properties_typeProperties_userName": {
 			"type": "string",
@@ -412,14 +376,6 @@
 			"defaultValue": "\\\\netapp-ams-cifs\\db\\Events_Collector\\Archived"
 		},
 		"fileserver1_properties_typeProperties_userId": {
-			"type": "string",
-			"defaultValue": "efix\\az_etl"
-		},
-		"pufiles_properties_typeProperties_host": {
-			"type": "string",
-			"defaultValue": "D:\\\\pufiles"
-		},
-		"pufiles_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		}
@@ -1725,6 +1681,76 @@
 				"[concat(variables('factoryId'), '/datasets/Blob_Contacts')]",
 				"[concat(variables('factoryId'), '/linkedServices/Azure BI db')]",
 				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy Model Data')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy Model Data",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "Assignment.Model_Data"
+							},
+							{
+								"name": "Destination",
+								"value": "mirrordatafs//adata"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"validateDataConsistency": false
+						},
+						"inputs": [
+							{
+								"referenceName": "DM_Model_Data",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ADLS_Model_Data",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"folder": {
+					"name": "Assignment Score"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DM_Model_Data')]",
+				"[concat(variables('factoryId'), '/datasets/ADLS_Model_Data')]"
 			]
 		},
 		{
@@ -5067,6 +5093,35 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ADLS_Model_Data')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS Byl",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Assignment Score"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "Model_Data",
+						"folderPath": "Assignment",
+						"fileSystem": "mirrordatafs"
+					},
+					"compressionCodec": "gzip"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS Byl')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureSQL_Logins_By_Country')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -5663,32 +5718,377 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Customers_Models_Data_old')]",
+			"name": "[concat(parameters('factoryName'), '/DM_Model_Data')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase_events",
-					"type": "LinkedServiceReference"
+					"referenceName": "DWH12",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DB_Name": "DM"
+					}
+				},
+				"folder": {
+					"name": "Assignment Score"
 				},
 				"annotations": [],
-				"type": "AzureSqlTable",
-				"structure": [
+				"type": "SqlServerTable",
+				"schema": [
 					{
-						"name": "AccountNumber",
-						"type": "Int32"
+						"name": "AssignmentDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
 					},
 					{
-						"name": "Broker",
-						"type": "String"
+						"name": "Contact_Id",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "Accountnumber",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "BrokerId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "IsOnline",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "HasAccount",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "First_Lead_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "First_Lead_Local_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "Last_Lead_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "Last_Email_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "Last_Login_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "Last_Action_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "First_Lead_Last_Lead_Minutes",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "First_Lead_To_Assignment_Minutes",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Last_Action_To_Assignment_Minutes",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "First_Lead_Local_Weekday",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "First_Lead_Local_Day",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "First_Lead_Local_Hour",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Language",
+						"type": "varchar"
+					},
+					{
+						"name": "Country",
+						"type": "varchar"
+					},
+					{
+						"name": "SiteTrigger",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Serial",
+						"type": "varchar"
+					},
+					{
+						"name": "Is_Serial_0",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Target_Market",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CampaignName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ProductName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Supplier",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Site_Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Landing_Page",
+						"type": "varchar"
+					},
+					{
+						"name": "ProductType",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Placement_size",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SupplierChargingUnit",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Creative_format",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Creative",
+						"type": "nvarchar"
+					},
+					{
+						"name": "First_Lead_Os",
+						"type": "nvarchar"
+					},
+					{
+						"name": "First_Lead_Browser",
+						"type": "nvarchar"
+					},
+					{
+						"name": "First_Lead_Content",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Last_Failed_Deposit_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "Last_Failed_Amount_USD",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "Last_Wire_Amount_USD",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "Last_Failed_To_Assignment_Minutes",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Is_Failed_Dep_Last_7",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "number_of_serials",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "total_hphit",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "n_logins_last_30",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "n_emails_last_30",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "SupplierGroup",
+						"type": "varchar"
+					},
+					{
+						"name": "SupplierGroup_SEM",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "SupplierGroup_Others",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "SupplierGroup_Affiliates",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactAction",
+						"type": "varchar"
+					},
+					{
+						"name": "ContactAction_Lead",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactAction_Returning_Lead",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactAction_Returning_Email",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactAction_Returning_Login",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactActionAge",
+						"type": "varchar"
+					},
+					{
+						"name": "ContactActionAge_Till_2H",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactActionAge_2H_24H",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactActionAge_24H_3D",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactActionAge_3D_7D",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactActionAge_7D_14D",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactActionAge_14D_1M",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactActionAge_1M",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "First_Lead_Device",
+						"type": "nvarchar"
+					},
+					{
+						"name": "First_Lead_Device_Tablet",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "First_Lead_Device_Mobile",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "First_Lead_Device_Desktop",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Last_Failed_Method",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Last_Failed_CreditCards",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Last_Failed_eWallet",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Last_Failed_None",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Activation_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
 					}
 				],
 				"typeProperties": {
-					"tableName": "Customers_Models_Data"
+					"schema": "Assignment",
+					"table": "Model_Data"
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase_events')]"
+				"[concat(variables('factoryId'), '/linkedServices/DWH12')]"
 			]
 		},
 		{
@@ -6061,75 +6461,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DimEmp')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Azure BI db",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "EmpID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "surrogatekey",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Region",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Status",
-						"type": "nvarchar"
-					},
-					{
-						"name": "EmpFunction",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Level",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Role",
-						"type": "nvarchar"
-					},
-					{
-						"name": "StartDate",
-						"type": "date"
-					},
-					{
-						"name": "EndDate",
-						"type": "date"
-					},
-					{
-						"name": "iscurrent",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "processtime",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"tableName": "[[dbo].[DimEmp]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Azure BI db')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Dim_AccountContacts')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -6197,26 +6528,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/Dwhpr')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/FactTable2')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Azure BI db",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"tableName": "dbo.FactTable2"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Azure BI db')]"
 			]
 		},
 		{
@@ -6454,50 +6765,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Facts')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"container": "mycontainer"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "employeeID",
-						"type": "String"
-					},
-					{
-						"name": "Hours",
-						"type": "String"
-					},
-					{
-						"name": "Amount",
-						"type": "String"
-					},
-					{
-						"name": "ProjDate",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
 			]
 		},
 		{
@@ -6882,16 +7149,21 @@
 				},
 				"annotations": [],
 				"type": "SqlServerTable",
-				"structure": [
+				"schema": [
 					{
 						"name": "AccountNumber",
-						"type": "Int64",
-						"precision": 19,
-						"scale": 255
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "num_contacts",
+						"type": "int",
+						"precision": 10
 					}
 				],
 				"typeProperties": {
-					"tableName": "acc_tab"
+					"schema": "dbo",
+					"table": "acc_con"
 				}
 			},
 			"dependsOn": [
@@ -8402,6 +8674,23 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ADLS Byl')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ADLS Byl_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('ADLS Byl_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Analysis')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -8465,36 +8754,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage2')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('AzureBlobStorage2_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureFunction1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureFunction",
-				"typeProperties": {
-					"functionAppUrl": "[parameters('AzureFunction1_properties_typeProperties_functionAppUrl')]",
-					"functionKey": {
-						"type": "SecureString",
-						"value": "[parameters('AzureFunction1_functionKey')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase_dwh')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -8521,19 +8780,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/CosmosDb1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "CosmosDb",
-				"typeProperties": {
-					"connectionString": "[parameters('CosmosDb1_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/DWH')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -8546,6 +8792,36 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('DWH_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/alldbgateway')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWH12')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"DB_Name": {
+						"type": "string",
+						"defaultValue": "DWH"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('DWH12_connectionString')]",
+					"userName": "[parameters('DWH12_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('DWH12_password')]"
 					}
 				},
 				"connectVia": {
@@ -8655,19 +8931,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Key Vault Databrickskeys')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureKeyVault",
-				"typeProperties": {
-					"baseUrl": "[parameters('Key Vault Databrickskeys_properties_typeProperties_baseUrl')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/STG')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -8680,62 +8943,6 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('STG_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "alldbgateway",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/alldbgateway')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/TableServiceStoree')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "HttpServer",
-				"typeProperties": {
-					"url": "[parameters('TableServiceStoree_properties_typeProperties_url')]",
-					"enableServerCertificateValidation": true,
-					"authenticationType": "Anonymous"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/adls2 dwh')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobFS",
-				"typeProperties": {
-					"url": "[parameters('adls2 dwh_properties_typeProperties_url')]",
-					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('adls2 dwh_accountKey')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/alldb communications temp')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('alldb communications temp_connectionString')]",
-					"userName": "[parameters('alldb communications temp_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('alldb communications temp_password')]"
 					}
 				},
 				"connectVia": {
@@ -8769,38 +8976,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/alldbgateway')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/cliotestingstore')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('cliotestingstore_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/destpufiles')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('destpufiles_connectionString')]"
-				},
-				"connectVia": {
-					"referenceName": "puodsfiles",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/puodsfiles')]"
 			]
 		},
 		{
@@ -8878,30 +9053,6 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('fileserver1_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "alldbgateway",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/alldbgateway')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pufiles')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "FileServer",
-				"typeProperties": {
-					"host": "[parameters('pufiles_properties_typeProperties_host')]",
-					"userId": "[parameters('pufiles_properties_typeProperties_userId')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('pufiles_password')]"
 					}
 				},
 				"connectVia": {
