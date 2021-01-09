@@ -1,5 +1,5 @@
 {
-	"name": "SourceDataset_kit",
+	"name": "DM_Model_Data",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "DWH12",

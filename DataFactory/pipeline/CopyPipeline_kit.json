@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy_kit",
+				"name": "Copy Model Data",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -42,18 +42,21 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SourceDataset_kit",
+						"referenceName": "DM_Model_Data",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "DestinationDataset_kit",
+						"referenceName": "ADLS_Model_Data",
 						"type": "DatasetReference"
 					}
 				]
 			}
 		],
+		"folder": {
+			"name": "Assignment Score"
+		},
 		"annotations": []
 	}
 }
