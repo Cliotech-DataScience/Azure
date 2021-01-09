@@ -1,5 +1,5 @@
 {
-	"name": "CopyPipeline_kit",
+	"name": "Copy Model Data",
 	"properties": {
 		"activities": [
 			{
