@@ -1,0 +1,23 @@
+{
+	"name": "DWH12",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"parameters": {
+			"DB_Name": {
+				"type": "string",
+				"defaultValue": "DWH"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=True;data source=DWH12-PR,2555;initial catalog=@{linkedService().DB_Name}",
+			"userName": "efix\\Barak",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJiNGM0ZDM2NC1kNDU2LTQyMmMtYjQzZi00ZjYyNDY1ZDA5N2YiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "alldbgateway",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
