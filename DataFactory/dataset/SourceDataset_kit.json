@@ -2,8 +2,14 @@
 	"name": "SourceDataset_kit",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "all_db_dm",
-			"type": "LinkedServiceReference"
+			"referenceName": "DWH12",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"DB_Name": "DM"
+			}
+		},
+		"folder": {
+			"name": "Assignment Score"
 		},
 		"annotations": [],
 		"type": "SqlServerTable",
