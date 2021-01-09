@@ -1,0 +1,27 @@
+{
+	"name": "alldbsp",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "alldbdwh",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "AccountNumber",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "num_contacts",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "acc_con"
+		}
+	}
+}
