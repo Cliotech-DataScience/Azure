@@ -2,8 +2,11 @@
 	"name": "DestinationDataset_kit",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureDataLakeStorage1",
+			"referenceName": "ADLS Byl",
 			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Assignment Score"
 		},
 		"annotations": [],
 		"type": "Parquet",
