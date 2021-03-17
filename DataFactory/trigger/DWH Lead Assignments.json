@@ -16,14 +16,14 @@
 			"recurrence": {
 				"frequency": "Day",
 				"interval": 1,
-				"startTime": "2019-03-16T22:04:00.000Z",
+				"startTime": "2019-03-16T22:04:00Z",
 				"timeZone": "UTC",
 				"schedule": {
 					"minutes": [
 						5
 					],
 					"hours": [
-						5
+						4
 					]
 				}
 			}
