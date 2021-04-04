@@ -20,6 +20,7 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"notebookPath": "/BI/Reports/Sessions Reports",
 					"baseParameters": {
@@ -37,6 +38,7 @@
 			{
 				"name": "GetLast_Date",
 				"type": "Lookup",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -44,10 +46,12 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderStoredProcedureName": "[Reports].[Get_LastDate]"
+						"sqlReaderStoredProcedureName": "[Reports].[Get_LastDate]",
+						"partitionOption": "None"
 					},
 					"dataset": {
 						"referenceName": "AzureSQL_Logins_By_Country",
@@ -73,6 +77,7 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "BlobSource",
@@ -82,21 +87,7 @@
 						"type": "SqlSink",
 						"writeBatchSize": 10000
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"columnMappings": {
-							"Event_date_Day": "Event_date_Day",
-							"AccountNumber": "AccountNumber",
-							"Broker": "Broker",
-							"Folder": "Folder",
-							"FolderType": "FolderType",
-							"Login_From_Country": "Login_From_Country",
-							"CustomerCountry": "CustomerCountry",
-							"AMLComplianceStatus": "AMLComplianceStatus",
-							"Sessions": "Sessions"
-						}
-					}
+					"enableStaging": false
 				},
 				"inputs": [
 					{
@@ -114,6 +105,7 @@
 		],
 		"folder": {
 			"name": "BI"
-		}
+		},
+		"annotations": []
 	}
 }
