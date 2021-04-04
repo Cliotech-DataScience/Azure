@@ -417,21 +417,7 @@
 								"type": "SqlSink",
 								"writeBatchSize": 10000
 							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"Event_date_Day": "Event_date_Day",
-									"AccountNumber": "AccountNumber",
-									"Broker": "Broker",
-									"Folder": "Folder",
-									"FolderType": "FolderType",
-									"Login_From_Country": "Login_From_Country",
-									"CustomerCountry": "CustomerCountry",
-									"AMLComplianceStatus": "AMLComplianceStatus",
-									"Sessions": "Sessions"
-								}
-							}
+							"enableStaging": false
 						},
 						"inputs": [
 							{

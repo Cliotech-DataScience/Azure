@@ -433,7 +433,7 @@
 				"type": "AzureBlob",
 				"structure": [
 					{
-						"name": "Event_date_Day",
+						"name": "Event_Day",
 						"type": "DateTime"
 					},
 					{
