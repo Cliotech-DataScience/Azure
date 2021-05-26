@@ -507,12 +507,6 @@
 					},
 					"blob_EMERP_Events_properties_typeProperties_folderPath": {
 						"value": "[parameters('blob_EMERP_Events_properties_typeProperties_folderPath')]"
-					},
-					"blob_Fact_Transactions_properties_typeProperties_fileName": {
-						"value": "[parameters('blob_Fact_Transactions_properties_typeProperties_fileName')]"
-					},
-					"blob_Fact_Transactions_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_Fact_Transactions_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -533,6 +527,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"blob_Fact_Transactions_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_Fact_Transactions_properties_typeProperties_fileName')]"
+					},
+					"blob_Fact_Transactions_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_Fact_Transactions_properties_typeProperties_folderPath')]"
 					},
 					"blob_customers_clustering_properties_typeProperties_fileName": {
 						"value": "[parameters('blob_customers_clustering_properties_typeProperties_fileName')]"
@@ -626,12 +626,6 @@
 					},
 					"scmm_activities_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('scmm_activities_blob_properties_typeProperties_folderPath')]"
-					},
-					"unzip_platfrom_file_properties_typeProperties_fileName": {
-						"value": "[parameters('unzip_platfrom_file_properties_typeProperties_fileName')]"
-					},
-					"unzip_platfrom_file_properties_typeProperties_folderPath": {
-						"value": "[parameters('unzip_platfrom_file_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -700,6 +694,12 @@
 					},
 					"fileserver1_password": {
 						"value": "[parameters('fileserver1_password')]"
+					},
+					"unzip_platfrom_file_properties_typeProperties_fileName": {
+						"value": "[parameters('unzip_platfrom_file_properties_typeProperties_fileName')]"
+					},
+					"unzip_platfrom_file_properties_typeProperties_folderPath": {
+						"value": "[parameters('unzip_platfrom_file_properties_typeProperties_folderPath')]"
 					},
 					"DWH_properties_typeProperties_userName": {
 						"value": "[parameters('DWH_properties_typeProperties_userName')]"

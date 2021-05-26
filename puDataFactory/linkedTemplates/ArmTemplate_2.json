@@ -7,6 +7,14 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "puDataFactory"
 		},
+		"blob_Fact_Transactions_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@CONCAT('test_pu-', pipeline().RunId, '.txt')"
+		},
+		"blob_Fact_Transactions_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "rawdata/Fact_Transactions"
+		},
 		"blob_customers_clustering_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "*.csv"
@@ -130,20 +138,48 @@
 		"scmm_activities_blob_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "@concat('rawdata/SCMM_Activities/Received=',utcnow('s'))"
-		},
-		"unzip_platfrom_file_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": ""
-		},
-		"unzip_platfrom_file_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "platformusage/rawdata/201810"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/blob_Fact_Transactions')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"folder_name": {
+						"type": "String",
+						"defaultValue": "Fact_Transactions"
+					}
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"nullValue": "\\N",
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"fileName": {
+						"value": "[parameters('blob_Fact_Transactions_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": "[parameters('blob_Fact_Transactions_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/blob_customers_clustering')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -1204,36 +1240,6 @@
 				],
 				"typeProperties": {
 					"tableName": "[[dbo].[dim_serials]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/unzip_platfrom_file')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"nullValue": "\\N",
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"compression": {
-						"type": "ZipDeflate"
-					},
-					"fileName": "[parameters('unzip_platfrom_file_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('unzip_platfrom_file_properties_typeProperties_folderPath')]"
 				}
 			},
 			"dependsOn": []
