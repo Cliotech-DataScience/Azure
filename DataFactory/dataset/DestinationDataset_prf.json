@@ -1,0 +1,28 @@
+{
+	"name": "DestinationDataset_prf",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CosmosDb1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "CosmosDbSqlApiCollection",
+		"schema": {
+			"type": "object",
+			"properties": {
+				"Guid": {
+					"type": "string"
+				},
+				"Name": {
+					"type": "string"
+				},
+				"Age": {
+					"type": "integer"
+				}
+			}
+		},
+		"typeProperties": {
+			"collectionName": "WebEvents"
+		}
+	}
+}
