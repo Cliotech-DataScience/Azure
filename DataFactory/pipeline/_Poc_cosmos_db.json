@@ -56,7 +56,7 @@
 					"source": {
 						"type": "SqlSource",
 						"sqlReaderQuery": {
-							"value": "SELECT * from   EmErp_LM.azure.scmm_contacts\n where update_date > CAST(CAST('@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' AS bigint) AS VARBINARY(8))\n",
+							"value": "SELECT top 10 * from   EmErp_LM.azure.scmm_contacts\n where update_date > CAST(CAST('@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' AS bigint) AS VARBINARY(8))\n",
 							"type": "Expression"
 						},
 						"partitionOption": "None"
@@ -84,50 +84,6 @@
 				]
 			},
 			{
-				"name": "update_mng_azure",
-				"type": "SqlServerStoredProcedure",
-				"dependsOn": [
-					{
-						"activity": "copy_to_blob",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"storedProcedureName": "SP_Update_Mng_data_factory_ETL",
-					"storedProcedureParameters": {
-						"LastId": {
-							"value": {
-								"value": "@{activity('LK_new_max_id').output.firstRow.last_id}",
-								"type": "Expression"
-							},
-							"type": "Int64"
-						},
-						"LastIncrementalDate": {
-							"value": "1990-01-01",
-							"type": "DateTime"
-						},
-						"TableName": {
-							"value": "Contacts",
-							"type": "String"
-						}
-					}
-				},
-				"linkedServiceName": {
-					"referenceName": "Azure BI db",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
 				"name": "LK_new_max_id",
 				"type": "Lookup",
 				"dependsOn": [],
@@ -149,33 +105,6 @@
 						"referenceName": "Contacts",
 						"type": "DatasetReference"
 					}
-				}
-			},
-			{
-				"name": "Contacts",
-				"type": "DatabricksNotebook",
-				"dependsOn": [
-					{
-						"activity": "update_mng_azure",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"notebookPath": "/Load Data/Dimensions/contacts"
-				},
-				"linkedServiceName": {
-					"referenceName": "Analysis",
-					"type": "LinkedServiceReference"
 				}
 			}
 		],
