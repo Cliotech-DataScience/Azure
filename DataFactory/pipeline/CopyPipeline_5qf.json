@@ -1,0 +1,95 @@
+{
+	"name": "CopyPipeline_5qf",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy_5qf",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dbo.agent_tab"
+					},
+					{
+						"name": "Destination",
+						"value": "agents"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "CosmosDbSqlApiSink",
+						"writeBehavior": "insert"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "agent_numerator",
+									"type": "Int32"
+								},
+								"sink": {
+									"path": "$"
+								}
+							},
+							{
+								"source": {
+									"name": "id",
+									"type": "Guid"
+								},
+								"sink": {
+									"path": "$['agent_id']"
+								}
+							},
+							{
+								"source": {
+									"name": "name",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['agent_name']"
+								}
+							},
+							{
+								"source": {
+									"name": "status",
+									"type": "Byte"
+								},
+								"sink": {
+									"path": "$['status']"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_5qf",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_5qf",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}

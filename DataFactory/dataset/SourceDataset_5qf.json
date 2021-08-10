@@ -1,0 +1,118 @@
+{
+	"name": "SourceDataset_5qf",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "emerpdbpr",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "agent_numerator",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "id",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "first_name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "last_name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "email",
+				"type": "nvarchar"
+			},
+			{
+				"name": "password",
+				"type": "nvarchar"
+			},
+			{
+				"name": "deleted",
+				"type": "bit"
+			},
+			{
+				"name": "position",
+				"type": "nvarchar"
+			},
+			{
+				"name": "signature",
+				"type": "nvarchar"
+			},
+			{
+				"name": "default_supplier_id",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "phone",
+				"type": "nvarchar"
+			},
+			{
+				"name": "fax",
+				"type": "nvarchar"
+			},
+			{
+				"name": "cellphone",
+				"type": "nvarchar"
+			},
+			{
+				"name": "affiliate",
+				"type": "bit"
+			},
+			{
+				"name": "status",
+				"type": "tinyint",
+				"precision": 3
+			},
+			{
+				"name": "address_id",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "billing_address_id",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "webui_pref",
+				"type": "nvarchar"
+			},
+			{
+				"name": "currency",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "default_charge_unit_id",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "default_payment_method_id",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "default_site_id",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "affiliate_default",
+				"type": "bit"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "agent_tab"
+		}
+	}
+}
