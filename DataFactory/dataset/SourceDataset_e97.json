@@ -1,0 +1,27 @@
+{
+	"name": "SourceDataset_e97",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "bydatalakqa sa",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "campaings.json",
+				"folderPath": "sqldata",
+				"container": "dwh-qa"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"value": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}
