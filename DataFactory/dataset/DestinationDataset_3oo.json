@@ -1,0 +1,20 @@
+{
+	"name": "DestinationDataset_3oo",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "bydatalakqa sa",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "campaings.json",
+				"folderPath": "sqldata",
+				"container": "dwh-qa"
+			}
+		},
+		"schema": {}
+	}
+}
