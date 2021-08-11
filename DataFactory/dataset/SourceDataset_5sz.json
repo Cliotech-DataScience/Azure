@@ -1,0 +1,61 @@
+{
+	"name": "SourceDataset_5sz",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "bydatalakqa sa",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "campaingscsv.json",
+				"folderPath": "sqldata",
+				"container": "dwh-qa"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"numerator": {
+					"type": "integer"
+				},
+				"id": {
+					"type": "string"
+				},
+				"name": {
+					"type": "string"
+				},
+				"Products": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"product_id": {
+								"type": "string"
+							},
+							"product_numerator": {
+								"type": "integer"
+							},
+							"Serials": {
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"Serial_id": {
+											"type": "string"
+										},
+										"serial": {
+											"type": "integer"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
