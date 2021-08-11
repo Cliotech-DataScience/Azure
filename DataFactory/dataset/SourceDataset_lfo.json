@@ -1,0 +1,12 @@
+{
+	"name": "SourceDataset_lfo",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "emerpdbpr",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	}
+}
