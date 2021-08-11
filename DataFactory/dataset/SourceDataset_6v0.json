@@ -1,0 +1,17 @@
+{
+	"name": "SourceDataset_6v0",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "emerpdbpr",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "value",
+				"type": "nvarchar"
+			}
+		]
+	}
+}
