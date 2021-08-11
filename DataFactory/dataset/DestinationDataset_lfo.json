@@ -1,0 +1,23 @@
+{
+	"name": "DestinationDataset_lfo",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "bydatalakqa sa",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "campaingscsv.json",
+				"folderPath": "sqldata",
+				"container": "dwh-qa"
+			},
+			"columnDelimiter": "\t",
+			"escapeChar": "\\",
+			"quoteChar": ""
+		},
+		"schema": []
+	}
+}
