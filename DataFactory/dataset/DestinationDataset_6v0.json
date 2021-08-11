@@ -11,6 +11,7 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"fileName": "campaings",
+				"folderPath": "sqldata",
 				"container": "dwh-qa"
 			}
 		},
