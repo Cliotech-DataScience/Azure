@@ -1,0 +1,61 @@
+{
+	"name": "cm json to cosmos",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy_bve",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dwh-qa/sqldata/campaings"
+					},
+					{
+						"name": "Destination",
+						"value": "campaigns"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"sink": {
+						"type": "CosmosDbSqlApiSink",
+						"writeBehavior": "insert"
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_bve",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_bve",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}
