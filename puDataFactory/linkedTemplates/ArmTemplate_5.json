@@ -6,6 +6,18 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "puDataFactory"
+		},
+		"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "processed"
+		},
+		"Source_file_avi_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@dataset().file_name"
+		},
+		"Source_file_avi_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@dataset().folder"
 		}
 	},
 	"variables": {
@@ -13,3069 +25,1534 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/Communication')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "LK_Last_Date_Mng_azure_ETL",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureTableSource",
-								"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq 'Communication'",
-								"azureTableSourceIgnoreTableNotFound": false
-							},
-							"dataset": {
-								"referenceName": "etl_manage",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "LK_new_max_date",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": " SELECT Last_Event_Date = MAX(Event_Date)\nFROM EMERP_LM.azure.AZ_Communication\nWHERE Event_Date < CAST(GETDATE() AS DATE)",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "Communication_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "copy_to_blob",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "LK_Last_Date_Mng_azure_ETL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "LK_new_max_date",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "select * \nFROM EMERP_LM.azure.AZ_Communication\nwhere Event_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Event_Date <= '@{activity('LK_new_max_date').output.firstRow.Last_Event_Date}'",
-									"type": "Expression"
-								},
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"MessageID": "MessageID",
-									"Event_Date": "Event_Date",
-									"details": "details"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Communication_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Communication_blob",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Update Manage Table",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "MergeTableStore",
-								"type": "PipelineReference"
-							},
-							"parameters": {
-								"PartitionKey": "Upload Data",
-								"RowKey": "Communication",
-								"PropertyName": "Last_Incremental_Date",
-								"PropertyValue": {
-									"value": "@activity('LK_new_max_date').output.firstRow.Last_Event_Date",
-									"type": "Expression"
-								}
-							}
-						}
-					},
-					{
-						"name": "Load Communication to Events",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "Update Manage Table",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/Digital Communication/Load Communication"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Data_from_SQL"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Contacts')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"activities": [
+				"linkedServiceName": {
+					"referenceName": "Dwhpr",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
 					{
-						"name": "LK_Last_Id_Mng_azure_ETL",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "  SELECT  LastIncrementalDate=LastId \n  ---- remove to use incremental\n FROM  Mng_data_factory_ETL\n  WHERE TableName='Contacts'\n",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "Mng_data_factory_etl",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
+						"name": "RAWDB_Id",
+						"type": "Int64"
 					},
 					{
-						"name": "copy_to_blob",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "LK_Last_Id_Mng_azure_ETL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "LK_new_max_id",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "SELECT * from   EmErp_LM.azure.scmm_contacts\n where update_date > CAST(CAST('@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' AS bigint) AS VARBINARY(8))\n",
-									"type": "Expression"
-								},
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"parallelCopies": 6
-						},
-						"inputs": [
-							{
-								"referenceName": "Contacts",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Blob_Contacts",
-								"type": "DatasetReference",
-								"parameters": {
-									"folder_name": "Contacts"
-								}
-							}
-						]
+						"name": "datails",
+						"type": "String"
 					},
 					{
-						"name": "update_mng_azure",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "SP_Update_Mng_data_factory_ETL",
-							"storedProcedureParameters": {
-								"LastId": {
-									"value": {
-										"value": "@{activity('LK_new_max_id').output.firstRow.last_id}",
-										"type": "Expression"
-									},
-									"type": "Int64"
-								},
-								"LastIncrementalDate": {
-									"value": "1990-01-01",
-									"type": "DateTime"
-								},
-								"TableName": {
-									"value": "Contacts",
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "Azure BI db",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "LK_new_max_id",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT last_id= MAX(timeStampINT)\nFROM EmErp_LM.azure.scmm_contacts\n",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "Contacts",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "Contacts",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "update_mng_azure",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/Dimensions/contacts"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
+						"name": "Fixed_Timestamp",
+						"type": "DateTime"
 					}
 				],
-				"folder": {
-					"name": "Data_from_SQL"
-				},
-				"annotations": []
+				"typeProperties": {
+					"tableName": "EmErp_LM.azure.scmm_contacts"
+				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Copy Model Data')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/DM_Model_Data')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"activities": [
-					{
-						"name": "Copy Model Data",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "Assignment.Model_Data"
-							},
-							{
-								"name": "Destination",
-								"value": "mirrordatafs//adata"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "ParquetSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "ParquetWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"validateDataConsistency": false
-						},
-						"inputs": [
-							{
-								"referenceName": "DM_Model_Data",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "ADLS_Model_Data",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
+				"linkedServiceName": {
+					"referenceName": "DWH12",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DB_Name": "DM"
 					}
-				],
+				},
 				"folder": {
 					"name": "Assignment Score"
 				},
-				"annotations": []
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "AssignmentDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "Contact_Id",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "Accountnumber",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "BrokerId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "IsOnline",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "HasAccount",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "First_Lead_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "First_Lead_Local_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "Last_Lead_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "Last_Email_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "Last_Login_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "Last_Action_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "First_Lead_Last_Lead_Minutes",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "First_Lead_To_Assignment_Minutes",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Last_Action_To_Assignment_Minutes",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "First_Lead_Local_Weekday",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "First_Lead_Local_Day",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "First_Lead_Local_Hour",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Language",
+						"type": "varchar"
+					},
+					{
+						"name": "Country",
+						"type": "varchar"
+					},
+					{
+						"name": "SiteTrigger",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Serial",
+						"type": "varchar"
+					},
+					{
+						"name": "Is_Serial_0",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Target_Market",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CampaignName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ProductName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Supplier",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Site_Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Landing_Page",
+						"type": "varchar"
+					},
+					{
+						"name": "ProductType",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Placement_size",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SupplierChargingUnit",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Creative_format",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Creative",
+						"type": "nvarchar"
+					},
+					{
+						"name": "First_Lead_Os",
+						"type": "nvarchar"
+					},
+					{
+						"name": "First_Lead_Browser",
+						"type": "nvarchar"
+					},
+					{
+						"name": "First_Lead_Content",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Last_Failed_Deposit_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "Last_Failed_Amount_USD",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "Last_Wire_Amount_USD",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "Last_Failed_To_Assignment_Minutes",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Is_Failed_Dep_Last_7",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "number_of_serials",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "total_hphit",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "n_logins_last_30",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "n_emails_last_30",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "SupplierGroup",
+						"type": "varchar"
+					},
+					{
+						"name": "SupplierGroup_SEM",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "SupplierGroup_Others",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "SupplierGroup_Affiliates",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactAction",
+						"type": "varchar"
+					},
+					{
+						"name": "ContactAction_Lead",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactAction_Returning_Lead",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactAction_Returning_Email",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactAction_Returning_Login",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactActionAge",
+						"type": "varchar"
+					},
+					{
+						"name": "ContactActionAge_Till_2H",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactActionAge_2H_24H",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactActionAge_24H_3D",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactActionAge_3D_7D",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactActionAge_7D_14D",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactActionAge_14D_1M",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ContactActionAge_1M",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "First_Lead_Device",
+						"type": "nvarchar"
+					},
+					{
+						"name": "First_Lead_Device_Tablet",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "First_Lead_Device_Mobile",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "First_Lead_Device_Desktop",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Last_Failed_Method",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Last_Failed_CreditCards",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Last_Failed_eWallet",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Last_Failed_None",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Activation_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "Assignment",
+					"table": "Model_Data"
+				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Customer_Questionnaires')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/DWH_API_Customers_Models_Data')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"activities": [
+				"linkedServiceName": {
+					"referenceName": "DWH",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
 					{
-						"name": "LK_Last_Date_Mng_azure_ETL",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureTableSource",
-								"azureTableSourceQuery": {
-									"value": "PartitionKey eq 'Upload Data' and RowKey eq '@{variables('Table_Name')}'",
-									"type": "Expression"
-								},
-								"azureTableSourceIgnoreTableNotFound": false
-							},
-							"dataset": {
-								"referenceName": "etl_manage",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": true
-						}
+						"name": "ID",
+						"type": "int",
+						"precision": 10
 					},
 					{
-						"name": "LK_new_max_date",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": " SELECT Last_Update= MAX(Last_Update)\nFROM azure.AZ_Customer_Questionnaires",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "dwh_Customer_Questionnaires_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
+						"name": "AccountNumber",
+						"type": "bigint",
+						"precision": 19
 					},
 					{
-						"name": "copy_to_blob",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "LK_Last_Date_Mng_azure_ETL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "LK_new_max_date",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "select * \nFROM azure.AZ_Customer_Questionnaires\nwhere Last_Update > '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Incremental_Date}' \n  and Last_Update <= '@{activity('LK_new_max_date').output.firstRow.Last_Update}'\n",
-									"type": "Expression"
-								},
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0
-						},
-						"inputs": [
-							{
-								"referenceName": "dwh_Customer_Questionnaires_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "dwh_Customer_Questionnaires_blob",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
+						"name": "ModelID",
+						"type": "int",
+						"precision": 10
 					},
 					{
-						"name": "Update Manage Table",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "run_Load Customer_Questionnaires",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "MergeTableStore",
-								"type": "PipelineReference"
-							},
-							"parameters": {
-								"PartitionKey": "Upload Data",
-								"RowKey": {
-									"value": "@variables('Table_Name')",
-									"type": "Expression"
-								},
-								"PropertyName": "Last_Incremental_Date",
-								"PropertyValue": {
-									"value": "@activity('LK_new_max_date').output.firstRow.Last_Update",
-									"type": "Expression"
-								}
-							}
-						}
+						"name": "Model_Result",
+						"type": "nvarchar"
 					},
 					{
-						"name": "run_Load Customer_Questionnaires",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/Dimensions/Load Customer_Questionnaires"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
+						"name": "Last_Update_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
 					},
 					{
-						"name": "Delete_copy_file",
-						"type": "Delete",
-						"dependsOn": [
-							{
-								"activity": "Update Manage Table",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "dwh_Customer_Questionnaires_blob",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"enableLogging": false
-						}
+						"name": "Last_Sync_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
 					}
 				],
-				"variables": {
-					"Table_Name": {
-						"type": "String",
-						"defaultValue": "Customer_Questionnaires"
-					}
+				"typeProperties": {
+					"tableName": "[[dbo].[Azure_Customers_Models_Data]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWH_Dim_Customers_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWH",
+					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Data_from_SQL"
+					"name": "DWH"
 				},
-				"annotations": []
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "AccountNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "datails",
+						"type": "String"
+					},
+					{
+						"name": "SsisUpdatedDate",
+						"type": "DateTime"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[azure].[AZ_Customers]"
+				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Customers')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/DWH_pu_list_files')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"activities": [
-					{
-						"name": "LK_Last_Id_Mng_azure_ETL",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(DAY,-1,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  Mng_data_factory_ETL\n  WHERE TableName='Customers'",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "Mng_data_factory_etl",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "LK_new_max_id",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT ExecutionDate=MAX(SsisUpdatedDate)\n FROM dwh.azure.AZ_Customers\n",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "Mng_azure_ETL",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "copy_to_blob",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "LK_Last_Id_Mng_azure_ETL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "LK_new_max_id",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "select * from  dwh.azure.AZ_Customers\n where SsisUpdatedDate > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' ",
-									"type": "Expression"
-								},
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0
-						},
-						"inputs": [
-							{
-								"referenceName": "DWH_Dim_Customers_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DWH_Dim_Customers_blob",
-								"type": "DatasetReference",
-								"parameters": {
-									"folder_name": "Customers"
-								}
-							}
-						]
-					},
-					{
-						"name": "update_mng_azure",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "SP_Update_Mng_data_factory_ETL",
-							"storedProcedureParameters": {
-								"LastId": {
-									"value": "-1",
-									"type": "Int64"
-								},
-								"LastIncrementalDate": {
-									"value": {
-										"value": "@{activity('LK_new_max_id').output.firstRow.ExecutionDate}",
-										"type": "Expression"
-									},
-									"type": "DateTime"
-								},
-								"TableName": {
-									"value": "Customers",
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "Azure BI db",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "Customers",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "update_mng_azure",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/Dimensions/Customers"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Data_from_SQL"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DWH_Calls')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "LK_new_max_Date",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT Next_Call_Day=DATEADD(DAY,-1,MAX(callday))\nFROM dwh.azure.AZ_Calls",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "dwh_calls_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "copy_to_blob",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "LK_new_max_Date",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "LK_Last_Date_Mng_azure_ETL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "select * \nFROM dwh.azure.AZ_calls\nwhere callday> '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Incremental_Date}' and callday<= '@{activity('LK_new_max_Date').output.firstRow.Next_Call_Day}'",
-									"type": "Expression"
-								},
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"Call_ID": "Call_ID",
-									"Call_Details": "Call_Details",
-									"CallDay": "CallDay"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "dwh_calls_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "dwh_calls_blob",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "LK_Last_Date_Mng_azure_ETL",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureTableSource",
-								"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq 'DWH_Calls'",
-								"azureTableSourceIgnoreTableNotFound": false
-							},
-							"dataset": {
-								"referenceName": "etl_manage",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "Load Calls to Events",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "merge tbl store",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/Calls/Load Calls"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "merge tbl store",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "MergeTableStore",
-								"type": "PipelineReference"
-							},
-							"parameters": {
-								"PartitionKey": "Upload Data",
-								"RowKey": "DWH_Calls",
-								"PropertyName": "Last_Incremental_Date",
-								"PropertyValue": {
-									"value": "@{activity('LK_new_max_Date').output.firstRow.Next_Call_Day}",
-									"type": "Expression"
-								}
-							}
-						}
-					}
-				],
-				"folder": {
-					"name": "Data_from_SQL"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DWH_Dim_Users')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "copy_to_blob",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"User_ID": "User_ID",
-									"details": "details"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "dwh_Dim_Users_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "dwh_Dim_Users_blob",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Load_Users",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/Dimensions/Users"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Data_from_SQL"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DWH_Lead_Assignments')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "assignments",
-				"activities": [
-					{
-						"name": "LK_Last_Date_Mng_azure_ETL",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureTableSource",
-								"azureTableSourceQuery": {
-									"value": "PartitionKey eq 'Upload Data' and RowKey eq '@{variables('Table_Name')}'",
-									"type": "Expression"
-								},
-								"azureTableSourceIgnoreTableNotFound": false
-							},
-							"dataset": {
-								"referenceName": "etl_manage",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "LK_new_max_date",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT Last_Date=MAX(Assignment_Date)\nFROM azure.AZ_Lead_Assignments \nWHERE Assignment_Day BETWEEN\nCAST(GETDATE() - 100 AS DATE) AND CAST(GETDATE() - 1 AS DATE) \n",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "dwh_lead_assignments_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "copy_to_blob",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "LK_Last_Date_Mng_azure_ETL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "LK_new_max_date",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "SELECT * \nFROM azure.AZ_Lead_Assignments\nwhere Assignment_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' \n  and Assignment_Date <= '@{activity('LK_new_max_date').output.firstRow.Last_Date}'\n  and Assignment_Day > dateadd(day,-1,cast('@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' as date))\n  and Assignment_Day < dateadd(day,1,cast('@{activity('LK_new_max_date').output.firstRow.Last_Date}' as date))\n",
-									"type": "Expression"
-								},
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"Fact_Lead_Assignments_ID": "Fact_Lead_Assignments_ID",
-									"Assignment_Day": "Assignment_Day",
-									"Assignment_Date": "Assignment_Date",
-									"Details": "Details"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "dwh_lead_assignments_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "dwh_lead_assignments_blob",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Update Manage Table",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "MergeTableStore",
-								"type": "PipelineReference"
-							},
-							"parameters": {
-								"PartitionKey": "Upload Data",
-								"RowKey": {
-									"value": "@variables('Table_Name')",
-									"type": "Expression"
-								},
-								"PropertyName": "Last_Incremental_Date",
-								"PropertyValue": {
-									"value": "@activity('LK_new_max_date').output.firstRow.Last_Date",
-									"type": "Expression"
-								}
-							}
-						}
-					},
-					{
-						"name": "load assignments to events",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "Update Manage Table",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/SCMM/Load Lead Assignments"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"variables": {
-					"Table_Name": {
-						"type": "String",
-						"defaultValue": "DWH_Lead_Assignments"
-					}
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
 				},
 				"folder": {
-					"name": "Data_from_SQL"
+					"name": "Platform Usage"
 				},
-				"annotations": []
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "TransactionNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "PositionNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "AccountNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "CustomerHistory_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "CustomersExtendedHistory_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "DealAttirbute_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "Instrument_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "TransactionType_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "Direction_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "Source_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "DealType_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "ExecutionDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "ExecutionDay",
+						"type": "DateTime"
+					},
+					{
+						"name": "ExecutionTime",
+						"type": "TimeSpan"
+					},
+					{
+						"name": "TransactionCloseDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "ValueDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "ValueDay",
+						"type": "DateTime"
+					},
+					{
+						"name": "BaseAmount",
+						"type": "Decimal"
+					},
+					{
+						"name": "OtherAmount",
+						"type": "Decimal"
+					},
+					{
+						"name": "SpotRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "ForwardPips",
+						"type": "Double"
+					},
+					{
+						"name": "TotRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "Volume_USD",
+						"type": "Decimal"
+					},
+					{
+						"name": "ServerRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "OtherServerRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "ExecutedLimit",
+						"type": "Int16"
+					},
+					{
+						"name": "PL",
+						"type": "Decimal"
+					},
+					{
+						"name": "IsFirstBOP",
+						"type": "Boolean"
+					},
+					{
+						"name": "IsFirstForex",
+						"type": "Boolean"
+					},
+					{
+						"name": "IsFirstDeal",
+						"type": "Boolean"
+					},
+					{
+						"name": "Deleted",
+						"type": "Boolean"
+					},
+					{
+						"name": "PositionClosed",
+						"type": "Int16"
+					},
+					{
+						"name": "DealPL_USD",
+						"type": "Decimal"
+					},
+					{
+						"name": "PL_SymbolId",
+						"type": "Int16"
+					},
+					{
+						"name": "AccountBasesymbolId",
+						"type": "Int16"
+					},
+					{
+						"name": "EtlUpdatedDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "SpreadCost",
+						"type": "Decimal"
+					},
+					{
+						"name": "Folder_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "Broker_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "AccountNumber_modo",
+						"type": "Int32"
+					},
+					{
+						"name": "PositionNumber_modo",
+						"type": "Int32"
+					},
+					{
+						"name": "PL_AccountBase",
+						"type": "Decimal"
+					},
+					{
+						"name": "Customer_Favor_Rate_diff",
+						"type": "Decimal"
+					},
+					{
+						"name": "Channel_Bucket_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Sessions_ID",
+						"type": "Int64"
+					},
+					{
+						"name": "DealCountTotal",
+						"type": "Int32"
+					},
+					{
+						"name": "Retention_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "ConversionRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "CommissionInAccountBase",
+						"type": "Decimal"
+					},
+					{
+						"name": "SpreadCostInAccountBase",
+						"type": "Decimal"
+					},
+					{
+						"name": "RolloverSpreadCostInAccountBase",
+						"type": "Decimal"
+					},
+					{
+						"name": "CommissionInOther",
+						"type": "Decimal"
+					},
+					{
+						"name": "SpreadCostInOther",
+						"type": "Decimal"
+					},
+					{
+						"name": "RolloverSpreadCostInOther",
+						"type": "Decimal"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[azure].[platfrom_usage_log_file]"
+				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Dim_Communication_Channels')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/Dim_AccountContacts')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "Copy data from on premise SQL Server to SQL Azure.\n\nYou can also go to \"Copy Data Tool\" to get the pipeline for more connectors and scenarios.",
-				"activities": [
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
 					{
-						"name": "SQL_to_SQLAzure",
-						"description": "Copy data from SQL server to SQL Azure",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "SqlSink",
-								"writeBatchSize": 10000
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "ChannelID",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "ChannelID",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "ChannelTypeID",
-											"type": "Byte"
-										},
-										"sink": {
-											"name": "ChannelTypeID",
-											"type": "Byte"
-										}
-									},
-									{
-										"source": {
-											"name": "ChannelType",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ChannelType",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ChannelName",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ChannelName",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ChannelStatus",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ChannelStatus",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "SendingMethodID",
-											"type": "Int16"
-										},
-										"sink": {
-											"name": "SendingMethodID",
-											"type": "Int16"
-										}
-									},
-									{
-										"source": {
-											"name": "SendingMethodName",
-											"type": "String"
-										},
-										"sink": {
-											"name": "SendingMethodName",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ChannelPopulationFilterId",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "ChannelPopulationFilterId",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "ChannelPopulationFilter",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ChannelPopulationFilter",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Channel_Event",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Channel_Event",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ChannelDeliveryScheduleType",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ChannelDeliveryScheduleType",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CampaignID",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "CampaignID",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "CampaignName",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CampaignName",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CampaignCategory",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CampaignCategory",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Campaign_System",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Campaign_System",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Campaign_Schedule_Type",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Campaign_Schedule_Type",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "EmailSubject",
-											"type": "String"
-										},
-										"sink": {
-											"name": "EmailSubject",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CampaignStatus",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CampaignStatus",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "CampaignPopulationFilterId",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "CampaignPopulationFilterId",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "CampaignPopulationFilter",
-											"type": "String"
-										},
-										"sink": {
-											"name": "CampaignPopulationFilter",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "ExpectedCustomerResponse",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ExpectedCustomerResponse",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "RewardID",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "RewardID",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "RewardName",
-											"type": "String"
-										},
-										"sink": {
-											"name": "RewardName",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Channel_Group",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Channel_Group",
-											"type": "String"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Scmm_Communication_Channels",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Azure_dwh_Dim_Channels",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
+						"name": "AccountNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "ContactID",
+						"type": "Int64"
+					},
+					{
+						"name": "LastUpdate",
+						"type": "DateTime"
+					},
+					{
+						"name": "SsisUpdatedDate",
+						"type": "DateTime"
 					}
 				],
+				"typeProperties": {
+					"tableName": "dwh.azure.AZ_Dim_AccountContacts"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/EMERP_DB_Events')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Dwhpr",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "RAWDB_Id",
+						"type": "Int64"
+					},
+					{
+						"name": "datails",
+						"type": "String"
+					},
+					{
+						"name": "Fixed_Timestamp",
+						"type": "DateTime"
+					}
+				],
+				"typeProperties": {
+					"tableName": "emerp_db.azure.AZ_EMERP_DB_Events"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Fact_Transactions')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "TransactionNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "PositionNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "AccountNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "CustomerHistory_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "CustomersExtendedHistory_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "DealAttirbute_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "Instrument_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "TransactionType_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "Direction_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "Source_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "DealType_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "ExecutionDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "ExecutionDay",
+						"type": "DateTime"
+					},
+					{
+						"name": "ExecutionTime",
+						"type": "TimeSpan"
+					},
+					{
+						"name": "TransactionCloseDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "ValueDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "ValueDay",
+						"type": "DateTime"
+					},
+					{
+						"name": "BaseAmount",
+						"type": "Decimal"
+					},
+					{
+						"name": "OtherAmount",
+						"type": "Decimal"
+					},
+					{
+						"name": "SpotRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "ForwardPips",
+						"type": "Double"
+					},
+					{
+						"name": "TotRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "Volume_USD",
+						"type": "Decimal"
+					},
+					{
+						"name": "ServerRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "OtherServerRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "ExecutedLimit",
+						"type": "Int16"
+					},
+					{
+						"name": "PL",
+						"type": "Decimal"
+					},
+					{
+						"name": "IsFirstBOP",
+						"type": "Boolean"
+					},
+					{
+						"name": "IsFirstForex",
+						"type": "Boolean"
+					},
+					{
+						"name": "IsFirstDeal",
+						"type": "Boolean"
+					},
+					{
+						"name": "Deleted",
+						"type": "Boolean"
+					},
+					{
+						"name": "PositionClosed",
+						"type": "Int16"
+					},
+					{
+						"name": "DealPL_USD",
+						"type": "Decimal"
+					},
+					{
+						"name": "PL_SymbolId",
+						"type": "Int16"
+					},
+					{
+						"name": "AccountBasesymbolId",
+						"type": "Int16"
+					},
+					{
+						"name": "EtlUpdatedDate",
+						"type": "DateTime"
+					},
+					{
+						"name": "SpreadCost",
+						"type": "Decimal"
+					},
+					{
+						"name": "Folder_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "Broker_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "AccountNumber_modo",
+						"type": "Int32"
+					},
+					{
+						"name": "PositionNumber_modo",
+						"type": "Int32"
+					},
+					{
+						"name": "PL_AccountBase",
+						"type": "Decimal"
+					},
+					{
+						"name": "Customer_Favor_Rate_diff",
+						"type": "Decimal"
+					},
+					{
+						"name": "Channel_Bucket_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Sessions_ID",
+						"type": "Int64"
+					},
+					{
+						"name": "DealCountTotal",
+						"type": "Int32"
+					},
+					{
+						"name": "Retention_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "ConversionRate",
+						"type": "Decimal"
+					},
+					{
+						"name": "CommissionInAccountBase",
+						"type": "Decimal"
+					},
+					{
+						"name": "SpreadCostInAccountBase",
+						"type": "Decimal"
+					},
+					{
+						"name": "RolloverSpreadCostInAccountBase",
+						"type": "Decimal"
+					},
+					{
+						"name": "CommissionInOther",
+						"type": "Decimal"
+					},
+					{
+						"name": "SpreadCostInOther",
+						"type": "Decimal"
+					},
+					{
+						"name": "RolloverSpreadCostInOther",
+						"type": "Decimal"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[azure].[AZ_Fact_Transactions]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Mng_azure_ETL')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"typeProperties": {
+					"tableName": "[[azure].[Mng_azure_ETL]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/STG_mrr_customers_clustering')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "STG",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "sync"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "AccountNumber",
+						"type": "Int64",
+						"precision": 19,
+						"scale": 255
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[mrr_customers_clustering]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Scmm_Communication_Channels')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "emerp_lm",
+					"type": "LinkedServiceReference"
+				},
 				"folder": {
 					"name": "DC"
 				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/EMERP_Events')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "LK_Last_Id_Mng_azure_ETL",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,65,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM dbo.Mng_data_factory_ETL\n  WHERE TableName='EMERP_DB_Events'",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "Mng_data_factory_etl",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "LK_new_max_id",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": " SELECT ExecutionDate=MAX(Event_Date)\n FROM EmErp_DB.azure.AZ_EMERP_DB_Events",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "EMERP_DB_Events",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "copy_to_blob",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "LK_Last_Id_Mng_azure_ETL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "LK_new_max_id",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "select * from  EmErp_DB.azure.AZ_EMERP_DB_Events\n where Event_Date > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' \n AND Event_Date <= '@{activity('LK_new_max_id').output.firstRow.ExecutionDate}'",
-									"type": "Expression"
-								},
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0
-						},
-						"inputs": [
-							{
-								"referenceName": "EMERP_DB_Events",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "blob_EMERP_Events",
-								"type": "DatasetReference",
-								"parameters": {
-									"folder_name": "EMERP_Events"
-								}
-							}
-						]
-					},
-					{
-						"name": "Stored Procedure1",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "SP_Update_Mng_data_factory_ETL",
-							"storedProcedureParameters": {
-								"LastId": {
-									"value": "-1",
-									"type": "Int64"
-								},
-								"LastIncrementalDate": {
-									"value": {
-										"value": "@{activity('LK_new_max_id').output.firstRow.ExecutionDate}",
-										"type": "Expression"
-									},
-									"type": "DateTime"
-								},
-								"TableName": {
-									"value": "EMERP_DB_Events",
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "Azure BI db",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "Notebook1",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "Stored Procedure1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/Emerp Events/EMERP_Events_to_events_table"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Data_from_SQL"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/FXNET_Accounting')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "LK_Last_Date_Mng_azure_ETL",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureTableSource",
-								"azureTableSourceQuery": {
-									"value": "PartitionKey eq 'Upload Data' and RowKey eq '@{variables('Table_Name')}'",
-									"type": "Expression"
-								},
-								"azureTableSourceIgnoreTableNotFound": false
-							},
-							"dataset": {
-								"referenceName": "etl_manage",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "LK_new_max_date",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT Last_Activity_Date = MAX(ActionDate)\nFROM azure.AZ_Accounting\nWHERE ActionDay BETWEEN CAST(GETDATE() - 100 AS DATE) AND CAST(GETDATE() - 1 AS DATE) ",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "fxnet_accounting_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "copy_to_blob",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "LK_Last_Date_Mng_azure_ETL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "LK_new_max_date",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "select * \nFROM azure.AZ_Accounting\nwhere ActionDate > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' \n  and ActionDate <= '@{activity('LK_new_max_date').output.firstRow.Last_Activity_Date}'\n  and ActionDay > dateadd(day,-1,cast('@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' as date))\n  and ActionDay < dateadd(day,1,cast('@{activity('LK_new_max_date').output.firstRow.Last_Activity_Date}' as date))",
-									"type": "Expression"
-								},
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"fact_account_trans_id": "fact_account_trans_id",
-									"ActionDay": "ActionDay",
-									"ActionDate": "ActionDate",
-									"Details": "Details"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "fxnet_accounting_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "fxnet_accounting_blob",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Update Manage Table",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "MergeTableStore",
-								"type": "PipelineReference"
-							},
-							"parameters": {
-								"PartitionKey": "Upload Data",
-								"RowKey": {
-									"value": "@variables('Table_Name')",
-									"type": "Expression"
-								},
-								"PropertyName": "Last_Incremental_Date",
-								"PropertyValue": {
-									"value": "@activity('LK_new_max_date').output.firstRow.Last_Activity_Date",
-									"type": "Expression"
-								}
-							}
-						}
-					},
-					{
-						"name": "Load Accounts to Events",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "Update Manage Table",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/FXNET/Load Accounting"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"variables": {
-					"Table_Name": {
-						"type": "String",
-						"defaultValue": "FXNET_Accounting"
-					}
-				},
-				"folder": {
-					"name": "Data_from_SQL"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/FXNET_Deals')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "LK_Last_Date_Mng_azure_ETL",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureTableSource",
-								"azureTableSourceQuery": {
-									"value": "PartitionKey eq 'Upload Data' and RowKey eq '@{variables('Table_Name')}'",
-									"type": "Expression"
-								},
-								"azureTableSourceIgnoreTableNotFound": false
-							},
-							"dataset": {
-								"referenceName": "etl_manage",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "LK_new_max_Date",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT Last_Date=MAX(ExecutionDate)\nFROM azure.AZ_Deals\nWHERE executionDay BETWEEN\nCAST(GETDATE() - 100 AS DATE) AND CAST(GETDATE() - 1 AS DATE) ",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "fxnet_deals_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "copy_to_blob",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "LK_Last_Date_Mng_azure_ETL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "LK_new_max_Date",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "select * \nFROM azure.AZ_Deals\nwhere executionDate > '@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Incremental_Date}' \nand executionDate <= '@{activity('LK_new_max_Date').output.firstRow.Last_Date}'\nand executionDay > dateadd(day,-1,cast('@{activity('LK_Last_Date_Mng_azure_ETL').output.firstRow.Last_Incremental_Date}' as date))\nand executionDay < dateadd(day,1,cast('@{activity('LK_new_max_Date').output.firstRow.Last_Date}' as date))",
-									"type": "Expression"
-								},
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"TransactionNumber": "TransactionNumber",
-									"ExecutionDay": "ExecutionDay",
-									"ExecutionDate": "ExecutionDate",
-									"Trans_Details": "Trans_Details"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "fxnet_deals_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "fxnet_deals_blob",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Update mng ETL table storage",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "MergeTableStore",
-								"type": "PipelineReference"
-							},
-							"parameters": {
-								"PartitionKey": "Upload Data",
-								"RowKey": {
-									"value": "@variables('Table_Name')",
-									"type": "Expression"
-								},
-								"PropertyName": "Last_Incremental_Date",
-								"PropertyValue": {
-									"value": "@activity('LK_new_max_Date').output.firstRow.Last_Date",
-									"type": "Expression"
-								}
-							}
-						}
-					},
-					{
-						"name": "Load Deals",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "Update mng ETL table storage",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/FXNET/Load Deals"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"variables": {
-					"Table_Name": {
-						"type": "String",
-						"defaultValue": "FXNET_Deals"
-					}
-				},
-				"folder": {
-					"name": "Data_from_SQL"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SCMM_Activities')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "LK_Last_Date_Mng_azure_ETL",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureTableSource",
-								"azureTableSourceQuery": "PartitionKey eq 'Upload Data' and RowKey eq 'SCMM_Activities'",
-								"azureTableSourceIgnoreTableNotFound": false
-							},
-							"dataset": {
-								"referenceName": "etl_manage",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "LK_new_max_date",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT Last_Activity_Date = MAX(Activity_Date)\nFROM azure.AZ_SCMM_Activities\n",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "scmm_activities_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "copy_to_blob",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "LK_Last_Date_Mng_azure_ETL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "LK_new_max_date",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "select * \nFROM EMERP_LM.azure.AZ_SCMM_Activities\nwhere Activity_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Activity_Date <= '@{activity('LK_new_max_date').output.firstRow.Last_Activity_Date}'",
-									"type": "Expression"
-								},
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"Activity_Id": "Activity_Id",
-									"Activity_Date": "Activity_Date",
-									"details": "details"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "scmm_activities_src",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "scmm_activities_blob",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Update Manage Table",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "MergeTableStore",
-								"type": "PipelineReference"
-							},
-							"parameters": {
-								"PartitionKey": "Upload Data",
-								"RowKey": "SCMM_Activities",
-								"PropertyName": "Last_Incremental_Date",
-								"PropertyValue": {
-									"value": "@activity('LK_new_max_date').output.firstRow.Last_Activity_Date",
-									"type": "Expression"
-								}
-							}
-						}
-					},
-					{
-						"name": "Load_Activities_To_Events",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "Update Manage Table",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/SCMM/Load Activities"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Data_from_SQL"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Serials')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "LK_Last_Id_Mng_azure_ETL",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,65,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  Mng_data_factory_ETL\n  WHERE TableName='Serials'",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "Mng_data_factory_etl",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "copy_to_blob",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "LK_Last_Id_Mng_azure_ETL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "LK_new_max_id",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "BlobSink"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0
-						},
-						"inputs": [
-							{
-								"referenceName": "serials",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Blob_Serials",
-								"type": "DatasetReference",
-								"parameters": {
-									"folder_name": "Serials"
-								}
-							}
-						]
-					},
-					{
-						"name": "update_mng_azure",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "SP_Update_Mng_data_factory_ETL",
-							"storedProcedureParameters": {
-								"LastId": {
-									"value": "-1",
-									"type": "Int64"
-								},
-								"LastIncrementalDate": {
-									"value": {
-										"value": "@{activity('LK_new_max_id').output.firstRow.ExecutionDate}",
-										"type": "Expression"
-									},
-									"type": "DateTime"
-								},
-								"TableName": {
-									"value": "Serials",
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "Azure BI db",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "LK_new_max_id",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": " SELECT ExecutionDate=MAX(update_date)\n FROM azure.az_serials",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "serials",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "Serials",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "update_mng_azure",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/Dimensions/serials"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "Delete_serials_file",
-						"type": "Delete",
-						"dependsOn": [
-							{
-								"activity": "Serials",
-								"dependencyConditions": [
-									"Failed"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "blob_serials_row_folder",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"enableLogging": false
-						}
-					},
-					{
-						"name": "Serials_after_delete",
-						"type": "DatabricksNotebook",
-						"dependsOn": [
-							{
-								"activity": "Delete_serials_file",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Load Data/Dimensions/serials"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"folder": {
-					"name": "Data_from_SQL"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Reports Logins by Country Daily')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
+				"type": "SqlServerTable",
+				"schema": [
 					{
-						"pipelineReference": {
-							"referenceName": "Logins_by_Country",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
+						"name": "ChannelID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ChannelTypeID",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "ChannelType",
+						"type": "varchar"
+					},
+					{
+						"name": "ChannelName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ChannelStatus",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SendingMethodID",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "SendingMethodName",
+						"type": "varchar"
+					},
+					{
+						"name": "ChannelPopulationFilterId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ChannelPopulationFilter",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Channel_Event",
+						"type": "varchar"
+					},
+					{
+						"name": "ChannelDeliveryScheduleType",
+						"type": "varchar"
+					},
+					{
+						"name": "CampaignID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CampaignName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CampaignCategory",
+						"type": "varchar"
+					},
+					{
+						"name": "Campaign_System",
+						"type": "varchar"
+					},
+					{
+						"name": "Campaign_Schedule_Type",
+						"type": "varchar"
+					},
+					{
+						"name": "EmailSubject",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CampaignStatus",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CampaignPopulationFilterId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CampaignPopulationFilter",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ExpectedCustomerResponse",
+						"type": "varchar"
+					},
+					{
+						"name": "RewardID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "RewardName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Channel_Group",
+						"type": "varchar"
 					}
 				],
-				"type": "ScheduleTrigger",
 				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-04-10T11:07:00Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								30
-							],
-							"hours": [
-								9
-							]
-						}
+					"schema": "azure",
+					"table": "Communication_Channels_Stream"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_3oo')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "emerpdbpr",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "value",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_5qf')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "emerpdbpr",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "agent_numerator",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "id",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "first_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "last_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "email",
+						"type": "nvarchar"
+					},
+					{
+						"name": "password",
+						"type": "nvarchar"
+					},
+					{
+						"name": "deleted",
+						"type": "bit"
+					},
+					{
+						"name": "position",
+						"type": "nvarchar"
+					},
+					{
+						"name": "signature",
+						"type": "nvarchar"
+					},
+					{
+						"name": "default_supplier_id",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "phone",
+						"type": "nvarchar"
+					},
+					{
+						"name": "fax",
+						"type": "nvarchar"
+					},
+					{
+						"name": "cellphone",
+						"type": "nvarchar"
+					},
+					{
+						"name": "affiliate",
+						"type": "bit"
+					},
+					{
+						"name": "status",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "address_id",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "billing_address_id",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "webui_pref",
+						"type": "nvarchar"
+					},
+					{
+						"name": "currency",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "default_charge_unit_id",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "default_payment_method_id",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "default_site_id",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "affiliate_default",
+						"type": "bit"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "agent_tab"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_6v0')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "emerpdbpr",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "value",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_PlatfromUsagePROD')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Events_Collector_PlatfromUsage_log",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "FileShare",
+				"typeProperties": {
+					"folderPath": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_lfo')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "emerpdbpr",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Source_file_avi')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "fileserver1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"file_name": {
+						"type": "String"
+					},
+					"folder": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Platform Usage"
+				},
+				"annotations": [],
+				"type": "FileShare",
+				"typeProperties": {
+					"compression": {
+						"type": "ZipDeflate",
+						"level": "Optimal"
+					},
+					"fileName": {
+						"value": "[parameters('Source_file_avi_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": {
+						"value": "[parameters('Source_file_avi_properties_typeProperties_folderPath')]",
+						"type": "Expression"
 					}
 				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/RUN ONLY PU')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/dwh_Customer_Questionnaires_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"activities": [
+				"linkedServiceName": {
+					"referenceName": "DWH",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
 					{
-						"name": "RUN - 02_platfromusage_unzip_zip_blob_files",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - 01_platfromusage_files_copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "02_platfromusage_unzip_zip_blob_files",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
+						"name": "AccountNumber",
+						"type": "Int32"
 					},
 					{
-						"name": "RUN - 03_PU_Load_ods_data",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - 02_platfromusage_unzip_zip_blob_files",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "03_PU_Load_ods_data",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
+						"name": "details",
+						"type": "String"
 					},
 					{
-						"name": "RUN - 01_platfromusage_files_copy_to_blob",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "01_platfromusage_files_copy_to_blob",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
+						"name": "Last_Update",
+						"type": "DateTime"
 					}
 				],
-				"annotations": []
+				"typeProperties": {
+					"tableName": "[[azure].[AZ_Customer_Questionnaires]"
+				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/RUN_ALL_pip_platfrom_usage')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/dwh_Dim_Users_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"activities": [
-					{
-						"name": "RUN - 02_platfromusage_unzip_zip_blob_files",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - 01_platfromusage_files_copy_to_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "02_platfromusage_unzip_zip_blob_files",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "RUN - 03_PU_Load_ods_data",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - 02_platfromusage_unzip_zip_blob_files",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "03_PU_Load_ods_data",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "RUN - Customers",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Customers",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "RUN - 01_platfromusage_files_copy_to_blob",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - Customer Questionnaires",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "01_platfromusage_files_copy_to_blob",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "RUN - Serials",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - Customers",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Serials",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "RUN - emerp_events",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - 03_PU_Load_ods_data",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "EMERP_Events",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "RUN - Contacts",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - Serials",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Contacts",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "RUN - Users",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - Contacts",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "DWH_Dim_Users",
-								"type": "PipelineReference"
-							},
-							"parameters": {}
-						}
-					},
-					{
-						"name": "RUN - Customer Questionnaires",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - Users",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Customer_Questionnaires",
-								"type": "PipelineReference"
-							},
-							"parameters": {}
-						}
-					},
-					{
-						"name": "RUN SCMM_Activities",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - emerp_events",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "SCMM_Activities",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Customers')]",
-				"[concat(variables('factoryId'), '/pipelines/Serials')]",
-				"[concat(variables('factoryId'), '/pipelines/EMERP_Events')]",
-				"[concat(variables('factoryId'), '/pipelines/Contacts')]",
-				"[concat(variables('factoryId'), '/pipelines/DWH_Dim_Users')]",
-				"[concat(variables('factoryId'), '/pipelines/Customer_Questionnaires')]",
-				"[concat(variables('factoryId'), '/pipelines/SCMM_Activities')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Communication Daily')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWH",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
 				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
+				"type": "SqlServerTable",
+				"structure": [
 					{
-						"pipelineReference": {
-							"referenceName": "Communication",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
+						"name": "User_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "details",
+						"type": "String"
 					}
 				],
-				"type": "ScheduleTrigger",
 				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-03-07T17:45:00Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								59
-							],
-							"hours": [
-								3
-							]
-						}
-					}
+					"tableName": "[[azure].[AZ_Users]"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Communication')]"
-			]
+			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DWH Calls Daily')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
+			"name": "[concat(parameters('factoryName'), '/dwh_calls_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWH",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
 				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
+				"type": "SqlServerTable",
+				"structure": [
 					{
-						"pipelineReference": {
-							"referenceName": "DWH_Calls",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
+						"name": "Call_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Call_Details",
+						"type": "String"
+					},
+					{
+						"name": "CallDay",
+						"type": "DateTime"
 					}
 				],
-				"type": "ScheduleTrigger",
 				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-03-14T18:56:00Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								50
-							],
-							"hours": [
-								3
-							]
-						}
-					}
+					"tableName": "[[azure].[AZ_Calls]"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/DWH_Calls')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DWH Lead Assignments')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "DWH_Lead_Assignments",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-03-16T22:04:00Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								5
-							],
-							"hours": [
-								4
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/DWH_Lead_Assignments')]"
-			]
+			"dependsOn": []
 		}
 	]
 }

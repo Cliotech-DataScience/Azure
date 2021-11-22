@@ -7,6 +7,30 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "puDataFactory"
 		},
+		"Communication_blob_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@CONCAT('Communication_', pipeline().TriggerTime, '.csv.bz2')"
+		},
+		"Communication_blob_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@concat('rawdata/Communication/Received=',utcnow('s'))"
+		},
+		"DWH_Dim_Customers_blob_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@CONCAT('Customers_', pipeline().RunId, '.csv')"
+		},
+		"DWH_Dim_Customers_blob_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "rawdata/Customers"
+		},
+		"blob_EMERP_Events_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@CONCAT('EMERP_Events', pipeline().RunId, '.csv')"
+		},
+		"blob_EMERP_Events_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "rawdata/EMERP_Events"
+		},
 		"blob_Fact_Transactions_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "@CONCAT('test_pu-', pipeline().RunId, '.txt')"
@@ -22,128 +46,621 @@
 		"blob_customers_clustering_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "@concat('rawdata/export_file/customers_clustering/',dataset().folder_name)"
-		},
-		"blob_customers_clustering_folder_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": ""
-		},
-		"blob_customers_clustering_folder_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@concat('rawdata/export_file/customers_clustering/',dataset().folder_name)"
-		},
-		"blob_customers_clustering_folder_hd_file_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "dataset().folder_name"
-		},
-		"blob_customers_clustering_folder_hd_file_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "rawdata/export_file/customers_clustering/"
-		},
-		"blob_customers_clustering_json_file_list_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "*.json"
-		},
-		"blob_customers_clustering_json_file_list_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "rawdata/export_file/customers_clustering/file_list.json"
-		},
-		"blob_platfrom_merge_file_des_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@dataset().file_name"
-		},
-		"blob_platfrom_merge_file_des_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "rawdata/platfrom_merged_by_day"
-		},
-		"blob_platfrom_unzip_file_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@dataset().folder_name"
-		},
-		"blob_platfrom_unzip_file_1_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@dataset().file_name"
-		},
-		"blob_platfrom_unzip_file_1_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@dataset().folder_name"
-		},
-		"blob_serials_row_folder_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "*.csv"
-		},
-		"blob_serials_row_folder_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "rawdata/Serials/"
-		},
-		"dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('Customer_Questionnaires_', pipeline().TriggerTime, '.csv.bz2')"
-		},
-		"dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "rawdata/Customer_Questionnaires/"
-		},
-		"dwh_Dim_Users_blob_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "Users.csv"
-		},
-		"dwh_Dim_Users_blob_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "rawdata/DWH_Users"
-		},
-		"dwh_calls_blob_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('Calls_', pipeline().TriggerTime, '.csv.bz2')"
-		},
-		"dwh_calls_blob_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@concat('rawdata/DWH_Calls/Received=',utcnow('s'))"
-		},
-		"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('DWH_Lead_Assignments_', pipeline().TriggerTime, '.csv.bz2')"
-		},
-		"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@concat('rawdata/DWH_Lead_Assignments/Received=',utcnow('s'))"
-		},
-		"fxnet_accounting_blob_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('FXNET_Accounting_', pipeline().TriggerTime, '.csv.bz2')"
-		},
-		"fxnet_accounting_blob_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@concat('rawdata/FXNET_Accounting/Received=',utcnow('s'))"
-		},
-		"fxnet_deals_blob_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('FXNET_Deals_', pipeline().TriggerTime, '.csv.bz2')"
-		},
-		"fxnet_deals_blob_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@concat('rawdata/FXNET_Deals/Received=',utcnow('s'))"
-		},
-		"platformusage_blob_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@dataset().file_name"
-		},
-		"platformusage_blob_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@dataset().folder_name"
-		},
-		"scmm_activities_blob_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('SCMM_Activities_', pipeline().TriggerTime, '.csv.bz2')"
-		},
-		"scmm_activities_blob_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@concat('rawdata/SCMM_Activities/Received=',utcnow('s'))"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Communication_blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DataloadStore",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "MessageID",
+						"type": "Int32"
+					},
+					{
+						"name": "Event_Date",
+						"type": "DateTime"
+					},
+					{
+						"name": "details",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": "\t",
+						"rowDelimiter": "",
+						"quoteChar": "",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"compression": {
+						"type": "BZip2"
+					},
+					"fileName": {
+						"value": "[parameters('Communication_blob_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": {
+						"value": "[parameters('Communication_blob_properties_typeProperties_folderPath')]",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CosmosDbSqlApi')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "CosmosDb1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "CosmosDbSqlApiCollection",
+				"schema": {},
+				"typeProperties": {
+					"collectionName": "users"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWH_Dim_Customers_blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"folder_name": {
+						"type": "String",
+						"defaultValue": "Dim_AccountContacts"
+					}
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": "\u0001",
+						"rowDelimiter": "\n",
+						"nullValue": "\\N",
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"fileName": {
+						"value": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_3oo')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "bydatalakqa sa",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "campaings.json",
+						"folderPath": "sqldata",
+						"container": "dwh-qa"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_5qf')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "CosmosDb1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "CosmosDbSqlApiCollection",
+				"schema": {},
+				"typeProperties": {
+					"collectionName": "agents"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_5sz')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "CosmosDb1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "CosmosDbSqlApiCollection",
+				"schema": {},
+				"typeProperties": {
+					"collectionName": "campaigns"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_6v0')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "bydatalakqa sa",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "campaings",
+						"folderPath": "sqldata",
+						"container": "dwh-qa"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_bve')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "CosmosDb1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "CosmosDbSqlApiCollection",
+				"schema": {},
+				"typeProperties": {
+					"collectionName": "campaigns"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_e97')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "CosmosDb1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "CosmosDbSqlApiCollection",
+				"schema": {},
+				"typeProperties": {
+					"collectionName": "campaigns"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_lfo')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "bydatalakqa sa",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "campaingscsv.json",
+						"folderPath": "sqldata",
+						"container": "dwh-qa"
+					},
+					"columnDelimiter": "\t",
+					"escapeChar": "\\",
+					"quoteChar": ""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_prf')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "CosmosDb1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "CosmosDbSqlApiCollection",
+				"schema": {
+					"type": "object",
+					"properties": {
+						"Guid": {
+							"type": "string"
+						},
+						"Name": {
+							"type": "string"
+						},
+						"Age": {
+							"type": "integer"
+						}
+					}
+				},
+				"typeProperties": {
+					"collectionName": "WebEvents"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Mng_data_factory_etl')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Azure BI db",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Source",
+						"type": "varchar"
+					},
+					{
+						"name": "TableName",
+						"type": "varchar"
+					},
+					{
+						"name": "Incremental",
+						"type": "bit"
+					},
+					{
+						"name": "LastIncrementalDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "LastIncrementalDate2",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "NextIncrementalDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "NextIncrementalDate2",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "SelectSQL",
+						"type": "varchar"
+					},
+					{
+						"name": "LastId",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "NextId",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "LastRunRowCount",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "LastTimeStamp",
+						"type": "varbinary"
+					},
+					{
+						"name": "NextTimeStamp",
+						"type": "varbinary"
+					},
+					{
+						"name": "MaxToDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "MaxID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Batch_Size",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Mng_data_factory_ETL"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ParameterTable')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Azure BI db",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tablename": {
+						"type": "string",
+						"defaultValue": "DimProducts"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": {
+						"value": "@dataset().tablename",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_5sz')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "bydatalakqa sa",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "campaingscsv.json",
+						"folderPath": "sqldata",
+						"container": "dwh-qa"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"numerator": {
+							"type": "integer"
+						},
+						"id": {
+							"type": "string"
+						},
+						"name": {
+							"type": "string"
+						},
+						"Products": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"product_id": {
+										"type": "string"
+									},
+									"product_numerator": {
+										"type": "integer"
+									},
+									"Serials": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"Serial_id": {
+													"type": "string"
+												},
+												"serial": {
+													"type": "integer"
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_bve')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "bydatalakqa sa",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "campaings",
+						"folderPath": "sqldata",
+						"container": "dwh-qa"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"value": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_e97')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "bydatalakqa sa",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "campaings.json",
+						"folderPath": "sqldata",
+						"container": "dwh-qa"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"value": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_prf')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage3",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "barak/tmp_pqu",
+						"container": "users"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "id",
+						"type": "UTF8"
+					},
+					{
+						"name": "Req",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/blob_EMERP_Events')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"folder_name": {
+						"type": "String",
+						"defaultValue": "EMERP_Events"
+					}
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": "\u0001",
+						"rowDelimiter": "\n",
+						"nullValue": "\\N",
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"fileName": {
+						"value": "[parameters('blob_EMERP_Events_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": "[parameters('blob_EMERP_Events_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/blob_Fact_Transactions')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -232,1014 +749,6 @@
 						"value": "[parameters('blob_customers_clustering_properties_typeProperties_folderPath')]",
 						"type": "Expression"
 					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/blob_customers_clustering_folder')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"folder_name": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "sync"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "AccountNumber",
-						"type": "String"
-					},
-					{
-						"name": "cluster_type",
-						"type": "String"
-					},
-					{
-						"name": "update_date",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": true
-					},
-					"fileName": "[parameters('blob_customers_clustering_folder_properties_typeProperties_fileName')]",
-					"folderPath": {
-						"value": "[parameters('blob_customers_clustering_folder_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/blob_customers_clustering_folder_hd_file')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"folder_name": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "sync"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "AccountNumber",
-						"type": "String"
-					},
-					{
-						"name": "cluster_type",
-						"type": "String"
-					},
-					{
-						"name": "update_date",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": true
-					},
-					"fileName": "[parameters('blob_customers_clustering_folder_hd_file_properties_typeProperties_fileName')]",
-					"folderPath": {
-						"value": "[parameters('blob_customers_clustering_folder_hd_file_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/blob_customers_clustering_json_file_list')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "sync"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "file",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "JsonFormat",
-						"filePattern": "setOfObjects",
-						"jsonPathDefinition": {
-							"file": "$.['_1']"
-						}
-					},
-					"fileName": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/blob_platfrom_merge_file_des')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"file_name": {
-						"type": "String"
-					}
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": " ",
-						"rowDelimiter": "\n",
-						"quoteChar": "\"",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"fileName": {
-						"value": "[parameters('blob_platfrom_merge_file_des_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": "[parameters('blob_platfrom_merge_file_des_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/blob_platfrom_unzip_file')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"folder_name": {
-						"type": "String"
-					},
-					"file_name": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "Platform Usage"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "ip",
-						"type": "String"
-					},
-					{
-						"name": "hyphen_1",
-						"type": "String"
-					},
-					{
-						"name": "hyphen_2",
-						"type": "String"
-					},
-					{
-						"name": "datetime",
-						"type": "String"
-					},
-					{
-						"name": "time",
-						"type": "String"
-					},
-					{
-						"name": "url_parm",
-						"type": "String"
-					},
-					{
-						"name": "Prop_6",
-						"type": "String"
-					},
-					{
-						"name": "Prop_7",
-						"type": "String"
-					},
-					{
-						"name": "server",
-						"type": "String"
-					},
-					{
-						"name": "user_agent",
-						"type": "String"
-					},
-					{
-						"name": "log_parm",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"folderPath": {
-						"value": "[parameters('blob_platfrom_unzip_file_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/blob_platfrom_unzip_file_1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"folder_name": {
-						"type": "String"
-					},
-					"file_name": {
-						"type": "String"
-					}
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "ip",
-						"type": "String"
-					},
-					{
-						"name": "hyphen_1",
-						"type": "String"
-					},
-					{
-						"name": "hyphen_2",
-						"type": "String"
-					},
-					{
-						"name": "datetime",
-						"type": "String"
-					},
-					{
-						"name": "time",
-						"type": "String"
-					},
-					{
-						"name": "url_parm",
-						"type": "String"
-					},
-					{
-						"name": "Prop_6",
-						"type": "String"
-					},
-					{
-						"name": "Prop_7",
-						"type": "String"
-					},
-					{
-						"name": "server",
-						"type": "String"
-					},
-					{
-						"name": "user_agent",
-						"type": "String"
-					},
-					{
-						"name": "log_parm",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": " ",
-						"rowDelimiter": "\n",
-						"quoteChar": "\"",
-						"nullValue": "\\N",
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"fileName": {
-						"value": "[parameters('blob_platfrom_unzip_file_1_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": {
-						"value": "[parameters('blob_platfrom_unzip_file_1_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/blob_serials_row_folder')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": true
-					},
-					"fileName": "[parameters('blob_serials_row_folder_properties_typeProperties_fileName')]",
-					"folderPath": {
-						"value": "[parameters('blob_serials_row_folder_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dwh_Customer_Questionnaires_blob')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DataloadStore",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": "\t",
-						"rowDelimiter": "",
-						"quoteChar": "",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"compression": {
-						"type": "BZip2"
-					},
-					"fileName": {
-						"value": "[parameters('dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": {
-						"value": "[parameters('dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dwh_Dim_Users_blob')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DataloadStore",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "User_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "details",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": "\u0001",
-						"rowDelimiter": "\n",
-						"nullValue": "\\N",
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": true
-					},
-					"fileName": {
-						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dwh_calls_blob')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DataloadStore",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "Call_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "Call_Details",
-						"type": "String"
-					},
-					{
-						"name": "CallDay",
-						"type": "DateTime"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": "\t",
-						"rowDelimiter": "",
-						"quoteChar": "",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"compression": {
-						"type": "BZip2"
-					},
-					"fileName": {
-						"value": "[parameters('dwh_calls_blob_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": {
-						"value": "[parameters('dwh_calls_blob_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dwh_lead_assignments_blob')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DataloadStore",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "Fact_Lead_Assignments_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "Assignment_Day",
-						"type": "DateTime"
-					},
-					{
-						"name": "Assignment_Date",
-						"type": "DateTime"
-					},
-					{
-						"name": "Details",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": "\t",
-						"rowDelimiter": "",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"compression": {
-						"type": "BZip2"
-					},
-					"fileName": {
-						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": {
-						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/etl_manage')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DataLoadStorageAccount",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureTable",
-				"structure": [
-					{
-						"name": "PartitionKey",
-						"type": "String"
-					},
-					{
-						"name": "RowKey",
-						"type": "String"
-					},
-					{
-						"name": "Timestamp",
-						"type": "DateTimeOffset"
-					},
-					{
-						"name": "Last_Incremental_Date",
-						"type": "String"
-					},
-					{
-						"name": "Next_Incremental_Date",
-						"type": "String"
-					},
-					{
-						"name": "Last_PU_INT",
-						"type": "Int64"
-					},
-					{
-						"name": "Next_PU_INT",
-						"type": "Int64"
-					}
-				],
-				"typeProperties": {
-					"tableName": "etlManage"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/fact_events_dwh')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase_dwh",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "BI"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"structure": [
-					{
-						"name": "Event_Date_day",
-						"type": "DateTime"
-					},
-					{
-						"name": "Source",
-						"type": "String"
-					},
-					{
-						"name": "Event_Name",
-						"type": "String"
-					},
-					{
-						"name": "Event_Details",
-						"type": "String"
-					},
-					{
-						"name": "Event_Count",
-						"type": "Int64"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[[dbo].[fact_events]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/fxnet_accounting_blob')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DataloadStore",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "fact_account_trans_id",
-						"type": "Int64"
-					},
-					{
-						"name": "ActionDay",
-						"type": "DateTime"
-					},
-					{
-						"name": "ActionDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "Details",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": "\t",
-						"rowDelimiter": "",
-						"quoteChar": "",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"compression": {
-						"type": "BZip2"
-					},
-					"fileName": {
-						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": {
-						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/fxnet_deals_blob')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DataloadStore",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "TransactionNumber",
-						"type": "String"
-					},
-					{
-						"name": "ExecutionDay",
-						"type": "String"
-					},
-					{
-						"name": "ExecutionDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "Trans_Details",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": "\t",
-						"rowDelimiter": "",
-						"quoteChar": "",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"compression": {
-						"type": "BZip2"
-					},
-					"fileName": {
-						"value": "[parameters('fxnet_deals_blob_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": {
-						"value": "[parameters('fxnet_deals_blob_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/platformusage_blob')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"folder_name": {
-						"type": "String"
-					},
-					"file_name": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "Platform Usage"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"typeProperties": {
-					"compression": {
-						"type": "ZipDeflate",
-						"level": "Optimal"
-					},
-					"fileName": {
-						"value": "[parameters('platformusage_blob_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": {
-						"value": "[parameters('platformusage_blob_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/scmm_activities_blob')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DataloadStore",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "Activity_Id",
-						"type": "Int32"
-					},
-					{
-						"name": "Activity_Date",
-						"type": "DateTime"
-					},
-					{
-						"name": "details",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": "\t",
-						"rowDelimiter": "",
-						"quoteChar": "",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"compression": {
-						"type": "BZip2"
-					},
-					"fileName": {
-						"value": "[parameters('scmm_activities_blob_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": {
-						"value": "[parameters('scmm_activities_blob_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/serials_dim_dwh')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase_dwh",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "BI"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"structure": [
-					{
-						"name": "Serial",
-						"type": "Int64"
-					},
-					{
-						"name": "Client_Id",
-						"type": "String"
-					},
-					{
-						"name": "Client_Numerator",
-						"type": "Int32"
-					},
-					{
-						"name": "Client_Name",
-						"type": "String"
-					},
-					{
-						"name": "Product_Numerator",
-						"type": "Int32"
-					},
-					{
-						"name": "Product_Name",
-						"type": "String"
-					},
-					{
-						"name": "Product_Full_Name",
-						"type": "String"
-					},
-					{
-						"name": "Campaign_Numerator",
-						"type": "Int32"
-					},
-					{
-						"name": "Campaign_Name",
-						"type": "String"
-					},
-					{
-						"name": "Targetmarket_Id",
-						"type": "Int32"
-					},
-					{
-						"name": "Targetmarket",
-						"type": "String"
-					},
-					{
-						"name": "Supplier_Numerator",
-						"type": "Int32"
-					},
-					{
-						"name": "Supplier",
-						"type": "String"
-					},
-					{
-						"name": "Supplier_Group",
-						"type": "String"
-					},
-					{
-						"name": "Mediabuyer_Numerator",
-						"type": "Int32"
-					},
-					{
-						"name": "Mediabuyer",
-						"type": "String"
-					},
-					{
-						"name": "Format",
-						"type": "String"
-					},
-					{
-						"name": "Site_Numerator",
-						"type": "Int32"
-					},
-					{
-						"name": "Site_Name",
-						"type": "String"
-					},
-					{
-						"name": "Proposition_Id",
-						"type": "Int32"
-					},
-					{
-						"name": "Proposition",
-						"type": "String"
-					},
-					{
-						"name": "Banner_Name",
-						"type": "String"
-					},
-					{
-						"name": "Banner_Path",
-						"type": "String"
-					},
-					{
-						"name": "TypeExt",
-						"type": "String"
-					},
-					{
-						"name": "Landing_Page",
-						"type": "String"
-					},
-					{
-						"name": "Language",
-						"type": "String"
-					},
-					{
-						"name": "SelfActivation",
-						"type": "Int32"
-					},
-					{
-						"name": "Content",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[[dbo].[dim_serials]"
 				}
 			},
 			"dependsOn": []

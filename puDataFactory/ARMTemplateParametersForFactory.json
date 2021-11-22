@@ -20,10 +20,19 @@
 		"AzureBlobStorage1_connectionString": {
 			"value": ""
 		},
+		"AzureBlobStorage2_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorage3_connectionString": {
+			"value": ""
+		},
 		"AzureSqlDatabase_dwh_connectionString": {
 			"value": ""
 		},
 		"AzureSqlDatabase_events_connectionString": {
+			"value": ""
+		},
+		"CosmosDb1_connectionString": {
 			"value": ""
 		},
 		"DWH_connectionString": {
@@ -68,6 +77,9 @@
 		"alldbdwh_password": {
 			"value": ""
 		},
+		"bydatalakqa sa_connectionString": {
+			"value": ""
+		},
 		"dwhdb_blob_connectionString": {
 			"value": ""
 		},
@@ -84,6 +96,9 @@
 			"value": ""
 		},
 		"fileserver1_password": {
+			"value": ""
+		},
+		"AzureDataLake_gen2_usansa_accountKey": {
 			"value": ""
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
@@ -283,6 +298,9 @@
 		},
 		"fileserver1_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
+		},
+		"AzureDataLake_gen2_usansa_properties_typeProperties_url": {
+			"value": "https://usansa.dfs.core.windows.net/"
 		}
 	}
 }

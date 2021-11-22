@@ -46,36 +46,364 @@
 		"Blob_Serials_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "rawdata/Serials"
-		},
-		"Communication_blob_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('Communication_', pipeline().TriggerTime, '.csv.bz2')"
-		},
-		"Communication_blob_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@concat('rawdata/Communication/Received=',utcnow('s'))"
-		},
-		"DWH_Dim_Customers_blob_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('Customers_', pipeline().RunId, '.csv')"
-		},
-		"DWH_Dim_Customers_blob_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "rawdata/Customers"
-		},
-		"blob_EMERP_Events_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('EMERP_Events', pipeline().RunId, '.csv')"
-		},
-		"blob_EMERP_Events_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "rawdata/EMERP_Events"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/01 Get Customers List For All Models')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "run Get Customers List For Model",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/Get Customers List For Models  2 7 30"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Dm_Models"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/02 Get Data For Models')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "2 Days 11  Get Data For Model",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/2_DAYS/10. Customers 2 Days -  11. Get Data For Model"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "30 Days 11  Get Data For Model",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "7 Days 11 Get Data For Model",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/30_DAYS/12. Customers 30 Days -  11. Get Data For Model"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "7 Days 11 Get Data For Model",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "2 Days 11  Get Data For Model",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/7_DAYS/11. Customers 7 Days -  11. Get Data For Model"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Dm_Models"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/03 - Execute Models')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Customers 2 Days  12 Execute Model",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/RUN/11. 2 DAYS -  RUN 03 - Execute model"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Customers 7 Days  12 Execute Model",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Customers 2 Days  12 Execute Model",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/RUN/11. 7 DAYS -  RUN 03 - Execute model"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Customers 30 Days  12 Execute Model",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "Customers 7 Days  12 Execute Model",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/RUN/11. 30 DAYS -  RUN 03 - Execute model"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Dm_Models"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/04 - sync to azure sql')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "sync 2 day models result",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/2_DAYS/10. Customers 2 Days - 13. sync models result"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "sync 7 day models result",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "sync 2 day models result",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/7_DAYS/11. Customers 7 Days - 13. sync models result"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "sync 30 day models result",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "sync 7 day models result",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering/30_DAYS/12. Customers 30 Days - 13. sync models result"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Dm_Models"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/04_PU_ods_to_events')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "PU PU ods to events raw",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Load Data/Platform Usage/PU ods to events raw"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Platfrom_Usage"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/301 Get Customers List For Model')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -103,6 +431,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"folder": {
 					"name": "Dm_Models"
 				},
@@ -137,6 +469,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"folder": {
 					"name": "Dm_Models"
 				},
@@ -171,6 +507,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"folder": {
 					"name": "Dm_Models"
 				},
@@ -208,6 +548,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"folder": {
 					"name": "Dm_Models"
 				},
@@ -249,6 +593,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"folder": {
 					"name": "BI"
 				},
@@ -283,6 +631,10 @@
 						}
 					}
 				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
 				"folder": {
 					"name": "Platfrom_Usage/V2"
 				},
@@ -767,266 +1119,6 @@
 						"type": "Expression"
 					},
 					"folderPath": "[parameters('Blob_Serials_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Communication_blob')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DataloadStore",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "MessageID",
-						"type": "Int32"
-					},
-					{
-						"name": "Event_Date",
-						"type": "DateTime"
-					},
-					{
-						"name": "details",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": "\t",
-						"rowDelimiter": "",
-						"quoteChar": "",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"compression": {
-						"type": "BZip2"
-					},
-					"fileName": {
-						"value": "[parameters('Communication_blob_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": {
-						"value": "[parameters('Communication_blob_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DWH_Dim_Customers_blob')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"folder_name": {
-						"type": "String",
-						"defaultValue": "Dim_AccountContacts"
-					}
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": "\u0001",
-						"rowDelimiter": "\n",
-						"nullValue": "\\N",
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": true
-					},
-					"fileName": {
-						"value": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Mng_data_factory_etl')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Azure BI db",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "id",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Source",
-						"type": "varchar"
-					},
-					{
-						"name": "TableName",
-						"type": "varchar"
-					},
-					{
-						"name": "Incremental",
-						"type": "bit"
-					},
-					{
-						"name": "LastIncrementalDate",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "LastIncrementalDate2",
-						"type": "datetime2",
-						"scale": 7
-					},
-					{
-						"name": "NextIncrementalDate",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "NextIncrementalDate2",
-						"type": "datetime2",
-						"scale": 7
-					},
-					{
-						"name": "SelectSQL",
-						"type": "varchar"
-					},
-					{
-						"name": "LastId",
-						"type": "bigint",
-						"precision": 19
-					},
-					{
-						"name": "NextId",
-						"type": "bigint",
-						"precision": 19
-					},
-					{
-						"name": "LastRunRowCount",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "LastTimeStamp",
-						"type": "varbinary"
-					},
-					{
-						"name": "NextTimeStamp",
-						"type": "varbinary"
-					},
-					{
-						"name": "MaxToDate",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "MaxID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Batch_Size",
-						"type": "int",
-						"precision": 10
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Mng_data_factory_ETL"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ParameterTable')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Azure BI db",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"tablename": {
-						"type": "string",
-						"defaultValue": "DimProducts"
-					}
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": {
-						"value": "@dataset().tablename",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/blob_EMERP_Events')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"folder_name": {
-						"type": "String",
-						"defaultValue": "EMERP_Events"
-					}
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": "\u0001",
-						"rowDelimiter": "\n",
-						"nullValue": "\\N",
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": true
-					},
-					"fileName": {
-						"value": "[parameters('blob_EMERP_Events_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": "[parameters('blob_EMERP_Events_properties_typeProperties_folderPath')]"
 				}
 			},
 			"dependsOn": []
