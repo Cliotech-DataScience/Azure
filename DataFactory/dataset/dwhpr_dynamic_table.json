@@ -1,0 +1,36 @@
+{
+	"name": "dwhpr_dynamic_table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Dwhpr",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"DB": "FXNET"
+			}
+		},
+		"parameters": {
+			"DB": {
+				"type": "string"
+			},
+			"TableName": {
+				"type": "string"
+			},
+			"schema": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().schema",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().TableName",
+				"type": "Expression"
+			}
+		}
+	}
+}
