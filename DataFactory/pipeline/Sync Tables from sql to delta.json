@@ -90,11 +90,11 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"DB": {
-											"value": "item().DB",
+											"value": "@item().DB",
 											"type": "Expression"
 										},
-										"TableName": "item().TableName",
-										"schema": "item().schema"
+										"TableName": "@item().TableName",
+										"schema": "@item().schema"
 									}
 								}
 							],
