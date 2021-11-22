@@ -2,11 +2,17 @@
 	"name": "Dwhpr",
 	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
+		"parameters": {
+			"DB": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
 		"type": "SqlServer",
 		"typeProperties": {
-			"connectionString": "integrated security=True;data source=Dwh-pr,2555;initial catalog=emerp_lm",
+			"connectionString": "integrated security=True;data source=Dwh-pr,2555;initial catalog=@{linkedService().DB}",
 			"userName": "efix\\az_etl",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI2YWJjMDFhMi1iMzU3LTQ3MjMtYjYzMS05YTdiMjgxZjM5YTUiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIzMzdiOGEwMS0wZjg3LTQ1MTQtYTJlYi1mZDMxYzE4YjA2NWQiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "alldbgateway",
