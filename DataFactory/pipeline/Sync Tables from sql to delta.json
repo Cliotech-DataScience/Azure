@@ -17,6 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT ID,\n       Server,\n       DB,\n       [schema],\n       TableName\nFROM dbo.synapse_Mng_Sync_Tables\nWHERE Active=1",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
