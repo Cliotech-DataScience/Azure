@@ -361,7 +361,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": {
-							"value": "@concat(dataset().Parquet_db,'_',dataset().Parquet_table_file_name)",
+							"value": "@concat(dataset().Parquet_db,'_',dataset().Parquet_table_file_name,'.qz')",
 							"type": "Expression"
 						},
 						"folderPath": "parquet_file/lookup_tables",
