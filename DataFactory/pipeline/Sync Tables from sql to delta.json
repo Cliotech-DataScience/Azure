@@ -87,13 +87,25 @@
 							"inputs": [
 								{
 									"referenceName": "dwhpr_dynamic_table",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"DB": {
+											"value": "item().DB",
+											"type": "Expression"
+										},
+										"TableName": "item().TableName",
+										"schema": "item().schema"
+									}
 								}
 							],
 							"outputs": [
 								{
 									"referenceName": "Parquet_file_dynamic",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"Parquet_table_file_name": "item().TableName",
+										"Parquet_db": "item().DB"
+									}
 								}
 							]
 						}
