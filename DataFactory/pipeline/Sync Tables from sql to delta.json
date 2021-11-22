@@ -48,7 +48,7 @@
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "Copy data1",
+							"name": "Copy data to parquet",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
@@ -103,8 +103,8 @@
 									"referenceName": "Parquet_file_dynamic",
 									"type": "DatasetReference",
 									"parameters": {
-										"Parquet_table_file_name": "item().TableName",
-										"Parquet_db": "item().DB"
+										"Parquet_table_file_name": "@item().TableName",
+										"Parquet_db": "@item().DB"
 									}
 								}
 							]
