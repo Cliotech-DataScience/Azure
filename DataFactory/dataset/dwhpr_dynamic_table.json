@@ -5,7 +5,10 @@
 			"referenceName": "Dwhpr",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"DB": "FXNET"
+				"DB": {
+					"value": "@dataset().DB",
+					"type": "Expression"
+				}
 			}
 		},
 		"parameters": {
