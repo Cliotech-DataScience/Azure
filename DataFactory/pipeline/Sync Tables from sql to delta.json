@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Lookup1",
+				"name": "Lk_table_name",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
