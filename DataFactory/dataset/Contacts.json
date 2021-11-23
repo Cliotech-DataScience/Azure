@@ -3,8 +3,12 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "Dwhpr",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"DB": "dwh"
+			}
 		},
+		"annotations": [],
 		"type": "SqlServerTable",
 		"structure": [
 			{
