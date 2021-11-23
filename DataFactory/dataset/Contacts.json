@@ -5,7 +5,7 @@
 			"referenceName": "Dwhpr",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"DB": "dwh"
+				"DB": "emerp_lm"
 			}
 		},
 		"annotations": [],
