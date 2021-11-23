@@ -7,6 +7,14 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "puDataFactory"
 		},
+		"DWH_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'DWH'"
+		},
+		"DWH_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'DWH'"
+		},
 		"DWH12_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'DWH12'"
@@ -63,6 +71,18 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'fileserver1'"
 		},
+		"unzip_platfrom_file_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"unzip_platfrom_file_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "platformusage/rawdata/201810"
+		},
+		"DWH_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
 		"DWH12_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\Barak"
@@ -108,6 +128,58 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/unzip_platfrom_file')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"nullValue": "\\N",
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"compression": {
+						"type": "ZipDeflate"
+					},
+					"fileName": "[parameters('unzip_platfrom_file_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('unzip_platfrom_file_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DWH')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('DWH_connectionString')]",
+					"userName": "[parameters('DWH_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('DWH_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DWH12')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -293,83 +365,6 @@
 					"referenceName": "alldbgateway",
 					"type": "IntegrationRuntimeReference"
 				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Azure BI db",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "ID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Server",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DB",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TableName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Active",
-						"type": "int",
-						"precision": 10
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "synapse_Mng_Sync_Tables"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Parquet_file_dynamic')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLake_gen2_usansa",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"Parquet_table_file_name": {
-						"type": "string"
-					},
-					"Parquet_db": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "Parquet",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@concat(dataset().Parquet_db,'_',dataset().Parquet_table_file_name,'.qz')",
-							"type": "Expression"
-						},
-						"folderPath": "parquet_file/lookup_tables",
-						"fileSystem": "usan-data-lake-fs"
-					},
-					"compressionCodec": "gzip"
-				},
-				"schema": []
 			},
 			"dependsOn": []
 		},

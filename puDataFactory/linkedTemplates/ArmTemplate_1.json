@@ -38,14 +38,6 @@
 		"Blob_Contacts_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "rawdata/Contacts"
-		},
-		"Blob_Serials_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('Serials', pipeline().RunId, '.csv')"
-		},
-		"Blob_Serials_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "rawdata/Serials"
 		}
 	},
 	"variables": {
@@ -728,6 +720,48 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Azure BI db",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Server",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DB",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TableName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Active",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "synapse_Mng_Sync_Tables"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Azure_dwh_Dim_Channels')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1083,42 +1117,6 @@
 						"type": "Expression"
 					},
 					"folderPath": "[parameters('Blob_Contacts_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Blob_Serials')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"folder_name": {
-						"type": "String",
-						"defaultValue": "Dim_AccountContacts"
-					}
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": "\u0001",
-						"rowDelimiter": "\n",
-						"nullValue": "\\N",
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": true
-					},
-					"fileName": {
-						"value": "[parameters('Blob_Serials_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": "[parameters('Blob_Serials_properties_typeProperties_folderPath')]"
 				}
 			},
 			"dependsOn": []

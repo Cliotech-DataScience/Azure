@@ -31,7 +31,10 @@
 			"properties": {
 				"linkedServiceName": {
 					"referenceName": "Dwhpr",
-					"type": "LinkedServiceReference"
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DB": "emerp_lm"
+					}
 				},
 				"annotations": [],
 				"type": "SqlServerTable",

@@ -26,6 +26,9 @@
 		"AzureBlobStorage3_connectionString": {
 			"value": ""
 		},
+		"AzureDataLake_gen2_usansa_accountKey": {
+			"value": ""
+		},
 		"AzureSqlDatabase_dwh_connectionString": {
 			"value": ""
 		},
@@ -96,9 +99,6 @@
 			"value": ""
 		},
 		"fileserver1_password": {
-			"value": ""
-		},
-		"AzureDataLake_gen2_usansa_accountKey": {
 			"value": ""
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
@@ -266,6 +266,9 @@
 		"ADLS Byl_properties_typeProperties_url": {
 			"value": "https://byldatalakeqa.dfs.core.windows.net"
 		},
+		"AzureDataLake_gen2_usansa_properties_typeProperties_url": {
+			"value": "https://usansa.dfs.core.windows.net/"
+		},
 		"DWH_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"
 		},
@@ -298,9 +301,6 @@
 		},
 		"fileserver1_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
-		},
-		"AzureDataLake_gen2_usansa_properties_typeProperties_url": {
-			"value": "https://usansa.dfs.core.windows.net/"
 		},
 		"containerUri": {
 			"value": ""
