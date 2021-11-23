@@ -794,7 +794,10 @@
 			"properties": {
 				"linkedServiceName": {
 					"referenceName": "Dwhpr",
-					"type": "LinkedServiceReference"
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DB": "emerp_db"
+					}
 				},
 				"annotations": [],
 				"type": "SqlServerTable",
@@ -813,7 +816,7 @@
 					}
 				],
 				"typeProperties": {
-					"tableName": "emerp_db.azure.AZ_EMERP_DB_Events"
+					"tableName": "azure.AZ_EMERP_DB_Events"
 				}
 			},
 			"dependsOn": []
