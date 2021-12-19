@@ -1551,27 +1551,6 @@
 						}
 					},
 					{
-						"name": "RUN - emerp_events",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - 03_PU_Load_ods_data",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "EMERP_Events",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "RUN - Contacts",
 						"type": "ExecutePipeline",
 						"dependsOn": [
@@ -1637,7 +1616,7 @@
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "RUN - emerp_events",
+								"activity": "RUN - 03_PU_Load_ods_data",
 								"dependencyConditions": [
 									"Succeeded"
 								]
