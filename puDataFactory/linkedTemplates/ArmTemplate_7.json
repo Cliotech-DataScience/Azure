@@ -1474,27 +1474,6 @@
 						}
 					},
 					{
-						"name": "RUN - 03_PU_Load_ods_data",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - 02_platfromusage_unzip_zip_blob_files",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "03_PU_Load_ods_data",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "RUN - Customers",
 						"type": "ExecutePipeline",
 						"dependsOn": [],
@@ -1616,7 +1595,7 @@
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "RUN - 03_PU_Load_ods_data",
+								"activity": "RUN - 02_platfromusage_unzip_zip_blob_files",
 								"dependencyConditions": [
 									"Succeeded"
 								]
