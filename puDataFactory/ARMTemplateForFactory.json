@@ -4151,27 +4151,6 @@
 						}
 					},
 					{
-						"name": "RUN - 03_PU_Load_ods_data",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "RUN - 02_platfromusage_unzip_zip_blob_files",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "03_PU_Load_ods_data",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
 						"name": "RUN - 01_platfromusage_files_copy_to_blob",
 						"type": "ExecutePipeline",
 						"dependsOn": [],
@@ -4194,7 +4173,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/02_platfromusage_unzip_zip_blob_files')]",
-				"[concat(variables('factoryId'), '/pipelines/03_PU_Load_ods_data')]",
 				"[concat(variables('factoryId'), '/pipelines/01_platfromusage_files_copy_to_blob')]"
 			]
 		},
