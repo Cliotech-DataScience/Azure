@@ -21,6 +21,7 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"notebookPath": "/Load Data/Platform Usage/PU Load ods data",
 					"baseParameters": {
@@ -44,6 +45,7 @@
 			{
 				"name": "Lookup_file_to_create",
 				"type": "Lookup",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -51,10 +53,12 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderQuery": "   SELECT file_name,\n        folder,daily_file\nFROM azure.platfrom_usage_log_file\nWHERE 1=1\nAND move_to_blob =1 \nAND unzip_file=1\nAND  ISNULL(daily_file,0)<>1\n"
+						"sqlReaderQuery": "   SELECT file_name,\n        folder,daily_file\nFROM azure.platfrom_usage_log_file\nWHERE 1=1\nAND move_to_blob =1 \nAND unzip_file=1\nAND  ISNULL(daily_file,0)<>1\n",
+						"partitionOption": "None"
 					},
 					"dataset": {
 						"referenceName": "DWH_pu_list_files",
@@ -80,6 +84,7 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"storedProcedureName": "[azure].[SP_Update_platfrom_usage_log_file_create_daily_file]",
 					"storedProcedureParameters": {
@@ -99,8 +104,9 @@
 			}
 		],
 		"folder": {
-			"name": "Platfrom_Usage"
-		}
+			"name": "Platfrom_Usage/old"
+		},
+		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

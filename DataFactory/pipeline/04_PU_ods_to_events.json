@@ -5,6 +5,7 @@
 			{
 				"name": "PU PU ods to events raw",
 				"type": "DatabricksNotebook",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -12,6 +13,7 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"notebookPath": "/Load Data/Platform Usage/PU ods to events raw"
 				},
@@ -22,8 +24,9 @@
 			}
 		],
 		"folder": {
-			"name": "Platfrom_Usage"
-		}
+			"name": "Platfrom_Usage/old"
+		},
+		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
