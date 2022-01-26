@@ -1,0 +1,17 @@
+{
+	"name": "SCMM SQL",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=True;data source=dwh-pr,2555;initial catalog=emerp_lm",
+			"userName": "efix\\reportsprod",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJmODA2Y2ZlMC0yZTU4LTQ2ODItOGVmNy1lMjc2ODJhOWNiYjEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "alldbgateway",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
