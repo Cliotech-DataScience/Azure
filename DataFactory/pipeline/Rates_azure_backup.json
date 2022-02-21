@@ -1,0 +1,9 @@
+{
+	"name": "Rates_azure_backup",
+	"properties": {
+		"folder": {
+			"name": "RATES"
+		},
+		"annotations": []
+	}
+}
