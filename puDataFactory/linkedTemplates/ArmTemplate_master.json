@@ -151,6 +151,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'linkedService1'"
 		},
+		"pu_raw_file_LS_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'pu_raw_file_LS'"
+		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "*.parquet"
@@ -428,6 +432,14 @@
 			"defaultValue": "\\\\netapp-ams-cifs\\db\\Events_Collector\\pu_file_sync_to_azure\\files"
 		},
 		"linkedService1_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
+		"pu_raw_file_LS_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\netapp-ams-cifs\\db\\Events_Collector\\pu_file_sync_to_azure\\files"
+		},
+		"pu_raw_file_LS_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
@@ -791,6 +803,9 @@
 					"linkedService1_password": {
 						"value": "[parameters('linkedService1_password')]"
 					},
+					"pu_raw_file_LS_password": {
+						"value": "[parameters('pu_raw_file_LS_password')]"
+					},
 					"scmm_activities_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('scmm_activities_blob_properties_typeProperties_fileName')]"
 					},
@@ -844,6 +859,12 @@
 					},
 					"linkedService1_properties_typeProperties_userId": {
 						"value": "[parameters('linkedService1_properties_typeProperties_userId')]"
+					},
+					"pu_raw_file_LS_properties_typeProperties_host": {
+						"value": "[parameters('pu_raw_file_LS_properties_typeProperties_host')]"
+					},
+					"pu_raw_file_LS_properties_typeProperties_userId": {
+						"value": "[parameters('pu_raw_file_LS_properties_typeProperties_userId')]"
 					}
 				}
 			},

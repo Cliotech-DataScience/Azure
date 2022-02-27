@@ -113,6 +113,9 @@
 		"linkedService1_password": {
 			"value": ""
 		},
+		"pu_raw_file_LS_password": {
+			"value": ""
+		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"value": "*.parquet"
 		},
@@ -321,6 +324,12 @@
 			"value": "\\\\netapp-ams-cifs\\db\\Events_Collector\\pu_file_sync_to_azure\\files"
 		},
 		"linkedService1_properties_typeProperties_userId": {
+			"value": "efix\\az_etl"
+		},
+		"pu_raw_file_LS_properties_typeProperties_host": {
+			"value": "\\\\netapp-ams-cifs\\db\\Events_Collector\\pu_file_sync_to_azure\\files"
+		},
+		"pu_raw_file_LS_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
 		}
 	}
