@@ -6,8 +6,8 @@
 		"type": "FileServer",
 		"typeProperties": {
 			"host": "\\\\netapp-ams-cifs\\db\\Events_Collector\\pu_file_sync_to_azure\\files",
-			"userId": "EFIX/az_etl",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJjMDhkY2EzMC1hNjI2LTQzYzEtOTA4ZC1lNmUxZjM2N2NlNzIiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"userId": "efix\\az_etl",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJkZDE3NWQ2Mi1kMmU0LTRmMjYtOGFhZS0xMDY1YTc5MTdiYzgiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "alldbgateway",
