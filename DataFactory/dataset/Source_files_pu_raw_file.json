@@ -1,0 +1,37 @@
+{
+	"name": "Source_files_pu_raw_file",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "fileserver1",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"file_name": {
+				"type": "String"
+			},
+			"folder": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Platform Usage"
+		},
+		"annotations": [],
+		"type": "FileShare",
+		"typeProperties": {
+			"compression": {
+				"type": "ZipDeflate",
+				"level": "Optimal"
+			},
+			"fileName": {
+				"value": "@dataset().file_name",
+				"type": "Expression"
+			},
+			"folderPath": {
+				"value": "@dataset().folder",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
