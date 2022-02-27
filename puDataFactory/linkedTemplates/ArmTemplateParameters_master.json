@@ -29,6 +29,9 @@
 		"AzureDataLake_gen2_usansa_accountKey": {
 			"value": ""
 		},
+		"AzureSql tesdb_connectionString": {
+			"value": ""
+		},
 		"AzureSqlDatabase_dwh_connectionString": {
 			"value": ""
 		},
@@ -68,6 +71,12 @@
 		"Events_Collector_PlatfromUsage_log_password": {
 			"value": ""
 		},
+		"SCMM SQL_connectionString": {
+			"value": ""
+		},
+		"SCMM SQL_password": {
+			"value": ""
+		},
 		"STG_connectionString": {
 			"value": ""
 		},
@@ -99,6 +108,9 @@
 			"value": ""
 		},
 		"fileserver1_password": {
+			"value": ""
+		},
+		"linkedService1_password": {
 			"value": ""
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
@@ -284,6 +296,9 @@
 		"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
 		},
+		"SCMM SQL_properties_typeProperties_userName": {
+			"value": "efix\\reportsprod"
+		},
 		"STG_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"
 		},
@@ -300,6 +315,12 @@
 			"value": "\\\\netapp-ams-cifs\\db\\Events_Collector\\Archived"
 		},
 		"fileserver1_properties_typeProperties_userId": {
+			"value": "efix\\az_etl"
+		},
+		"linkedService1_properties_typeProperties_host": {
+			"value": "\\\\netapp-ams-cifs\\db\\Events_Collector\\pu_file_sync_to_azure\\files"
+		},
+		"linkedService1_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
 		},
 		"containerUri": {

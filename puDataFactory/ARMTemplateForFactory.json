@@ -39,6 +39,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLake_gen2_usansa'"
 		},
+		"AzureSql tesdb_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSql tesdb'"
+		},
 		"AzureSqlDatabase_dwh_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase_dwh'"
@@ -91,6 +95,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'Events_Collector_PlatfromUsage_log'"
 		},
+		"SCMM SQL_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SCMM SQL'"
+		},
+		"SCMM SQL_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SCMM SQL'"
+		},
 		"STG_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'STG'"
@@ -134,6 +146,10 @@
 		"fileserver1_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'fileserver1'"
+		},
+		"linkedService1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'linkedService1'"
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -379,6 +395,10 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"SCMM SQL_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\reportsprod"
+		},
 		"STG_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -400,6 +420,14 @@
 			"defaultValue": "\\\\netapp-ams-cifs\\db\\Events_Collector\\Archived"
 		},
 		"fileserver1_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
+		"linkedService1_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\netapp-ams-cifs\\db\\Events_Collector\\pu_file_sync_to_azure\\files"
+		},
+		"linkedService1_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		}
@@ -2036,6 +2064,219 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SourceDataset_prf')]",
 				"[concat(variables('factoryId'), '/datasets/DestinationDataset_prf')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CopyPipeline_small_tables')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach_y59",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.cw_items",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy_y59",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [
+										{
+											"name": "Source",
+											"value": "@{item().source.schema}.@{item().source.table}"
+										},
+										{
+											"name": "Destination",
+											"value": "bi.@{item().destination.table}"
+										}
+									],
+									"typeProperties": {
+										"source": {
+											"type": "SqlServerSource",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": {
+												"value": "@item().copySink.writeBehavior",
+												"type": "Expression"
+											},
+											"sqlWriterUseTableLock": {
+												"value": "@item().copySink.sqlWriterUseTableLock",
+												"type": "Expression"
+											},
+											"upsertSettings": {
+												"useTempDB": true
+											},
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"validateDataConsistency": false,
+										"translator": {
+											"value": "@item().copyActivity.translator",
+											"type": "Expression"
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "SourceDataset_y59",
+											"type": "DatasetReference",
+											"parameters": {
+												"cw_schema": "@item().source.schema",
+												"cw_table": "@item().source.table"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "DestinationDataset_y59",
+											"type": "DatasetReference",
+											"parameters": {
+												"cw_table": "@item().destination.table"
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"cw_items": {
+						"type": "Array",
+						"defaultValue": [
+							{
+								"source": {
+									"schema": "Calls",
+									"table": "CallModes"
+								},
+								"destination": {
+									"table": "CallModes"
+								},
+								"copySink": {
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false
+								},
+								"copyActivity": {
+									"translator": {
+										"type": "TabularTranslator",
+										"mappings": [
+											{
+												"source": {
+													"name": "CallModeID",
+													"type": "Byte",
+													"physicalType": "tinyint"
+												},
+												"sink": {
+													"name": "CallModeID",
+													"type": "Byte"
+												}
+											},
+											{
+												"source": {
+													"name": "CallModeName",
+													"type": "String",
+													"physicalType": "varchar"
+												},
+												"sink": {
+													"name": "CallModeName",
+													"type": "String"
+												}
+											}
+										],
+										"typeConversion": true,
+										"typeConversionSettings": {
+											"allowDataTruncation": true,
+											"treatBooleanAsNumber": false
+										}
+									}
+								}
+							},
+							{
+								"source": {
+									"schema": "Communication",
+									"table": "Statuses"
+								},
+								"destination": {
+									"table": "Statuses"
+								},
+								"copySink": {
+									"writeBehavior": null,
+									"sqlWriterUseTableLock": null
+								},
+								"copyActivity": {
+									"translator": {
+										"type": "TabularTranslator",
+										"mappings": [
+											{
+												"source": {
+													"name": "StatusID",
+													"type": "Int16",
+													"physicalType": "smallint"
+												},
+												"sink": {
+													"name": "StatusID",
+													"type": "Int16"
+												}
+											},
+											{
+												"source": {
+													"name": "Status",
+													"type": "String",
+													"physicalType": "varchar"
+												},
+												"sink": {
+													"name": "Status",
+													"type": "String"
+												}
+											},
+											{
+												"source": {
+													"name": "TreatAsSent",
+													"type": "Boolean",
+													"physicalType": "bit"
+												},
+												"sink": {
+													"name": "TreatAsSent",
+													"type": "Boolean"
+												}
+											}
+										],
+										"typeConversion": true,
+										"typeConversionSettings": {
+											"allowDataTruncation": true,
+											"treatBooleanAsNumber": false
+										}
+									}
+								}
+							}
+						]
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SourceDataset_y59')]",
+				"[concat(variables('factoryId'), '/datasets/DestinationDataset_y59')]"
 			]
 		},
 		{
@@ -7755,6 +7996,35 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_y59')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSql tesdb",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"cw_table": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "bi",
+					"table": {
+						"value": "@dataset().cw_table",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSql tesdb')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Dim_AccountContacts')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -8783,6 +9053,41 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_y59')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SCMM SQL",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"cw_schema": {
+						"type": "String"
+					},
+					"cw_table": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().cw_schema",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().cw_table",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SCMM SQL')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Source_file_avi')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -8821,6 +9126,26 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/fileserver1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Source_files_pu_raw_file')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "linkedService1",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "Platform Usage"
+				},
+				"annotations": [],
+				"type": "FileShare",
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/linkedService1')]"
 			]
 		},
 		{
@@ -10494,6 +10819,19 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureSql tesdb')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSql tesdb_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase_dwh')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -10618,7 +10956,8 @@
 						"PYSPARK_PYTHON": "/databricks/python3/bin/python3"
 					},
 					"newClusterVersion": "6.5.x-scala2.11",
-					"newClusterInitScripts": []
+					"newClusterInitScripts": [],
+					"clusterOption": "Fixed"
 				}
 			},
 			"dependsOn": []
@@ -10678,6 +11017,30 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('Events_Collector_PlatfromUsage_log_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/alldbgateway')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SCMM SQL')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('SCMM SQL_connectionString')]",
+					"userName": "[parameters('SCMM SQL_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('SCMM SQL_password')]"
 					}
 				},
 				"connectVia": {
@@ -11158,6 +11521,30 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/linkedService1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('linkedService1_properties_typeProperties_host')]",
+					"userId": "[parameters('linkedService1_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('linkedService1_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/alldbgateway')]"
+			]
 		}
 	]
 }

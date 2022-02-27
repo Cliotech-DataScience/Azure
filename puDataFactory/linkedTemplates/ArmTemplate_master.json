@@ -39,6 +39,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLake_gen2_usansa'"
 		},
+		"AzureSql tesdb_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSql tesdb'"
+		},
 		"AzureSqlDatabase_dwh_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase_dwh'"
@@ -91,6 +95,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'Events_Collector_PlatfromUsage_log'"
 		},
+		"SCMM SQL_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SCMM SQL'"
+		},
+		"SCMM SQL_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SCMM SQL'"
+		},
 		"STG_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'STG'"
@@ -134,6 +146,10 @@
 		"fileserver1_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'fileserver1'"
+		},
+		"linkedService1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'linkedService1'"
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -379,6 +395,10 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"SCMM SQL_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\reportsprod"
+		},
 		"STG_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -400,6 +420,14 @@
 			"defaultValue": "\\\\netapp-ams-cifs\\db\\Events_Collector\\Archived"
 		},
 		"fileserver1_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
+		"linkedService1_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\netapp-ams-cifs\\db\\Events_Collector\\pu_file_sync_to_azure\\files"
+		},
+		"linkedService1_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
@@ -453,6 +481,9 @@
 					},
 					"AzureDataLake_gen2_usansa_accountKey": {
 						"value": "[parameters('AzureDataLake_gen2_usansa_accountKey')]"
+					},
+					"AzureSql tesdb_connectionString": {
+						"value": "[parameters('AzureSql tesdb_connectionString')]"
 					},
 					"AzureSqlDatabase_dwh_connectionString": {
 						"value": "[parameters('AzureSqlDatabase_dwh_connectionString')]"
@@ -519,12 +550,6 @@
 					},
 					"BI_Serials_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('BI_Serials_blob_properties_typeProperties_folderPath')]"
-					},
-					"Blob_Contacts_properties_typeProperties_fileName": {
-						"value": "[parameters('Blob_Contacts_properties_typeProperties_fileName')]"
-					},
-					"Blob_Contacts_properties_typeProperties_folderPath": {
-						"value": "[parameters('Blob_Contacts_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -546,6 +571,12 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"Blob_Contacts_properties_typeProperties_fileName": {
+						"value": "[parameters('Blob_Contacts_properties_typeProperties_fileName')]"
+					},
+					"Blob_Contacts_properties_typeProperties_folderPath": {
+						"value": "[parameters('Blob_Contacts_properties_typeProperties_folderPath')]"
+					},
 					"Blob_Serials_properties_typeProperties_fileName": {
 						"value": "[parameters('Blob_Serials_properties_typeProperties_fileName')]"
 					},
@@ -563,12 +594,6 @@
 					},
 					"DWH_Dim_Customers_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_folderPath')]"
-					},
-					"blob_EMERP_Events_properties_typeProperties_fileName": {
-						"value": "[parameters('blob_EMERP_Events_properties_typeProperties_fileName')]"
-					},
-					"blob_EMERP_Events_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_EMERP_Events_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -589,6 +614,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"blob_EMERP_Events_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_EMERP_Events_properties_typeProperties_fileName')]"
+					},
+					"blob_EMERP_Events_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_EMERP_Events_properties_typeProperties_folderPath')]"
 					},
 					"blob_Fact_Transactions_properties_typeProperties_fileName": {
 						"value": "[parameters('blob_Fact_Transactions_properties_typeProperties_fileName')]"
@@ -682,12 +713,6 @@
 					},
 					"platformusage_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('platformusage_blob_properties_typeProperties_folderPath')]"
-					},
-					"scmm_activities_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('scmm_activities_blob_properties_typeProperties_fileName')]"
-					},
-					"scmm_activities_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('scmm_activities_blob_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -730,6 +755,12 @@
 					"Events_Collector_PlatfromUsage_log_password": {
 						"value": "[parameters('Events_Collector_PlatfromUsage_log_password')]"
 					},
+					"SCMM SQL_connectionString": {
+						"value": "[parameters('SCMM SQL_connectionString')]"
+					},
+					"SCMM SQL_password": {
+						"value": "[parameters('SCMM SQL_password')]"
+					},
 					"STG_connectionString": {
 						"value": "[parameters('STG_connectionString')]"
 					},
@@ -757,6 +788,15 @@
 					"fileserver1_password": {
 						"value": "[parameters('fileserver1_password')]"
 					},
+					"linkedService1_password": {
+						"value": "[parameters('linkedService1_password')]"
+					},
+					"scmm_activities_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('scmm_activities_blob_properties_typeProperties_fileName')]"
+					},
+					"scmm_activities_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('scmm_activities_blob_properties_typeProperties_folderPath')]"
+					},
 					"unzip_platfrom_file_properties_typeProperties_fileName": {
 						"value": "[parameters('unzip_platfrom_file_properties_typeProperties_fileName')]"
 					},
@@ -778,6 +818,9 @@
 					"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
 						"value": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_userId')]"
 					},
+					"SCMM SQL_properties_typeProperties_userName": {
+						"value": "[parameters('SCMM SQL_properties_typeProperties_userName')]"
+					},
 					"STG_properties_typeProperties_userName": {
 						"value": "[parameters('STG_properties_typeProperties_userName')]"
 					},
@@ -795,6 +838,12 @@
 					},
 					"fileserver1_properties_typeProperties_userId": {
 						"value": "[parameters('fileserver1_properties_typeProperties_userId')]"
+					},
+					"linkedService1_properties_typeProperties_host": {
+						"value": "[parameters('linkedService1_properties_typeProperties_host')]"
+					},
+					"linkedService1_properties_typeProperties_userId": {
+						"value": "[parameters('linkedService1_properties_typeProperties_userId')]"
 					}
 				}
 			},
@@ -818,12 +867,6 @@
 					},
 					"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 						"value": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"
-					},
-					"Source_file_avi_properties_typeProperties_fileName": {
-						"value": "[parameters('Source_file_avi_properties_typeProperties_fileName')]"
-					},
-					"Source_file_avi_properties_typeProperties_folderPath": {
-						"value": "[parameters('Source_file_avi_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -844,6 +887,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Source_file_avi_properties_typeProperties_fileName": {
+						"value": "[parameters('Source_file_avi_properties_typeProperties_fileName')]"
+					},
+					"Source_file_avi_properties_typeProperties_folderPath": {
+						"value": "[parameters('Source_file_avi_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -869,6 +918,26 @@
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'puDataFactory_ArmTemplate_6')]"
+			]
+		},
+		{
+			"name": "puDataFactory_ArmTemplate_8",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_8.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'puDataFactory_ArmTemplate_7')]"
 			]
 		}
 	]
