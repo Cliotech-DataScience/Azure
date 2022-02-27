@@ -18,52 +18,6 @@
 		},
 		"annotations": [],
 		"type": "AzureBlob",
-		"structure": [
-			{
-				"name": "ip",
-				"type": "String"
-			},
-			{
-				"name": "hyphen_1",
-				"type": "String"
-			},
-			{
-				"name": "hyphen_2",
-				"type": "String"
-			},
-			{
-				"name": "datetime",
-				"type": "String"
-			},
-			{
-				"name": "time",
-				"type": "String"
-			},
-			{
-				"name": "url_parm",
-				"type": "String"
-			},
-			{
-				"name": "Prop_6",
-				"type": "String"
-			},
-			{
-				"name": "Prop_7",
-				"type": "String"
-			},
-			{
-				"name": "server",
-				"type": "String"
-			},
-			{
-				"name": "user_agent",
-				"type": "String"
-			},
-			{
-				"name": "log_parm",
-				"type": "String"
-			}
-		],
 		"typeProperties": {
 			"fileName": "",
 			"folderPath": "platformusage/_test_pu_raw_file_sync"
