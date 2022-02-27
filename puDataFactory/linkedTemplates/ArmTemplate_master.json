@@ -155,6 +155,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pu_raw_file_LS'"
 		},
+		"AzureBlob_pu_files_raw_sc_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlob_pu_files_raw_sc'"
+		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "*.parquet"
@@ -443,6 +447,14 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"blob_PU_raw_files_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"blob_PU_raw_files_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "platformusage/_test_pu_raw_file_sync"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -544,6 +556,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"AzureBlob_pu_files_raw_sc_connectionString": {
+						"value": "[parameters('AzureBlob_pu_files_raw_sc_connectionString')]"
 					},
 					"BI_Events_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('BI_Events_blob_properties_typeProperties_fileName')]"
@@ -719,12 +734,6 @@
 					},
 					"fxnet_deals_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('fxnet_deals_blob_properties_typeProperties_folderPath')]"
-					},
-					"platformusage_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('platformusage_blob_properties_typeProperties_fileName')]"
-					},
-					"platformusage_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('platformusage_blob_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -806,6 +815,12 @@
 					"pu_raw_file_LS_password": {
 						"value": "[parameters('pu_raw_file_LS_password')]"
 					},
+					"platformusage_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('platformusage_blob_properties_typeProperties_fileName')]"
+					},
+					"platformusage_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('platformusage_blob_properties_typeProperties_folderPath')]"
+					},
 					"scmm_activities_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('scmm_activities_blob_properties_typeProperties_fileName')]"
 					},
@@ -865,6 +880,12 @@
 					},
 					"pu_raw_file_LS_properties_typeProperties_userId": {
 						"value": "[parameters('pu_raw_file_LS_properties_typeProperties_userId')]"
+					},
+					"blob_PU_raw_files_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_PU_raw_files_properties_typeProperties_fileName')]"
+					},
+					"blob_PU_raw_files_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_PU_raw_files_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -885,9 +906,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
-						"value": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -908,6 +926,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
+						"value": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"
 					},
 					"Source_file_avi_properties_typeProperties_fileName": {
 						"value": "[parameters('Source_file_avi_properties_typeProperties_fileName')]"

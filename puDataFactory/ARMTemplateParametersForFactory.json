@@ -116,6 +116,9 @@
 		"pu_raw_file_LS_password": {
 			"value": ""
 		},
+		"AzureBlob_pu_files_raw_sc_connectionString": {
+			"value": ""
+		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"value": "*.parquet"
 		},
@@ -331,6 +334,12 @@
 		},
 		"pu_raw_file_LS_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
+		},
+		"blob_PU_raw_files_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"blob_PU_raw_files_properties_typeProperties_folderPath": {
+			"value": "platformusage/_test_pu_raw_file_sync"
 		}
 	}
 }
