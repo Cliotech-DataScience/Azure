@@ -35,6 +35,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage3'"
 		},
+		"AzureBlob_pu_files_raw_sc_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlob_pu_files_raw_sc'"
+		},
 		"AzureDataLake_gen2_usansa_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLake_gen2_usansa'"
@@ -155,10 +159,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pu_raw_file_LS'"
 		},
-		"AzureBlob_pu_files_raw_sc_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AzureBlob_pu_files_raw_sc'"
-		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "*.parquet"
@@ -242,6 +242,14 @@
 		"blob_Fact_Transactions_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "rawdata/Fact_Transactions"
+		},
+		"blob_PU_raw_files_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": ""
+		},
+		"blob_PU_raw_files_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "platformusage/_test_pu_raw_file_sync"
 		},
 		"blob_customers_clustering_properties_typeProperties_fileName": {
 			"type": "string",
@@ -447,13 +455,9 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
-		"blob_PU_raw_files_properties_typeProperties_fileName": {
+		"Trigger_np9_properties____CopyPipeline_pu_file_AUTO_parameters_windowStart": {
 			"type": "string",
-			"defaultValue": ""
-		},
-		"blob_PU_raw_files_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "platformusage/_test_pu_raw_file_sync"
+			"defaultValue": "@trigger().scheduledTime"
 		},
 		"containerUri": {
 			"type": "string",
@@ -502,6 +506,9 @@
 					},
 					"AzureBlobStorage3_connectionString": {
 						"value": "[parameters('AzureBlobStorage3_connectionString')]"
+					},
+					"AzureBlob_pu_files_raw_sc_connectionString": {
+						"value": "[parameters('AzureBlob_pu_files_raw_sc_connectionString')]"
 					},
 					"AzureDataLake_gen2_usansa_accountKey": {
 						"value": "[parameters('AzureDataLake_gen2_usansa_accountKey')]"
@@ -557,9 +564,6 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"AzureBlob_pu_files_raw_sc_connectionString": {
-						"value": "[parameters('AzureBlob_pu_files_raw_sc_connectionString')]"
-					},
 					"BI_Events_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('BI_Events_blob_properties_typeProperties_fileName')]"
 					},
@@ -571,12 +575,6 @@
 					},
 					"BI_Logins_By_Country_properties_typeProperties_folderPath": {
 						"value": "[parameters('BI_Logins_By_Country_properties_typeProperties_folderPath')]"
-					},
-					"BI_Serials_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('BI_Serials_blob_properties_typeProperties_fileName')]"
-					},
-					"BI_Serials_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('BI_Serials_blob_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -597,6 +595,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"BI_Serials_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('BI_Serials_blob_properties_typeProperties_fileName')]"
+					},
+					"BI_Serials_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('BI_Serials_blob_properties_typeProperties_folderPath')]"
 					},
 					"Blob_Contacts_properties_typeProperties_fileName": {
 						"value": "[parameters('Blob_Contacts_properties_typeProperties_fileName')]"
@@ -653,6 +657,12 @@
 					},
 					"blob_Fact_Transactions_properties_typeProperties_folderPath": {
 						"value": "[parameters('blob_Fact_Transactions_properties_typeProperties_folderPath')]"
+					},
+					"blob_PU_raw_files_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_PU_raw_files_properties_typeProperties_fileName')]"
+					},
+					"blob_PU_raw_files_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_PU_raw_files_properties_typeProperties_folderPath')]"
 					},
 					"blob_customers_clustering_properties_typeProperties_fileName": {
 						"value": "[parameters('blob_customers_clustering_properties_typeProperties_fileName')]"
@@ -722,18 +732,6 @@
 					},
 					"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_folderPath')]"
-					},
-					"fxnet_accounting_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_fileName')]"
-					},
-					"fxnet_accounting_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_folderPath')]"
-					},
-					"fxnet_deals_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('fxnet_deals_blob_properties_typeProperties_fileName')]"
-					},
-					"fxnet_deals_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('fxnet_deals_blob_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -815,6 +813,18 @@
 					"pu_raw_file_LS_password": {
 						"value": "[parameters('pu_raw_file_LS_password')]"
 					},
+					"fxnet_accounting_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_fileName')]"
+					},
+					"fxnet_accounting_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_folderPath')]"
+					},
+					"fxnet_deals_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('fxnet_deals_blob_properties_typeProperties_fileName')]"
+					},
+					"fxnet_deals_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('fxnet_deals_blob_properties_typeProperties_folderPath')]"
+					},
 					"platformusage_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('platformusage_blob_properties_typeProperties_fileName')]"
 					},
@@ -880,12 +890,6 @@
 					},
 					"pu_raw_file_LS_properties_typeProperties_userId": {
 						"value": "[parameters('pu_raw_file_LS_properties_typeProperties_userId')]"
-					},
-					"blob_PU_raw_files_properties_typeProperties_fileName": {
-						"value": "[parameters('blob_PU_raw_files_properties_typeProperties_fileName')]"
-					},
-					"blob_PU_raw_files_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_PU_raw_files_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -975,6 +979,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Trigger_np9_properties____CopyPipeline_pu_file_AUTO_parameters_windowStart": {
+						"value": "[parameters('Trigger_np9_properties____CopyPipeline_pu_file_AUTO_parameters_windowStart')]"
 					}
 				}
 			},

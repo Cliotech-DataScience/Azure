@@ -7,10 +7,6 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "puDataFactory"
 		},
-		"AzureBlob_pu_files_raw_sc_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'AzureBlob_pu_files_raw_sc'"
-		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "*.parquet"
@@ -26,20 +22,42 @@
 		"BI_Logins_By_Country_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "bi-db/mrr_logins_by_country"
-		},
-		"BI_Serials_blob_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "*.parquet"
-		},
-		"BI_Serials_blob_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "bi-db/dim_serials"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Trigger_zci')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 1,
+						"startTime": "2022-02-28T08:33:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/alldbgateway')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/puodsfiles')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
@@ -55,19 +73,6 @@
 							"timeToLive": 0
 						}
 					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureBlob_pu_files_raw_sc')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('AzureBlob_pu_files_raw_sc_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -915,164 +920,6 @@
 					},
 					"fileName": "[parameters('BI_Logins_By_Country_properties_typeProperties_fileName')]",
 					"folderPath": "[parameters('BI_Logins_By_Country_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/BI_Serials_blob')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "dwhdb_blob",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "BI"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "Serial",
-						"type": "Int64"
-					},
-					{
-						"name": "Client_Id",
-						"type": "String"
-					},
-					{
-						"name": "Client_Numerator",
-						"type": "Int32"
-					},
-					{
-						"name": "Client_Name",
-						"type": "String"
-					},
-					{
-						"name": "Product_Numerator",
-						"type": "Int32"
-					},
-					{
-						"name": "Product_Name",
-						"type": "String"
-					},
-					{
-						"name": "Product_Full_Name",
-						"type": "String"
-					},
-					{
-						"name": "Campaign_Numerator",
-						"type": "Int32"
-					},
-					{
-						"name": "Campaign_Name",
-						"type": "String"
-					},
-					{
-						"name": "Targetmarket_Id",
-						"type": "Int32"
-					},
-					{
-						"name": "Targetmarket",
-						"type": "String"
-					},
-					{
-						"name": "Supplier_Numerator",
-						"type": "Int32"
-					},
-					{
-						"name": "Supplier",
-						"type": "String"
-					},
-					{
-						"name": "Supplier_Group",
-						"type": "String"
-					},
-					{
-						"name": "Mediabuyer_Numerator",
-						"type": "Int32"
-					},
-					{
-						"name": "Mediabuyer",
-						"type": "String"
-					},
-					{
-						"name": "Format",
-						"type": "String"
-					},
-					{
-						"name": "Site_Numerator",
-						"type": "Int32"
-					},
-					{
-						"name": "Site_Name",
-						"type": "String"
-					},
-					{
-						"name": "Proposition_Id",
-						"type": "Int32"
-					},
-					{
-						"name": "Proposition",
-						"type": "String"
-					},
-					{
-						"name": "Banner_Name",
-						"type": "String"
-					},
-					{
-						"name": "Banner_Path",
-						"type": "String"
-					},
-					{
-						"name": "TypeExt",
-						"type": "String"
-					},
-					{
-						"name": "Landing_Page",
-						"type": "String"
-					},
-					{
-						"name": "Language",
-						"type": "String"
-					},
-					{
-						"name": "SelfActivation",
-						"type": "Int32"
-					},
-					{
-						"name": "Content",
-						"type": "String"
-					},
-					{
-						"name": "Charge_Unit_Id",
-						"type": "Int32"
-					},
-					{
-						"name": "Charge_Unit_Name",
-						"type": "String"
-					},
-					{
-						"name": "Landing_Page_Numerator",
-						"type": "Int32"
-					},
-					{
-						"name": "Creative_Logical_Name",
-						"type": "String"
-					},
-					{
-						"name": "serial_details",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "ParquetFormat"
-					},
-					"fileName": "[parameters('BI_Serials_blob_properties_typeProperties_fileName')]",
-					"folderPath": "[parameters('BI_Serials_blob_properties_typeProperties_folderPath')]"
 				}
 			},
 			"dependsOn": []

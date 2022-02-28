@@ -13,6 +13,215 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Logins_by_Country')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Login Sessions",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "GetLast_Date",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/BI/Reports/Sessions Reports",
+							"baseParameters": {
+								"Last_Date": {
+									"value": "@activity('GetLast_Date').output.firstRow.Last_Date",
+									"type": "Expression"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "GetLast_Date",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderStoredProcedureName": "[[Reports].[Get_LastDate]",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "AzureSQL_Logins_By_Country",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "Copy mrr to Azure SQL",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Login Sessions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BlobSource",
+								"recursive": true
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Event_Day": "Event_date_Day",
+									"AccountNumber": "AccountNumber",
+									"Broker": "Broker",
+									"Folder": "Folder",
+									"FolderType": "FolderType",
+									"Login_From_Country": "Login_From_Country",
+									"CustomerCountry": "CustomerCountry",
+									"AMLComplianceStatus": "AMLComplianceStatus",
+									"Sessions": "Sessions"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "BI_Logins_By_Country",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "AzureSQL_Logins_By_Country",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "BI"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/RUN_All_old_clustering_model_203')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "01 Get Customers",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "01 Get Customers List For All Models",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "02 Get Data For Models",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "01 Get Customers",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "02 Get Data For Models",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					},
+					{
+						"name": "03  Execute Models",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "02 Get Data For Models",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "03 - Execute Models",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Dm_Models"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Run_all_Model_ETL')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1798,148 +2007,6 @@
 				"typeProperties": {
 					"schema": "azure",
 					"table": "Communication_Channels_Stream"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_3oo')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "emerpdbpr",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "value",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_5qf')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "emerpdbpr",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "agent_numerator",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "id",
-						"type": "uniqueidentifier"
-					},
-					{
-						"name": "name",
-						"type": "nvarchar"
-					},
-					{
-						"name": "first_name",
-						"type": "nvarchar"
-					},
-					{
-						"name": "last_name",
-						"type": "nvarchar"
-					},
-					{
-						"name": "email",
-						"type": "nvarchar"
-					},
-					{
-						"name": "password",
-						"type": "nvarchar"
-					},
-					{
-						"name": "deleted",
-						"type": "bit"
-					},
-					{
-						"name": "position",
-						"type": "nvarchar"
-					},
-					{
-						"name": "signature",
-						"type": "nvarchar"
-					},
-					{
-						"name": "default_supplier_id",
-						"type": "uniqueidentifier"
-					},
-					{
-						"name": "phone",
-						"type": "nvarchar"
-					},
-					{
-						"name": "fax",
-						"type": "nvarchar"
-					},
-					{
-						"name": "cellphone",
-						"type": "nvarchar"
-					},
-					{
-						"name": "affiliate",
-						"type": "bit"
-					},
-					{
-						"name": "status",
-						"type": "tinyint",
-						"precision": 3
-					},
-					{
-						"name": "address_id",
-						"type": "uniqueidentifier"
-					},
-					{
-						"name": "billing_address_id",
-						"type": "uniqueidentifier"
-					},
-					{
-						"name": "webui_pref",
-						"type": "nvarchar"
-					},
-					{
-						"name": "currency",
-						"type": "bigint",
-						"precision": 19
-					},
-					{
-						"name": "default_charge_unit_id",
-						"type": "bigint",
-						"precision": 19
-					},
-					{
-						"name": "default_payment_method_id",
-						"type": "bigint",
-						"precision": 19
-					},
-					{
-						"name": "default_site_id",
-						"type": "uniqueidentifier"
-					},
-					{
-						"name": "affiliate_default",
-						"type": "bit"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "agent_tab"
 				}
 			},
 			"dependsOn": []

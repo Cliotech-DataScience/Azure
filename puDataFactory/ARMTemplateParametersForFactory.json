@@ -26,6 +26,9 @@
 		"AzureBlobStorage3_connectionString": {
 			"value": ""
 		},
+		"AzureBlob_pu_files_raw_sc_connectionString": {
+			"value": ""
+		},
 		"AzureDataLake_gen2_usansa_accountKey": {
 			"value": ""
 		},
@@ -116,9 +119,6 @@
 		"pu_raw_file_LS_password": {
 			"value": ""
 		},
-		"AzureBlob_pu_files_raw_sc_connectionString": {
-			"value": ""
-		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"value": "*.parquet"
 		},
@@ -181,6 +181,12 @@
 		},
 		"blob_Fact_Transactions_properties_typeProperties_folderPath": {
 			"value": "rawdata/Fact_Transactions"
+		},
+		"blob_PU_raw_files_properties_typeProperties_fileName": {
+			"value": ""
+		},
+		"blob_PU_raw_files_properties_typeProperties_folderPath": {
+			"value": "platformusage/_test_pu_raw_file_sync"
 		},
 		"blob_customers_clustering_properties_typeProperties_fileName": {
 			"value": "*.csv"
@@ -335,11 +341,8 @@
 		"pu_raw_file_LS_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
 		},
-		"blob_PU_raw_files_properties_typeProperties_fileName": {
-			"value": ""
-		},
-		"blob_PU_raw_files_properties_typeProperties_folderPath": {
-			"value": "platformusage/_test_pu_raw_file_sync"
+		"Trigger_np9_properties____CopyPipeline_pu_file_AUTO_parameters_windowStart": {
+			"value": "@trigger().scheduledTime"
 		}
 	}
 }
