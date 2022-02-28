@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Get Metadata1",
+				"name": "Get FileName",
 				"type": "GetMetadata",
 				"dependsOn": [],
 				"policy": {
@@ -29,7 +29,7 @@
 				"type": "AppendVariable",
 				"dependsOn": [
 					{
-						"activity": "Get Metadata1",
+						"activity": "Get FileName",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -38,7 +38,10 @@
 				"userProperties": [],
 				"typeProperties": {
 					"variableName": "files_lists",
-					"value": ""
+					"value": {
+						"value": "(@split(split(activity('Get FileName').output.itemName,'_')[1],'.')[0])",
+						"type": "Expression"
+					}
 				}
 			}
 		],
