@@ -344,6 +344,12 @@
 		"Trigger_np9_properties____CopyPipeline_pu_file_AUTO_parameters_windowStart": {
 			"value": "@trigger().scheduledTime"
 		},
+		"Trigger_zwu_properties__pu_raw_files_sync_parameters_windowStart": {
+			"value": "@{addminutes(trigger().scheduledTime, -24)}"
+		},
+		"Trigger_zwu_properties__pu_raw_files_sync_parameters_windowEnd": {
+			"value": "@trigger().scheduledTime"
+		},
 		"containerUri": {
 			"value": ""
 		},

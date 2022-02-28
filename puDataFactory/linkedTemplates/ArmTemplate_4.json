@@ -197,6 +197,53 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/etl_manage')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DataLoadStorageAccount",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureTable",
+				"structure": [
+					{
+						"name": "PartitionKey",
+						"type": "String"
+					},
+					{
+						"name": "RowKey",
+						"type": "String"
+					},
+					{
+						"name": "Timestamp",
+						"type": "DateTimeOffset"
+					},
+					{
+						"name": "Last_Incremental_Date",
+						"type": "String"
+					},
+					{
+						"name": "Next_Incremental_Date",
+						"type": "String"
+					},
+					{
+						"name": "Last_PU_INT",
+						"type": "Int64"
+					},
+					{
+						"name": "Next_PU_INT",
+						"type": "Int64"
+					}
+				],
+				"typeProperties": {
+					"tableName": "etlManage"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/fact_events_dwh')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -887,97 +934,6 @@
 					"referenceName": "alldbgateway",
 					"type": "IntegrationRuntimeReference"
 				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/CopyPipeline_prf')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy_prf",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "users/barak/tmp_pqu/"
-							},
-							{
-								"name": "Destination",
-								"value": "WebEvents"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "ParquetSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*",
-									"enablePartitionDiscovery": false
-								}
-							},
-							"sink": {
-								"type": "CosmosDbSqlApiSink",
-								"writeBehavior": "insert"
-							},
-							"enableStaging": false,
-							"validateDataConsistency": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "id",
-											"type": "String"
-										},
-										"sink": {
-											"path": "$['id']"
-										}
-									},
-									{
-										"source": {
-											"name": "Req",
-											"type": "String"
-										},
-										"sink": {
-											"path": "$['Req']"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "SourceDataset_prf",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DestinationDataset_prf",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": []
 			},
 			"dependsOn": []
 		}

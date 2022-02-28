@@ -13,6 +13,97 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/CopyPipeline_prf')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_prf",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "users/barak/tmp_pqu/"
+							},
+							{
+								"name": "Destination",
+								"value": "WebEvents"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*",
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "CosmosDbSqlApiSink",
+								"writeBehavior": "insert"
+							},
+							"enableStaging": false,
+							"validateDataConsistency": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "id",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['id']"
+										}
+									},
+									{
+										"source": {
+											"name": "Req",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Req']"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_prf",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationDataset_prf",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Logins_by_Country')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1881,132 +1972,6 @@
 				],
 				"typeProperties": {
 					"tableName": "[[dbo].[mrr_customers_clustering]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Scmm_Communication_Channels')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "emerp_lm",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DC"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "ChannelID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "ChannelTypeID",
-						"type": "tinyint",
-						"precision": 3
-					},
-					{
-						"name": "ChannelType",
-						"type": "varchar"
-					},
-					{
-						"name": "ChannelName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ChannelStatus",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SendingMethodID",
-						"type": "smallint",
-						"precision": 5
-					},
-					{
-						"name": "SendingMethodName",
-						"type": "varchar"
-					},
-					{
-						"name": "ChannelPopulationFilterId",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "ChannelPopulationFilter",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Channel_Event",
-						"type": "varchar"
-					},
-					{
-						"name": "ChannelDeliveryScheduleType",
-						"type": "varchar"
-					},
-					{
-						"name": "CampaignID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "CampaignName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CampaignCategory",
-						"type": "varchar"
-					},
-					{
-						"name": "Campaign_System",
-						"type": "varchar"
-					},
-					{
-						"name": "Campaign_Schedule_Type",
-						"type": "varchar"
-					},
-					{
-						"name": "EmailSubject",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CampaignStatus",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CampaignPopulationFilterId",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "CampaignPopulationFilter",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ExpectedCustomerResponse",
-						"type": "varchar"
-					},
-					{
-						"name": "RewardID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "RewardName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Channel_Group",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "azure",
-					"table": "Communication_Channels_Stream"
 				}
 			},
 			"dependsOn": []

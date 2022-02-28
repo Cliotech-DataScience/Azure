@@ -459,6 +459,14 @@
 			"type": "string",
 			"defaultValue": "@trigger().scheduledTime"
 		},
+		"Trigger_zwu_properties__pu_raw_files_sync_parameters_windowStart": {
+			"type": "string",
+			"defaultValue": "@{addminutes(trigger().scheduledTime, -24)}"
+		},
+		"Trigger_zwu_properties__pu_raw_files_sync_parameters_windowEnd": {
+			"type": "string",
+			"defaultValue": "@trigger().scheduledTime"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -982,6 +990,12 @@
 					},
 					"Trigger_np9_properties____CopyPipeline_pu_file_AUTO_parameters_windowStart": {
 						"value": "[parameters('Trigger_np9_properties____CopyPipeline_pu_file_AUTO_parameters_windowStart')]"
+					},
+					"Trigger_zwu_properties__pu_raw_files_sync_parameters_windowStart": {
+						"value": "[parameters('Trigger_zwu_properties__pu_raw_files_sync_parameters_windowStart')]"
+					},
+					"Trigger_zwu_properties__pu_raw_files_sync_parameters_windowEnd": {
+						"value": "[parameters('Trigger_zwu_properties__pu_raw_files_sync_parameters_windowEnd')]"
 					}
 				}
 			},

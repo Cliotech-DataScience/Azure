@@ -458,6 +458,14 @@
 		"Trigger_np9_properties____CopyPipeline_pu_file_AUTO_parameters_windowStart": {
 			"type": "string",
 			"defaultValue": "@trigger().scheduledTime"
+		},
+		"Trigger_zwu_properties__pu_raw_files_sync_parameters_windowStart": {
+			"type": "string",
+			"defaultValue": "@{addminutes(trigger().scheduledTime, -24)}"
+		},
+		"Trigger_zwu_properties__pu_raw_files_sync_parameters_windowEnd": {
+			"type": "string",
+			"defaultValue": "@trigger().scheduledTime"
 		}
 	},
 	"variables": {
@@ -5689,11 +5697,86 @@
 						"type": "String"
 					}
 				},
+				"variables": {
+					"files_list": {
+						"type": "Array"
+					}
+				},
 				"annotations": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SourceDataset_np9')]",
 				"[concat(variables('factoryId'), '/datasets/DestinationDataset_np9')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/___pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get FileName",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "Source_files_pu_raw_file",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"itemName"
+							]
+						}
+					},
+					{
+						"name": "Append variable1",
+						"type": "AppendVariable",
+						"dependsOn": [
+							{
+								"activity": "Get FileName",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "files_lists",
+							"value": {
+								"value": "(@split(split(activity('Get FileName').output.itemName,'_')[1],'.')[0])",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"files_lists": {
+						"type": "Array",
+						"defaultValue": [
+							"1",
+							"2",
+							"3"
+						]
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Source_files_pu_raw_file')]"
 			]
 		},
 		{
@@ -5860,6 +5943,101 @@
 				"[concat(variables('factoryId'), '/pipelines/301 Get Customers List For Model')]",
 				"[concat(variables('factoryId'), '/pipelines/302 Get Data For Model')]",
 				"[concat(variables('factoryId'), '/pipelines/303 Execute Models')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/_pu_raw_files_sync')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_zwu",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "/"
+							},
+							{
+								"name": "Destination",
+								"value": "platformusage/_test_pu_raw_file_sync/"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "FileServerReadSettings",
+									"recursive": true,
+									"modifiedDatetimeStart": {
+										"value": "@pipeline().parameters.windowStart",
+										"type": "Expression"
+									},
+									"modifiedDatetimeEnd": {
+										"value": "@pipeline().parameters.windowEnd",
+										"type": "Expression"
+									},
+									"wildcardFileName": "*"
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"enableSkipIncompatibleRow": false,
+							"skipErrorFile": {
+								"fileMissing": true
+							},
+							"validateDataConsistency": false
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_zwu",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationDataset_zwu",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"windowStart": {
+						"type": "String"
+					},
+					"windowEnd": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SourceDataset_zwu')]",
+				"[concat(variables('factoryId'), '/datasets/DestinationDataset_zwu')]"
 			]
 		},
 		{
@@ -8170,6 +8348,29 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_zwu')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlob_pu_files_raw_sc",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "_test_pu_raw_file_sync",
+						"container": "platformusage"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlob_pu_files_raw_sc')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Dim_AccountContacts')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -9251,6 +9452,27 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/SCMM SQL')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_zwu')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "pu_raw_file_LS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "FileServerLocation"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/pu_raw_file_LS')]"
 			]
 		},
 		{
@@ -11767,6 +11989,45 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Trigger_zwu')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "_pu_raw_files_sync",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"windowStart": {
+								"type": "Expression",
+								"value": "[parameters('Trigger_zwu_properties__pu_raw_files_sync_parameters_windowStart')]"
+							},
+							"windowEnd": {
+								"type": "Expression",
+								"value": "[parameters('Trigger_zwu_properties__pu_raw_files_sync_parameters_windowEnd')]"
+							}
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 24,
+						"startTime": "2022-02-28T12:25:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/_pu_raw_files_sync')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/every_day_run_all_piplines_to_platfrom_usage')]",
