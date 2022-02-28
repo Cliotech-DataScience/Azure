@@ -1,0 +1,18 @@
+{
+	"name": "DestinationDataset_zwu",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlob_pu_files_raw_sc",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "_test_pu_raw_file_sync",
+				"container": "platformusage"
+			}
+		}
+	}
+}
