@@ -37,7 +37,8 @@
 								"value": "@pipeline().parameters.windowEnd",
 								"type": "Expression"
 							},
-							"wildcardFileName": "*"
+							"wildcardFileName": "*",
+							"deleteFilesAfterCompletion": false
 						},
 						"formatSettings": {
 							"type": "BinaryReadSettings"
