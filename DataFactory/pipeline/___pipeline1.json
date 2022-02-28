@@ -40,7 +40,7 @@
 				"typeProperties": {
 					"variableName": "files_lists",
 					"value": {
-						"value": "(@split(split(activity('Get FileName').output.itemName,'_')[1],'.')[0])",
+						"value": "@activity('Get FileName').output.childItems[0]",
 						"type": "Expression"
 					}
 				}
@@ -48,7 +48,7 @@
 		],
 		"variables": {
 			"files_lists": {
-				"type": "String"
+				"type": "Array"
 			}
 		},
 		"annotations": []
