@@ -1,0 +1,16 @@
+{
+	"name": "SourceDataset_zwu",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "pu_raw_file_LS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "FileServerLocation"
+			}
+		}
+	}
+}
