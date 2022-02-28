@@ -5,14 +5,7 @@
 			{
 				"name": "Copy_np9",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Get Metadata1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -92,10 +85,28 @@
 						"itemName"
 					]
 				}
+			},
+			{
+				"name": "Append variable1",
+				"type": "AppendVariable",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": []
 			}
 		],
 		"parameters": {
 			"windowStart": {
+				"type": "String"
+			}
+		},
+		"variables": {
+			"Date": {
 				"type": "String"
 			}
 		},
