@@ -3,24 +3,7 @@
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Stopped",
-		"pipelines": [
-			{
-				"pipelineReference": {
-					"referenceName": "Copy_pu_raw_files_to_azure",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"windowStart": {
-						"type": "Expression",
-						"value": "@{addminutes(trigger().scheduledTime, -1)}"
-					},
-					"windowEnd": {
-						"type": "Expression",
-						"value": "@trigger().scheduledTime"
-					}
-				}
-			}
-		],
+		"pipelines": [],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
