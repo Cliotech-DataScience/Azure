@@ -1,0 +1,30 @@
+{
+	"name": "Trigger_np9",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "___CopyPipeline_pu_file_AUTO",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"windowStart": {
+						"type": "Expression",
+						"value": "@trigger().scheduledTime"
+					}
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 1,
+				"startTime": "2022-02-28T08:51:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
