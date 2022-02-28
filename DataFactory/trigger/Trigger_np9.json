@@ -3,20 +3,7 @@
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Stopped",
-		"pipelines": [
-			{
-				"pipelineReference": {
-					"referenceName": "___CopyPipeline_pu_file_AUTO",
-					"type": "PipelineReference"
-				},
-				"parameters": {
-					"windowStart": {
-						"type": "Expression",
-						"value": "@trigger().scheduledTime"
-					}
-				}
-			}
-		],
+		"pipelines": [],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
