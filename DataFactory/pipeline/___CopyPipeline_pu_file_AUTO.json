@@ -97,7 +97,10 @@
 						]
 					}
 				],
-				"userProperties": []
+				"typeProperties": {
+					"variableName": "files_list",
+					"value": ""
+				}
 			}
 		],
 		"parameters": {
@@ -106,8 +109,8 @@
 			}
 		},
 		"variables": {
-			"Date": {
-				"type": "String"
+			"files_list": {
+				"type": "Array"
 			}
 		},
 		"annotations": []
