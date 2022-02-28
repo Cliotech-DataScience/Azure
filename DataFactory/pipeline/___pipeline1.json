@@ -47,12 +47,7 @@
 		],
 		"variables": {
 			"files_lists": {
-				"type": "Array",
-				"defaultValue": [
-					"1",
-					"2",
-					"3"
-				]
+				"type": "String"
 			}
 		},
 		"annotations": []
