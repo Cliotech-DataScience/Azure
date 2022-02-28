@@ -35,12 +35,18 @@
 						]
 					}
 				],
+				"userProperties": [],
 				"typeProperties": {
 					"variableName": "files_list",
 					"value": ""
 				}
 			}
 		],
+		"variables": {
+			"files_list": {
+				"type": "Array"
+			}
+		},
 		"annotations": []
 	}
 }
