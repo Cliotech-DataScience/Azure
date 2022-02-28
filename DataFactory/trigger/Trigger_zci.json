@@ -1,0 +1,34 @@
+{
+	"name": "Trigger_zci",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Copy_pu_raw_files_to_azure",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"windowStart": {
+						"type": "Expression",
+						"value": "@{addminutes(trigger().scheduledTime, -1)}"
+					},
+					"windowEnd": {
+						"type": "Expression",
+						"value": "@trigger().scheduledTime"
+					}
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 1,
+				"startTime": "2022-02-28T08:33:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
