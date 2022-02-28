@@ -37,15 +37,19 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "files_list",
+					"variableName": "files_lists",
 					"value": ""
 				}
 			}
 		],
 		"variables": {
-			"files_list": {
+			"files_lists": {
 				"type": "Array",
-				"defaultValue": "0"
+				"defaultValue": [
+					"1",
+					"2",
+					"3"
+				]
 			}
 		},
 		"annotations": []
