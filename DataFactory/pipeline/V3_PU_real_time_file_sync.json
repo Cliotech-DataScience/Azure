@@ -1,6 +1,24 @@
 {
 	"name": "V3_PU_real_time_file_sync",
 	"properties": {
+		"activities": [
+			{
+				"name": "blob_pu_landing_files",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"enableStaging": false
+				}
+			}
+		],
 		"folder": {
 			"name": "Platfrom_Usage/V3"
 		},
