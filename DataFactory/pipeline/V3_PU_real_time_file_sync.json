@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "move last pu file",
+				"name": "move_last_pu_file",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
