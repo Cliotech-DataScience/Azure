@@ -20,7 +20,6 @@
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
-							"modifiedDatetimeStart": "2022-02-01T00:00:00.000Z",
 							"modifiedDatetimeEnd": {
 								"value": "@addseconds(pipeline().TriggerTime,-30)",
 								"type": "Expression"
