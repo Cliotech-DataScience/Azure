@@ -114,14 +114,6 @@
 		"dwh_calls_blob_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "@concat('rawdata/DWH_Calls/Received=',utcnow('s'))"
-		},
-		"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('DWH_Lead_Assignments_', pipeline().TriggerTime, '.csv.bz2')"
-		},
-		"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@concat('rawdata/DWH_Lead_Assignments/Received=',utcnow('s'))"
 		}
 	},
 	"variables": {
@@ -853,6 +845,27 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/des_pu_in_processing')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "bydatalakqa sa",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "in_processing",
+						"container": "test-up-blob-file"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/dwh_Customer_Questionnaires_blob')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -985,64 +998,6 @@
 					},
 					"folderPath": {
 						"value": "[parameters('dwh_calls_blob_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dwh_lead_assignments_blob')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DataloadStore",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "Fact_Lead_Assignments_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "Assignment_Day",
-						"type": "DateTime"
-					},
-					{
-						"name": "Assignment_Date",
-						"type": "DateTime"
-					},
-					{
-						"name": "Details",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": "\t",
-						"rowDelimiter": "",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"compression": {
-						"type": "BZip2"
-					},
-					"fileName": {
-						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": {
-						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_folderPath')]",
 						"type": "Expression"
 					}
 				}

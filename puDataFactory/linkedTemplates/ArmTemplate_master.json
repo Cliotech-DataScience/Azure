@@ -734,12 +734,6 @@
 					},
 					"dwh_calls_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('dwh_calls_blob_properties_typeProperties_folderPath')]"
-					},
-					"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_fileName')]"
-					},
-					"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -815,11 +809,11 @@
 					"fileserver1_password": {
 						"value": "[parameters('fileserver1_password')]"
 					},
-					"linkedService1_password": {
-						"value": "[parameters('linkedService1_password')]"
+					"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_fileName')]"
 					},
-					"pu_raw_file_LS_password": {
-						"value": "[parameters('pu_raw_file_LS_password')]"
+					"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_folderPath')]"
 					},
 					"fxnet_accounting_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_fileName')]"
@@ -886,18 +880,6 @@
 					},
 					"fileserver1_properties_typeProperties_userId": {
 						"value": "[parameters('fileserver1_properties_typeProperties_userId')]"
-					},
-					"linkedService1_properties_typeProperties_host": {
-						"value": "[parameters('linkedService1_properties_typeProperties_host')]"
-					},
-					"linkedService1_properties_typeProperties_userId": {
-						"value": "[parameters('linkedService1_properties_typeProperties_userId')]"
-					},
-					"pu_raw_file_LS_properties_typeProperties_host": {
-						"value": "[parameters('pu_raw_file_LS_properties_typeProperties_host')]"
-					},
-					"pu_raw_file_LS_properties_typeProperties_userId": {
-						"value": "[parameters('pu_raw_file_LS_properties_typeProperties_userId')]"
 					}
 				}
 			},
@@ -918,6 +900,24 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"linkedService1_password": {
+						"value": "[parameters('linkedService1_password')]"
+					},
+					"pu_raw_file_LS_password": {
+						"value": "[parameters('pu_raw_file_LS_password')]"
+					},
+					"linkedService1_properties_typeProperties_host": {
+						"value": "[parameters('linkedService1_properties_typeProperties_host')]"
+					},
+					"linkedService1_properties_typeProperties_userId": {
+						"value": "[parameters('linkedService1_properties_typeProperties_userId')]"
+					},
+					"pu_raw_file_LS_properties_typeProperties_host": {
+						"value": "[parameters('pu_raw_file_LS_properties_typeProperties_host')]"
+					},
+					"pu_raw_file_LS_properties_typeProperties_userId": {
+						"value": "[parameters('pu_raw_file_LS_properties_typeProperties_userId')]"
 					}
 				}
 			},
@@ -1001,6 +1001,26 @@
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'puDataFactory_ArmTemplate_7')]"
+			]
+		},
+		{
+			"name": "puDataFactory_ArmTemplate_9",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_9.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'puDataFactory_ArmTemplate_8')]"
 			]
 		}
 	]

@@ -6,12 +6,80 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "puDataFactory"
+		},
+		"linkedService1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'linkedService1'"
+		},
+		"pu_raw_file_LS_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'pu_raw_file_LS'"
+		},
+		"linkedService1_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\netapp-ams-cifs\\db\\Events_Collector\\pu_file_sync_to_azure\\files"
+		},
+		"linkedService1_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
+		"pu_raw_file_LS_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\netapp-ams-cifs\\db\\Events_Collector\\pu_file_sync_to_azure\\files"
+		},
+		"pu_raw_file_LS_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/linkedService1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('linkedService1_properties_typeProperties_host')]",
+					"userId": "[parameters('linkedService1_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('linkedService1_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pu_raw_file_LS')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('pu_raw_file_LS_properties_typeProperties_host')]",
+					"userId": "[parameters('pu_raw_file_LS_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('pu_raw_file_LS_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/CopyPipeline_prf')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -492,6 +560,77 @@
 				},
 				"folder": {
 					"name": "BI"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/V3_PU_real_time_file_sync')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "move_last_pu_file",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"modifiedDatetimeEnd": {
+										"value": "@addseconds(pipeline().TriggerTime,-30)",
+										"type": "Expression"
+									},
+									"wildcardFolderPath": "landing",
+									"wildcardFileName": "*.log",
+									"deleteFilesAfterCompletion": true
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "sc_pu_landing",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "des_pu_in_processing",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Platfrom_Usage/V3"
 				},
 				"annotations": []
 			},
@@ -1692,286 +1831,6 @@
 				],
 				"typeProperties": {
 					"tableName": "azure.AZ_EMERP_DB_Events"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Fact_Transactions')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "TransactionNumber",
-						"type": "Int32"
-					},
-					{
-						"name": "PositionNumber",
-						"type": "Int32"
-					},
-					{
-						"name": "AccountNumber",
-						"type": "Int32"
-					},
-					{
-						"name": "CustomerHistory_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "CustomersExtendedHistory_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "DealAttirbute_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "Instrument_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "TransactionType_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "Direction_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "Source_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "DealType_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "ExecutionDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "ExecutionDay",
-						"type": "DateTime"
-					},
-					{
-						"name": "ExecutionTime",
-						"type": "TimeSpan"
-					},
-					{
-						"name": "TransactionCloseDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "ValueDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "ValueDay",
-						"type": "DateTime"
-					},
-					{
-						"name": "BaseAmount",
-						"type": "Decimal"
-					},
-					{
-						"name": "OtherAmount",
-						"type": "Decimal"
-					},
-					{
-						"name": "SpotRate",
-						"type": "Decimal"
-					},
-					{
-						"name": "ForwardPips",
-						"type": "Double"
-					},
-					{
-						"name": "TotRate",
-						"type": "Decimal"
-					},
-					{
-						"name": "Volume_USD",
-						"type": "Decimal"
-					},
-					{
-						"name": "ServerRate",
-						"type": "Decimal"
-					},
-					{
-						"name": "OtherServerRate",
-						"type": "Decimal"
-					},
-					{
-						"name": "ExecutedLimit",
-						"type": "Int16"
-					},
-					{
-						"name": "PL",
-						"type": "Decimal"
-					},
-					{
-						"name": "IsFirstBOP",
-						"type": "Boolean"
-					},
-					{
-						"name": "IsFirstForex",
-						"type": "Boolean"
-					},
-					{
-						"name": "IsFirstDeal",
-						"type": "Boolean"
-					},
-					{
-						"name": "Deleted",
-						"type": "Boolean"
-					},
-					{
-						"name": "PositionClosed",
-						"type": "Int16"
-					},
-					{
-						"name": "DealPL_USD",
-						"type": "Decimal"
-					},
-					{
-						"name": "PL_SymbolId",
-						"type": "Int16"
-					},
-					{
-						"name": "AccountBasesymbolId",
-						"type": "Int16"
-					},
-					{
-						"name": "EtlUpdatedDate",
-						"type": "DateTime"
-					},
-					{
-						"name": "SpreadCost",
-						"type": "Decimal"
-					},
-					{
-						"name": "Folder_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "Broker_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "AccountNumber_modo",
-						"type": "Int32"
-					},
-					{
-						"name": "PositionNumber_modo",
-						"type": "Int32"
-					},
-					{
-						"name": "PL_AccountBase",
-						"type": "Decimal"
-					},
-					{
-						"name": "Customer_Favor_Rate_diff",
-						"type": "Decimal"
-					},
-					{
-						"name": "Channel_Bucket_ID",
-						"type": "Int32"
-					},
-					{
-						"name": "Sessions_ID",
-						"type": "Int64"
-					},
-					{
-						"name": "DealCountTotal",
-						"type": "Int32"
-					},
-					{
-						"name": "Retention_ID",
-						"type": "Int16"
-					},
-					{
-						"name": "ConversionRate",
-						"type": "Decimal"
-					},
-					{
-						"name": "CommissionInAccountBase",
-						"type": "Decimal"
-					},
-					{
-						"name": "SpreadCostInAccountBase",
-						"type": "Decimal"
-					},
-					{
-						"name": "RolloverSpreadCostInAccountBase",
-						"type": "Decimal"
-					},
-					{
-						"name": "CommissionInOther",
-						"type": "Decimal"
-					},
-					{
-						"name": "SpreadCostInOther",
-						"type": "Decimal"
-					},
-					{
-						"name": "RolloverSpreadCostInOther",
-						"type": "Decimal"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[[azure].[AZ_Fact_Transactions]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Mng_azure_ETL')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"typeProperties": {
-					"tableName": "[[azure].[Mng_azure_ETL]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/STG_mrr_customers_clustering')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "STG",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "sync"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "AccountNumber",
-						"type": "Int64",
-						"precision": 19,
-						"scale": 255
-					}
-				],
-				"typeProperties": {
-					"tableName": "[[dbo].[mrr_customers_clustering]"
 				}
 			},
 			"dependsOn": []
