@@ -29,7 +29,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Binary1",
+						"referenceName": "sc_pu_landing",
 						"type": "DatasetReference"
 					}
 				]
