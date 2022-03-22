@@ -6568,7 +6568,8 @@
 								"storeSettings": {
 									"type": "AzureBlobStorageReadSettings",
 									"recursive": true,
-									"wildcardFileName": "*",
+									"wildcardFolderPath": "nati/pu_2019_2021_export/",
+									"wildcardFileName": "part-*",
 									"enablePartitionDiscovery": false
 								}
 							},
