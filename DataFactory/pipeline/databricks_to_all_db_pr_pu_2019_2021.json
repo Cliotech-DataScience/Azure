@@ -99,6 +99,9 @@
 				]
 			}
 		],
+		"folder": {
+			"name": "Platfrom_Usage"
+		},
 		"annotations": []
 	}
 }
