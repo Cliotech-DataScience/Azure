@@ -1,0 +1,33 @@
+{
+	"name": "SourceDataset_ihk",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "dwhdb_blob",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "nati/pu_2019_2021_export",
+				"container": "users"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "accountnumber",
+				"type": "INT64"
+			},
+			{
+				"name": "Event_date",
+				"type": "INT96"
+			},
+			{
+				"name": "event_name",
+				"type": "UTF8"
+			}
+		]
+	}
+}
