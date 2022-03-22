@@ -35,7 +35,10 @@
 						}
 					},
 					"sink": {
-						"type": "SqlServerSink"
+						"type": "SqlServerSink",
+						"writeBatchSize": 1000000,
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": true
 					},
 					"enableStaging": false,
 					"validateDataConsistency": false,
