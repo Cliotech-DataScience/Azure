@@ -32,6 +32,9 @@
 		"AzureDataLake_gen2_usansa_accountKey": {
 			"value": ""
 		},
+		"AzureDatabricksDeltaLake_accessToken": {
+			"value": ""
+		},
 		"AzureSql tesdb_connectionString": {
 			"value": ""
 		},

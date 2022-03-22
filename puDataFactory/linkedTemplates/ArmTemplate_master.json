@@ -43,6 +43,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLake_gen2_usansa'"
 		},
+		"AzureDatabricksDeltaLake_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'AzureDatabricksDeltaLake'"
+		},
 		"AzureSql tesdb_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSql tesdb'"
@@ -521,6 +525,9 @@
 					"AzureDataLake_gen2_usansa_accountKey": {
 						"value": "[parameters('AzureDataLake_gen2_usansa_accountKey')]"
 					},
+					"AzureDatabricksDeltaLake_accessToken": {
+						"value": "[parameters('AzureDatabricksDeltaLake_accessToken')]"
+					},
 					"AzureSql tesdb_connectionString": {
 						"value": "[parameters('AzureSql tesdb_connectionString')]"
 					},
@@ -571,18 +578,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"BI_Events_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('BI_Events_blob_properties_typeProperties_fileName')]"
-					},
-					"BI_Events_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('BI_Events_blob_properties_typeProperties_folderPath')]"
-					},
-					"BI_Logins_By_Country_properties_typeProperties_fileName": {
-						"value": "[parameters('BI_Logins_By_Country_properties_typeProperties_fileName')]"
-					},
-					"BI_Logins_By_Country_properties_typeProperties_folderPath": {
-						"value": "[parameters('BI_Logins_By_Country_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -603,6 +598,18 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"BI_Events_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('BI_Events_blob_properties_typeProperties_fileName')]"
+					},
+					"BI_Events_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('BI_Events_blob_properties_typeProperties_folderPath')]"
+					},
+					"BI_Logins_By_Country_properties_typeProperties_fileName": {
+						"value": "[parameters('BI_Logins_By_Country_properties_typeProperties_fileName')]"
+					},
+					"BI_Logins_By_Country_properties_typeProperties_folderPath": {
+						"value": "[parameters('BI_Logins_By_Country_properties_typeProperties_folderPath')]"
 					},
 					"BI_Serials_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('BI_Serials_blob_properties_typeProperties_fileName')]"
@@ -716,24 +723,6 @@
 					},
 					"blob_serials_row_folder_properties_typeProperties_folderPath": {
 						"value": "[parameters('blob_serials_row_folder_properties_typeProperties_folderPath')]"
-					},
-					"dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName')]"
-					},
-					"dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath')]"
-					},
-					"dwh_Dim_Users_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_fileName')]"
-					},
-					"dwh_Dim_Users_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_folderPath')]"
-					},
-					"dwh_calls_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('dwh_calls_blob_properties_typeProperties_fileName')]"
-					},
-					"dwh_calls_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('dwh_calls_blob_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -794,20 +783,23 @@
 					"alldbdwh_password": {
 						"value": "[parameters('alldbdwh_password')]"
 					},
-					"emerp_lm_connectionString": {
-						"value": "[parameters('emerp_lm_connectionString')]"
+					"dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName')]"
 					},
-					"emerp_lm_password": {
-						"value": "[parameters('emerp_lm_password')]"
+					"dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath')]"
 					},
-					"emerpdbpr_connectionString": {
-						"value": "[parameters('emerpdbpr_connectionString')]"
+					"dwh_Dim_Users_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_fileName')]"
 					},
-					"emerpdbpr_password": {
-						"value": "[parameters('emerpdbpr_password')]"
+					"dwh_Dim_Users_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_folderPath')]"
 					},
-					"fileserver1_password": {
-						"value": "[parameters('fileserver1_password')]"
+					"dwh_calls_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('dwh_calls_blob_properties_typeProperties_fileName')]"
+					},
+					"dwh_calls_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('dwh_calls_blob_properties_typeProperties_folderPath')]"
 					},
 					"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_fileName')]"
@@ -868,18 +860,6 @@
 					},
 					"alldbdwh_properties_typeProperties_userName": {
 						"value": "[parameters('alldbdwh_properties_typeProperties_userName')]"
-					},
-					"emerp_lm_properties_typeProperties_userName": {
-						"value": "[parameters('emerp_lm_properties_typeProperties_userName')]"
-					},
-					"emerpdbpr_properties_typeProperties_userName": {
-						"value": "[parameters('emerpdbpr_properties_typeProperties_userName')]"
-					},
-					"fileserver1_properties_typeProperties_host": {
-						"value": "[parameters('fileserver1_properties_typeProperties_host')]"
-					},
-					"fileserver1_properties_typeProperties_userId": {
-						"value": "[parameters('fileserver1_properties_typeProperties_userId')]"
 					}
 				}
 			},
@@ -901,11 +881,38 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"emerp_lm_connectionString": {
+						"value": "[parameters('emerp_lm_connectionString')]"
+					},
+					"emerp_lm_password": {
+						"value": "[parameters('emerp_lm_password')]"
+					},
+					"emerpdbpr_connectionString": {
+						"value": "[parameters('emerpdbpr_connectionString')]"
+					},
+					"emerpdbpr_password": {
+						"value": "[parameters('emerpdbpr_password')]"
+					},
+					"fileserver1_password": {
+						"value": "[parameters('fileserver1_password')]"
+					},
 					"linkedService1_password": {
 						"value": "[parameters('linkedService1_password')]"
 					},
 					"pu_raw_file_LS_password": {
 						"value": "[parameters('pu_raw_file_LS_password')]"
+					},
+					"emerp_lm_properties_typeProperties_userName": {
+						"value": "[parameters('emerp_lm_properties_typeProperties_userName')]"
+					},
+					"emerpdbpr_properties_typeProperties_userName": {
+						"value": "[parameters('emerpdbpr_properties_typeProperties_userName')]"
+					},
+					"fileserver1_properties_typeProperties_host": {
+						"value": "[parameters('fileserver1_properties_typeProperties_host')]"
+					},
+					"fileserver1_properties_typeProperties_userId": {
+						"value": "[parameters('fileserver1_properties_typeProperties_userId')]"
 					},
 					"linkedService1_properties_typeProperties_host": {
 						"value": "[parameters('linkedService1_properties_typeProperties_host')]"
@@ -987,15 +994,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"Trigger_np9_properties____CopyPipeline_pu_file_AUTO_parameters_windowStart": {
-						"value": "[parameters('Trigger_np9_properties____CopyPipeline_pu_file_AUTO_parameters_windowStart')]"
-					},
-					"Trigger_zwu_properties__pu_raw_files_sync_parameters_windowStart": {
-						"value": "[parameters('Trigger_zwu_properties__pu_raw_files_sync_parameters_windowStart')]"
-					},
-					"Trigger_zwu_properties__pu_raw_files_sync_parameters_windowEnd": {
-						"value": "[parameters('Trigger_zwu_properties__pu_raw_files_sync_parameters_windowEnd')]"
 					}
 				}
 			},
@@ -1016,6 +1014,15 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Trigger_np9_properties____CopyPipeline_pu_file_AUTO_parameters_windowStart": {
+						"value": "[parameters('Trigger_np9_properties____CopyPipeline_pu_file_AUTO_parameters_windowStart')]"
+					},
+					"Trigger_zwu_properties__pu_raw_files_sync_parameters_windowStart": {
+						"value": "[parameters('Trigger_zwu_properties__pu_raw_files_sync_parameters_windowStart')]"
+					},
+					"Trigger_zwu_properties__pu_raw_files_sync_parameters_windowEnd": {
+						"value": "[parameters('Trigger_zwu_properties__pu_raw_files_sync_parameters_windowEnd')]"
 					}
 				}
 			},
