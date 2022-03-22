@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "delta_to_sql_table",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -22,11 +22,57 @@
 							"type": "AzureDatabricksDeltaLakeExportCommand"
 						}
 					},
-					"enableStaging": false
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "accountnumber",
+									"type": "Int64"
+								},
+								"sink": {
+									"name": "accountnumber",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"name": "Event_date",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "Event_date",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "event_name",
+									"type": "string"
+								},
+								"sink": {
+									"name": "event_name",
+									"type": "String"
+								}
+							}
+						]
+					}
 				},
 				"inputs": [
 					{
 						"referenceName": "AzureDatabricksDeltaLakeDataset1",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "all_db_pr_SQL_SERVER",
 						"type": "DatasetReference"
 					}
 				]
