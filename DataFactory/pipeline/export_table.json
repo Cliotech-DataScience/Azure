@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "export_table",
 	"properties": {
 		"activities": [
 			{
