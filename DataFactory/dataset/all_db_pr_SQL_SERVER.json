@@ -1,0 +1,16 @@
+{
+	"name": "all_db_pr_SQL_SERVER",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "alldbdwh",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "_nati_pu_2019_2021"
+		}
+	}
+}
