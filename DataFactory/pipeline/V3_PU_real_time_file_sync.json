@@ -74,6 +74,9 @@
 				"userProperties": [],
 				"typeProperties": {
 					"notebookPath": "/Load Data/Platform Usage/version 3/01 v3  load  pu rows files to platformusage raw data table",
+					"baseParameters": {
+						"env_type": "dev"
+					},
 					"libraries": [
 						{
 							"pypi": {
