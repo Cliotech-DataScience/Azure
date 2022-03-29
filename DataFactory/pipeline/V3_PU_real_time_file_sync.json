@@ -54,7 +54,7 @@
 				]
 			},
 			{
-				"name": "Notebook1",
+				"name": "load pu rows files to platformusage",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
@@ -73,10 +73,10 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/Load Data/Platform Usage/version 3/dev"
+					"notebookPath": "/Load Data/Platform Usage/version 3/01 v3  load  pu rows files to platformusage raw data table"
 				},
 				"linkedServiceName": {
-					"referenceName": "Analysis",
+					"referenceName": "AzureDatabricks1_10_4",
 					"type": "LinkedServiceReference"
 				}
 			}
