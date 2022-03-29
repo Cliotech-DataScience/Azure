@@ -73,7 +73,14 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/Load Data/Platform Usage/version 3/01 v3  load  pu rows files to platformusage raw data table"
+					"notebookPath": "/Load Data/Platform Usage/version 3/01 v3  load  pu rows files to platformusage raw data table",
+					"libraries": [
+						{
+							"pypi": {
+								"package": "user_agents"
+							}
+						}
+					]
 				},
 				"linkedServiceName": {
 					"referenceName": "AzureDatabricks1_10_4",
