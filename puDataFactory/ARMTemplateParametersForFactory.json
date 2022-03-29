@@ -122,6 +122,9 @@
 		"pu_raw_file_LS_password": {
 			"value": ""
 		},
+		"AzureDatabricks1_10_4_accessToken": {
+			"value": ""
+		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"value": "*.parquet"
 		},

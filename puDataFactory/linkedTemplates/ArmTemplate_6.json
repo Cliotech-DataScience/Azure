@@ -25,6 +25,40 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/DWH_Dim_Customers_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWH",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "AccountNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "datails",
+						"type": "String"
+					},
+					{
+						"name": "SsisUpdatedDate",
+						"type": "DateTime"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[azure].[AZ_Customers]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DWH_pu_list_files')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1114,40 +1148,6 @@
 				"typeProperties": {
 					"schema": "dbo",
 					"table": "_nati_pu_2019_2021"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dwh_Customer_Questionnaires_src')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DWH",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "AccountNumber",
-						"type": "Int32"
-					},
-					{
-						"name": "details",
-						"type": "String"
-					},
-					{
-						"name": "Last_Update",
-						"type": "DateTime"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[[azure].[AZ_Customer_Questionnaires]"
 				}
 			},
 			"dependsOn": []
