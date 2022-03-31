@@ -32,6 +32,9 @@
 		"AzureDataLake_gen2_usansa_accountKey": {
 			"value": ""
 		},
+		"AzureDatabricks1_10_4_accessToken": {
+			"value": ""
+		},
 		"AzureDatabricksDeltaLake_accessToken": {
 			"value": ""
 		},
@@ -120,9 +123,6 @@
 			"value": ""
 		},
 		"pu_raw_file_LS_password": {
-			"value": ""
-		},
-		"AzureDatabricks1_10_4_accessToken": {
 			"value": ""
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {

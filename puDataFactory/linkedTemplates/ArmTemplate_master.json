@@ -43,6 +43,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLake_gen2_usansa'"
 		},
+		"AzureDatabricks1_10_4_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks1_10_4'"
+		},
 		"AzureDatabricksDeltaLake_accessToken": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'AzureDatabricksDeltaLake'"
@@ -162,10 +166,6 @@
 		"pu_raw_file_LS_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pu_raw_file_LS'"
-		},
-		"AzureDatabricks1_10_4_accessToken": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks1_10_4'"
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -529,6 +529,9 @@
 					"AzureDataLake_gen2_usansa_accountKey": {
 						"value": "[parameters('AzureDataLake_gen2_usansa_accountKey')]"
 					},
+					"AzureDatabricks1_10_4_accessToken": {
+						"value": "[parameters('AzureDatabricks1_10_4_accessToken')]"
+					},
 					"AzureDatabricksDeltaLake_accessToken": {
 						"value": "[parameters('AzureDatabricksDeltaLake_accessToken')]"
 					},
@@ -556,9 +559,6 @@
 					"bydatalakqa sa_connectionString": {
 						"value": "[parameters('bydatalakqa sa_connectionString')]"
 					},
-					"dwhdb_blob_connectionString": {
-						"value": "[parameters('dwhdb_blob_connectionString')]"
-					},
 					"ADLS Byl_properties_typeProperties_url": {
 						"value": "[parameters('ADLS Byl_properties_typeProperties_url')]"
 					},
@@ -583,8 +583,8 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"AzureDatabricks1_10_4_accessToken": {
-						"value": "[parameters('AzureDatabricks1_10_4_accessToken')]"
+					"dwhdb_blob_connectionString": {
+						"value": "[parameters('dwhdb_blob_connectionString')]"
 					}
 				}
 			},
