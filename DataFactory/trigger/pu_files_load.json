@@ -1,0 +1,24 @@
+{
+	"name": "pu_files_load",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "V3_PU_real_time_file_sync",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 1,
+				"startTime": "2022-03-31T14:01:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
