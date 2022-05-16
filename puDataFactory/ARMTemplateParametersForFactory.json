@@ -125,6 +125,9 @@
 		"pu_raw_file_LS_password": {
 			"value": ""
 		},
+		"mlwprdwesa_connectionString": {
+			"value": ""
+		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"value": "*.parquet"
 		},

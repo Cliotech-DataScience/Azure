@@ -167,6 +167,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pu_raw_file_LS'"
 		},
+		"mlwprdwesa_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'mlwprdwesa'"
+		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "*.parquet"
@@ -585,6 +589,9 @@
 					},
 					"dwhdb_blob_connectionString": {
 						"value": "[parameters('dwhdb_blob_connectionString')]"
+					},
+					"mlwprdwesa_connectionString": {
+						"value": "[parameters('mlwprdwesa_connectionString')]"
 					}
 				}
 			},
@@ -724,12 +731,6 @@
 					},
 					"blob_platfrom_unzip_file_1_properties_typeProperties_folderPath": {
 						"value": "[parameters('blob_platfrom_unzip_file_1_properties_typeProperties_folderPath')]"
-					},
-					"blob_serials_row_folder_properties_typeProperties_fileName": {
-						"value": "[parameters('blob_serials_row_folder_properties_typeProperties_fileName')]"
-					},
-					"blob_serials_row_folder_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_serials_row_folder_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -778,11 +779,11 @@
 					"SCMM SQL_password": {
 						"value": "[parameters('SCMM SQL_password')]"
 					},
-					"STG_connectionString": {
-						"value": "[parameters('STG_connectionString')]"
+					"blob_serials_row_folder_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_serials_row_folder_properties_typeProperties_fileName')]"
 					},
-					"STG_password": {
-						"value": "[parameters('STG_password')]"
+					"blob_serials_row_folder_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_serials_row_folder_properties_typeProperties_folderPath')]"
 					},
 					"dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName')]"
@@ -855,9 +856,6 @@
 					},
 					"SCMM SQL_properties_typeProperties_userName": {
 						"value": "[parameters('SCMM SQL_properties_typeProperties_userName')]"
-					},
-					"STG_properties_typeProperties_userName": {
-						"value": "[parameters('STG_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -878,6 +876,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"STG_connectionString": {
+						"value": "[parameters('STG_connectionString')]"
+					},
+					"STG_password": {
+						"value": "[parameters('STG_password')]"
 					},
 					"alldbdwh_connectionString": {
 						"value": "[parameters('alldbdwh_connectionString')]"
@@ -905,6 +909,9 @@
 					},
 					"pu_raw_file_LS_password": {
 						"value": "[parameters('pu_raw_file_LS_password')]"
+					},
+					"STG_properties_typeProperties_userName": {
+						"value": "[parameters('STG_properties_typeProperties_userName')]"
 					},
 					"alldbdwh_properties_typeProperties_userName": {
 						"value": "[parameters('alldbdwh_properties_typeProperties_userName')]"

@@ -10,6 +10,10 @@
 		"dwhdb_blob_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'dwhdb_blob'"
+		},
+		"mlwprdwesa_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'mlwprdwesa'"
 		}
 	},
 	"variables": {
@@ -102,6 +106,19 @@
 							"timeToLive": 0
 						}
 					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/mlwprdwesa')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('mlwprdwesa_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -795,48 +812,6 @@
 				],
 				"typeProperties": {
 					"tableName": "[[Reports].[Logins_By_Country]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Azure BI db",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "ID",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Server",
-						"type": "nvarchar"
-					},
-					{
-						"name": "DB",
-						"type": "nvarchar"
-					},
-					{
-						"name": "TableName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Active",
-						"type": "int",
-						"precision": 10
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "synapse_Mng_Sync_Tables"
 				}
 			},
 			"dependsOn": []
