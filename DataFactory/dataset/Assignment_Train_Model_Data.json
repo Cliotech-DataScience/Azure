@@ -1,0 +1,21 @@
+{
+	"name": "Assignment_Train_Model_Data",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "mlwprdwesa",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Train__Data",
+				"folderPath": "Assignment/v_Train_Model_Data/",
+				"container": "azureml-blobstore-6f32a53f-5320-4a3b-beeb-ff75fdbffc9e"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
