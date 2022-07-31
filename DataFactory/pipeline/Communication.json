@@ -5,6 +5,7 @@
 			{
 				"name": "LK_Last_Date_Mng_azure_ETL",
 				"type": "Lookup",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -12,6 +13,7 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "AzureTableSource",
@@ -28,6 +30,7 @@
 			{
 				"name": "LK_new_max_date",
 				"type": "Lookup",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -35,10 +38,12 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
-						"sqlReaderQuery": " SELECT Last_Event_Date = MAX(Event_Date)\nFROM EMERP_LM.azure.AZ_Communication\nWHERE Event_Date < CAST(GETDATE() AS DATE)"
+						"sqlReaderQuery": " SELECT Last_Event_Date = MAX(Event_Date)\nFROM EMERP_LM.azure.AZ_Communication\nWHERE Event_Date < CAST(GETDATE() AS DATE)\nand  Event_Date>'2022-07-30'",
+						"partitionOption": "None"
 					},
 					"dataset": {
 						"referenceName": "Communication_src",
@@ -70,13 +75,15 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "SqlSource",
 						"sqlReaderQuery": {
 							"value": "select * \nFROM EMERP_LM.azure.AZ_Communication\nwhere Event_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Event_Date <= '@{activity('LK_new_max_date').output.firstRow.Last_Event_Date}'",
 							"type": "Expression"
-						}
+						},
+						"partitionOption": "None"
 					},
 					"sink": {
 						"type": "BlobSink"
@@ -116,6 +123,7 @@
 						]
 					}
 				],
+				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "MergeTableStore",
@@ -150,6 +158,7 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"notebookPath": "/Load Data/Digital Communication/Load Communication"
 				},
@@ -161,7 +170,8 @@
 		],
 		"folder": {
 			"name": "Data_from_SQL"
-		}
+		},
+		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
