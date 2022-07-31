@@ -34,6 +34,19 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/mlwprdwesa')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('mlwprdwesa_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Run Clustering Model Daily')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -106,19 +119,6 @@
 							"timeToLive": 0
 						}
 					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/mlwprdwesa')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('mlwprdwesa_connectionString')]"
 				}
 			},
 			"dependsOn": []
@@ -741,6 +741,32 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Assignment_Train_Model_Data')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "mlwprdwesa",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Train__Data",
+						"folderPath": "Assignment/v_Train_Model_Data/",
+						"container": "azureml-blobstore-6f32a53f-5320-4a3b-beeb-ff75fdbffc9e"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/mlwprdwesa')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureDatabricksDeltaLakeDataset1')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -755,64 +781,6 @@
 					"database": ""
 				},
 				"schema": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/AzureSQL_Logins_By_Country')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase_events",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "BI"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"structure": [
-					{
-						"name": "Event_date_Day",
-						"type": "Date"
-					},
-					{
-						"name": "AccountNumber",
-						"type": "Int32"
-					},
-					{
-						"name": "Broker",
-						"type": "String"
-					},
-					{
-						"name": "Folder",
-						"type": "String"
-					},
-					{
-						"name": "FolderType",
-						"type": "String"
-					},
-					{
-						"name": "Login_From_Country",
-						"type": "String"
-					},
-					{
-						"name": "CustomerCountry",
-						"type": "String"
-					},
-					{
-						"name": "AMLComplianceStatus",
-						"type": "String"
-					},
-					{
-						"name": "Sessions",
-						"type": "Int32"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[[Reports].[Logins_By_Country]"
-				}
 			},
 			"dependsOn": []
 		}

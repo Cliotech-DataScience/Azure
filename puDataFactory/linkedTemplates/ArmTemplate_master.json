@@ -163,13 +163,13 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'linkedService1'"
 		},
-		"pu_raw_file_LS_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'pu_raw_file_LS'"
-		},
 		"mlwprdwesa_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'mlwprdwesa'"
+		},
+		"pu_raw_file_LS_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'pu_raw_file_LS'"
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -399,6 +399,14 @@
 			"type": "string",
 			"defaultValue": "https://byldatalakeqa.dfs.core.windows.net"
 		},
+		"Analysis_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0120-125803-reach437"
+		},
+		"Analysis_spark_3_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "1224-085455-babel544"
+		},
 		"AzureDataLake_gen2_usansa_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://usansa.dfs.core.windows.net/"
@@ -566,6 +574,12 @@
 					"ADLS Byl_properties_typeProperties_url": {
 						"value": "[parameters('ADLS Byl_properties_typeProperties_url')]"
 					},
+					"Analysis_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('Analysis_properties_typeProperties_existingClusterId')]"
+					},
+					"Analysis_spark_3_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('Analysis_spark_3_properties_typeProperties_existingClusterId')]"
+					},
 					"AzureDataLake_gen2_usansa_properties_typeProperties_url": {
 						"value": "[parameters('AzureDataLake_gen2_usansa_properties_typeProperties_url')]"
 					}
@@ -725,12 +739,6 @@
 					},
 					"blob_platfrom_unzip_file_properties_typeProperties_folderPath": {
 						"value": "[parameters('blob_platfrom_unzip_file_properties_typeProperties_folderPath')]"
-					},
-					"blob_platfrom_unzip_file_1_properties_typeProperties_fileName": {
-						"value": "[parameters('blob_platfrom_unzip_file_1_properties_typeProperties_fileName')]"
-					},
-					"blob_platfrom_unzip_file_1_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_platfrom_unzip_file_1_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -773,11 +781,11 @@
 					"Events_Collector_PlatfromUsage_log_password": {
 						"value": "[parameters('Events_Collector_PlatfromUsage_log_password')]"
 					},
-					"SCMM SQL_connectionString": {
-						"value": "[parameters('SCMM SQL_connectionString')]"
+					"blob_platfrom_unzip_file_1_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_platfrom_unzip_file_1_properties_typeProperties_fileName')]"
 					},
-					"SCMM SQL_password": {
-						"value": "[parameters('SCMM SQL_password')]"
+					"blob_platfrom_unzip_file_1_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_platfrom_unzip_file_1_properties_typeProperties_folderPath')]"
 					},
 					"blob_serials_row_folder_properties_typeProperties_fileName": {
 						"value": "[parameters('blob_serials_row_folder_properties_typeProperties_fileName')]"
@@ -853,9 +861,6 @@
 					},
 					"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
 						"value": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_userId')]"
-					},
-					"SCMM SQL_properties_typeProperties_userName": {
-						"value": "[parameters('SCMM SQL_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -876,6 +881,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"SCMM SQL_connectionString": {
+						"value": "[parameters('SCMM SQL_connectionString')]"
+					},
+					"SCMM SQL_password": {
+						"value": "[parameters('SCMM SQL_password')]"
 					},
 					"STG_connectionString": {
 						"value": "[parameters('STG_connectionString')]"
@@ -909,6 +920,9 @@
 					},
 					"pu_raw_file_LS_password": {
 						"value": "[parameters('pu_raw_file_LS_password')]"
+					},
+					"SCMM SQL_properties_typeProperties_userName": {
+						"value": "[parameters('SCMM SQL_properties_typeProperties_userName')]"
 					},
 					"STG_properties_typeProperties_userName": {
 						"value": "[parameters('STG_properties_typeProperties_userName')]"

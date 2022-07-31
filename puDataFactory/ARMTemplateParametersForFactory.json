@@ -122,10 +122,10 @@
 		"linkedService1_password": {
 			"value": ""
 		},
-		"pu_raw_file_LS_password": {
+		"mlwprdwesa_connectionString": {
 			"value": ""
 		},
-		"mlwprdwesa_connectionString": {
+		"pu_raw_file_LS_password": {
 			"value": ""
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
@@ -298,6 +298,12 @@
 		},
 		"ADLS Byl_properties_typeProperties_url": {
 			"value": "https://byldatalakeqa.dfs.core.windows.net"
+		},
+		"Analysis_properties_typeProperties_existingClusterId": {
+			"value": "0120-125803-reach437"
+		},
+		"Analysis_spark_3_properties_typeProperties_existingClusterId": {
+			"value": "1224-085455-babel544"
 		},
 		"AzureDataLake_gen2_usansa_properties_typeProperties_url": {
 			"value": "https://usansa.dfs.core.windows.net/"

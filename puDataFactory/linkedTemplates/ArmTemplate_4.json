@@ -35,13 +35,13 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'Events_Collector_PlatfromUsage_log'"
 		},
-		"SCMM SQL_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'SCMM SQL'"
+		"blob_platfrom_unzip_file_1_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@dataset().file_name"
 		},
-		"SCMM SQL_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'SCMM SQL'"
+		"blob_platfrom_unzip_file_1_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@dataset().folder_name"
 		},
 		"blob_serials_row_folder_properties_typeProperties_fileName": {
 			"type": "string",
@@ -142,16 +142,100 @@
 		"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
-		},
-		"SCMM SQL_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "efix\\reportsprod"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/blob_platfrom_unzip_file_1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"folder_name": {
+						"type": "String"
+					},
+					"file_name": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "ip",
+						"type": "String"
+					},
+					{
+						"name": "hyphen_1",
+						"type": "String"
+					},
+					{
+						"name": "hyphen_2",
+						"type": "String"
+					},
+					{
+						"name": "datetime",
+						"type": "String"
+					},
+					{
+						"name": "time",
+						"type": "String"
+					},
+					{
+						"name": "url_parm",
+						"type": "String"
+					},
+					{
+						"name": "Prop_6",
+						"type": "String"
+					},
+					{
+						"name": "Prop_7",
+						"type": "String"
+					},
+					{
+						"name": "server",
+						"type": "String"
+					},
+					{
+						"name": "user_agent",
+						"type": "String"
+					},
+					{
+						"name": "log_parm",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": " ",
+						"rowDelimiter": "\n",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"fileName": {
+						"value": "[parameters('blob_platfrom_unzip_file_1_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": {
+						"value": "[parameters('blob_platfrom_unzip_file_1_properties_typeProperties_folderPath')]",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/blob_serials_row_folder')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -980,28 +1064,6 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('Events_Collector_PlatfromUsage_log_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "alldbgateway",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SCMM SQL')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('SCMM SQL_connectionString')]",
-					"userName": "[parameters('SCMM SQL_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('SCMM SQL_password')]"
 					}
 				},
 				"connectVia": {

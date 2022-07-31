@@ -69,6 +69,64 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureSQL_Logins_By_Country')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase_events",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "BI"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "Event_date_Day",
+						"type": "Date"
+					},
+					{
+						"name": "AccountNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "Broker",
+						"type": "String"
+					},
+					{
+						"name": "Folder",
+						"type": "String"
+					},
+					{
+						"name": "FolderType",
+						"type": "String"
+					},
+					{
+						"name": "Login_From_Country",
+						"type": "String"
+					},
+					{
+						"name": "CustomerCountry",
+						"type": "String"
+					},
+					{
+						"name": "AMLComplianceStatus",
+						"type": "String"
+					},
+					{
+						"name": "Sessions",
+						"type": "Int32"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[Reports].[Logins_By_Country]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureSqlTable1')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -787,37 +845,6 @@
 						},
 						"container": "platformusage"
 					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DestinationDataset_prf')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "CosmosDb1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "CosmosDbSqlApiCollection",
-				"schema": {
-					"type": "object",
-					"properties": {
-						"Guid": {
-							"type": "string"
-						},
-						"Name": {
-							"type": "string"
-						},
-						"Age": {
-							"type": "integer"
-						}
-					}
-				},
-				"typeProperties": {
-					"collectionName": "WebEvents"
 				}
 			},
 			"dependsOn": []

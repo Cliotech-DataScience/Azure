@@ -87,6 +87,14 @@
 			"type": "string",
 			"defaultValue": "https://byldatalakeqa.dfs.core.windows.net"
 		},
+		"Analysis_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0120-125803-reach437"
+		},
+		"Analysis_spark_3_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "1224-085455-babel544"
+		},
 		"AzureDataLake_gen2_usansa_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://usansa.dfs.core.windows.net/"
@@ -181,7 +189,7 @@
 						"type": "SecureString",
 						"value": "[parameters('Analysis_accessToken')]"
 					},
-					"existingClusterId": "0120-125803-reach437"
+					"existingClusterId": "[parameters('Analysis_properties_typeProperties_existingClusterId')]"
 				}
 			},
 			"dependsOn": []
@@ -200,7 +208,7 @@
 						"type": "SecureString",
 						"value": "[parameters('Analysis_spark_3_accessToken')]"
 					},
-					"existingClusterId": "1224-085455-babel544"
+					"existingClusterId": "[parameters('Analysis_spark_3_properties_typeProperties_existingClusterId')]"
 				}
 			},
 			"dependsOn": []

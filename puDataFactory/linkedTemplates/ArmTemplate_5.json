@@ -7,6 +7,14 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "puDataFactory"
 		},
+		"SCMM SQL_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SCMM SQL'"
+		},
+		"SCMM SQL_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SCMM SQL'"
+		},
 		"STG_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'STG'"
@@ -50,6 +58,10 @@
 		"pu_raw_file_LS_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pu_raw_file_LS'"
+		},
+		"SCMM SQL_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\reportsprod"
 		},
 		"STG_properties_typeProperties_userName": {
 			"type": "string",
@@ -96,6 +108,28 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/SCMM SQL')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('SCMM SQL_connectionString')]",
+					"userName": "[parameters('SCMM SQL_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('SCMM SQL_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/STG')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -248,30 +282,6 @@
 					"referenceName": "alldbgateway",
 					"type": "IntegrationRuntimeReference"
 				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Assignment_Train_Model_Data')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "mlwprdwesa",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Parquet",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "Train__Data",
-						"folderPath": "Assignment/v_Train_Model_Data/",
-						"container": "azureml-blobstore-6f32a53f-5320-4a3b-beeb-ff75fdbffc9e"
-					},
-					"compressionCodec": "snappy"
-				},
-				"schema": []
 			},
 			"dependsOn": []
 		},

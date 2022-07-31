@@ -163,13 +163,13 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'linkedService1'"
 		},
-		"pu_raw_file_LS_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'pu_raw_file_LS'"
-		},
 		"mlwprdwesa_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'mlwprdwesa'"
+		},
+		"pu_raw_file_LS_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'pu_raw_file_LS'"
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -398,6 +398,14 @@
 		"ADLS Byl_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://byldatalakeqa.dfs.core.windows.net"
+		},
+		"Analysis_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "0120-125803-reach437"
+		},
+		"Analysis_spark_3_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "1224-085455-babel544"
 		},
 		"AzureDataLake_gen2_usansa_properties_typeProperties_url": {
 			"type": "string",
@@ -1490,7 +1498,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlSource",
-								"sqlReaderQuery": " SELECT Last_Event_Date = MAX(Event_Date)\nFROM EMERP_LM.azure.AZ_Communication\nWHERE Event_Date < CAST(GETDATE() AS DATE)",
+								"sqlReaderQuery": " SELECT Last_Event_Date = MAX(Event_Date)\nFROM EMERP_LM.azure.AZ_Communication\nWHERE Event_Date < CAST(GETDATE() AS DATE)\nand  Event_Date>'2022-07-30'",
 								"partitionOption": "None"
 							},
 							"dataset": {
@@ -6790,6 +6798,80 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data to ml",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "SELECT * FROM dm.Assignment.v_Train_Model_Data",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "all_db_pr_SQL_SERVER",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Assignment_Train_Model_Data",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "ML/train_ai"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/all_db_pr_SQL_SERVER')]",
+				"[concat(variables('factoryId'), '/datasets/Assignment_Train_Model_Data')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/run_only_pu_on_loop')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -6931,6 +7013,32 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ADLS Byl')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Assignment_Train_Model_Data')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "mlwprdwesa",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Train__Data",
+						"folderPath": "Assignment/v_Train_Model_Data/",
+						"container": "azureml-blobstore-6f32a53f-5320-4a3b-beeb-ff75fdbffc9e"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/mlwprdwesa')]"
 			]
 		},
 		{
@@ -11552,7 +11660,7 @@
 						"type": "SecureString",
 						"value": "[parameters('Analysis_accessToken')]"
 					},
-					"existingClusterId": "0120-125803-reach437"
+					"existingClusterId": "[parameters('Analysis_properties_typeProperties_existingClusterId')]"
 				}
 			},
 			"dependsOn": []
@@ -11571,7 +11679,7 @@
 						"type": "SecureString",
 						"value": "[parameters('Analysis_spark_3_accessToken')]"
 					},
-					"existingClusterId": "1224-085455-babel544"
+					"existingClusterId": "[parameters('Analysis_spark_3_properties_typeProperties_existingClusterId')]"
 				}
 			},
 			"dependsOn": []
@@ -12104,6 +12212,19 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/mlwprdwesa')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('mlwprdwesa_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/pu_raw_file_LS')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -12535,7 +12656,7 @@
 				"typeProperties": {
 					"recurrence": {
 						"frequency": "Hour",
-						"interval": 1,
+						"interval": 2,
 						"startTime": "2022-03-31T14:01:00Z",
 						"timeZone": "UTC"
 					}
@@ -12573,119 +12694,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data to ml",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderQuery": "SELECT * FROM dm.Assignment.v_Train_Model_Data",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "ParquetSink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								},
-								"formatSettings": {
-									"type": "ParquetWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "all_db_pr_SQL_SERVER",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Assignment_Train_Model_Data",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "ML/train_ai"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/all_db_pr_SQL_SERVER')]",
-				"[concat(variables('factoryId'), '/datasets/Assignment_Train_Model_Data')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/mlwprdwesa')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": "[parameters('mlwprdwesa_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Assignment_Train_Model_Data')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "mlwprdwesa",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Parquet",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "Train__Data",
-						"folderPath": "Assignment/v_Train_Model_Data/",
-						"container": "azureml-blobstore-6f32a53f-5320-4a3b-beeb-ff75fdbffc9e"
-					},
-					"compressionCodec": "snappy"
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/mlwprdwesa')]"
-			]
 		}
 	]
 }
