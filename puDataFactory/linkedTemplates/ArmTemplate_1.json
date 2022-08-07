@@ -754,7 +754,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "Train__Data_8_3",
+						"fileName": "Train__Data_8_7",
 						"folderPath": "Assignment/v_Train_Model_Data/",
 						"container": "azureml-blobstore-6f32a53f-5320-4a3b-beeb-ff75fdbffc9e"
 					},
