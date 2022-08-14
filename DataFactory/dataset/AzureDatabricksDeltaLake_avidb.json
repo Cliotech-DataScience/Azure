@@ -1,0 +1,15 @@
+{
+	"name": "AzureDatabricksDeltaLake_avidb",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDatabricksDeltaLake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureDatabricksDeltaLakeDataset",
+		"typeProperties": {
+			"database": "avi"
+		},
+		"schema": []
+	}
+}
