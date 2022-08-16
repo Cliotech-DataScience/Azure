@@ -62,7 +62,7 @@
 							"typeProperties": {
 								"source": {
 									"type": "SqlServerSource",
-									"sqlReaderQuery": "SELECT TOP 1400000 * FROM [DWH].[vDwh_Customers_full]",
+									"sqlReaderQuery": "SELECT TOP 10000* FROM [DWH].[vDwh_Customers_full]",
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
