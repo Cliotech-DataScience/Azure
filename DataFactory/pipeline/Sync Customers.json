@@ -1,0 +1,9 @@
+{
+	"name": "Sync Customers",
+	"properties": {
+		"folder": {
+			"name": "azure"
+		},
+		"annotations": []
+	}
+}
