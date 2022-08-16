@@ -25,7 +25,7 @@
 				"folderPath": "parquet_file/lookup_tables",
 				"fileSystem": "usan-data-lake-fs"
 			},
-			"compressionCodec": "gzip"
+			"compressionCodec": "none"
 		},
 		"schema": []
 	}
