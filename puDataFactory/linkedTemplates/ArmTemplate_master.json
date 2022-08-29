@@ -11,10 +11,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ADLS Byl'"
 		},
-		"Analysis_accessToken": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accessToken' of 'Analysis'"
-		},
 		"Analysis_spark_3_accessToken": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'Analysis_spark_3'"
@@ -517,9 +513,6 @@
 					"ADLS Byl_accountKey": {
 						"value": "[parameters('ADLS Byl_accountKey')]"
 					},
-					"Analysis_accessToken": {
-						"value": "[parameters('Analysis_accessToken')]"
-					},
 					"Analysis_spark_3_accessToken": {
 						"value": "[parameters('Analysis_spark_3_accessToken')]"
 					},
@@ -736,9 +729,6 @@
 					},
 					"blob_platfrom_merge_file_des_properties_typeProperties_folderPath": {
 						"value": "[parameters('blob_platfrom_merge_file_des_properties_typeProperties_folderPath')]"
-					},
-					"blob_platfrom_unzip_file_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_platfrom_unzip_file_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -778,8 +768,8 @@
 					"Dwhpr_password": {
 						"value": "[parameters('Dwhpr_password')]"
 					},
-					"Events_Collector_PlatfromUsage_log_password": {
-						"value": "[parameters('Events_Collector_PlatfromUsage_log_password')]"
+					"blob_platfrom_unzip_file_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_platfrom_unzip_file_properties_typeProperties_folderPath')]"
 					},
 					"blob_platfrom_unzip_file_1_properties_typeProperties_fileName": {
 						"value": "[parameters('blob_platfrom_unzip_file_1_properties_typeProperties_fileName')]"
@@ -855,12 +845,6 @@
 					},
 					"Dwhpr_properties_typeProperties_userName": {
 						"value": "[parameters('Dwhpr_properties_typeProperties_userName')]"
-					},
-					"Events_Collector_PlatfromUsage_log_properties_typeProperties_host": {
-						"value": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_host')]"
-					},
-					"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
-						"value": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_userId')]"
 					}
 				}
 			},
@@ -881,6 +865,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Events_Collector_PlatfromUsage_log_password": {
+						"value": "[parameters('Events_Collector_PlatfromUsage_log_password')]"
 					},
 					"SCMM SQL_connectionString": {
 						"value": "[parameters('SCMM SQL_connectionString')]"
@@ -920,6 +907,12 @@
 					},
 					"pu_raw_file_LS_password": {
 						"value": "[parameters('pu_raw_file_LS_password')]"
+					},
+					"Events_Collector_PlatfromUsage_log_properties_typeProperties_host": {
+						"value": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_host')]"
+					},
+					"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
+						"value": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_userId')]"
 					},
 					"SCMM SQL_properties_typeProperties_userName": {
 						"value": "[parameters('SCMM SQL_properties_typeProperties_userName')]"
@@ -976,12 +969,6 @@
 					},
 					"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
 						"value": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"
-					},
-					"Source_file_avi_properties_typeProperties_fileName": {
-						"value": "[parameters('Source_file_avi_properties_typeProperties_fileName')]"
-					},
-					"Source_file_avi_properties_typeProperties_folderPath": {
-						"value": "[parameters('Source_file_avi_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -1002,6 +989,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Source_file_avi_properties_typeProperties_fileName": {
+						"value": "[parameters('Source_file_avi_properties_typeProperties_fileName')]"
+					},
+					"Source_file_avi_properties_typeProperties_folderPath": {
+						"value": "[parameters('Source_file_avi_properties_typeProperties_folderPath')]"
 					}
 				}
 			},

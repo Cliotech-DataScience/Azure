@@ -11,10 +11,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ADLS Byl'"
 		},
-		"Analysis_accessToken": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accessToken' of 'Analysis'"
-		},
 		"Analysis_spark_3_accessToken": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'Analysis_spark_3'"
@@ -5509,6 +5505,140 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Sync Tables from sql to delta_copy1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lk_table_name",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT ID,\n       Server,\n       DB,\n       [schema],\n       TableName\nFROM dbo.synapse_Mng_Sync_Tables\nWHERE Active=1",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "AzureSqlTable1",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "For Each table",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lk_table_name",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lk_table_name').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Copy data to parquet",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlServerSource",
+											"sqlReaderQuery": "SELECT TOP 10000* FROM [DWH].[vDwh_Customers_full]",
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "ParquetSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "ParquetWriteSettings"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "dwhpr_dynamic_table",
+											"type": "DatasetReference",
+											"parameters": {
+												"DB": {
+													"value": "@item().DB",
+													"type": "Expression"
+												},
+												"TableName": "@item().TableName",
+												"schema": "@item().schema"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "Parquet_file_dynamic",
+											"type": "DatasetReference",
+											"parameters": {
+												"Parquet_table_file_name": "@item().TableName",
+												"Parquet_db": "@item().DB"
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "azure"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/AzureSqlTable1')]",
+				"[concat(variables('factoryId'), '/datasets/dwhpr_dynamic_table')]",
+				"[concat(variables('factoryId'), '/datasets/Parquet_file_dynamic')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/V3_PU_real_time_file_sync')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -7054,6 +7184,26 @@
 				"type": "AzureDatabricksDeltaLakeDataset",
 				"typeProperties": {
 					"database": ""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDatabricksDeltaLake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDatabricksDeltaLake_avidb')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricksDeltaLake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureDatabricksDeltaLakeDataset",
+				"typeProperties": {
+					"database": "avi"
 				},
 				"schema": []
 			},
@@ -11655,11 +11805,9 @@
 				"annotations": [],
 				"type": "AzureDatabricks",
 				"typeProperties": {
-					"domain": "https://westeurope.azuredatabricks.net",
-					"accessToken": {
-						"type": "SecureString",
-						"value": "[parameters('Analysis_accessToken')]"
-					},
+					"domain": "https://adb-194285697588541.1.azuredatabricks.net",
+					"authentication": "MSI",
+					"workspaceResourceId": "/subscriptions/c080e8cb-10cc-4387-9fd5-9436257f02f4/resourceGroups/dataloader-rg/providers/Microsoft.Databricks/workspaces/Analysis",
 					"existingClusterId": "[parameters('Analysis_properties_typeProperties_existingClusterId')]"
 				}
 			},
@@ -11797,7 +11945,7 @@
 				"type": "AzureDatabricksDeltaLake",
 				"typeProperties": {
 					"domain": "https://adb-194285697588541.1.azuredatabricks.net",
-					"clusterId": "0312-192234-zeal88",
+					"clusterId": "1021-081550-salvo64",
 					"accessToken": {
 						"type": "SecureString",
 						"value": "[parameters('AzureDatabricksDeltaLake_accessToken')]"

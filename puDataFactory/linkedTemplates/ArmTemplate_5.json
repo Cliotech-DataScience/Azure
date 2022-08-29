@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "puDataFactory"
 		},
+		"Events_Collector_PlatfromUsage_log_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Events_Collector_PlatfromUsage_log'"
+		},
 		"SCMM SQL_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SCMM SQL'"
@@ -59,6 +63,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pu_raw_file_LS'"
 		},
+		"Events_Collector_PlatfromUsage_log_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\netapp-ams-cifs\\db\\Events_Collector\\az_test_processed"
+		},
+		"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
 		"SCMM SQL_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\reportsprod"
@@ -108,6 +120,28 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Events_Collector_PlatfromUsage_log')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_host')]",
+					"userId": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('Events_Collector_PlatfromUsage_log_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/SCMM SQL')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -1281,40 +1315,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Contacts')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Dwhpr",
-					"type": "LinkedServiceReference",
-					"parameters": {
-						"DB": "emerp_lm"
-					}
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "RAWDB_Id",
-						"type": "Int64"
-					},
-					{
-						"name": "datails",
-						"type": "String"
-					},
-					{
-						"name": "Fixed_Timestamp",
-						"type": "DateTime"
-					}
-				],
-				"typeProperties": {
-					"tableName": "EmErp_LM.azure.scmm_contacts"
-				}
-			},
-			"dependsOn": []
 		}
 	]
 }
