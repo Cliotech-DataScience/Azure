@@ -17,12 +17,46 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Communication_src')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "MessageID",
+						"type": "Int32"
+					},
+					{
+						"name": "Event_Date",
+						"type": "DateTime"
+					},
+					{
+						"name": "details",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": "emerp_lm.azure.AZ_Communication"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Contacts')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "Dwhpr",
+					"referenceName": "SCMM_DBG_PR1",
 					"type": "LinkedServiceReference",
 					"parameters": {
 						"DB": "emerp_lm"
@@ -1500,25 +1534,6 @@
 					"table": {
 						"value": "@dataset().cw_table",
 						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_zwu')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "pu_raw_file_LS",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "FileServerLocation"
 					}
 				}
 			},

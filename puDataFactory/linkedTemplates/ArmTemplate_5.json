@@ -19,6 +19,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'SCMM SQL'"
 		},
+		"SCMM_DBG_PR1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SCMM_DBG_PR1'"
+		},
+		"SCMM_DBG_PR1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SCMM_DBG_PR1'"
+		},
 		"STG_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'STG'"
@@ -74,6 +82,10 @@
 		"SCMM SQL_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\reportsprod"
+		},
+		"SCMM_DBG_PR1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
 		},
 		"STG_properties_typeProperties_userName": {
 			"type": "string",
@@ -155,6 +167,33 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('SCMM SQL_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SCMM_DBG_PR1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"DB": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('SCMM_DBG_PR1_connectionString')]",
+					"userName": "[parameters('SCMM_DBG_PR1_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('SCMM_DBG_PR1_password')]"
 					}
 				},
 				"connectVia": {
@@ -1279,42 +1318,6 @@
 				"annotations": []
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Communication_src')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "MessageID",
-						"type": "Int32"
-					},
-					{
-						"name": "Event_Date",
-						"type": "DateTime"
-					},
-					{
-						"name": "details",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"tableName": "emerp_lm.azure.AZ_Communication"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
-			]
 		}
 	]
 }

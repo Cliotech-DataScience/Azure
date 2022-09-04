@@ -21,6 +21,25 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_zwu')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "pu_raw_file_LS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "FileServerLocation"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Source_file_avi')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1391,216 +1410,6 @@
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/CopyPipeline_small_tables')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "ForEach_y59",
-						"type": "ForEach",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@pipeline().parameters.cw_items",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Copy_y59",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "7.00:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [
-										{
-											"name": "Source",
-											"value": "@{item().source.schema}.@{item().source.table}"
-										},
-										{
-											"name": "Destination",
-											"value": "bi.@{item().destination.table}"
-										}
-									],
-									"typeProperties": {
-										"source": {
-											"type": "SqlServerSource",
-											"partitionOption": "None"
-										},
-										"sink": {
-											"type": "AzureSqlSink",
-											"writeBehavior": {
-												"value": "@item().copySink.writeBehavior",
-												"type": "Expression"
-											},
-											"sqlWriterUseTableLock": {
-												"value": "@item().copySink.sqlWriterUseTableLock",
-												"type": "Expression"
-											},
-											"upsertSettings": {
-												"useTempDB": true
-											},
-											"tableOption": "autoCreate",
-											"disableMetricsCollection": false
-										},
-										"enableStaging": false,
-										"validateDataConsistency": false,
-										"translator": {
-											"value": "@item().copyActivity.translator",
-											"type": "Expression"
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "SourceDataset_y59",
-											"type": "DatasetReference",
-											"parameters": {
-												"cw_schema": "@item().source.schema",
-												"cw_table": "@item().source.table"
-											}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "DestinationDataset_y59",
-											"type": "DatasetReference",
-											"parameters": {
-												"cw_table": "@item().destination.table"
-											}
-										}
-									]
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"cw_items": {
-						"type": "Array",
-						"defaultValue": [
-							{
-								"source": {
-									"schema": "Calls",
-									"table": "CallModes"
-								},
-								"destination": {
-									"table": "CallModes"
-								},
-								"copySink": {
-									"writeBehavior": "insert",
-									"sqlWriterUseTableLock": false
-								},
-								"copyActivity": {
-									"translator": {
-										"type": "TabularTranslator",
-										"mappings": [
-											{
-												"source": {
-													"name": "CallModeID",
-													"type": "Byte",
-													"physicalType": "tinyint"
-												},
-												"sink": {
-													"name": "CallModeID",
-													"type": "Byte"
-												}
-											},
-											{
-												"source": {
-													"name": "CallModeName",
-													"type": "String",
-													"physicalType": "varchar"
-												},
-												"sink": {
-													"name": "CallModeName",
-													"type": "String"
-												}
-											}
-										],
-										"typeConversion": true,
-										"typeConversionSettings": {
-											"allowDataTruncation": true,
-											"treatBooleanAsNumber": false
-										}
-									}
-								}
-							},
-							{
-								"source": {
-									"schema": "Communication",
-									"table": "Statuses"
-								},
-								"destination": {
-									"table": "Statuses"
-								},
-								"copySink": {
-									"writeBehavior": null,
-									"sqlWriterUseTableLock": null
-								},
-								"copyActivity": {
-									"translator": {
-										"type": "TabularTranslator",
-										"mappings": [
-											{
-												"source": {
-													"name": "StatusID",
-													"type": "Int16",
-													"physicalType": "smallint"
-												},
-												"sink": {
-													"name": "StatusID",
-													"type": "Int16"
-												}
-											},
-											{
-												"source": {
-													"name": "Status",
-													"type": "String",
-													"physicalType": "varchar"
-												},
-												"sink": {
-													"name": "Status",
-													"type": "String"
-												}
-											},
-											{
-												"source": {
-													"name": "TreatAsSent",
-													"type": "Boolean",
-													"physicalType": "bit"
-												},
-												"sink": {
-													"name": "TreatAsSent",
-													"type": "Boolean"
-												}
-											}
-										],
-										"typeConversion": true,
-										"typeConversionSettings": {
-											"allowDataTruncation": true,
-											"treatBooleanAsNumber": false
-										}
-									}
-								}
-							}
-						]
-					}
 				},
 				"annotations": []
 			},

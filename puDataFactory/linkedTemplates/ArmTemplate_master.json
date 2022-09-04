@@ -111,6 +111,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'SCMM SQL'"
 		},
+		"SCMM_DBG_PR1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SCMM_DBG_PR1'"
+		},
+		"SCMM_DBG_PR1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SCMM_DBG_PR1'"
+		},
 		"STG_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'STG'"
@@ -430,6 +438,10 @@
 		"SCMM SQL_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\reportsprod"
+		},
+		"SCMM_DBG_PR1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
 		},
 		"STG_properties_typeProperties_userName": {
 			"type": "string",
@@ -875,6 +887,12 @@
 					"SCMM SQL_password": {
 						"value": "[parameters('SCMM SQL_password')]"
 					},
+					"SCMM_DBG_PR1_connectionString": {
+						"value": "[parameters('SCMM_DBG_PR1_connectionString')]"
+					},
+					"SCMM_DBG_PR1_password": {
+						"value": "[parameters('SCMM_DBG_PR1_password')]"
+					},
 					"STG_connectionString": {
 						"value": "[parameters('STG_connectionString')]"
 					},
@@ -916,6 +934,9 @@
 					},
 					"SCMM SQL_properties_typeProperties_userName": {
 						"value": "[parameters('SCMM SQL_properties_typeProperties_userName')]"
+					},
+					"SCMM_DBG_PR1_properties_typeProperties_userName": {
+						"value": "[parameters('SCMM_DBG_PR1_properties_typeProperties_userName')]"
 					},
 					"STG_properties_typeProperties_userName": {
 						"value": "[parameters('STG_properties_typeProperties_userName')]"

@@ -83,6 +83,12 @@
 		"SCMM SQL_password": {
 			"value": ""
 		},
+		"SCMM_DBG_PR1_connectionString": {
+			"value": ""
+		},
+		"SCMM_DBG_PR1_password": {
+			"value": ""
+		},
 		"STG_connectionString": {
 			"value": ""
 		},
@@ -322,6 +328,9 @@
 		},
 		"SCMM SQL_properties_typeProperties_userName": {
 			"value": "efix\\reportsprod"
+		},
+		"SCMM_DBG_PR1_properties_typeProperties_userName": {
+			"value": "efix\\az_etl"
 		},
 		"STG_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"

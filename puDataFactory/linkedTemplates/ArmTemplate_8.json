@@ -13,6 +13,216 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/CopyPipeline_small_tables')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach_y59",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.cw_items",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy_y59",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [
+										{
+											"name": "Source",
+											"value": "@{item().source.schema}.@{item().source.table}"
+										},
+										{
+											"name": "Destination",
+											"value": "bi.@{item().destination.table}"
+										}
+									],
+									"typeProperties": {
+										"source": {
+											"type": "SqlServerSource",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": {
+												"value": "@item().copySink.writeBehavior",
+												"type": "Expression"
+											},
+											"sqlWriterUseTableLock": {
+												"value": "@item().copySink.sqlWriterUseTableLock",
+												"type": "Expression"
+											},
+											"upsertSettings": {
+												"useTempDB": true
+											},
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"validateDataConsistency": false,
+										"translator": {
+											"value": "@item().copyActivity.translator",
+											"type": "Expression"
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "SourceDataset_y59",
+											"type": "DatasetReference",
+											"parameters": {
+												"cw_schema": "@item().source.schema",
+												"cw_table": "@item().source.table"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "DestinationDataset_y59",
+											"type": "DatasetReference",
+											"parameters": {
+												"cw_table": "@item().destination.table"
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"cw_items": {
+						"type": "Array",
+						"defaultValue": [
+							{
+								"source": {
+									"schema": "Calls",
+									"table": "CallModes"
+								},
+								"destination": {
+									"table": "CallModes"
+								},
+								"copySink": {
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false
+								},
+								"copyActivity": {
+									"translator": {
+										"type": "TabularTranslator",
+										"mappings": [
+											{
+												"source": {
+													"name": "CallModeID",
+													"type": "Byte",
+													"physicalType": "tinyint"
+												},
+												"sink": {
+													"name": "CallModeID",
+													"type": "Byte"
+												}
+											},
+											{
+												"source": {
+													"name": "CallModeName",
+													"type": "String",
+													"physicalType": "varchar"
+												},
+												"sink": {
+													"name": "CallModeName",
+													"type": "String"
+												}
+											}
+										],
+										"typeConversion": true,
+										"typeConversionSettings": {
+											"allowDataTruncation": true,
+											"treatBooleanAsNumber": false
+										}
+									}
+								}
+							},
+							{
+								"source": {
+									"schema": "Communication",
+									"table": "Statuses"
+								},
+								"destination": {
+									"table": "Statuses"
+								},
+								"copySink": {
+									"writeBehavior": null,
+									"sqlWriterUseTableLock": null
+								},
+								"copyActivity": {
+									"translator": {
+										"type": "TabularTranslator",
+										"mappings": [
+											{
+												"source": {
+													"name": "StatusID",
+													"type": "Int16",
+													"physicalType": "smallint"
+												},
+												"sink": {
+													"name": "StatusID",
+													"type": "Int16"
+												}
+											},
+											{
+												"source": {
+													"name": "Status",
+													"type": "String",
+													"physicalType": "varchar"
+												},
+												"sink": {
+													"name": "Status",
+													"type": "String"
+												}
+											},
+											{
+												"source": {
+													"name": "TreatAsSent",
+													"type": "Boolean",
+													"physicalType": "bit"
+												},
+												"sink": {
+													"name": "TreatAsSent",
+													"type": "Boolean"
+												}
+											}
+										],
+										"typeConversion": true,
+										"typeConversionSettings": {
+											"allowDataTruncation": true,
+											"treatBooleanAsNumber": false
+										}
+									}
+								}
+							}
+						]
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Customer_Questionnaires')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -3011,89 +3221,6 @@
 						"outputs": [
 							{
 								"referenceName": "DestinationDataset_3oo",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/cm to json')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy_6v0",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "."
-							},
-							{
-								"name": "Destination",
-								"value": "dwh-qa//campaings"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderQuery": "\r\nSELECT [value] FROM OPENJSON(\r\n  (SELECT\r\n     c.numerator, c.id, c.name,\r\n    (select product_id = p.id, product_name= p.name, product_numerator = p.numerator ,\r\n\t\t(SELECT Serial_id =pc.id, pc.serial\r\n\t\tFROM product_creative_tab pc \r\n\t\tWHERE pc.product_id = p.id\r\n\t\tFOR JSON AUTO\r\n\t\t) AS Serials\r\n\t FROM product_tab p \r\n\t WHERE p.campaign_id = c.id \r\n\t FOR json auto) as Products\r\n   FROM dbo.campaign_tab\tc  \r\n   WHERE c.numerator BETWEEN 39900 AND 39950\r\n   FOR JSON PATH)\r\n)",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "JsonSink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								},
-								"formatSettings": {
-									"type": "JsonWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"validateDataConsistency": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "value",
-											"type": "String"
-										},
-										"sink": {
-											"path": "$['value']"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "SourceDataset_6v0",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DestinationDataset_6v0",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
