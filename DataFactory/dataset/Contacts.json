@@ -2,7 +2,7 @@
 	"name": "Contacts",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "Dwhpr",
+			"referenceName": "SCMM_DBG_PR1",
 			"type": "LinkedServiceReference",
 			"parameters": {
 				"DB": "emerp_lm"
