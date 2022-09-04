@@ -6,8 +6,8 @@
 		"type": "SqlServer",
 		"typeProperties": {
 			"connectionString": "integrated security=True;data source=SCMM-DBG-PR1,2555;initial catalog=emerp_lm;applicationintent=ReadOnly",
-			"userName": "az_etl",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI5NTAwN2U3MC0xNjY2LTQyNzctODA2MC02NmZhNTBkNjQ4YjIiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"userName": "efix\\az_etl",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJjZDEzNGNlMy01NjQxLTQyYzEtOWJhOC1jYjkxMjQyNTEyZWEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "alldbgateway",
