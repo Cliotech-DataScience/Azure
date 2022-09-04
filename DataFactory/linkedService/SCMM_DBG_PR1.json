@@ -2,12 +2,17 @@
 	"name": "SCMM_DBG_PR1",
 	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
+		"parameters": {
+			"DB": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "SqlServer",
 		"typeProperties": {
-			"connectionString": "integrated security=True;data source=SCMM-DBG-PR1,2555;initial catalog=emerp_lm;applicationintent=ReadOnly",
+			"connectionString": "integrated security=True;data source=SCMM-DBG-PR1,2555;initial catalog=@{linkedService().DB};applicationintent=ReadOnly",
 			"userName": "efix\\az_etl",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJjZDEzNGNlMy01NjQxLTQyYzEtOWJhOC1jYjkxMjQyNTEyZWEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI0NjlhYjI4MS05ZTZkLTRlMDAtYTBkMi1lMGJiM2JmMzdhMjkiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "alldbgateway",
