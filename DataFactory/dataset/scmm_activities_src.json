@@ -2,12 +2,16 @@
 	"name": "scmm_activities_src",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "emerp_lm",
-			"type": "LinkedServiceReference"
+			"referenceName": "SCMM_DBG_PR1",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"DB": "EmErp_LM"
+			}
 		},
 		"folder": {
 			"name": "DWH"
 		},
+		"annotations": [],
 		"type": "SqlServerTable",
 		"structure": [
 			{
