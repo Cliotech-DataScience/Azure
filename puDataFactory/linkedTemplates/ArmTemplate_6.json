@@ -22,8 +22,11 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
+					"referenceName": "SCMM_DBG_PR1",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DB": "emerp_lm"
+					}
 				},
 				"folder": {
 					"name": "DWH"
@@ -45,7 +48,7 @@
 					}
 				],
 				"typeProperties": {
-					"tableName": "emerp_lm.azure.AZ_Communication"
+					"tableName": "azure.AZ_Communication"
 				}
 			},
 			"dependsOn": []

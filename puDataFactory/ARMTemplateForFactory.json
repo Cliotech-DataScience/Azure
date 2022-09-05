@@ -1543,11 +1543,8 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "select * \nFROM EMERP_LM.azure.AZ_Communication\nwhere Event_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Event_Date <= '@{activity('LK_new_max_date').output.firstRow.Last_Event_Date}'",
-									"type": "Expression"
-								},
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
 							"sink": {
@@ -7797,8 +7794,11 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
+					"referenceName": "SCMM_DBG_PR1",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DB": "emerp_lm"
+					}
 				},
 				"folder": {
 					"name": "DWH"
@@ -7820,11 +7820,11 @@
 					}
 				],
 				"typeProperties": {
-					"tableName": "emerp_lm.azure.AZ_Communication"
+					"tableName": "azure.AZ_Communication"
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+				"[concat(variables('factoryId'), '/linkedServices/SCMM_DBG_PR1')]"
 			]
 		},
 		{
