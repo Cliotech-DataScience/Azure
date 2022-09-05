@@ -4926,11 +4926,8 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": {
-									"value": "select * \nFROM EMERP_LM.azure.AZ_SCMM_Activities\nwhere Activity_Date > '@{activity('LK_Last_Date_Mng_azure_ETL').output.value[0].Last_Incremental_Date}' and Activity_Date <= '@{activity('LK_new_max_date').output.firstRow.Last_Activity_Date}'",
-									"type": "Expression"
-								},
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
 							"sink": {
@@ -11561,8 +11558,11 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "emerp_lm",
-					"type": "LinkedServiceReference"
+					"referenceName": "SCMM_DBG_PR1",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DB": "EmErp_LM"
+					}
 				},
 				"folder": {
 					"name": "DWH"
@@ -11588,7 +11588,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/emerp_lm')]"
+				"[concat(variables('factoryId'), '/linkedServices/SCMM_DBG_PR1')]"
 			]
 		},
 		{

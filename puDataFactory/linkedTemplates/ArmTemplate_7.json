@@ -375,8 +375,11 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "emerp_lm",
-					"type": "LinkedServiceReference"
+					"referenceName": "SCMM_DBG_PR1",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DB": "EmErp_LM"
+					}
 				},
 				"folder": {
 					"name": "DWH"
