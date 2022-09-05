@@ -2,12 +2,16 @@
 	"name": "Communication_src",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "alldbdwh",
-			"type": "LinkedServiceReference"
+			"referenceName": "SCMM_DBG_PR1",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"DB": "emerp_lm"
+			}
 		},
 		"folder": {
 			"name": "DWH"
 		},
+		"annotations": [],
 		"type": "SqlServerTable",
 		"structure": [
 			{
@@ -24,7 +28,7 @@
 			}
 		],
 		"typeProperties": {
-			"tableName": "emerp_lm.azure.AZ_Communication"
+			"tableName": "azure.AZ_Communication"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
