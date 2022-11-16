@@ -102,6 +102,20 @@
 						"path": "usan-data-lake-fs/adf_staging/Scmm_Communication_MessageTemplates",
 						"enableCompression": false
 					},
+					"logSettings": {
+						"enableCopyActivityLog": true,
+						"copyActivityLogSettings": {
+							"logLevel": "Warning",
+							"enableReliableLogging": false
+						},
+						"logLocationSettings": {
+							"linkedServiceName": {
+								"referenceName": "adf_staging_linked_service",
+								"type": "LinkedServiceReference"
+							},
+							"path": "usan-data-lake-fs/adf_staging/Scmm_Communication_MessageTemplates"
+						}
+					},
 					"translator": {
 						"type": "TabularTranslator",
 						"mappings": [
@@ -137,32 +151,12 @@
 							},
 							{
 								"source": {
-									"name": "Created",
-									"type": "DateTime"
-								},
-								"sink": {
-									"name": "Created",
-									"type": "DateTime"
-								}
-							},
-							{
-								"source": {
 									"name": "Weight",
 									"type": "Byte"
 								},
 								"sink": {
 									"name": "Weight",
 									"type": "Int"
-								}
-							},
-							{
-								"source": {
-									"name": "ContentUpdateDate",
-									"type": "DateTime"
-								},
-								"sink": {
-									"name": "ContentUpdateDate",
-									"type": "DateTime"
 								}
 							}
 						]
