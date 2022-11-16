@@ -51,6 +51,50 @@
 						"type": "DatasetReference"
 					}
 				}
+			},
+			{
+				"name": "Copy data to file",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "LK_Last_Id_Mng_azure_ETL",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "LK_new_max_id",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": {
+							"value": "SELECT * from   EmErp_LM.azure.scmm_Communication_MessageTemplates\n where ContentUpdateDate > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}'",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "SCMM_ALL",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"folder": {
