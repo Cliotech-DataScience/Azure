@@ -93,7 +93,15 @@
 							"type": "AzureDatabricksDeltaLakeImportCommand"
 						}
 					},
-					"enableStaging": false,
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "adf_staging_linked_service",
+							"type": "LinkedServiceReference"
+						},
+						"path": "usan-data-lake-fs/adf_staging/Scmm_Communication_MessageTemplates",
+						"enableCompression": true
+					},
 					"translator": {
 						"type": "TabularTranslator",
 						"mappings": [
