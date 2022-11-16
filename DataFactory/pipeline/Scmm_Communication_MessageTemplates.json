@@ -100,7 +100,7 @@
 							"type": "LinkedServiceReference"
 						},
 						"path": "usan-data-lake-fs/adf_staging/Scmm_Communication_MessageTemplates",
-						"enableCompression": true
+						"enableCompression": false
 					},
 					"translator": {
 						"type": "TabularTranslator",
