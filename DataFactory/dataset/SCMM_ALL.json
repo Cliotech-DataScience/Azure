@@ -3,7 +3,10 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "SCMM_DBG_PR1",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"DB": "emerp_lm"
+			}
 		},
 		"annotations": [],
 		"type": "SqlServerTable",
