@@ -81,7 +81,7 @@
 					"source": {
 						"type": "SqlServerSource",
 						"sqlReaderQuery": {
-							"value": "SELECT * from   EmErp_LM.azure.scmm_Communication_MessageTemplates\n where ContentUpdateDate > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}'",
+							"value": "SELECT * from   EmErp_LM.azure.scmm_Communication_MessageTemplates",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -93,7 +93,72 @@
 							"type": "AzureDatabricksDeltaLakeImportCommand"
 						}
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "MessageTemplateID",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "MessageTemplateID",
+									"type": "Int"
+								}
+							},
+							{
+								"source": {
+									"name": "ContentKey",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ContentKey",
+									"type": "string"
+								}
+							},
+							{
+								"source": {
+									"name": "ChannelID",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "ChannelID",
+									"type": "Int"
+								}
+							},
+							{
+								"source": {
+									"name": "Created",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "Created",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "Weight",
+									"type": "Byte"
+								},
+								"sink": {
+									"name": "Weight",
+									"type": "Int"
+								}
+							},
+							{
+								"source": {
+									"name": "ContentUpdateDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "ContentUpdateDate",
+									"type": "DateTime"
+								}
+							}
+						]
+					}
 				},
 				"inputs": [
 					{
