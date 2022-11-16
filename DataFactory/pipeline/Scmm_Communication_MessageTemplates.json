@@ -41,12 +41,13 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "SqlSource",
-						"sqlReaderQuery": " SELECT ExecutionDate=MAX(update_date)\n FROM azure.az_serials",
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT MAX(ContentUpdateDate) FROM emerp_lm.azure.scmm_Communication_MessageTemplates",
+						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "serials",
+						"referenceName": "SCMM_ALL",
 						"type": "DatasetReference"
 					}
 				}

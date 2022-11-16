@@ -1,0 +1,12 @@
+{
+	"name": "SCMM_ALL",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SCMM_DBG_PR1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	}
+}
