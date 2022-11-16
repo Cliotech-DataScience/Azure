@@ -74,6 +74,9 @@
 		"Dwhpr_password": {
 			"value": ""
 		},
+		"ETL Manage DB_connectionString": {
+			"value": ""
+		},
 		"Events_Collector_PlatfromUsage_log_password": {
 			"value": ""
 		},
@@ -129,6 +132,9 @@
 			"value": ""
 		},
 		"pu_raw_file_LS_password": {
+			"value": ""
+		},
+		"adf_staging_linked_service_connectionString": {
 			"value": ""
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {

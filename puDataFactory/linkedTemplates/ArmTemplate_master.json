@@ -99,6 +99,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'Dwhpr'"
 		},
+		"ETL Manage DB_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ETL Manage DB'"
+		},
 		"Events_Collector_PlatfromUsage_log_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'Events_Collector_PlatfromUsage_log'"
@@ -174,6 +178,10 @@
 		"pu_raw_file_LS_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pu_raw_file_LS'"
+		},
+		"adf_staging_linked_service_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'adf_staging_linked_service'"
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -573,8 +581,8 @@
 					"DataloadStore_connectionString": {
 						"value": "[parameters('DataloadStore_connectionString')]"
 					},
-					"bydatalakqa sa_connectionString": {
-						"value": "[parameters('bydatalakqa sa_connectionString')]"
+					"ETL Manage DB_connectionString": {
+						"value": "[parameters('ETL Manage DB_connectionString')]"
 					},
 					"ADLS Byl_properties_typeProperties_url": {
 						"value": "[parameters('ADLS Byl_properties_typeProperties_url')]"
@@ -606,11 +614,17 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"bydatalakqa sa_connectionString": {
+						"value": "[parameters('bydatalakqa sa_connectionString')]"
+					},
 					"dwhdb_blob_connectionString": {
 						"value": "[parameters('dwhdb_blob_connectionString')]"
 					},
 					"mlwprdwesa_connectionString": {
 						"value": "[parameters('mlwprdwesa_connectionString')]"
+					},
+					"adf_staging_linked_service_connectionString": {
+						"value": "[parameters('adf_staging_linked_service_connectionString')]"
 					}
 				}
 			},
@@ -729,18 +743,6 @@
 					},
 					"blob_customers_clustering_folder_hd_file_properties_typeProperties_folderPath": {
 						"value": "[parameters('blob_customers_clustering_folder_hd_file_properties_typeProperties_folderPath')]"
-					},
-					"blob_customers_clustering_json_file_list_properties_typeProperties_fileName": {
-						"value": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_fileName')]"
-					},
-					"blob_customers_clustering_json_file_list_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_folderPath')]"
-					},
-					"blob_platfrom_merge_file_des_properties_typeProperties_fileName": {
-						"value": "[parameters('blob_platfrom_merge_file_des_properties_typeProperties_fileName')]"
-					},
-					"blob_platfrom_merge_file_des_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_platfrom_merge_file_des_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -768,17 +770,17 @@
 					"DWH_password": {
 						"value": "[parameters('DWH_password')]"
 					},
-					"DWH12_connectionString": {
-						"value": "[parameters('DWH12_connectionString')]"
+					"blob_customers_clustering_json_file_list_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_fileName')]"
 					},
-					"DWH12_password": {
-						"value": "[parameters('DWH12_password')]"
+					"blob_customers_clustering_json_file_list_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_folderPath')]"
 					},
-					"Dwhpr_connectionString": {
-						"value": "[parameters('Dwhpr_connectionString')]"
+					"blob_platfrom_merge_file_des_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_platfrom_merge_file_des_properties_typeProperties_fileName')]"
 					},
-					"Dwhpr_password": {
-						"value": "[parameters('Dwhpr_password')]"
+					"blob_platfrom_merge_file_des_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_platfrom_merge_file_des_properties_typeProperties_folderPath')]"
 					},
 					"blob_platfrom_unzip_file_properties_typeProperties_folderPath": {
 						"value": "[parameters('blob_platfrom_unzip_file_properties_typeProperties_folderPath')]"
@@ -851,12 +853,6 @@
 					},
 					"DWH_properties_typeProperties_userName": {
 						"value": "[parameters('DWH_properties_typeProperties_userName')]"
-					},
-					"DWH12_properties_typeProperties_userName": {
-						"value": "[parameters('DWH12_properties_typeProperties_userName')]"
-					},
-					"Dwhpr_properties_typeProperties_userName": {
-						"value": "[parameters('Dwhpr_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -877,6 +873,18 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"DWH12_connectionString": {
+						"value": "[parameters('DWH12_connectionString')]"
+					},
+					"DWH12_password": {
+						"value": "[parameters('DWH12_password')]"
+					},
+					"Dwhpr_connectionString": {
+						"value": "[parameters('Dwhpr_connectionString')]"
+					},
+					"Dwhpr_password": {
+						"value": "[parameters('Dwhpr_password')]"
 					},
 					"Events_Collector_PlatfromUsage_log_password": {
 						"value": "[parameters('Events_Collector_PlatfromUsage_log_password')]"
@@ -925,6 +933,12 @@
 					},
 					"pu_raw_file_LS_password": {
 						"value": "[parameters('pu_raw_file_LS_password')]"
+					},
+					"DWH12_properties_typeProperties_userName": {
+						"value": "[parameters('DWH12_properties_typeProperties_userName')]"
+					},
+					"Dwhpr_properties_typeProperties_userName": {
+						"value": "[parameters('Dwhpr_properties_typeProperties_userName')]"
 					},
 					"Events_Collector_PlatfromUsage_log_properties_typeProperties_host": {
 						"value": "[parameters('Events_Collector_PlatfromUsage_log_properties_typeProperties_host')]"
@@ -1070,6 +1084,26 @@
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'puDataFactory_ArmTemplate_8')]"
+			]
+		},
+		{
+			"name": "puDataFactory_ArmTemplate_10",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_10.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'puDataFactory_ArmTemplate_9')]"
 			]
 		}
 	]
