@@ -1,0 +1,9 @@
+{
+	"name": "Scmm_Communication_MessageTemplates",
+	"properties": {
+		"folder": {
+			"name": "Data_from_SQL"
+		},
+		"annotations": []
+	}
+}
