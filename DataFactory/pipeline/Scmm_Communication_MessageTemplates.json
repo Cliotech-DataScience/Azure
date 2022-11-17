@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,65,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  Mng_data_factory_ETL\n  WHERE TableName='MessageTemplates'",
+						"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,10,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  Mng_data_factory_ETL\n  WHERE TableName='MessageTemplates'",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -194,6 +194,33 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "Load_Communication_MessageTemplates",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "Copy data to file",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Load Data/SCMM/Load_Communication_MessageTemplates"
+				},
+				"linkedServiceName": {
+					"referenceName": "Adf_Cluster",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"folder": {
