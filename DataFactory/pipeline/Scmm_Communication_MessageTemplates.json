@@ -215,7 +215,10 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/Load Data/SCMM/Load_Communication_MessageTemplates"
+					"notebookPath": "/Load Data/SCMM/Load_Communication_MessageTemplates",
+					"baseParameters": {
+						"env_type": "prod"
+					}
 				},
 				"linkedServiceName": {
 					"referenceName": "Adf_Cluster",
