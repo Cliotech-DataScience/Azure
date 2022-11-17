@@ -89,6 +89,7 @@
 					},
 					"sink": {
 						"type": "AzureDatabricksDeltaLakeSink",
+						"preCopyScript": "TRUNCATE TABLE prod_raw.mrr_Communication_MessageTemplates",
 						"importSettings": {
 							"type": "AzureDatabricksDeltaLakeImportCommand"
 						}
@@ -101,20 +102,6 @@
 						},
 						"path": "usan-data-lake-fs/adf_staging/Scmm_Communication_MessageTemplates",
 						"enableCompression": false
-					},
-					"logSettings": {
-						"enableCopyActivityLog": true,
-						"copyActivityLogSettings": {
-							"logLevel": "Warning",
-							"enableReliableLogging": false
-						},
-						"logLocationSettings": {
-							"linkedServiceName": {
-								"referenceName": "adf_staging_linked_service",
-								"type": "LinkedServiceReference"
-							},
-							"path": "usan-data-lake-fs/adf_staging/Scmm_Communication_MessageTemplates"
-						}
 					},
 					"translator": {
 						"type": "TabularTranslator",
