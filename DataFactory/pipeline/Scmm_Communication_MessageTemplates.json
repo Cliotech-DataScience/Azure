@@ -177,7 +177,7 @@
 			}
 		],
 		"folder": {
-			"name": "Data_from_SQL"
+			"name": "Data_from_SQL/sql_to_azure_delta_table"
 		},
 		"annotations": []
 	}
