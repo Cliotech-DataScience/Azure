@@ -151,12 +151,32 @@
 							},
 							{
 								"source": {
+									"name": "Created",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "Created",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
 									"name": "Weight",
 									"type": "Byte"
 								},
 								"sink": {
 									"name": "Weight",
 									"type": "Int"
+								}
+							},
+							{
+								"source": {
+									"name": "ContentUpdateDate",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "ContentUpdateDate",
+									"type": "DateTime"
 								}
 							}
 						]
