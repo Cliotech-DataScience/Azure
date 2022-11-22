@@ -72,9 +72,154 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@equals(activity('LK_Last_Id_Mng_azure_ETL').output.firstRow,activity('LK_new_max_id').output.firstRow)",
+						"value": "@equals(activity('LK_Last_Id_Mng_azure_ETL').output.firstRow,activity('LK_new_max_id').output.firstRow)\n",
 						"type": "Expression"
 					},
+					"ifFalseActivities": [
+						{
+							"name": "Copy data1_copy1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": "SELECT * from   EmErp_LM.azure.scmm_Communication_MessageTemplates\n where ContentUpdateDate > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}'",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzureDatabricksDeltaLakeSink",
+									"preCopyScript": "TRUNCATE TABLE prod_raw.mrr_Communication_MessageTemplates",
+									"importSettings": {
+										"type": "AzureDatabricksDeltaLakeImportCommand"
+									}
+								},
+								"enableStaging": true,
+								"stagingSettings": {
+									"linkedServiceName": {
+										"referenceName": "adf_staging_linked_service",
+										"type": "LinkedServiceReference"
+									},
+									"path": "usan-data-lake-fs/adf_staging/Scmm_Communication_MessageTemplates"
+								},
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "MessageTemplateID",
+												"type": "Int32"
+											},
+											"sink": {
+												"name": "MessageTemplateID",
+												"type": "Int"
+											}
+										},
+										{
+											"source": {
+												"name": "ContentKey",
+												"type": "String"
+											},
+											"sink": {
+												"name": "ContentKey",
+												"type": "string"
+											}
+										},
+										{
+											"source": {
+												"name": "ChannelID",
+												"type": "Int32"
+											},
+											"sink": {
+												"name": "ChannelID",
+												"type": "Int"
+											}
+										},
+										{
+											"source": {
+												"name": "Created",
+												"type": "DateTime"
+											},
+											"sink": {
+												"name": "Created",
+												"type": "DateTime"
+											}
+										},
+										{
+											"source": {
+												"name": "Weight",
+												"type": "Byte"
+											},
+											"sink": {
+												"name": "Weight",
+												"type": "Int"
+											}
+										},
+										{
+											"source": {
+												"name": "ContentUpdateDate",
+												"type": "DateTime"
+											},
+											"sink": {
+												"name": "ContentUpdateDate",
+												"type": "DateTime"
+											}
+										}
+									]
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SCMM_ALL",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "AzureDatabricksDelta_DWH",
+									"type": "DatasetReference",
+									"parameters": {
+										"table": "mrr_communication_messagetemplates"
+									}
+								}
+							]
+						},
+						{
+							"name": "Load_Communication_MessageTemplates_v2_copy1",
+							"type": "DatabricksNotebook",
+							"dependsOn": [
+								{
+									"activity": "Copy data1_copy1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": "/Load Data/SCMM/Load_Communication_MessageTemplates"
+							},
+							"linkedServiceName": {
+								"referenceName": "Adf_Cluster",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
 					"ifTrueActivities": [
 						{
 							"name": "Copy data1",
