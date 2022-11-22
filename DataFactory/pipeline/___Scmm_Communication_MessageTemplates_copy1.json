@@ -253,7 +253,10 @@
 							"outputs": [
 								{
 									"referenceName": "AzureDatabricksDelta_DWH",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"table": "mrr_communication_messagetemplates"
+									}
 								}
 							]
 						}
