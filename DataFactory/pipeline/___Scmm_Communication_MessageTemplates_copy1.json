@@ -53,29 +53,6 @@
 				}
 			},
 			{
-				"name": "Load_Communication_MessageTemplates",
-				"type": "DatabricksNotebook",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"notebookPath": "/Load Data/SCMM/Load_Communication_MessageTemplates",
-					"baseParameters": {
-						"env_type": "prod"
-					}
-				},
-				"linkedServiceName": {
-					"referenceName": "Adf_Cluster",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
 				"name": "If Condition1",
 				"type": "IfCondition",
 				"dependsOn": [
@@ -125,7 +102,14 @@
 										"type": "AzureDatabricksDeltaLakeImportCommand"
 									}
 								},
-								"enableStaging": false,
+								"enableStaging": true,
+								"stagingSettings": {
+									"linkedServiceName": {
+										"referenceName": "adf_staging_linked_service",
+										"type": "LinkedServiceReference"
+									},
+									"path": "usan-data-lake-fs/adf_staging/Scmm_Communication_MessageTemplates"
+								},
 								"translator": {
 									"type": "TabularTranslator",
 									"mappings": [
