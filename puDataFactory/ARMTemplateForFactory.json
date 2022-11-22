@@ -4760,6 +4760,37 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Run all sql to delta')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Communication_MessageTemplates",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Scmm_Communication_MessageTemplates",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Scmm_Communication_MessageTemplates')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Run_all_Model_ETL')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -5239,7 +5270,9 @@
 							{
 								"referenceName": "AzureDatabricksDelta_DWH",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"table": "mrr_communication_messagetemplates"
+								}
 							}
 						]
 					},
@@ -6237,6 +6270,253 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SourceDataset_np9')]",
 				"[concat(variables('factoryId'), '/datasets/DestinationDataset_np9')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/___Scmm_Communication_MessageTemplates_copy1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LK_Last_Id_Mng_azure_ETL",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,10,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  Mng_data_factory_ETL\n  WHERE TableName='MessageTemplates'",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "Mng_data_factory_etl",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "LK_new_max_id",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "SELECT MAX(ContentUpdateDate) FROM emerp_lm.azure.scmm_Communication_MessageTemplates",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "SCMM_ALL",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "If Condition1",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "LK_Last_Id_Mng_azure_ETL",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "LK_new_max_id",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@equals(activity('LK_Last_Id_Mng_azure_ETL').output.firstRow,activity('LK_new_max_id').output.firstRow)\n",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "Copy data1_copy1",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlServerSource",
+											"sqlReaderQuery": "SELECT * from   EmErp_LM.azure.scmm_Communication_MessageTemplates\n where ContentUpdateDate > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}'",
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "AzureDatabricksDeltaLakeSink",
+											"preCopyScript": "TRUNCATE TABLE prod_raw.mrr_Communication_MessageTemplates",
+											"importSettings": {
+												"type": "AzureDatabricksDeltaLakeImportCommand"
+											}
+										},
+										"enableStaging": true,
+										"stagingSettings": {
+											"linkedServiceName": {
+												"referenceName": "adf_staging_linked_service",
+												"type": "LinkedServiceReference"
+											},
+											"path": "usan-data-lake-fs/adf_staging/Scmm_Communication_MessageTemplates"
+										},
+										"translator": {
+											"type": "TabularTranslator",
+											"mappings": [
+												{
+													"source": {
+														"name": "MessageTemplateID",
+														"type": "Int32"
+													},
+													"sink": {
+														"name": "MessageTemplateID",
+														"type": "Int"
+													}
+												},
+												{
+													"source": {
+														"name": "ContentKey",
+														"type": "String"
+													},
+													"sink": {
+														"name": "ContentKey",
+														"type": "string"
+													}
+												},
+												{
+													"source": {
+														"name": "ChannelID",
+														"type": "Int32"
+													},
+													"sink": {
+														"name": "ChannelID",
+														"type": "Int"
+													}
+												},
+												{
+													"source": {
+														"name": "Created",
+														"type": "DateTime"
+													},
+													"sink": {
+														"name": "Created",
+														"type": "DateTime"
+													}
+												},
+												{
+													"source": {
+														"name": "Weight",
+														"type": "Byte"
+													},
+													"sink": {
+														"name": "Weight",
+														"type": "Int"
+													}
+												},
+												{
+													"source": {
+														"name": "ContentUpdateDate",
+														"type": "DateTime"
+													},
+													"sink": {
+														"name": "ContentUpdateDate",
+														"type": "DateTime"
+													}
+												}
+											]
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "SCMM_ALL",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "AzureDatabricksDelta_DWH",
+											"type": "DatasetReference",
+											"parameters": {
+												"table": "mrr_communication_messagetemplates"
+											}
+										}
+									]
+								},
+								{
+									"name": "Load_Communication_MessageTemplates_v2_copy1",
+									"type": "DatabricksNotebook",
+									"dependsOn": [
+										{
+											"activity": "Copy data1_copy1",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"notebookPath": "/Load Data/SCMM/Load_Communication_MessageTemplates"
+									},
+									"linkedServiceName": {
+										"referenceName": "Adf_Cluster",
+										"type": "LinkedServiceReference"
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Data_from_SQL/sql_to_azure_delta_table"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Mng_data_factory_etl')]",
+				"[concat(variables('factoryId'), '/datasets/SCMM_ALL')]",
+				"[concat(variables('factoryId'), '/datasets/AzureDatabricksDelta_DWH')]",
+				"[concat(variables('factoryId'), '/linkedServices/Adf_Cluster')]",
+				"[concat(variables('factoryId'), '/linkedServices/adf_staging_linked_service')]"
 			]
 		},
 		{
@@ -7487,6 +7767,12 @@
 				"linkedServiceName": {
 					"referenceName": "AzureDatabricksDeltaLake",
 					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"table": {
+						"type": "string",
+						"defaultValue": "mrr_communication_messagetemplates"
+					}
 				},
 				"annotations": [],
 				"type": "AzureDatabricksDeltaLakeDataset",
@@ -13231,6 +13517,36 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sql_to_delta_triger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Run all sql to delta",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 5,
+						"startTime": "2022-11-22T16:00:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Run all sql to delta')]"
+			]
 		}
 	]
 }

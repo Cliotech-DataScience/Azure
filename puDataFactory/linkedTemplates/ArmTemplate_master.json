@@ -1084,15 +1084,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"Trigger_np9_properties____CopyPipeline_pu_file_AUTO_parameters_windowStart": {
-						"value": "[parameters('Trigger_np9_properties____CopyPipeline_pu_file_AUTO_parameters_windowStart')]"
-					},
-					"Trigger_zwu_properties__pu_raw_files_sync_parameters_windowStart": {
-						"value": "[parameters('Trigger_zwu_properties__pu_raw_files_sync_parameters_windowStart')]"
-					},
-					"Trigger_zwu_properties__pu_raw_files_sync_parameters_windowEnd": {
-						"value": "[parameters('Trigger_zwu_properties__pu_raw_files_sync_parameters_windowEnd')]"
 					}
 				}
 			},
@@ -1113,6 +1104,15 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Trigger_np9_properties____CopyPipeline_pu_file_AUTO_parameters_windowStart": {
+						"value": "[parameters('Trigger_np9_properties____CopyPipeline_pu_file_AUTO_parameters_windowStart')]"
+					},
+					"Trigger_zwu_properties__pu_raw_files_sync_parameters_windowStart": {
+						"value": "[parameters('Trigger_zwu_properties__pu_raw_files_sync_parameters_windowStart')]"
+					},
+					"Trigger_zwu_properties__pu_raw_files_sync_parameters_windowEnd": {
+						"value": "[parameters('Trigger_zwu_properties__pu_raw_files_sync_parameters_windowEnd')]"
 					}
 				}
 			},

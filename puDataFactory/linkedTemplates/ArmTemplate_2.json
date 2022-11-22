@@ -164,6 +164,12 @@
 					"referenceName": "AzureDatabricksDeltaLake",
 					"type": "LinkedServiceReference"
 				},
+				"parameters": {
+					"table": {
+						"type": "string",
+						"defaultValue": "mrr_communication_messagetemplates"
+					}
+				},
 				"annotations": [],
 				"type": "AzureDatabricksDeltaLakeDataset",
 				"typeProperties": {
