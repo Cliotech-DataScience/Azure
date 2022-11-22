@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ADLS Byl'"
 		},
+		"Adf_Cluster_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'Adf_Cluster'"
+		},
 		"Analysis_spark_3_accessToken": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'Analysis_spark_3'"
@@ -131,6 +135,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'STG'"
 		},
+		"adf_staging_linked_service_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'adf_staging_linked_service'"
+		},
 		"alldbdwh_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'alldbdwh'"
@@ -178,10 +186,6 @@
 		"pu_raw_file_LS_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pu_raw_file_LS'"
-		},
-		"adf_staging_linked_service_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'adf_staging_linked_service'"
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -411,6 +415,10 @@
 			"type": "string",
 			"defaultValue": "https://byldatalakeqa.dfs.core.windows.net"
 		},
+		"Adf_Cluster_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "1116-124605-z2166z9e"
+		},
 		"Analysis_properties_typeProperties_existingClusterId": {
 			"type": "string",
 			"defaultValue": "0120-125803-reach437"
@@ -533,6 +541,9 @@
 					"ADLS Byl_accountKey": {
 						"value": "[parameters('ADLS Byl_accountKey')]"
 					},
+					"Adf_Cluster_accessToken": {
+						"value": "[parameters('Adf_Cluster_accessToken')]"
+					},
 					"Analysis_spark_3_accessToken": {
 						"value": "[parameters('Analysis_spark_3_accessToken')]"
 					},
@@ -581,11 +592,11 @@
 					"DataloadStore_connectionString": {
 						"value": "[parameters('DataloadStore_connectionString')]"
 					},
-					"ETL Manage DB_connectionString": {
-						"value": "[parameters('ETL Manage DB_connectionString')]"
-					},
 					"ADLS Byl_properties_typeProperties_url": {
 						"value": "[parameters('ADLS Byl_properties_typeProperties_url')]"
+					},
+					"Adf_Cluster_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('Adf_Cluster_properties_typeProperties_existingClusterId')]"
 					},
 					"Analysis_properties_typeProperties_existingClusterId": {
 						"value": "[parameters('Analysis_properties_typeProperties_existingClusterId')]"
@@ -614,6 +625,12 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"ETL Manage DB_connectionString": {
+						"value": "[parameters('ETL Manage DB_connectionString')]"
+					},
+					"adf_staging_linked_service_connectionString": {
+						"value": "[parameters('adf_staging_linked_service_connectionString')]"
+					},
 					"bydatalakqa sa_connectionString": {
 						"value": "[parameters('bydatalakqa sa_connectionString')]"
 					},
@@ -622,9 +639,6 @@
 					},
 					"mlwprdwesa_connectionString": {
 						"value": "[parameters('mlwprdwesa_connectionString')]"
-					},
-					"adf_staging_linked_service_connectionString": {
-						"value": "[parameters('adf_staging_linked_service_connectionString')]"
 					}
 				}
 			},
@@ -731,18 +745,6 @@
 					},
 					"blob_customers_clustering_properties_typeProperties_folderPath": {
 						"value": "[parameters('blob_customers_clustering_properties_typeProperties_folderPath')]"
-					},
-					"blob_customers_clustering_folder_properties_typeProperties_fileName": {
-						"value": "[parameters('blob_customers_clustering_folder_properties_typeProperties_fileName')]"
-					},
-					"blob_customers_clustering_folder_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_customers_clustering_folder_properties_typeProperties_folderPath')]"
-					},
-					"blob_customers_clustering_folder_hd_file_properties_typeProperties_fileName": {
-						"value": "[parameters('blob_customers_clustering_folder_hd_file_properties_typeProperties_fileName')]"
-					},
-					"blob_customers_clustering_folder_hd_file_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_customers_clustering_folder_hd_file_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -764,11 +766,17 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"DWH_connectionString": {
-						"value": "[parameters('DWH_connectionString')]"
+					"blob_customers_clustering_folder_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_customers_clustering_folder_properties_typeProperties_fileName')]"
 					},
-					"DWH_password": {
-						"value": "[parameters('DWH_password')]"
+					"blob_customers_clustering_folder_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_customers_clustering_folder_properties_typeProperties_folderPath')]"
+					},
+					"blob_customers_clustering_folder_hd_file_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_customers_clustering_folder_hd_file_properties_typeProperties_fileName')]"
+					},
+					"blob_customers_clustering_folder_hd_file_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_customers_clustering_folder_hd_file_properties_typeProperties_folderPath')]"
 					},
 					"blob_customers_clustering_json_file_list_properties_typeProperties_fileName": {
 						"value": "[parameters('blob_customers_clustering_json_file_list_properties_typeProperties_fileName')]"
@@ -844,15 +852,6 @@
 					},
 					"scmm_activities_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('scmm_activities_blob_properties_typeProperties_folderPath')]"
-					},
-					"unzip_platfrom_file_properties_typeProperties_fileName": {
-						"value": "[parameters('unzip_platfrom_file_properties_typeProperties_fileName')]"
-					},
-					"unzip_platfrom_file_properties_typeProperties_folderPath": {
-						"value": "[parameters('unzip_platfrom_file_properties_typeProperties_folderPath')]"
-					},
-					"DWH_properties_typeProperties_userName": {
-						"value": "[parameters('DWH_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -873,6 +872,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"DWH_connectionString": {
+						"value": "[parameters('DWH_connectionString')]"
+					},
+					"DWH_password": {
+						"value": "[parameters('DWH_password')]"
 					},
 					"DWH12_connectionString": {
 						"value": "[parameters('DWH12_connectionString')]"
@@ -933,6 +938,15 @@
 					},
 					"pu_raw_file_LS_password": {
 						"value": "[parameters('pu_raw_file_LS_password')]"
+					},
+					"unzip_platfrom_file_properties_typeProperties_fileName": {
+						"value": "[parameters('unzip_platfrom_file_properties_typeProperties_fileName')]"
+					},
+					"unzip_platfrom_file_properties_typeProperties_folderPath": {
+						"value": "[parameters('unzip_platfrom_file_properties_typeProperties_folderPath')]"
+					},
+					"DWH_properties_typeProperties_userName": {
+						"value": "[parameters('DWH_properties_typeProperties_userName')]"
 					},
 					"DWH12_properties_typeProperties_userName": {
 						"value": "[parameters('DWH12_properties_typeProperties_userName')]"
@@ -1001,9 +1015,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
-						"value": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -1024,6 +1035,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath": {
+						"value": "[parameters('SourceDataset_PlatfromUsagePROD_properties_typeProperties_folderPath')]"
 					},
 					"Source_file_avi_properties_typeProperties_fileName": {
 						"value": "[parameters('Source_file_avi_properties_typeProperties_fileName')]"

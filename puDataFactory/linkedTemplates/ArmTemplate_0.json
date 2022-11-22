@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ADLS Byl'"
 		},
+		"Adf_Cluster_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'Adf_Cluster'"
+		},
 		"Analysis_spark_3_accessToken": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'Analysis_spark_3'"
@@ -75,13 +79,13 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'DataloadStore'"
 		},
-		"ETL Manage DB_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'ETL Manage DB'"
-		},
 		"ADLS Byl_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://byldatalakeqa.dfs.core.windows.net"
+		},
+		"Adf_Cluster_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "1116-124605-z2166z9e"
 		},
 		"Analysis_properties_typeProperties_existingClusterId": {
 			"type": "string",
@@ -168,6 +172,24 @@
 						"type": "SecureString",
 						"value": "[parameters('ADLS Byl_accountKey')]"
 					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Adf_Cluster')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-194285697588541.1.azuredatabricks.net",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('Adf_Cluster_accessToken')]"
+					},
+					"existingClusterId": "[parameters('Adf_Cluster_properties_typeProperties_existingClusterId')]"
 				}
 			},
 			"dependsOn": []
@@ -428,19 +450,6 @@
 				"type": "AzureBlobStorage",
 				"typeProperties": {
 					"connectionString": "[parameters('DataloadStore_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ETL Manage DB')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('ETL Manage DB_connectionString')]"
 				}
 			},
 			"dependsOn": []

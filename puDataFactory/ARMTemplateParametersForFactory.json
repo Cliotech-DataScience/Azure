@@ -8,6 +8,9 @@
 		"ADLS Byl_accountKey": {
 			"value": ""
 		},
+		"Adf_Cluster_accessToken": {
+			"value": ""
+		},
 		"Analysis_spark_3_accessToken": {
 			"value": ""
 		},
@@ -98,6 +101,9 @@
 		"STG_password": {
 			"value": ""
 		},
+		"adf_staging_linked_service_connectionString": {
+			"value": ""
+		},
 		"alldbdwh_connectionString": {
 			"value": ""
 		},
@@ -132,9 +138,6 @@
 			"value": ""
 		},
 		"pu_raw_file_LS_password": {
-			"value": ""
-		},
-		"adf_staging_linked_service_connectionString": {
 			"value": ""
 		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
@@ -307,6 +310,9 @@
 		},
 		"ADLS Byl_properties_typeProperties_url": {
 			"value": "https://byldatalakeqa.dfs.core.windows.net"
+		},
+		"Adf_Cluster_properties_typeProperties_existingClusterId": {
+			"value": "1116-124605-z2166z9e"
 		},
 		"Analysis_properties_typeProperties_existingClusterId": {
 			"value": "0120-125803-reach437"
