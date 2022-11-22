@@ -211,6 +211,18 @@
 					"referenceName": "Adf_Cluster",
 					"type": "LinkedServiceReference"
 				}
+			},
+			{
+				"name": "If Condition1",
+				"type": "IfCondition",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(1,1)",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"folder": {
