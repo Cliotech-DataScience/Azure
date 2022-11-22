@@ -229,8 +229,33 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": "SELECT * from   EmErp_LM.azure.scmm_Communication_MessageTemplates\n where ContentUpdateDate > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}'",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzureDatabricksDeltaLakeSink",
+									"preCopyScript": "TRUNCATE TABLE prod_raw.mrr_Communication_MessageTemplates",
+									"importSettings": {
+										"type": "AzureDatabricksDeltaLakeImportCommand"
+									}
+								},
 								"enableStaging": false
-							}
+							},
+							"inputs": [
+								{
+									"referenceName": "SCMM_ALL",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "AzureDatabricksDelta_DWH",
+									"type": "DatasetReference"
+								}
+							]
 						}
 					]
 				}
