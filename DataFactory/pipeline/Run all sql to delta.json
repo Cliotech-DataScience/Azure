@@ -1,0 +1,6 @@
+{
+	"name": "Run all sql to delta",
+	"properties": {
+		"annotations": []
+	}
+}
