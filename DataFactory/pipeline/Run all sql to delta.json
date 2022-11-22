@@ -1,6 +1,21 @@
 {
 	"name": "Run all sql to delta",
 	"properties": {
+		"activities": [
+			{
+				"name": "Communication_MessageTemplates",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Scmm_Communication_MessageTemplates",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
 		"annotations": []
 	}
 }
