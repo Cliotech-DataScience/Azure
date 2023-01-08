@@ -12,7 +12,7 @@
 		"type": "SqlServer",
 		"typeProperties": {
 			"connectionString": "integrated security=False;data source=DWH12-PR,2555;initial catalog=@{linkedService().DB_Name};user id=Sqlserver",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJmYzJiMDg1ZS0yNjY5LTRiMDAtYjEyZS04MmRiNGM2OTM2ZDQiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI2MjZmZDhkZS05ZDUzLTQzYWUtYTdhYi03Zjg1NWFhYTFkOTkiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "alldbgateway",
