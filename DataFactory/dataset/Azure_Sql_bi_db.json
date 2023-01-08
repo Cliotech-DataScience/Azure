@@ -1,0 +1,12 @@
+{
+	"name": "Azure_Sql_bi_db",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Azure BI db",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
