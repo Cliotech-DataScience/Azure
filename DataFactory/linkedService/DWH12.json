@@ -11,8 +11,9 @@
 		"annotations": [],
 		"type": "SqlServer",
 		"typeProperties": {
-			"connectionString": "integrated security=False;data source=DWH12-PR,2555;initial catalog=@{linkedService().DB_Name};user id=Sqlserver",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI2MjZmZDhkZS05ZDUzLTQzYWUtYTdhYi03Zjg1NWFhYTFkOTkiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"connectionString": "integrated security=True;data source=DWH12-PR,2555;initial catalog=@{linkedService().DB_Name}",
+			"userName": "efix\\az_etl",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJlMTg3MTIzNC1mNjdiLTRhZTctYTU0OC01NzA3MmQ1YjQxY2UiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "alldbgateway",
