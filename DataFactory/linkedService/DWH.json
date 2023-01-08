@@ -2,11 +2,12 @@
 	"name": "DWH",
 	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
+		"annotations": [],
 		"type": "SqlServer",
 		"typeProperties": {
 			"connectionString": "integrated security=True;data source=DWH12-PR,2555;initial catalog=DWH",
 			"userName": "efix\\az_etl",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI5NTY3OGJjYi05ZjMwLTRlOGMtOGJmYy02YWM2MzI0NjE4ZWIiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI3ZGU5ZDUyNS0wNGQ1LTRkM2ItYmQzNi1kMGJlMzQ3MmE1MjYiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "alldbgateway",
