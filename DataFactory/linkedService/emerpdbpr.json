@@ -8,7 +8,7 @@
 		"typeProperties": {
 			"connectionString": "integrated security=True;data source=dwh-pr;initial catalog=EmErp_CM",
 			"userName": "efix\\az_etl",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJjY2Y4ZTUxMC01NDA1LTQ1NzItODg1Ny00ZWM2NTlkZDkzMTciLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI2MjBlYmI5My02MTNlLTRhNTktOTg0Ny02ODExMDE4NDFmODMiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "alldbgateway",
