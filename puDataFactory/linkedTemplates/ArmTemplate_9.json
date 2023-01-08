@@ -323,7 +323,10 @@
 									"typeProperties": {
 										"source": {
 											"type": "SqlServerSource",
-											"sqlReaderQuery": "SELECT * from   EmErp_LM.azure.scmm_Communication_MessageTemplates\n where ContentUpdateDate > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}'",
+											"sqlReaderQuery": {
+												"value": "SELECT * from   EmErp_LM.azure.scmm_Communication_MessageTemplates\n where ContentUpdateDate > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}'",
+												"type": "Expression"
+											},
 											"queryTimeout": "02:00:00",
 											"partitionOption": "None"
 										},

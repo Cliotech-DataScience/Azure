@@ -51,13 +51,13 @@
 			"value": ""
 		},
 		"DWH_connectionString": {
-			"value": ""
+			"value": "Integrated Security=True;Data Source=DWH12-PR,2555;Initial Catalog=DWH"
 		},
 		"DWH_password": {
 			"value": ""
 		},
 		"DWH12_connectionString": {
-			"value": ""
+			"value": "Integrated Security=True;Data Source=DWH12-PR,2555;Initial Catalog=@{linkedService().DB_Name}"
 		},
 		"DWH12_password": {
 			"value": ""
@@ -72,7 +72,7 @@
 			"value": ""
 		},
 		"Dwhpr_connectionString": {
-			"value": ""
+			"value": "Integrated Security=True;Data Source=Dwh-pr,2555;Initial Catalog=@{linkedService().DB}"
 		},
 		"Dwhpr_password": {
 			"value": ""
@@ -84,19 +84,19 @@
 			"value": ""
 		},
 		"SCMM SQL_connectionString": {
-			"value": ""
+			"value": "Integrated Security=True;Data Source=dwh-pr,2555;Initial Catalog=emerp_lm"
 		},
 		"SCMM SQL_password": {
 			"value": ""
 		},
 		"SCMM_DBG_PR1_connectionString": {
-			"value": ""
+			"value": "Integrated Security=True;Data Source=SCMM-DBG-PR1,2555;Initial Catalog=@{linkedService().DB};applicationintent=ReadOnly"
 		},
 		"SCMM_DBG_PR1_password": {
 			"value": ""
 		},
 		"STG_connectionString": {
-			"value": ""
+			"value": "Integrated Security=True;Data Source=DWH12-PR,2555;Initial Catalog=STG"
 		},
 		"STG_password": {
 			"value": ""
@@ -105,7 +105,7 @@
 			"value": ""
 		},
 		"alldbdwh_connectionString": {
-			"value": ""
+			"value": "Integrated Security=True;Data Source=all-db-pr,2555;Initial Catalog=LocalDB"
 		},
 		"alldbdwh_password": {
 			"value": ""
@@ -117,13 +117,13 @@
 			"value": ""
 		},
 		"emerp_lm_connectionString": {
-			"value": ""
+			"value": "Integrated Security=True;Data Source=dwh-pr,2555;Initial Catalog=emerp_lm"
 		},
 		"emerp_lm_password": {
 			"value": ""
 		},
 		"emerpdbpr_connectionString": {
-			"value": ""
+			"value": "Integrated Security=True;Data Source=dwh-pr;Initial Catalog=EmErp_CM"
 		},
 		"emerpdbpr_password": {
 			"value": ""
@@ -327,7 +327,7 @@
 			"value": "efix\\az_etl"
 		},
 		"DWH12_properties_typeProperties_userName": {
-			"value": "efix\\Barak"
+			"value": "efix\\az_etl"
 		},
 		"Dwhpr_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"

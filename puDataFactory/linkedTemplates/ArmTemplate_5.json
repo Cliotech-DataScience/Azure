@@ -9,7 +9,8 @@
 		},
 		"DWH_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'DWH'"
+			"metadata": "Secure string for 'connectionString' of 'DWH'",
+			"defaultValue": "Integrated Security=True;Data Source=DWH12-PR,2555;Initial Catalog=DWH"
 		},
 		"DWH_password": {
 			"type": "secureString",
@@ -17,7 +18,8 @@
 		},
 		"DWH12_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'DWH12'"
+			"metadata": "Secure string for 'connectionString' of 'DWH12'",
+			"defaultValue": "Integrated Security=True;Data Source=DWH12-PR,2555;Initial Catalog=@{linkedService().DB_Name}"
 		},
 		"DWH12_password": {
 			"type": "secureString",
@@ -25,7 +27,8 @@
 		},
 		"Dwhpr_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'Dwhpr'"
+			"metadata": "Secure string for 'connectionString' of 'Dwhpr'",
+			"defaultValue": "Integrated Security=True;Data Source=Dwh-pr,2555;Initial Catalog=@{linkedService().DB}"
 		},
 		"Dwhpr_password": {
 			"type": "secureString",
@@ -37,7 +40,8 @@
 		},
 		"SCMM SQL_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'SCMM SQL'"
+			"metadata": "Secure string for 'connectionString' of 'SCMM SQL'",
+			"defaultValue": "Integrated Security=True;Data Source=dwh-pr,2555;Initial Catalog=emerp_lm"
 		},
 		"SCMM SQL_password": {
 			"type": "secureString",
@@ -45,7 +49,8 @@
 		},
 		"SCMM_DBG_PR1_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'SCMM_DBG_PR1'"
+			"metadata": "Secure string for 'connectionString' of 'SCMM_DBG_PR1'",
+			"defaultValue": "Integrated Security=True;Data Source=SCMM-DBG-PR1,2555;Initial Catalog=@{linkedService().DB};applicationintent=ReadOnly"
 		},
 		"SCMM_DBG_PR1_password": {
 			"type": "secureString",
@@ -53,7 +58,8 @@
 		},
 		"STG_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'STG'"
+			"metadata": "Secure string for 'connectionString' of 'STG'",
+			"defaultValue": "Integrated Security=True;Data Source=DWH12-PR,2555;Initial Catalog=STG"
 		},
 		"STG_password": {
 			"type": "secureString",
@@ -61,7 +67,8 @@
 		},
 		"alldbdwh_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'alldbdwh'"
+			"metadata": "Secure string for 'connectionString' of 'alldbdwh'",
+			"defaultValue": "Integrated Security=True;Data Source=all-db-pr,2555;Initial Catalog=LocalDB"
 		},
 		"alldbdwh_password": {
 			"type": "secureString",
@@ -69,7 +76,8 @@
 		},
 		"emerp_lm_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'emerp_lm'"
+			"metadata": "Secure string for 'connectionString' of 'emerp_lm'",
+			"defaultValue": "Integrated Security=True;Data Source=dwh-pr,2555;Initial Catalog=emerp_lm"
 		},
 		"emerp_lm_password": {
 			"type": "secureString",
@@ -77,7 +85,8 @@
 		},
 		"emerpdbpr_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'emerpdbpr'"
+			"metadata": "Secure string for 'connectionString' of 'emerpdbpr'",
+			"defaultValue": "Integrated Security=True;Data Source=dwh-pr;Initial Catalog=EmErp_CM"
 		},
 		"emerpdbpr_password": {
 			"type": "secureString",
@@ -109,7 +118,7 @@
 		},
 		"DWH12_properties_typeProperties_userName": {
 			"type": "string",
-			"defaultValue": "efix\\Barak"
+			"defaultValue": "efix\\az_etl"
 		},
 		"Dwhpr_properties_typeProperties_userName": {
 			"type": "string",

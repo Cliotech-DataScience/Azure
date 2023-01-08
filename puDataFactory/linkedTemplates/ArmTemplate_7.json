@@ -700,8 +700,11 @@
 							"storedProcedureName": "[[azure].[SP_add_new_file_to_table]"
 						},
 						"linkedServiceName": {
-							"referenceName": "alldbdwh",
-							"type": "LinkedServiceReference"
+							"referenceName": "DWH12",
+							"type": "LinkedServiceReference",
+							"parameters": {
+								"DB_Name": "DWH"
+							}
 						}
 					}
 				],
