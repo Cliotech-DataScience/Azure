@@ -2645,12 +2645,13 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "SELECT ExecutionDate=MAX(SsisUpdatedDate)\n FROM dwh.azure.AZ_Customers\n",
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "SELECT ExecutionDate=MAX(SsisUpdatedDate)\n FROM azure.AZ_Customers",
+								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "Mng_azure_ETL",
+								"referenceName": "DWH_Dim_Customers_src",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -2796,7 +2797,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Mng_data_factory_etl')]",
-				"[concat(variables('factoryId'), '/datasets/Mng_azure_ETL')]",
 				"[concat(variables('factoryId'), '/datasets/DWH_Dim_Customers_src')]",
 				"[concat(variables('factoryId'), '/datasets/DWH_Dim_Customers_blob')]",
 				"[concat(variables('factoryId'), '/linkedServices/Azure BI db')]",
