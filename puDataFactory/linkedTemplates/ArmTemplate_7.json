@@ -25,6 +25,127 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_5qf')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "emerpdbpr",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "agent_numerator",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "id",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "first_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "last_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "email",
+						"type": "nvarchar"
+					},
+					{
+						"name": "password",
+						"type": "nvarchar"
+					},
+					{
+						"name": "deleted",
+						"type": "bit"
+					},
+					{
+						"name": "position",
+						"type": "nvarchar"
+					},
+					{
+						"name": "signature",
+						"type": "nvarchar"
+					},
+					{
+						"name": "default_supplier_id",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "phone",
+						"type": "nvarchar"
+					},
+					{
+						"name": "fax",
+						"type": "nvarchar"
+					},
+					{
+						"name": "cellphone",
+						"type": "nvarchar"
+					},
+					{
+						"name": "affiliate",
+						"type": "bit"
+					},
+					{
+						"name": "status",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "address_id",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "billing_address_id",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "webui_pref",
+						"type": "nvarchar"
+					},
+					{
+						"name": "currency",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "default_charge_unit_id",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "default_payment_method_id",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "default_site_id",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "affiliate_default",
+						"type": "bit"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "agent_tab"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SourceDataset_6v0')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -574,12 +695,13 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "\t  SELECT file_name,\n        folder\n\tFROM azure.platfrom_usage_log_file\n WHERE ISNULL(move_to_blob,0) <>1 \n  \n  IF @@ROWCOUNT=0 THROW 50000 ,'No file to move',1",
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "  SELECT file_name,\n        folder\n\tFROM etl.platfrom_usage_log_file\n WHERE ISNULL(move_to_blob,0) <>1 \n  \n  IF @@ROWCOUNT=0 THROW 50000 ,'No file to move',1",
+								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "DWH_pu_list_files",
+								"referenceName": "Azure_Sql_bi_db",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -668,7 +790,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"storedProcedureName": "[[azure].[SP_Update_platfrom_usage_log_file]",
+							"storedProcedureName": "[[etl].[SP_Update_platfrom_usage_log_file]",
 							"storedProcedureParameters": {
 								"file_name": {
 									"value": {
@@ -680,7 +802,7 @@
 							}
 						},
 						"linkedServiceName": {
-							"referenceName": "alldbdwh",
+							"referenceName": "Azure BI db",
 							"type": "LinkedServiceReference"
 						}
 					},
@@ -720,138 +842,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Source_file_avi')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/02_platfromusage_unzip_zip_blob_files')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "lookup_file_to_unzip",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "      SELECT file_name,\n        folder,unzip_file\n\tFROM azure.platfrom_usage_log_file\n WHERE ISNULL(unzip_file,0) <>1 AND move_to_blob=1\n  \n  IF @@ROWCOUNT=0 THROW 50000 ,'No file to move',1",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "DWH_pu_list_files",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": true
-						}
-					},
-					{
-						"name": "unzip",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "lookup_file_to_unzip",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BlobSource",
-								"recursive": true
-							},
-							"sink": {
-								"type": "BlobSink",
-								"copyBehavior": "PreserveHierarchy"
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0
-						},
-						"inputs": [
-							{
-								"referenceName": "platformusage_blob",
-								"type": "DatasetReference",
-								"parameters": {
-									"folder_name": "@concat('platformusage/rawdata/',activity('lookup_file_to_unzip').output.firstRow.folder,'/')",
-									"file_name": "@concat(substring(activity('lookup_file_to_unzip').output.firstRow.FILE_NAME,0,8),'.zip')"
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "blob_platfrom_unzip_file",
-								"type": "DatasetReference",
-								"parameters": {
-									"folder_name": "@concat('platformusage/unzip/',activity('lookup_file_to_unzip').output.firstRow.folder,'/')",
-									"file_name": "@concat(substring(activity('lookup_file_to_unzip').output.firstRow.FILE_NAME,0,8),'.zip')"
-								}
-							}
-						]
-					},
-					{
-						"name": "update_unzip",
-						"type": "SqlServerStoredProcedure",
-						"dependsOn": [
-							{
-								"activity": "unzip",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"storedProcedureName": "[[azure].[SP_Update_platfrom_usage_log_file_unzip]",
-							"storedProcedureParameters": {
-								"file_name": {
-									"value": {
-										"value": "@activity('lookup_file_to_unzip').output.firstRow.file_name",
-										"type": "Expression"
-									},
-									"type": "String"
-								}
-							}
-						},
-						"linkedServiceName": {
-							"referenceName": "alldbdwh",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Platfrom_Usage"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
 		}
 	]
 }

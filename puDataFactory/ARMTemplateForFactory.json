@@ -592,12 +592,13 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "\t  SELECT file_name,\n        folder\n\tFROM azure.platfrom_usage_log_file\n WHERE ISNULL(move_to_blob,0) <>1 \n  \n  IF @@ROWCOUNT=0 THROW 50000 ,'No file to move',1",
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "  SELECT file_name,\n        folder\n\tFROM etl.platfrom_usage_log_file\n WHERE ISNULL(move_to_blob,0) <>1 \n  \n  IF @@ROWCOUNT=0 THROW 50000 ,'No file to move',1",
+								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "DWH_pu_list_files",
+								"referenceName": "Azure_Sql_bi_db",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -686,7 +687,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"storedProcedureName": "[[azure].[SP_Update_platfrom_usage_log_file]",
+							"storedProcedureName": "[[etl].[SP_Update_platfrom_usage_log_file]",
 							"storedProcedureParameters": {
 								"file_name": {
 									"value": {
@@ -698,7 +699,7 @@
 							}
 						},
 						"linkedServiceName": {
-							"referenceName": "alldbdwh",
+							"referenceName": "Azure BI db",
 							"type": "LinkedServiceReference"
 						}
 					},
@@ -736,10 +737,10 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DWH_pu_list_files')]",
+				"[concat(variables('factoryId'), '/datasets/Azure_Sql_bi_db')]",
 				"[concat(variables('factoryId'), '/datasets/Source_file_avi')]",
 				"[concat(variables('factoryId'), '/datasets/platformusage_blob')]",
-				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]",
+				"[concat(variables('factoryId'), '/linkedServices/Azure BI db')]",
 				"[concat(variables('factoryId'), '/linkedServices/DWH12')]"
 			]
 		},
@@ -13563,6 +13564,24 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Azure_Sql_bi_db')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Azure BI db",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Azure BI db')]"
+			]
 		}
 	]
 }
