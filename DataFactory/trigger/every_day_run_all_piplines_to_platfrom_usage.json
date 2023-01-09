@@ -2,7 +2,7 @@
 	"name": "every_day_run_all_piplines_to_platfrom_usage",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
