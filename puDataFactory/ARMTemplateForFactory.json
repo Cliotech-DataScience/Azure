@@ -912,7 +912,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"storedProcedureName": "[[azure].[SP_Update_platfrom_usage_log_file_unzip]",
+							"storedProcedureName": "[[etl].[SP_Update_platfrom_usage_log_file_unzip]",
 							"storedProcedureParameters": {
 								"file_name": {
 									"value": {
@@ -924,7 +924,7 @@
 							}
 						},
 						"linkedServiceName": {
-							"referenceName": "alldbdwh",
+							"referenceName": "Azure BI db",
 							"type": "LinkedServiceReference"
 						}
 					}
@@ -942,7 +942,7 @@
 				"[concat(variables('factoryId'), '/datasets/Azure_Sql_bi_db')]",
 				"[concat(variables('factoryId'), '/datasets/platformusage_blob')]",
 				"[concat(variables('factoryId'), '/datasets/blob_platfrom_unzip_file')]",
-				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+				"[concat(variables('factoryId'), '/linkedServices/Azure BI db')]"
 			]
 		},
 		{
