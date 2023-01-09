@@ -100,7 +100,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[azure].[SP_Update_platfrom_usage_log_file_unzip]",
+					"storedProcedureName": "[etl].[SP_Update_platfrom_usage_log_file_unzip]",
 					"storedProcedureParameters": {
 						"file_name": {
 							"value": {
@@ -112,7 +112,7 @@
 					}
 				},
 				"linkedServiceName": {
-					"referenceName": "alldbdwh",
+					"referenceName": "Azure BI db",
 					"type": "LinkedServiceReference"
 				}
 			}
