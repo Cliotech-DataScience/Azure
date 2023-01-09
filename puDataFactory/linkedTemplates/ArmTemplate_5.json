@@ -186,6 +186,140 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/serials_dim_dwh')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase_dwh",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "BI"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "Serial",
+						"type": "Int64"
+					},
+					{
+						"name": "Client_Id",
+						"type": "String"
+					},
+					{
+						"name": "Client_Numerator",
+						"type": "Int32"
+					},
+					{
+						"name": "Client_Name",
+						"type": "String"
+					},
+					{
+						"name": "Product_Numerator",
+						"type": "Int32"
+					},
+					{
+						"name": "Product_Name",
+						"type": "String"
+					},
+					{
+						"name": "Product_Full_Name",
+						"type": "String"
+					},
+					{
+						"name": "Campaign_Numerator",
+						"type": "Int32"
+					},
+					{
+						"name": "Campaign_Name",
+						"type": "String"
+					},
+					{
+						"name": "Targetmarket_Id",
+						"type": "Int32"
+					},
+					{
+						"name": "Targetmarket",
+						"type": "String"
+					},
+					{
+						"name": "Supplier_Numerator",
+						"type": "Int32"
+					},
+					{
+						"name": "Supplier",
+						"type": "String"
+					},
+					{
+						"name": "Supplier_Group",
+						"type": "String"
+					},
+					{
+						"name": "Mediabuyer_Numerator",
+						"type": "Int32"
+					},
+					{
+						"name": "Mediabuyer",
+						"type": "String"
+					},
+					{
+						"name": "Format",
+						"type": "String"
+					},
+					{
+						"name": "Site_Numerator",
+						"type": "Int32"
+					},
+					{
+						"name": "Site_Name",
+						"type": "String"
+					},
+					{
+						"name": "Proposition_Id",
+						"type": "Int32"
+					},
+					{
+						"name": "Proposition",
+						"type": "String"
+					},
+					{
+						"name": "Banner_Name",
+						"type": "String"
+					},
+					{
+						"name": "Banner_Path",
+						"type": "String"
+					},
+					{
+						"name": "TypeExt",
+						"type": "String"
+					},
+					{
+						"name": "Landing_Page",
+						"type": "String"
+					},
+					{
+						"name": "Language",
+						"type": "String"
+					},
+					{
+						"name": "SelfActivation",
+						"type": "Int32"
+					},
+					{
+						"name": "Content",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[dim_serials]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/unzip_platfrom_file')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -515,22 +649,6 @@
 					"referenceName": "alldbgateway",
 					"type": "IntegrationRuntimeReference"
 				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Azure_Sql_bi_db')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Azure BI db",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {}
 			},
 			"dependsOn": []
 		},
@@ -1017,7 +1135,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/serials_dim_dwh')]"
+			]
 		}
 	]
 }

@@ -748,12 +748,6 @@
 					},
 					"blob_PU_raw_files_properties_typeProperties_folderPath": {
 						"value": "[parameters('blob_PU_raw_files_properties_typeProperties_folderPath')]"
-					},
-					"blob_customers_clustering_properties_typeProperties_fileName": {
-						"value": "[parameters('blob_customers_clustering_properties_typeProperties_fileName')]"
-					},
-					"blob_customers_clustering_properties_typeProperties_folderPath": {
-						"value": "[parameters('blob_customers_clustering_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -774,6 +768,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"blob_customers_clustering_properties_typeProperties_fileName": {
+						"value": "[parameters('blob_customers_clustering_properties_typeProperties_fileName')]"
+					},
+					"blob_customers_clustering_properties_typeProperties_folderPath": {
+						"value": "[parameters('blob_customers_clustering_properties_typeProperties_folderPath')]"
 					},
 					"blob_customers_clustering_folder_properties_typeProperties_fileName": {
 						"value": "[parameters('blob_customers_clustering_folder_properties_typeProperties_fileName')]"

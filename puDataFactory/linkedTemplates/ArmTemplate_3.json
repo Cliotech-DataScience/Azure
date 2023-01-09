@@ -30,20 +30,30 @@
 		"blob_PU_raw_files_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "platformusage/_test_pu_raw_file_sync"
-		},
-		"blob_customers_clustering_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "*.csv"
-		},
-		"blob_customers_clustering_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@concat('rawdata/export_file/customers_clustering/',dataset().folder_name)"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_5sz')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "CosmosDb1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "CosmosDbSqlApiCollection",
+				"schema": {},
+				"typeProperties": {
+					"collectionName": "campaigns"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DestinationDataset_6v0')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -691,62 +701,6 @@
 				"typeProperties": {
 					"fileName": "[parameters('blob_PU_raw_files_properties_typeProperties_fileName')]",
 					"folderPath": "[parameters('blob_PU_raw_files_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/blob_customers_clustering')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"folder_name": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "sync"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "AccountNumber",
-						"type": "String"
-					},
-					{
-						"name": "cluster_type",
-						"type": "String"
-					},
-					{
-						"name": "update_date",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": ",",
-						"rowDelimiter": "",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": true
-					},
-					"fileName": {
-						"value": "[parameters('blob_customers_clustering_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": {
-						"value": "[parameters('blob_customers_clustering_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
 				}
 			},
 			"dependsOn": []
