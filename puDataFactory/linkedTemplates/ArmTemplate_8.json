@@ -13,13 +13,13 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/02_platfromusage_unzip_zip_blob_files')]",
+			"name": "[concat(parameters('factoryName'), '/01_platfromusage_files_copy_to_blob')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "lookup_file_to_unzip",
+						"name": "LK_file",
 						"type": "Lookup",
 						"dependsOn": [],
 						"policy": {
@@ -32,24 +32,24 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "      SELECT file_name,\n        folder,unzip_file\n\tFROM azure.platfrom_usage_log_file\n WHERE ISNULL(unzip_file,0) <>1 AND move_to_blob=1\n  \n  IF @@ROWCOUNT=0 THROW 50000 ,'No file to move',1",
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "  SELECT file_name,\n        folder\n\tFROM etl.platfrom_usage_log_file\n WHERE ISNULL(move_to_blob,0) <>1 \n  \n  IF @@ROWCOUNT=0 THROW 50000 ,'No file to move',1",
+								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "DWH_pu_list_files",
+								"referenceName": "Azure_Sql_bi_db",
 								"type": "DatasetReference",
 								"parameters": {}
-							},
-							"firstRowOnly": true
+							}
 						}
 					},
 					{
-						"name": "unzip",
+						"name": "Copy to blob",
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "lookup_file_to_unzip",
+								"activity": "LK_file",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -65,43 +65,54 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "BlobSource",
+								"type": "FileSystemSource",
 								"recursive": true
 							},
 							"sink": {
-								"type": "BlobSink",
-								"copyBehavior": "PreserveHierarchy"
+								"type": "BlobSink"
 							},
 							"enableStaging": false,
 							"dataIntegrationUnits": 0
 						},
 						"inputs": [
 							{
-								"referenceName": "platformusage_blob",
+								"referenceName": "Source_file_avi",
 								"type": "DatasetReference",
 								"parameters": {
-									"folder_name": "@concat('platformusage/rawdata/',activity('lookup_file_to_unzip').output.firstRow.folder,'/')",
-									"file_name": "@concat(substring(activity('lookup_file_to_unzip').output.firstRow.FILE_NAME,0,8),'.zip')"
+									"file_name": {
+										"value": "@activity('LK_file').output.firstRow.file_name",
+										"type": "Expression"
+									},
+									"folder": {
+										"value": "@substring(activity('LK_file').output.firstRow.FILE_NAME,0,8)",
+										"type": "Expression"
+									}
 								}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "blob_platfrom_unzip_file",
+								"referenceName": "platformusage_blob",
 								"type": "DatasetReference",
 								"parameters": {
-									"folder_name": "@concat('platformusage/unzip/',activity('lookup_file_to_unzip').output.firstRow.folder,'/')",
-									"file_name": "@concat(substring(activity('lookup_file_to_unzip').output.firstRow.FILE_NAME,0,8),'.zip')"
+									"folder_name": {
+										"value": "@concat('platformusage/rawdata/',activity('LK_file').output.firstRow.folder,'/')\n ",
+										"type": "Expression"
+									},
+									"file_name": {
+										"value": "@concat(substring(activity('LK_file').output.firstRow.FILE_NAME,0,8),'.zip')",
+										"type": "Expression"
+									}
 								}
 							}
 						]
 					},
 					{
-						"name": "update_unzip",
+						"name": "update_platfrom_usage_log_file",
 						"type": "SqlServerStoredProcedure",
 						"dependsOn": [
 							{
-								"activity": "unzip",
+								"activity": "Copy to blob",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -116,11 +127,11 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"storedProcedureName": "[[azure].[SP_Update_platfrom_usage_log_file_unzip]",
+							"storedProcedureName": "[[etl].[SP_Update_platfrom_usage_log_file]",
 							"storedProcedureParameters": {
 								"file_name": {
 									"value": {
-										"value": "@activity('lookup_file_to_unzip').output.firstRow.file_name",
+										"value": "@activity('LK_file').output.firstRow.file_name",
 										"type": "Expression"
 									},
 									"type": "String"
@@ -128,7 +139,7 @@
 							}
 						},
 						"linkedServiceName": {
-							"referenceName": "alldbdwh",
+							"referenceName": "Azure BI db",
 							"type": "LinkedServiceReference"
 						}
 					}

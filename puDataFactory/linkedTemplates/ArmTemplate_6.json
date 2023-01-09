@@ -13,6 +13,96 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Serials Dim')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "copy_to_sql",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BlobSource",
+								"recursive": true
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"Serial": "Serial",
+									"Client_Id": "Client_Id",
+									"Client_Numerator": "Client_Numerator",
+									"Client_Name": "Client_Name",
+									"Product_Numerator": "Product_Numerator",
+									"Product_Name": "Product_Name",
+									"Product_Full_Name": "Product_Full_Name",
+									"Campaign_Numerator": "Campaign_Numerator",
+									"Campaign_Name": "Campaign_Name",
+									"Targetmarket_Id": "Targetmarket_Id",
+									"Targetmarket": "Targetmarket",
+									"Supplier_Numerator": "Supplier_Numerator",
+									"Supplier": "Supplier",
+									"Supplier_Group": "Supplier_Group",
+									"Mediabuyer_Numerator": "Mediabuyer_Numerator",
+									"Mediabuyer": "Mediabuyer",
+									"Format": "Format",
+									"Site_Numerator": "Site_Numerator",
+									"Site_Name": "Site_Name",
+									"Proposition_Id": "Proposition_Id",
+									"Proposition": "Proposition",
+									"Banner_Name": "Banner_Name",
+									"Banner_Path": "Banner_Path",
+									"TypeExt": "TypeExt",
+									"Landing_Page": "Landing_Page",
+									"Language": "Language",
+									"SelfActivation": "SelfActivation",
+									"Content": "Content"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "BI_Serials_blob",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "serials_dim_dwh",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "BI"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/V3_PU_real_time_file_sync')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1782,27 +1872,6 @@
 					"schema": "azure",
 					"table": "Communication_Channels_Stream"
 				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_3oo')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "emerpdbpr",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "value",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {}
 			},
 			"dependsOn": []
 		}

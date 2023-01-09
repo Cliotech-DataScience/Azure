@@ -653,6 +653,141 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/02_platfromusage_unzip_zip_blob_files')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "lookup_file_to_unzip",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "     SELECT file_name,\n        folder,unzip_file\n\tFROM etl.platfrom_usage_log_file\n WHERE ISNULL(unzip_file,0) <>1 AND move_to_blob=1\n  \n  IF @@ROWCOUNT=0 THROW 50000 ,'No file to move',1",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "Azure_Sql_bi_db",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": true
+						}
+					},
+					{
+						"name": "unzip",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "lookup_file_to_unzip",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BlobSource",
+								"recursive": true
+							},
+							"sink": {
+								"type": "BlobSink",
+								"copyBehavior": "PreserveHierarchy"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0
+						},
+						"inputs": [
+							{
+								"referenceName": "platformusage_blob",
+								"type": "DatasetReference",
+								"parameters": {
+									"folder_name": "@concat('platformusage/rawdata/',activity('lookup_file_to_unzip').output.firstRow.folder,'/')",
+									"file_name": "@concat(substring(activity('lookup_file_to_unzip').output.firstRow.FILE_NAME,0,8),'.zip')"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "blob_platfrom_unzip_file",
+								"type": "DatasetReference",
+								"parameters": {
+									"folder_name": "@concat('platformusage/unzip/',activity('lookup_file_to_unzip').output.firstRow.folder,'/')",
+									"file_name": "@concat(substring(activity('lookup_file_to_unzip').output.firstRow.FILE_NAME,0,8),'.zip')"
+								}
+							}
+						]
+					},
+					{
+						"name": "update_unzip",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "unzip",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[azure].[SP_Update_platfrom_usage_log_file_unzip]",
+							"storedProcedureParameters": {
+								"file_name": {
+									"value": {
+										"value": "@activity('lookup_file_to_unzip').output.firstRow.file_name",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "alldbdwh",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Platfrom_Usage"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/CopyPipeline_prf')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1046,98 +1181,6 @@
 				"annotations": []
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Serials Dim')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "copy_to_sql",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BlobSource",
-								"recursive": true
-							},
-							"sink": {
-								"type": "SqlSink",
-								"writeBatchSize": 10000
-							},
-							"enableStaging": false,
-							"dataIntegrationUnits": 0,
-							"translator": {
-								"type": "TabularTranslator",
-								"columnMappings": {
-									"Serial": "Serial",
-									"Client_Id": "Client_Id",
-									"Client_Numerator": "Client_Numerator",
-									"Client_Name": "Client_Name",
-									"Product_Numerator": "Product_Numerator",
-									"Product_Name": "Product_Name",
-									"Product_Full_Name": "Product_Full_Name",
-									"Campaign_Numerator": "Campaign_Numerator",
-									"Campaign_Name": "Campaign_Name",
-									"Targetmarket_Id": "Targetmarket_Id",
-									"Targetmarket": "Targetmarket",
-									"Supplier_Numerator": "Supplier_Numerator",
-									"Supplier": "Supplier",
-									"Supplier_Group": "Supplier_Group",
-									"Mediabuyer_Numerator": "Mediabuyer_Numerator",
-									"Mediabuyer": "Mediabuyer",
-									"Format": "Format",
-									"Site_Numerator": "Site_Numerator",
-									"Site_Name": "Site_Name",
-									"Proposition_Id": "Proposition_Id",
-									"Proposition": "Proposition",
-									"Banner_Name": "Banner_Name",
-									"Banner_Path": "Banner_Path",
-									"TypeExt": "TypeExt",
-									"Landing_Page": "Landing_Page",
-									"Language": "Language",
-									"SelfActivation": "SelfActivation",
-									"Content": "Content"
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "BI_Serials_blob",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "serials_dim_dwh",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "BI"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/serials_dim_dwh')]"
-			]
 		}
 	]
 }

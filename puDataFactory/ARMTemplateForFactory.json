@@ -827,12 +827,13 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "SqlSource",
-								"sqlReaderQuery": "      SELECT file_name,\n        folder,unzip_file\n\tFROM azure.platfrom_usage_log_file\n WHERE ISNULL(unzip_file,0) <>1 AND move_to_blob=1\n  \n  IF @@ROWCOUNT=0 THROW 50000 ,'No file to move',1",
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "     SELECT file_name,\n        folder,unzip_file\n\tFROM etl.platfrom_usage_log_file\n WHERE ISNULL(unzip_file,0) <>1 AND move_to_blob=1\n  \n  IF @@ROWCOUNT=0 THROW 50000 ,'No file to move',1",
+								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "DWH_pu_list_files",
+								"referenceName": "Azure_Sql_bi_db",
 								"type": "DatasetReference",
 								"parameters": {}
 							},
@@ -938,7 +939,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DWH_pu_list_files')]",
+				"[concat(variables('factoryId'), '/datasets/Azure_Sql_bi_db')]",
 				"[concat(variables('factoryId'), '/datasets/platformusage_blob')]",
 				"[concat(variables('factoryId'), '/datasets/blob_platfrom_unzip_file')]",
 				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
