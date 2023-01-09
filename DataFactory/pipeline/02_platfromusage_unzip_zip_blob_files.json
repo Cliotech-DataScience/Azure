@@ -5,6 +5,7 @@
 			{
 				"name": "lookup_file_to_unzip",
 				"type": "Lookup",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -12,13 +13,16 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "SqlSource",
-						"sqlReaderQuery": "      SELECT file_name,\n        folder,unzip_file\n\tFROM azure.platfrom_usage_log_file\n WHERE ISNULL(unzip_file,0) <>1 AND move_to_blob=1\n  \n  IF @@ROWCOUNT=0 THROW 50000 ,'No file to move',1"
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "     SELECT file_name,\n        folder,unzip_file\n\tFROM etl.platfrom_usage_log_file\n WHERE ISNULL(unzip_file,0) <>1 AND move_to_blob=1\n  \n  IF @@ROWCOUNT=0 THROW 50000 ,'No file to move',1",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "DWH_pu_list_files",
+						"referenceName": "Azure_Sql_bi_db",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": true
@@ -42,6 +46,7 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"source": {
 						"type": "BlobSource",
@@ -93,6 +98,7 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
+				"userProperties": [],
 				"typeProperties": {
 					"storedProcedureName": "[azure].[SP_Update_platfrom_usage_log_file_unzip]",
 					"storedProcedureParameters": {
@@ -113,7 +119,8 @@
 		],
 		"folder": {
 			"name": "Platfrom_Usage"
-		}
+		},
+		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
