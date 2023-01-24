@@ -1,0 +1,156 @@
+{
+	"name": "SourceDataset_4o1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DWH",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "Moneytrans_Id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Update_Date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "Request_Date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "AccountNumber",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CCY",
+				"type": "char"
+			},
+			{
+				"name": "Amount",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Moneytrans_Stage_Id",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "Moneytrans_Stage",
+				"type": "varchar"
+			},
+			{
+				"name": "Credit_Card",
+				"type": "nvarchar"
+			},
+			{
+				"name": "WireTransfer_Bank",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Payment_Provider_Id",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "Payment_Provider",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Payment_Type_Id",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "Payment_Type",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Payment_Provider_Owner_Broker_Id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Sessions_ID",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "Amount_USD",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Is_First_Deposit_Success",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "Is_First_Deposit_Attempt",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "Payment_Clearer_Id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Payment_Clearer_Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PaymentAuthenticationModeID",
+				"type": "tinyint",
+				"precision": 3
+			},
+			{
+				"name": "PaymentAuthenticationMode",
+				"type": "varchar"
+			},
+			{
+				"name": "ConcretePaymentTypeID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ConcretePaymentType",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CCTypeId",
+				"type": "tinyint",
+				"precision": 3
+			},
+			{
+				"name": "CCType",
+				"type": "nvarchar"
+			},
+			{
+				"name": "First6",
+				"type": "char"
+			},
+			{
+				"name": "CCIssuer",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CCCountry",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Fact_MoneyTrans"
+		}
+	}
+}
