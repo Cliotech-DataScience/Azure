@@ -1,0 +1,351 @@
+{
+	"name": "CopyPipeline_Moneytrans",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy_4o1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "dbo.Fact_MoneyTrans"
+					},
+					{
+						"name": "Destination",
+						"value": "mirrordatafs/moneytrans/@{formatDateTime(pipeline().parameters.windowStart,'yyyy')}/@{formatDateTime(pipeline().parameters.windowStart,'MM')}/mtrans_@{formatDateTime(pipeline().parameters.windowStart,'yyyy')}@{formatDateTime(pipeline().parameters.windowStart,'MM')}@{formatDateTime(pipeline().parameters.windowStart,'dd')}"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": {
+							"value": "select * from [dbo].[Fact_MoneyTrans] \nwhere [Request_Date] >= '@{formatDateTime(pipeline().parameters.windowStart, 'yyyy-MM-dd HH:mm' )}' \nAND [Request_Date] < '@{formatDateTime(pipeline().parameters.windowEnd, 'yyyy-MM-dd HH:mm' )}'",
+							"type": "Expression"
+						},
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings",
+							"filePattern": "arrayOfObjects"
+						}
+					},
+					"enableStaging": false,
+					"validateDataConsistency": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Moneytrans_Id",
+									"type": "Int32"
+								},
+								"sink": {
+									"path": "$['Moneytrans_Id']"
+								}
+							},
+							{
+								"source": {
+									"name": "Update_Date",
+									"type": "DateTime"
+								},
+								"sink": {
+									"path": "$['Update_Date']"
+								}
+							},
+							{
+								"source": {
+									"name": "Request_Date",
+									"type": "DateTime"
+								},
+								"sink": {
+									"path": "$['Request_Date']"
+								}
+							},
+							{
+								"source": {
+									"name": "AccountNumber",
+									"type": "Int32"
+								},
+								"sink": {
+									"path": "$['AccountNumber']"
+								}
+							},
+							{
+								"source": {
+									"name": "CCY",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['CCY']"
+								}
+							},
+							{
+								"source": {
+									"name": "Amount",
+									"type": "Double"
+								},
+								"sink": {
+									"path": "$['Amount']"
+								}
+							},
+							{
+								"source": {
+									"name": "Moneytrans_Stage_Id",
+									"type": "Int16"
+								},
+								"sink": {
+									"path": "$['Moneytrans_Stage_Id']"
+								}
+							},
+							{
+								"source": {
+									"name": "Moneytrans_Stage",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['Moneytrans_Stage']"
+								}
+							},
+							{
+								"source": {
+									"name": "Credit_Card",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['Credit_Card']"
+								}
+							},
+							{
+								"source": {
+									"name": "WireTransfer_Bank",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['WireTransfer_Bank']"
+								}
+							},
+							{
+								"source": {
+									"name": "Payment_Provider_Id",
+									"type": "Int16"
+								},
+								"sink": {
+									"path": "$['Payment_Provider_Id']"
+								}
+							},
+							{
+								"source": {
+									"name": "Payment_Provider",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['Payment_Provider']"
+								}
+							},
+							{
+								"source": {
+									"name": "Payment_Type_Id",
+									"type": "Int16"
+								},
+								"sink": {
+									"path": "$['Payment_Type_Id']"
+								}
+							},
+							{
+								"source": {
+									"name": "Payment_Type",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['Payment_Type']"
+								}
+							},
+							{
+								"source": {
+									"name": "Payment_Provider_Owner_Broker_Id",
+									"type": "Int32"
+								},
+								"sink": {
+									"path": "$['Payment_Provider_Owner_Broker_Id']"
+								}
+							},
+							{
+								"source": {
+									"name": "Sessions_ID",
+									"type": "Int64"
+								},
+								"sink": {
+									"path": "$['Sessions_ID']"
+								}
+							},
+							{
+								"source": {
+									"name": "Amount_USD",
+									"type": "Double"
+								},
+								"sink": {
+									"path": "$['Amount_USD']"
+								}
+							},
+							{
+								"source": {
+									"name": "Is_First_Deposit_Success",
+									"type": "Int16"
+								},
+								"sink": {
+									"path": "$['Is_First_Deposit_Success']"
+								}
+							},
+							{
+								"source": {
+									"name": "Is_First_Deposit_Attempt",
+									"type": "Int16"
+								},
+								"sink": {
+									"path": "$['Is_First_Deposit_Attempt']"
+								}
+							},
+							{
+								"source": {
+									"name": "Payment_Clearer_Id",
+									"type": "Int32"
+								},
+								"sink": {
+									"path": "$['Payment_Clearer_Id']"
+								}
+							},
+							{
+								"source": {
+									"name": "Payment_Clearer_Name",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['Payment_Clearer_Name']"
+								}
+							},
+							{
+								"source": {
+									"name": "PaymentAuthenticationModeID",
+									"type": "Byte"
+								},
+								"sink": {
+									"path": "$['PaymentAuthenticationModeID']"
+								}
+							},
+							{
+								"source": {
+									"name": "PaymentAuthenticationMode",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['PaymentAuthenticationMode']"
+								}
+							},
+							{
+								"source": {
+									"name": "ConcretePaymentTypeID",
+									"type": "Int32"
+								},
+								"sink": {
+									"path": "$['ConcretePaymentTypeID']"
+								}
+							},
+							{
+								"source": {
+									"name": "ConcretePaymentType",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['ConcretePaymentType']"
+								}
+							},
+							{
+								"source": {
+									"name": "CCTypeId",
+									"type": "Byte"
+								},
+								"sink": {
+									"path": "$['CCTypeId']"
+								}
+							},
+							{
+								"source": {
+									"name": "CCType",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['CCType']"
+								}
+							},
+							{
+								"source": {
+									"name": "First6",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['First6']"
+								}
+							},
+							{
+								"source": {
+									"name": "CCIssuer",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['CCIssuer']"
+								}
+							},
+							{
+								"source": {
+									"name": "CCCountry",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['CCCountry']"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_4o1",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_4o1",
+						"type": "DatasetReference",
+						"parameters": {
+							"cw_fileName": "mtrans_@{formatDateTime(pipeline().parameters.windowStart,'yyyy')}@{formatDateTime(pipeline().parameters.windowStart,'MM')}@{formatDateTime(pipeline().parameters.windowStart,'dd')}",
+							"cw_folderPath": "moneytrans/@{formatDateTime(pipeline().parameters.windowStart,'yyyy')}/@{formatDateTime(pipeline().parameters.windowStart,'MM')}"
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"windowStart": {
+				"type": "String"
+			},
+			"windowEnd": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}
