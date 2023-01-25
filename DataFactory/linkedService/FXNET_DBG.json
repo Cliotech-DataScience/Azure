@@ -1,0 +1,17 @@
+{
+	"name": "FXNET_DBG",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=True;data source=FXNET-DBG-PR,2555;initial catalog=FXNET;applicationintent=\"ReadOnly \"",
+			"userName": "efix\\az_etl",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI5Njk1NjhhZi02YzJkLTQ2YWUtODBhMi0wYmY0NWM2ZWJhNDkiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "alldbgateway",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
