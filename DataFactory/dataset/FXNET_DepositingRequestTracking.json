@@ -1,0 +1,65 @@
+{
+	"name": "FXNET_DepositingRequestTracking",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "FXNET_DBG",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "BARAKA TST"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "ClearingCallID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "RequestID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "MoneyTransID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ClearerID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ClearerMessageID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CallDuration",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "MachineName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ResponseTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "ErrorCode",
+				"type": "smallint",
+				"precision": 5
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "DepositingRequestTracking"
+		}
+	}
+}
