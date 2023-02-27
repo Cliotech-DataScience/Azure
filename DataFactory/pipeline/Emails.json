@@ -1,0 +1,9 @@
+{
+	"name": "Emails",
+	"properties": {
+		"folder": {
+			"name": "CRM"
+		},
+		"annotations": []
+	}
+}
