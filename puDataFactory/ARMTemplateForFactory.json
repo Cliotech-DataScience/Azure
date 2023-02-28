@@ -97,6 +97,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'DataloadStore'"
 		},
+		"Dataverse_crm_servicePrincipalCredential": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalCredential' of 'Dataverse_crm'"
+		},
 		"Dwhpr_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'Dwhpr'",
@@ -113,6 +117,15 @@
 		"Events_Collector_PlatfromUsage_log_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'Events_Collector_PlatfromUsage_log'"
+		},
+		"FXNET_DBG_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'FXNET_DBG'",
+			"defaultValue": "Integrated Security=True;Data Source=FXNET-DBG-PR,2555;Initial Catalog=FXNET;applicationintent=\"ReadOnly \""
+		},
+		"FXNET_DBG_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FXNET_DBG'"
 		},
 		"SCMM SQL_connectionString": {
 			"type": "secureString",
@@ -448,6 +461,10 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"Dataverse_crm_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "542f1539-389f-48a6-831c-0be1eeb19e2a"
+		},
 		"Dwhpr_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -457,6 +474,10 @@
 			"defaultValue": "\\\\netapp-ams-cifs\\db\\Events_Collector\\az_test_processed"
 		},
 		"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
+		"FXNET_DBG_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
@@ -492,6 +513,10 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"kv_pr_vpn_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://kv-pr-vpn.vault.azure.net/"
+		},
 		"linkedService1_properties_typeProperties_host": {
 			"type": "string",
 			"defaultValue": "\\\\netapp-ams-cifs\\db\\Events_Collector\\pu_file_sync_to_azure\\files"
@@ -507,6 +532,14 @@
 		"pu_raw_file_LS_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
+		},
+		"Trigger_4o1_properties_pipeline_parameters_windowStart": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowStartTime"
+		},
+		"Trigger_4o1_properties_pipeline_parameters_windowEnd": {
+			"type": "string",
+			"defaultValue": "@trigger().outputs.windowEndTime"
 		},
 		"Trigger_np9_properties____CopyPipeline_pu_file_AUTO_parameters_windowStart": {
 			"type": "string",
@@ -2035,6 +2068,368 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SourceDataset_5qf')]",
 				"[concat(variables('factoryId'), '/datasets/DestinationDataset_5qf')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CopyPipeline_Moneytrans')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_4o1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "dbo.Fact_MoneyTrans"
+							},
+							{
+								"name": "Destination",
+								"value": "mirrordatafs/moneytrans/@{formatDateTime(pipeline().parameters.windowStart,'yyyy')}/@{formatDateTime(pipeline().parameters.windowStart,'MM')}/mtrans_@{formatDateTime(pipeline().parameters.windowStart,'yyyy')}@{formatDateTime(pipeline().parameters.windowStart,'MM')}@{formatDateTime(pipeline().parameters.windowStart,'dd')}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": {
+									"value": "select * from [dbo].[Fact_MoneyTrans] \nwhere [Request_Date] >= '@{formatDateTime(pipeline().parameters.windowStart, 'yyyy-MM-dd HH:mm' )}' \nAND [Request_Date] < '@{formatDateTime(pipeline().parameters.windowEnd, 'yyyy-MM-dd HH:mm' )}'",
+									"type": "Expression"
+								},
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings",
+									"filePattern": "arrayOfObjects"
+								}
+							},
+							"enableStaging": false,
+							"validateDataConsistency": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Moneytrans_Id",
+											"type": "Int32"
+										},
+										"sink": {
+											"path": "$['Moneytrans_Id']"
+										}
+									},
+									{
+										"source": {
+											"name": "Update_Date",
+											"type": "DateTime"
+										},
+										"sink": {
+											"path": "$['Update_Date']"
+										}
+									},
+									{
+										"source": {
+											"name": "Request_Date",
+											"type": "DateTime"
+										},
+										"sink": {
+											"path": "$['Request_Date']"
+										}
+									},
+									{
+										"source": {
+											"name": "AccountNumber",
+											"type": "Int32"
+										},
+										"sink": {
+											"path": "$['AccountNumber']"
+										}
+									},
+									{
+										"source": {
+											"name": "CCY",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['CCY']"
+										}
+									},
+									{
+										"source": {
+											"name": "Amount",
+											"type": "Double"
+										},
+										"sink": {
+											"path": "$['Amount']"
+										}
+									},
+									{
+										"source": {
+											"name": "Moneytrans_Stage_Id",
+											"type": "Int16"
+										},
+										"sink": {
+											"path": "$['Moneytrans_Stage_Id']"
+										}
+									},
+									{
+										"source": {
+											"name": "Moneytrans_Stage",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Moneytrans_Stage']"
+										}
+									},
+									{
+										"source": {
+											"name": "Credit_Card",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Credit_Card']"
+										}
+									},
+									{
+										"source": {
+											"name": "WireTransfer_Bank",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['WireTransfer_Bank']"
+										}
+									},
+									{
+										"source": {
+											"name": "Payment_Provider_Id",
+											"type": "Int16"
+										},
+										"sink": {
+											"path": "$['Payment_Provider_Id']"
+										}
+									},
+									{
+										"source": {
+											"name": "Payment_Provider",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Payment_Provider']"
+										}
+									},
+									{
+										"source": {
+											"name": "Payment_Type_Id",
+											"type": "Int16"
+										},
+										"sink": {
+											"path": "$['Payment_Type_Id']"
+										}
+									},
+									{
+										"source": {
+											"name": "Payment_Type",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Payment_Type']"
+										}
+									},
+									{
+										"source": {
+											"name": "Payment_Provider_Owner_Broker_Id",
+											"type": "Int32"
+										},
+										"sink": {
+											"path": "$['Payment_Provider_Owner_Broker_Id']"
+										}
+									},
+									{
+										"source": {
+											"name": "Sessions_ID",
+											"type": "Int64"
+										},
+										"sink": {
+											"path": "$['Sessions_ID']"
+										}
+									},
+									{
+										"source": {
+											"name": "Amount_USD",
+											"type": "Double"
+										},
+										"sink": {
+											"path": "$['Amount_USD']"
+										}
+									},
+									{
+										"source": {
+											"name": "Is_First_Deposit_Success",
+											"type": "Int16"
+										},
+										"sink": {
+											"path": "$['Is_First_Deposit_Success']"
+										}
+									},
+									{
+										"source": {
+											"name": "Is_First_Deposit_Attempt",
+											"type": "Int16"
+										},
+										"sink": {
+											"path": "$['Is_First_Deposit_Attempt']"
+										}
+									},
+									{
+										"source": {
+											"name": "Payment_Clearer_Id",
+											"type": "Int32"
+										},
+										"sink": {
+											"path": "$['Payment_Clearer_Id']"
+										}
+									},
+									{
+										"source": {
+											"name": "Payment_Clearer_Name",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Payment_Clearer_Name']"
+										}
+									},
+									{
+										"source": {
+											"name": "PaymentAuthenticationModeID",
+											"type": "Byte"
+										},
+										"sink": {
+											"path": "$['PaymentAuthenticationModeID']"
+										}
+									},
+									{
+										"source": {
+											"name": "PaymentAuthenticationMode",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['PaymentAuthenticationMode']"
+										}
+									},
+									{
+										"source": {
+											"name": "ConcretePaymentTypeID",
+											"type": "Int32"
+										},
+										"sink": {
+											"path": "$['ConcretePaymentTypeID']"
+										}
+									},
+									{
+										"source": {
+											"name": "ConcretePaymentType",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['ConcretePaymentType']"
+										}
+									},
+									{
+										"source": {
+											"name": "CCTypeId",
+											"type": "Byte"
+										},
+										"sink": {
+											"path": "$['CCTypeId']"
+										}
+									},
+									{
+										"source": {
+											"name": "CCType",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['CCType']"
+										}
+									},
+									{
+										"source": {
+											"name": "First6",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['First6']"
+										}
+									},
+									{
+										"source": {
+											"name": "CCIssuer",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['CCIssuer']"
+										}
+									},
+									{
+										"source": {
+											"name": "CCCountry",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['CCCountry']"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_4o1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationDataset_4o1",
+								"type": "DatasetReference",
+								"parameters": {
+									"cw_fileName": "mtrans_@{formatDateTime(pipeline().parameters.windowStart,'yyyy')}@{formatDateTime(pipeline().parameters.windowStart,'MM')}@{formatDateTime(pipeline().parameters.windowStart,'dd')}",
+									"cw_folderPath": "moneytrans/@{formatDateTime(pipeline().parameters.windowStart,'yyyy')}/@{formatDateTime(pipeline().parameters.windowStart,'MM')}"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"windowStart": {
+						"type": "String"
+					},
+					"windowEnd": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SourceDataset_4o1')]",
+				"[concat(variables('factoryId'), '/datasets/DestinationDataset_4o1')]"
 			]
 		},
 		{
@@ -3822,6 +4217,831 @@
 				"[concat(variables('factoryId'), '/datasets/blob_EMERP_Events')]",
 				"[concat(variables('factoryId'), '/linkedServices/Azure BI db')]",
 				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Emails')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy email",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "CommonDataServiceForAppsSource"
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "createdby",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "createdby",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "createdbyname",
+											"type": "String"
+										},
+										"sink": {
+											"name": "createdbyname",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "createdbyyominame",
+											"type": "String"
+										},
+										"sink": {
+											"name": "createdbyyominame",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "createdon",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "createdon",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "createdonbehalfby",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "createdonbehalfby",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "createdonbehalfbyname",
+											"type": "String"
+										},
+										"sink": {
+											"name": "createdonbehalfbyname",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "createdonbehalfbyyominame",
+											"type": "String"
+										},
+										"sink": {
+											"name": "createdonbehalfbyyominame",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "entityimage_timestamp",
+											"type": "Int64"
+										},
+										"sink": {
+											"name": "entityimage_timestamp",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "entityimage_url",
+											"type": "String"
+										},
+										"sink": {
+											"name": "entityimage_url",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "entityimageid",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "entityimageid",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "importsequencenumber",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "importsequencenumber",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "modifiedby",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "modifiedby",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "modifiedbyname",
+											"type": "String"
+										},
+										"sink": {
+											"name": "modifiedbyname",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "modifiedbyyominame",
+											"type": "String"
+										},
+										"sink": {
+											"name": "modifiedbyyominame",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "modifiedon",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "modifiedon",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "modifiedonbehalfby",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "modifiedonbehalfby",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "modifiedonbehalfbyname",
+											"type": "String"
+										},
+										"sink": {
+											"name": "modifiedonbehalfbyname",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "modifiedonbehalfbyyominame",
+											"type": "String"
+										},
+										"sink": {
+											"name": "modifiedonbehalfbyyominame",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_automaticallygeneratetextpart",
+											"type": "Boolean"
+										},
+										"sink": {
+											"name": "msdynmkt_automaticallygeneratetextpart",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_brandprofiledata",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_brandprofiledata",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_brandprofileid",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "msdynmkt_brandprofileid",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_brandprofileidname",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_brandprofileidname",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_compliancesettings",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "msdynmkt_compliancesettings",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_compliancesettings3",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "msdynmkt_compliancesettings3",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_compliancesettings3name",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_compliancesettings3name",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_compliancesettings4",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "msdynmkt_compliancesettings4",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_compliancesettings4name",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_compliancesettings4name",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_compliancesettingscompanyaddress",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_compliancesettingscompanyaddress",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_compliancesettingsname",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_compliancesettingsname",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_conditionalcontent",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_conditionalcontent",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_description",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_description",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_designerhtml",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_designerhtml",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_emailbody",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_emailbody",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_emailcontentlanguage",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "msdynmkt_emailcontentlanguage",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_emailcontenttype",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "msdynmkt_emailcontenttype",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_emailid",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "msdynmkt_emailid",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_eventtype",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_eventtype",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_fromemail",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_fromemail",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_fromname",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_fromname",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_intendeduse",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "msdynmkt_intendeduse",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_isteamswebinaremail",
+											"type": "Boolean"
+										},
+										"sink": {
+											"name": "msdynmkt_isteamswebinaremail",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_messagedesignation",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "msdynmkt_messagedesignation",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_name",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_name",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_placeholders",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_placeholders",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_previewhtml",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_previewhtml",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_previewtext",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_previewtext",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_profiletype",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_profiletype",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_purpose",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "msdynmkt_purpose",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_purposename",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_purposename",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_replytoemail",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_replytoemail",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_senderid",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "msdynmkt_senderid",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_senderidname",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_senderidname",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_subject",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_subject",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_templateid",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "msdynmkt_templateid",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_templateidname",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_templateidname",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_testconfiguration",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_testconfiguration",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_textpart",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_textpart",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_to",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_to",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_virtualeventid",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_virtualeventid",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_webinaremailtemplatetype",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_webinaremailtemplatetype",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_webinarid",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_webinarid",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_webinartitle",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_webinartitle",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "overriddencreatedon",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "overriddencreatedon",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "ownerid",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "ownerid",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "owneridname",
+											"type": "String"
+										},
+										"sink": {
+											"name": "owneridname",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "owneridtype",
+											"type": "String"
+										},
+										"sink": {
+											"name": "owneridtype",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "owneridyominame",
+											"type": "String"
+										},
+										"sink": {
+											"name": "owneridyominame",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "owningbusinessunit",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "owningbusinessunit",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "owningbusinessunitname",
+											"type": "String"
+										},
+										"sink": {
+											"name": "owningbusinessunitname",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "owningteam",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "owningteam",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "owninguser",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "owninguser",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "statecode",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "statecode",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "statuscode",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "statuscode",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "timezoneruleversionnumber",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "timezoneruleversionnumber",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "utcconversiontimezonecode",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "utcconversiontimezonecode",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "versionnumber",
+											"type": "Int64"
+										},
+										"sink": {
+											"name": "versionnumber",
+											"type": "Int64"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "dataverse_Email",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "all_db_pr_SQL_SERVER",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "CRM"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dataverse_Email')]",
+				"[concat(variables('factoryId'), '/datasets/all_db_pr_SQL_SERVER')]"
 			]
 		},
 		{
@@ -9226,6 +10446,49 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_4o1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "bydatalakqa sa",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"cw_fileName": {
+						"type": "String"
+					},
+					"cw_folderPath": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().cw_fileName",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().cw_folderPath",
+							"type": "Expression"
+						},
+						"container": "mirrordatafs"
+					},
+					"compression": {
+						"type": "gzip",
+						"level": "Optimal"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/bydatalakqa sa')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DestinationDataset_5qf')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -9585,6 +10848,76 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/Dwhpr')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FXNET_DepositingRequestTracking')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "FXNET_DBG",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "BARAKA TST"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "ClearingCallID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "RequestID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "MoneyTransID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ClearerID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ClearerMessageID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CallDuration",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "MachineName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ResponseTime",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ErrorCode",
+						"type": "smallint",
+						"precision": 5
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "DepositingRequestTracking"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/FXNET_DBG')]"
 			]
 		},
 		{
@@ -10214,6 +11547,167 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/emerpdbpr')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_4o1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWH",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "Moneytrans_Id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Update_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "Request_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "AccountNumber",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "CCY",
+						"type": "char"
+					},
+					{
+						"name": "Amount",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Moneytrans_Stage_Id",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "Moneytrans_Stage",
+						"type": "varchar"
+					},
+					{
+						"name": "Credit_Card",
+						"type": "nvarchar"
+					},
+					{
+						"name": "WireTransfer_Bank",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Payment_Provider_Id",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "Payment_Provider",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Payment_Type_Id",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "Payment_Type",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Payment_Provider_Owner_Broker_Id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Sessions_ID",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "Amount_USD",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Is_First_Deposit_Success",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "Is_First_Deposit_Attempt",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "Payment_Clearer_Id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Payment_Clearer_Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PaymentAuthenticationModeID",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "PaymentAuthenticationMode",
+						"type": "varchar"
+					},
+					{
+						"name": "ConcretePaymentTypeID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ConcretePaymentType",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CCTypeId",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "CCType",
+						"type": "nvarchar"
+					},
+					{
+						"name": "First6",
+						"type": "char"
+					},
+					{
+						"name": "CCIssuer",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CCCountry",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Fact_MoneyTrans"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/DWH')]"
 			]
 		},
 		{
@@ -11313,6 +12807,26 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataverse_Email')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Dataverse_crm",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "CommonDataServiceForAppsEntity",
+				"schema": [],
+				"typeProperties": {
+					"entityName": "msdynmkt_email"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Dataverse_crm')]"
 			]
 		},
 		{
@@ -12737,6 +14251,27 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Dataverse_crm')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "CommonDataServiceForApps",
+				"typeProperties": {
+					"deploymentType": "Online",
+					"serviceUri": "https://orgc06bbec8.crm4.dynamics.com/",
+					"authenticationType": "AADServicePrincipal",
+					"servicePrincipalCredentialType": "ServicePrincipalKey",
+					"servicePrincipalId": "[parameters('Dataverse_crm_properties_typeProperties_servicePrincipalId')]",
+					"servicePrincipalCredential": {
+						"type": "SecureString",
+						"value": "[parameters('Dataverse_crm_servicePrincipalCredential')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Dwhpr')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -12791,6 +14326,30 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('Events_Collector_PlatfromUsage_log_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/alldbgateway')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FXNET_DBG')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('FXNET_DBG_connectionString')]",
+					"userName": "[parameters('FXNET_DBG_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('FXNET_DBG_password')]"
 					}
 				},
 				"connectVia": {
@@ -13014,6 +14573,19 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/alldbgateway')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/kv_pr_vpn')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('kv_pr_vpn_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/linkedService1')]",
@@ -13333,6 +14905,46 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Trigger_4o1')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipeline": {
+					"pipelineReference": {
+						"referenceName": "CopyPipeline_Moneytrans",
+						"type": "PipelineReference"
+					},
+					"parameters": {
+						"windowStart": {
+							"type": "Expression",
+							"value": "[parameters('Trigger_4o1_properties_pipeline_parameters_windowStart')]"
+						},
+						"windowEnd": {
+							"type": "Expression",
+							"value": "[parameters('Trigger_4o1_properties_pipeline_parameters_windowEnd')]"
+						}
+					}
+				},
+				"type": "TumblingWindowTrigger",
+				"typeProperties": {
+					"frequency": "Hour",
+					"interval": 1,
+					"startTime": "2023-01-24T14:52:00Z",
+					"delay": "00:00:00",
+					"maxConcurrency": 50,
+					"retryPolicy": {
+						"intervalInSeconds": 30
+					},
+					"dependsOn": []
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/CopyPipeline_Moneytrans')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Trigger_np9')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -13549,6 +15161,18 @@
 							"timeToLive": 0
 						}
 					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/mscrmcred')]",
+			"type": "Microsoft.DataFactory/factories/credentials",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "ManagedIdentity",
+				"typeProperties": {
+					"resourceId": "/subscriptions/c080e8cb-10cc-4387-9fd5-9436257f02f4/resourceGroups/dynamics365marketing-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/mscrm-identity"
 				}
 			},
 			"dependsOn": []

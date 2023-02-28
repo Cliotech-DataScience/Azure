@@ -71,6 +71,9 @@
 		"DataloadStore_connectionString": {
 			"value": ""
 		},
+		"Dataverse_crm_servicePrincipalCredential": {
+			"value": ""
+		},
 		"Dwhpr_connectionString": {
 			"value": "Integrated Security=True;Data Source=Dwh-pr,2555;Initial Catalog=@{linkedService().DB}"
 		},
@@ -81,6 +84,12 @@
 			"value": ""
 		},
 		"Events_Collector_PlatfromUsage_log_password": {
+			"value": ""
+		},
+		"FXNET_DBG_connectionString": {
+			"value": "Integrated Security=True;Data Source=FXNET-DBG-PR,2555;Initial Catalog=FXNET;applicationintent=\"ReadOnly \""
+		},
+		"FXNET_DBG_password": {
 			"value": ""
 		},
 		"SCMM SQL_connectionString": {
@@ -329,6 +338,9 @@
 		"DWH12_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"
 		},
+		"Dataverse_crm_properties_typeProperties_servicePrincipalId": {
+			"value": "542f1539-389f-48a6-831c-0be1eeb19e2a"
+		},
 		"Dwhpr_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"
 		},
@@ -336,6 +348,9 @@
 			"value": "\\\\netapp-ams-cifs\\db\\Events_Collector\\az_test_processed"
 		},
 		"Events_Collector_PlatfromUsage_log_properties_typeProperties_userId": {
+			"value": "efix\\az_etl"
+		},
+		"FXNET_DBG_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"
 		},
 		"SCMM SQL_properties_typeProperties_userName": {
@@ -362,6 +377,9 @@
 		"fileserver1_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
 		},
+		"kv_pr_vpn_properties_typeProperties_baseUrl": {
+			"value": "https://kv-pr-vpn.vault.azure.net/"
+		},
 		"linkedService1_properties_typeProperties_host": {
 			"value": "\\\\netapp-ams-cifs\\db\\Events_Collector\\pu_file_sync_to_azure\\files"
 		},
@@ -373,6 +391,12 @@
 		},
 		"pu_raw_file_LS_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
+		},
+		"Trigger_4o1_properties_pipeline_parameters_windowStart": {
+			"value": "@trigger().outputs.windowStartTime"
+		},
+		"Trigger_4o1_properties_pipeline_parameters_windowEnd": {
+			"value": "@trigger().outputs.windowEndTime"
 		},
 		"Trigger_np9_properties____CopyPipeline_pu_file_AUTO_parameters_windowStart": {
 			"value": "@trigger().scheduledTime"
