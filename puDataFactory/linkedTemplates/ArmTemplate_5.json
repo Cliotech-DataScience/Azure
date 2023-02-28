@@ -77,7 +77,7 @@
 		"alldbdwh_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'alldbdwh'",
-			"defaultValue": "Integrated Security=True;Data Source=all-db-pr,2555;Initial Catalog=LocalDB"
+			"defaultValue": "Integrated Security=True;Data Source=all-db-pr;Initial Catalog=LocalDB"
 		},
 		"alldbdwh_password": {
 			"type": "secureString",

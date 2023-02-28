@@ -114,7 +114,7 @@
 			"value": ""
 		},
 		"alldbdwh_connectionString": {
-			"value": "Integrated Security=True;Data Source=all-db-pr,2555;Initial Catalog=LocalDB"
+			"value": "Integrated Security=True;Data Source=all-db-pr;Initial Catalog=LocalDB"
 		},
 		"alldbdwh_password": {
 			"value": ""

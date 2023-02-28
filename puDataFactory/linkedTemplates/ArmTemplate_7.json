@@ -1048,7 +1048,7 @@
 				"schema": [],
 				"typeProperties": {
 					"schema": "dbo",
-					"table": "_nati_pu_2019_2021"
+					"table": "_Email_dn"
 				}
 			},
 			"dependsOn": []
