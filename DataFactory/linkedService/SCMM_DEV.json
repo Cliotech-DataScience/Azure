@@ -5,8 +5,9 @@
 		"annotations": [],
 		"type": "SqlServer",
 		"typeProperties": {
-			"connectionString": "integrated security=False;data source=scmm-db-dev;initial catalog=MS_CRM;user id=az_etl",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJkZGM5YWMyZi1lY2QzLTQ4ZjItYmJiOC0wMjZhNjhmYmI1NWMiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"connectionString": "integrated security=True;data source=scmm-db-dev;initial catalog=MS_CRM",
+			"userName": "efix\\az_etl",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJjZTFlMTE1Yi03NWNiLTRkODQtYTY4Ni0yNTJhN2EzNWI4N2YiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "alldbgateway",
