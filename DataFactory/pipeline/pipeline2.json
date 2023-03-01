@@ -18,11 +18,22 @@
 					"source": {
 						"type": "CommonDataServiceForAppsSource"
 					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
 					"enableStaging": false
 				},
 				"inputs": [
 					{
 						"referenceName": "Dataverse_AsyncOperation",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "all_db_pr_SQL_SERVER",
 						"type": "DatasetReference"
 					}
 				]
