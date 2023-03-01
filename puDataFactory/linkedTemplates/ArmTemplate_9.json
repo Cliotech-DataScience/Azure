@@ -1011,7 +1011,8 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "CommonDataServiceForAppsSource"
+								"type": "CommonDataServiceForAppsSource",
+								"query": "<fetch>  \n   <entity name='msdynmkt_email'>   \n      <attribute name='msdynmkt_name'/>   \n      <attribute name='msdynmkt_placeholders'/>   \n\t  <attribute name='msdynmkt_previewhtml'/>     \n   </entity>   \n</fetch>"
 							},
 							"sink": {
 								"type": "SqlServerSink",
