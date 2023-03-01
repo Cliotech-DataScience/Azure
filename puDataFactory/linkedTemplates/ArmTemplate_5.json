@@ -65,6 +65,15 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'SCMM_DBG_PR1'"
 		},
+		"SCMM_DEV_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SCMM_DEV'",
+			"defaultValue": "Integrated Security=True;Data Source=scmm-db-dev;Initial Catalog=MS_CRM"
+		},
+		"SCMM_DEV_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SCMM_DEV'"
+		},
 		"STG_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'STG'",
@@ -104,10 +113,6 @@
 		"fileserver1_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'fileserver1'"
-		},
-		"linkedService1_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'linkedService1'"
 		},
 		"fxnet_accounting_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -181,6 +186,10 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"SCMM_DEV_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
 		"STG_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -202,14 +211,6 @@
 			"defaultValue": "\\\\netapp-ams-cifs\\db\\Events_Collector\\Archived"
 		},
 		"fileserver1_properties_typeProperties_userId": {
-			"type": "string",
-			"defaultValue": "efix\\az_etl"
-		},
-		"linkedService1_properties_typeProperties_host": {
-			"type": "string",
-			"defaultValue": "\\\\netapp-ams-cifs\\db\\Events_Collector\\pu_file_sync_to_azure\\files"
-		},
-		"linkedService1_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		}
@@ -786,6 +787,28 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/SCMM_DEV')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('SCMM_DEV_connectionString')]",
+					"userName": "[parameters('SCMM_DEV_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('SCMM_DEV_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/STG')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -887,28 +910,6 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('fileserver1_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "alldbgateway",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/linkedService1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "FileServer",
-				"typeProperties": {
-					"host": "[parameters('linkedService1_properties_typeProperties_host')]",
-					"userId": "[parameters('linkedService1_properties_typeProperties_userId')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('linkedService1_password')]"
 					}
 				},
 				"connectVia": {

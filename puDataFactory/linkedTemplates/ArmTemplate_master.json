@@ -145,6 +145,15 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'SCMM_DBG_PR1'"
 		},
+		"SCMM_DEV_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SCMM_DEV'",
+			"defaultValue": "Integrated Security=True;Data Source=scmm-db-dev;Initial Catalog=MS_CRM"
+		},
+		"SCMM_DEV_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SCMM_DEV'"
+		},
 		"STG_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'STG'",
@@ -486,6 +495,10 @@
 			"defaultValue": "efix\\reportsprod"
 		},
 		"SCMM_DBG_PR1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
+		"SCMM_DEV_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
@@ -939,6 +952,12 @@
 					"SCMM_DBG_PR1_password": {
 						"value": "[parameters('SCMM_DBG_PR1_password')]"
 					},
+					"SCMM_DEV_connectionString": {
+						"value": "[parameters('SCMM_DEV_connectionString')]"
+					},
+					"SCMM_DEV_password": {
+						"value": "[parameters('SCMM_DEV_password')]"
+					},
 					"STG_connectionString": {
 						"value": "[parameters('STG_connectionString')]"
 					},
@@ -965,9 +984,6 @@
 					},
 					"fileserver1_password": {
 						"value": "[parameters('fileserver1_password')]"
-					},
-					"linkedService1_password": {
-						"value": "[parameters('linkedService1_password')]"
 					},
 					"fxnet_accounting_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_fileName')]"
@@ -1023,6 +1039,9 @@
 					"SCMM_DBG_PR1_properties_typeProperties_userName": {
 						"value": "[parameters('SCMM_DBG_PR1_properties_typeProperties_userName')]"
 					},
+					"SCMM_DEV_properties_typeProperties_userName": {
+						"value": "[parameters('SCMM_DEV_properties_typeProperties_userName')]"
+					},
 					"STG_properties_typeProperties_userName": {
 						"value": "[parameters('STG_properties_typeProperties_userName')]"
 					},
@@ -1040,12 +1059,6 @@
 					},
 					"fileserver1_properties_typeProperties_userId": {
 						"value": "[parameters('fileserver1_properties_typeProperties_userId')]"
-					},
-					"linkedService1_properties_typeProperties_host": {
-						"value": "[parameters('linkedService1_properties_typeProperties_host')]"
-					},
-					"linkedService1_properties_typeProperties_userId": {
-						"value": "[parameters('linkedService1_properties_typeProperties_userId')]"
 					}
 				}
 			},
@@ -1067,8 +1080,17 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"linkedService1_password": {
+						"value": "[parameters('linkedService1_password')]"
+					},
 					"pu_raw_file_LS_password": {
 						"value": "[parameters('pu_raw_file_LS_password')]"
+					},
+					"linkedService1_properties_typeProperties_host": {
+						"value": "[parameters('linkedService1_properties_typeProperties_host')]"
+					},
+					"linkedService1_properties_typeProperties_userId": {
+						"value": "[parameters('linkedService1_properties_typeProperties_userId')]"
 					},
 					"pu_raw_file_LS_properties_typeProperties_host": {
 						"value": "[parameters('pu_raw_file_LS_properties_typeProperties_host')]"

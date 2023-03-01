@@ -25,6 +25,41 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Dim_AccountContacts')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "alldbdwh",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "AccountNumber",
+						"type": "Int32"
+					},
+					{
+						"name": "ContactID",
+						"type": "Int64"
+					},
+					{
+						"name": "LastUpdate",
+						"type": "DateTime"
+					},
+					{
+						"name": "SsisUpdatedDate",
+						"type": "DateTime"
+					}
+				],
+				"typeProperties": {
+					"tableName": "dwh.azure.AZ_Dim_AccountContacts"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/EMERP_DB_Events')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1049,40 +1084,6 @@
 				"typeProperties": {
 					"schema": "dbo",
 					"table": "_Email_dn"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/dwh_Customer_Questionnaires_src')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DWH",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "AccountNumber",
-						"type": "Int32"
-					},
-					{
-						"name": "details",
-						"type": "String"
-					},
-					{
-						"name": "Last_Update",
-						"type": "DateTime"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[[azure].[AZ_Customer_Questionnaires]"
 				}
 			},
 			"dependsOn": []

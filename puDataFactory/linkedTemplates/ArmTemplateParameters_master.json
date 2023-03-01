@@ -104,6 +104,12 @@
 		"SCMM_DBG_PR1_password": {
 			"value": ""
 		},
+		"SCMM_DEV_connectionString": {
+			"value": "Integrated Security=True;Data Source=scmm-db-dev;Initial Catalog=MS_CRM"
+		},
+		"SCMM_DEV_password": {
+			"value": ""
+		},
 		"STG_connectionString": {
 			"value": "Integrated Security=True;Data Source=DWH12-PR,2555;Initial Catalog=STG"
 		},
@@ -357,6 +363,9 @@
 			"value": "efix\\reportsprod"
 		},
 		"SCMM_DBG_PR1_properties_typeProperties_userName": {
+			"value": "efix\\az_etl"
+		},
+		"SCMM_DEV_properties_typeProperties_userName": {
 			"value": "efix\\az_etl"
 		},
 		"STG_properties_typeProperties_userName": {
