@@ -129,6 +129,42 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_ihk')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "dwhdb_blob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "nati/pu_2019_2021_export",
+						"container": "users"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "accountnumber",
+						"type": "INT64"
+					},
+					{
+						"name": "Event_date",
+						"type": "INT96"
+					},
+					{
+						"name": "event_name",
+						"type": "UTF8"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SourceDataset_prf')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -972,48 +1008,6 @@
 				],
 				"typeProperties": {
 					"tableName": "etlManage"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/fact_events_dwh')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase_dwh",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "BI"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"structure": [
-					{
-						"name": "Event_Date_day",
-						"type": "DateTime"
-					},
-					{
-						"name": "Source",
-						"type": "String"
-					},
-					{
-						"name": "Event_Name",
-						"type": "String"
-					},
-					{
-						"name": "Event_Details",
-						"type": "String"
-					},
-					{
-						"name": "Event_Count",
-						"type": "Int64"
-					}
-				],
-				"typeProperties": {
-					"tableName": "[[dbo].[fact_events]"
 				}
 			},
 			"dependsOn": []

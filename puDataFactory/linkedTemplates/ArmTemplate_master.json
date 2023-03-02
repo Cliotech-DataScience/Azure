@@ -982,9 +982,6 @@
 					"emerpdbpr_password": {
 						"value": "[parameters('emerpdbpr_password')]"
 					},
-					"fileserver1_password": {
-						"value": "[parameters('fileserver1_password')]"
-					},
 					"fxnet_accounting_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_fileName')]"
 					},
@@ -1053,12 +1050,6 @@
 					},
 					"emerpdbpr_properties_typeProperties_userName": {
 						"value": "[parameters('emerpdbpr_properties_typeProperties_userName')]"
-					},
-					"fileserver1_properties_typeProperties_host": {
-						"value": "[parameters('fileserver1_properties_typeProperties_host')]"
-					},
-					"fileserver1_properties_typeProperties_userId": {
-						"value": "[parameters('fileserver1_properties_typeProperties_userId')]"
 					}
 				}
 			},
@@ -1080,11 +1071,20 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"fileserver1_password": {
+						"value": "[parameters('fileserver1_password')]"
+					},
 					"linkedService1_password": {
 						"value": "[parameters('linkedService1_password')]"
 					},
 					"pu_raw_file_LS_password": {
 						"value": "[parameters('pu_raw_file_LS_password')]"
+					},
+					"fileserver1_properties_typeProperties_host": {
+						"value": "[parameters('fileserver1_properties_typeProperties_host')]"
+					},
+					"fileserver1_properties_typeProperties_userId": {
+						"value": "[parameters('fileserver1_properties_typeProperties_userId')]"
 					},
 					"linkedService1_properties_typeProperties_host": {
 						"value": "[parameters('linkedService1_properties_typeProperties_host')]"
@@ -1206,6 +1206,26 @@
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'puDataFactory_ArmTemplate_9')]"
+			]
+		},
+		{
+			"name": "puDataFactory_ArmTemplate_11",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_11.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'puDataFactory_ArmTemplate_10')]"
 			]
 		}
 	]

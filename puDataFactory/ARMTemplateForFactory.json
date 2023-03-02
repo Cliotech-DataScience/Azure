@@ -8006,6 +8006,66 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AsyncOperation')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "CommonDataServiceForAppsSource"
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate"
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "Dataverse_AsyncOperation",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "all_db_pr_SQL_SERVER",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "CRM"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Dataverse_AsyncOperation')]",
+				"[concat(variables('factoryId'), '/datasets/all_db_pr_SQL_SERVER')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/run_only_pu_on_loop')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -9667,6 +9727,29 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/alldbdwh')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dataverse_AsyncOperation')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Dataverse_crm",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "CRM"
+				},
+				"annotations": [],
+				"type": "CommonDataServiceForAppsEntity",
+				"schema": [],
+				"typeProperties": {
+					"entityName": "asyncoperation"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Dataverse_crm')]"
 			]
 		},
 		{
@@ -11496,7 +11579,7 @@
 				"schema": [],
 				"typeProperties": {
 					"schema": "dbo",
-					"table": "_Email_dn"
+					"table": "AsyncOperation"
 				}
 			},
 			"dependsOn": [

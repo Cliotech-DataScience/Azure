@@ -13,6 +13,204 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Customers')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LK_Last_Id_Mng_azure_ETL",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(DAY,-1,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  Mng_data_factory_ETL\n  WHERE TableName='Customers'",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "Mng_data_factory_etl",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "LK_new_max_id",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "SELECT ExecutionDate=MAX(SsisUpdatedDate)\n FROM azure.AZ_Customers",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "DWH_Dim_Customers_src",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "copy_to_blob",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "LK_Last_Id_Mng_azure_ETL",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "LK_new_max_id",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlSource",
+								"sqlReaderQuery": {
+									"value": "select * from  dwh.azure.AZ_Customers\n where SsisUpdatedDate > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}' ",
+									"type": "Expression"
+								},
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "BlobSink"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0
+						},
+						"inputs": [
+							{
+								"referenceName": "DWH_Dim_Customers_src",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DWH_Dim_Customers_blob",
+								"type": "DatasetReference",
+								"parameters": {
+									"folder_name": "Customers"
+								}
+							}
+						]
+					},
+					{
+						"name": "update_mng_azure",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "copy_to_blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "SP_Update_Mng_data_factory_ETL",
+							"storedProcedureParameters": {
+								"LastId": {
+									"value": "-1",
+									"type": "Int64"
+								},
+								"LastIncrementalDate": {
+									"value": {
+										"value": "@{activity('LK_new_max_id').output.firstRow.ExecutionDate}",
+										"type": "Expression"
+									},
+									"type": "DateTime"
+								},
+								"TableName": {
+									"value": "Customers",
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "Azure BI db",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "Customers",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "update_mng_azure",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Load Data/Dimensions/Customers"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "Data_from_SQL"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DWH_Calls')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -3048,90 +3246,6 @@
 						"outputs": [
 							{
 								"referenceName": "DestinationDataset_lfo",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/cm to json 2')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy_3oo",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "."
-							},
-							{
-								"name": "Destination",
-								"value": "dwh-qa/sqldata/campaings.json"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderQuery": "\r\nSELECT [value] FROM OPENJSON(\r\n  (SELECT\r\n     c.numerator, c.id, c.name,\r\n    (select product_id = p.id, product_name= p.name, product_numerator = p.numerator ,\r\n\t\t(SELECT Serial_id =pc.id, pc.serial\r\n\t\tFROM product_creative_tab pc \r\n\t\tWHERE pc.product_id = p.id\r\n\t\tFOR JSON AUTO\r\n\t\t) AS Serials\r\n\t FROM product_tab p \r\n\t WHERE p.campaign_id = c.id \r\n\t FOR json auto) as Products\r\n   FROM dbo.campaign_tab\tc  \r\n   WHERE c.numerator BETWEEN 39900 AND 39950\r\n   FOR JSON PATH)\r\n)",
-								"partitionOption": "None"
-							},
-							"sink": {
-								"type": "JsonSink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								},
-								"formatSettings": {
-									"type": "JsonWriteSettings",
-									"filePattern": "arrayOfObjects"
-								}
-							},
-							"enableStaging": false,
-							"validateDataConsistency": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "value",
-											"type": "String"
-										},
-										"sink": {
-											"path": "$['value']"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "SourceDataset_3oo",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DestinationDataset_3oo",
 								"type": "DatasetReference",
 								"parameters": {}
 							}

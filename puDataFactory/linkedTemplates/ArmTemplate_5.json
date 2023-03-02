@@ -110,10 +110,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'emerpdbpr'"
 		},
-		"fileserver1_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'fileserver1'"
-		},
 		"fxnet_accounting_blob_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "@CONCAT('FXNET_Accounting_', pipeline().TriggerTime, '.csv.bz2')"
@@ -205,20 +201,54 @@
 		"emerpdbpr_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
-		},
-		"fileserver1_properties_typeProperties_host": {
-			"type": "string",
-			"defaultValue": "\\\\netapp-ams-cifs\\db\\Events_Collector\\Archived"
-		},
-		"fileserver1_properties_typeProperties_userId": {
-			"type": "string",
-			"defaultValue": "efix\\az_etl"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/fact_events_dwh')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase_dwh",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "BI"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"structure": [
+					{
+						"name": "Event_Date_day",
+						"type": "DateTime"
+					},
+					{
+						"name": "Source",
+						"type": "String"
+					},
+					{
+						"name": "Event_Name",
+						"type": "String"
+					},
+					{
+						"name": "Event_Details",
+						"type": "String"
+					},
+					{
+						"name": "Event_Count",
+						"type": "Int64"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[dbo].[fact_events]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/fxnet_accounting_blob')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -888,28 +918,6 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('emerpdbpr_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "alldbgateway",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/fileserver1')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "FileServer",
-				"typeProperties": {
-					"host": "[parameters('fileserver1_properties_typeProperties_host')]",
-					"userId": "[parameters('fileserver1_properties_typeProperties_userId')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('fileserver1_password')]"
 					}
 				},
 				"connectVia": {

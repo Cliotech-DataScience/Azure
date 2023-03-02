@@ -60,6 +60,27 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Dataverse_AsyncOperation')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Dataverse_crm",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "CRM"
+				},
+				"annotations": [],
+				"type": "CommonDataServiceForAppsEntity",
+				"schema": [],
+				"typeProperties": {
+					"entityName": "asyncoperation"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DestinationDataset_3oo')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -638,42 +659,6 @@
 						}
 					}
 				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_ihk')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "dwhdb_blob",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Parquet",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"folderPath": "nati/pu_2019_2021_export",
-						"container": "users"
-					},
-					"compressionCodec": "snappy"
-				},
-				"schema": [
-					{
-						"name": "accountnumber",
-						"type": "INT64"
-					},
-					{
-						"name": "Event_date",
-						"type": "INT96"
-					},
-					{
-						"name": "event_name",
-						"type": "UTF8"
-					}
-				]
 			},
 			"dependsOn": []
 		}

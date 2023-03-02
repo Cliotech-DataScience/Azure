@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "puDataFactory"
 		},
+		"fileserver1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'fileserver1'"
+		},
 		"linkedService1_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'linkedService1'"
@@ -14,6 +18,14 @@
 		"pu_raw_file_LS_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pu_raw_file_LS'"
+		},
+		"fileserver1_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\netapp-ams-cifs\\db\\Events_Collector\\Archived"
+		},
+		"fileserver1_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
 		},
 		"linkedService1_properties_typeProperties_host": {
 			"type": "string",
@@ -36,6 +48,28 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/fileserver1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('fileserver1_properties_typeProperties_host')]",
+					"userId": "[parameters('fileserver1_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('fileserver1_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/linkedService1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -1935,44 +1969,6 @@
 				],
 				"typeProperties": {
 					"tableName": "[[azure].[platfrom_usage_log_file]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DestinationDataset_ihk')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "alldbdwh",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "accountnumber",
-						"type": "bigint",
-						"precision": 19,
-						"scale": 0
-					},
-					{
-						"name": "Event_date",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "event_name",
-						"type": "nchar",
-						"precision": 0,
-						"scale": 0
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "_nati_pu_2019_2021"
 				}
 			},
 			"dependsOn": []
