@@ -10,7 +10,7 @@
 		"schema": [],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "_emails_crm"
+			"table": "_ Journey_crm"
 		}
 	}
 }
