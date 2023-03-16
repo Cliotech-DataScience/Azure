@@ -29,7 +29,7 @@
 						"type": "SqlServerSink",
 						"writeBehavior": "upsert",
 						"upsertSettings": {
-							"useTempDB": true,
+							"useTempDB": false,
 							"keys": [
 								"msdynmkt_emailid"
 							]
@@ -83,7 +83,7 @@
 							},
 							{
 								"source": {
-									"name": "msdynmkt_fromemail",
+									"name": "msdynmkt_fromname",
 									"type": "String"
 								},
 								"sink": {
@@ -178,6 +178,16 @@
 								},
 								"sink": {
 									"name": "modifiedon",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "ETL_update_date",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Etl_Update_Date",
 									"type": "DateTime"
 								}
 							}
