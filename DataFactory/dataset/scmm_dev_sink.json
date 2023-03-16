@@ -5,12 +5,21 @@
 			"referenceName": "alldbdwh",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"SQL_Table_name": {
+				"type": "string",
+				"defaultValue": "Emails"
+			}
+		},
 		"annotations": [],
 		"type": "SqlServerTable",
 		"schema": [],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "Emails"
+			"table": {
+				"value": "@dataset().SQL_Table_name",
+				"type": "Expression"
+			}
 		}
 	}
 }
