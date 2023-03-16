@@ -206,7 +206,10 @@
 				"outputs": [
 					{
 						"referenceName": "scmm_dev_sink",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"SQL_Table_name": "Emails"
+						}
 					}
 				]
 			}
