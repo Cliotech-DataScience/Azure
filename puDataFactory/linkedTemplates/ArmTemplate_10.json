@@ -33,6 +33,98 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/_pu_raw_files_sync')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_zwu",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "/"
+							},
+							{
+								"name": "Destination",
+								"value": "platformusage/_test_pu_raw_file_sync/"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "FileServerReadSettings",
+									"recursive": true,
+									"modifiedDatetimeStart": {
+										"value": "@pipeline().parameters.windowStart",
+										"type": "Expression"
+									},
+									"modifiedDatetimeEnd": {
+										"value": "@pipeline().parameters.windowEnd",
+										"type": "Expression"
+									},
+									"wildcardFileName": "*"
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"enableSkipIncompatibleRow": false,
+							"skipErrorFile": {
+								"fileMissing": true
+							},
+							"validateDataConsistency": false
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_zwu",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationDataset_zwu",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"windowStart": {
+						"type": "String"
+					},
+					"windowEnd": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/cm camp SqlJsonToBlobText')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -522,6 +614,522 @@
 						"timeZone": "UTC"
 					}
 				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Journeys')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Journeys crm to sql",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "CommonDataServiceForAppsSource",
+								"additionalColumns": [
+									{
+										"name": "ETL_update_date",
+										"value": "@utcnow()"
+									}
+								],
+								"query": "<fetch>  \n   <entity name='msdynmkt_journey'/>   \n     <attribute name='createdby'/>\n     <attribute name='createdon'/>\n     <attribute name='modifiedby'/>\n\t <attribute name='modifiedon'/>\n\t <attribute name='msdynmkt_automaticallygeneratetextpart'/>\n\t <attribute name='msdynmkt_designerhtml'/>\n\t <attribute name='msdynmkt_emailbody'/>\n\t <attribute name='msdynmkt_emailcontentlanguage'/>\n\t <attribute name='msdynmkt_emailcontenttype'/>\n\t <attribute name='msdynmkt_emailid'/>\n\t <attribute name='msdynmkt_eventtype'/>\n\t <attribute name='msdynmkt_fromemail'/>\n\t <attribute name='msdynmkt_fromname'/>\n\t <attribute name='msdynmkt_isteamswebinaremail'/>\n     <attribute name='msdynmkt_messagedesignation'/>\n     <attribute name='msdynmkt_name'/>\n     <attribute name='msdynmkt_placeholders'/>\n\t <attribute name='msdynmkt_previewhtml'/>\n\t <attribute name='msdynmkt_previewtext'/>\n\t <attribute name='msdynmkt_replytoemail'/>\n\t <attribute name='msdynmkt_subject'/>\n\t <attribute name='msdynmkt_templateid'/>\n\t <attribute name='msdynmkt_textpart'/>\n\t <attribute name='ownerid'/>\n\t <attribute name='owningbusinessunit'/>\n\t <attribute name='owninguser'/>\n\t <attribute name='statecode'/>\n\t <attribute name='statuscode'/>\n\t <filter type=\"and\">\n\t\t<condition attribute='modifiedon' operator=\"olderthan-x-days\" value=\"1\" />\n\t </filter>    \n    </entity>   \n</fetch>\n"
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "upsert",
+								"upsertSettings": {
+									"useTempDB": true,
+									"keys": [
+										"msdynmkt_journeyid"
+									]
+								},
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "createdby",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "createdby",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "createdbyname",
+											"type": "String"
+										},
+										"sink": {
+											"name": "createdbyname",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "createdbyyominame",
+											"type": "String"
+										},
+										"sink": {
+											"name": "createdbyyominame",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "createdon",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "createdon",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "createdonbehalfby",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "createdonbehalfby",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "createdonbehalfbyname",
+											"type": "String"
+										},
+										"sink": {
+											"name": "createdonbehalfbyname",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "createdonbehalfbyyominame",
+											"type": "String"
+										},
+										"sink": {
+											"name": "createdonbehalfbyyominame",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "importsequencenumber",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "importsequencenumber",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "modifiedby",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "modifiedby",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "modifiedbyname",
+											"type": "String"
+										},
+										"sink": {
+											"name": "modifiedbyname",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "modifiedbyyominame",
+											"type": "String"
+										},
+										"sink": {
+											"name": "modifiedbyyominame",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "modifiedon",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "modifiedon",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "modifiedonbehalfby",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "modifiedonbehalfby",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "modifiedonbehalfbyname",
+											"type": "String"
+										},
+										"sink": {
+											"name": "modifiedonbehalfbyname",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "modifiedonbehalfbyyominame",
+											"type": "String"
+										},
+										"sink": {
+											"name": "modifiedonbehalfbyyominame",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_baseversionjourneyid",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "msdynmkt_baseversionjourneyid",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_errorDetails",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_errorDetails",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_frequencycaptype",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "msdynmkt_frequencycaptype",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_issupersededbylaterversion",
+											"type": "Boolean"
+										},
+										"sink": {
+											"name": "msdynmkt_issupersededbylaterversion",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_journeyendtime",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "msdynmkt_journeyendtime",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_journeyid",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "msdynmkt_journeyid",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_journeyjson",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_journeyjson",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_journeyjsonbackup",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_journeyjsonbackup",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_journeystarttime",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "msdynmkt_journeystarttime",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_name",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_name",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_readytobetriggeredbysegmentrefresh",
+											"type": "Boolean"
+										},
+										"sink": {
+											"name": "msdynmkt_readytobetriggeredbysegmentrefresh",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_triggertype",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "msdynmkt_triggertype",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_versiondescription",
+											"type": "String"
+										},
+										"sink": {
+											"name": "msdynmkt_versiondescription",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_versionnumber",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "msdynmkt_versionnumber",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "overriddencreatedon",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "overriddencreatedon",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "ownerid",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "ownerid",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "owneridname",
+											"type": "String"
+										},
+										"sink": {
+											"name": "owneridname",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "owneridtype",
+											"type": "String"
+										},
+										"sink": {
+											"name": "owneridtype",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "owneridyominame",
+											"type": "String"
+										},
+										"sink": {
+											"name": "owneridyominame",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "owningbusinessunit",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "owningbusinessunit",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "owningbusinessunitname",
+											"type": "String"
+										},
+										"sink": {
+											"name": "owningbusinessunitname",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "owningteam",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "owningteam",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "owninguser",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "owninguser",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "statecode",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "statecode",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "statuscode",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "statuscode",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "timezoneruleversionnumber",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "timezoneruleversionnumber",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "utcconversiontimezonecode",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "utcconversiontimezonecode",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "versionnumber",
+											"type": "Int64"
+										},
+										"sink": {
+											"name": "versionnumber",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "ETL_update_date",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ETL_update_date",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Dataverse_Journeys",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "scmm_dev_sink",
+								"type": "DatasetReference",
+								"parameters": {
+									"SQL_Table_name": "_ Journey_crm"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "CRM"
+				},
+				"annotations": []
 			},
 			"dependsOn": []
 		},
@@ -1064,159 +1672,8 @@
 					}
 				}
 			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/run_only_pu_on_loop')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "run pu 01",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "RUN ONLY PU",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "run pu 02",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "run pu 01",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "RUN ONLY PU",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "run pu 03",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "run pu 02",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "RUN ONLY PU",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "run pu 04",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "run pu 03",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "RUN ONLY PU",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "run pu 05",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "run pu 04",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "RUN ONLY PU",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": []
-			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/RUN ONLY PU')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/every_day_run_all_piplines_to_platfrom_usage')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "RUN_ALL_pip_platfrom_usage",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-01-20T15:52:00Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								1
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/RUN_ALL_pip_platfrom_usage')]"
+				"[concat(variables('factoryId'), '/pipelines/_pu_raw_files_sync')]"
 			]
 		}
 	]

@@ -738,6 +738,9 @@
 					"referenceName": "Dataverse_crm",
 					"type": "LinkedServiceReference"
 				},
+				"folder": {
+					"name": "CRM"
+				},
 				"annotations": [],
 				"type": "CommonDataServiceForAppsEntity",
 				"schema": [],

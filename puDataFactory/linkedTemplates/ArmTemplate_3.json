@@ -75,7 +75,7 @@
 				"type": "CommonDataServiceForAppsEntity",
 				"schema": [],
 				"typeProperties": {
-					"entityName": "asyncoperation"
+					"entityName": "msdynmkt_journey"
 				}
 			},
 			"dependsOn": []
