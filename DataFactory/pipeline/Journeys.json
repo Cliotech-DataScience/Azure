@@ -24,12 +24,26 @@
 							}
 						]
 					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
 					"enableStaging": false
 				},
 				"inputs": [
 					{
 						"referenceName": "Dataverse_Journeys",
 						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "scmm_dev_sink",
+						"type": "DatasetReference",
+						"parameters": {
+							"SQL_Table_name": "_ Journey_crm"
+						}
 					}
 				]
 			}
