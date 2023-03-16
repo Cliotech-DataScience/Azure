@@ -10,7 +10,7 @@
 		"schema": [],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "AsyncOperation"
+			"table": "_emails_crm"
 		}
 	}
 }
