@@ -12,7 +12,7 @@
 		"type": "CommonDataServiceForAppsEntity",
 		"schema": [],
 		"typeProperties": {
-			"entityName": "msdynmkt_email"
+			"entityName": "msdynmkt_journey"
 		}
 	}
 }
