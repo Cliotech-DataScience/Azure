@@ -21,7 +21,13 @@
 					},
 					"sink": {
 						"type": "SqlServerSink",
-						"writeBehavior": "insert",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"msdynmkt_emailid"
+							]
+						},
 						"sqlWriterUseTableLock": false,
 						"tableOption": "autoCreate"
 					},
