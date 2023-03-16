@@ -16,7 +16,16 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "CommonDataServiceForAppsSource"
+						"type": "CommonDataServiceForAppsSource",
+						"additionalColumns": [
+							{
+								"name": "ETL_update_date",
+								"value": {
+									"value": "@utcnow()",
+									"type": "Expression"
+								}
+							}
+						]
 					},
 					"sink": {
 						"type": "SqlServerSink",
