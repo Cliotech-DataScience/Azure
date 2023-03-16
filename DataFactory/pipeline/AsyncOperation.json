@@ -20,7 +20,14 @@
 					},
 					"sink": {
 						"type": "SqlServerSink",
-						"writeBehavior": "insert",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": false,
+							"keys": [
+								"msdynmkt_emailid"
+							],
+							"interimSchemaName": "dbo"
+						},
 						"sqlWriterUseTableLock": false,
 						"tableOption": "autoCreate"
 					},
