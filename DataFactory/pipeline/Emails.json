@@ -17,6 +17,12 @@
 				"typeProperties": {
 					"source": {
 						"type": "CommonDataServiceForAppsSource",
+						"additionalColumns": [
+							{
+								"name": "ETL_update_date",
+								"value": "@utcnow()"
+							}
+						],
 						"query": "<fetch>  \n   <entity name='msdynmkt_email'> \n     <attribute name='msdynmkt_emailid'/>  \n     <attribute name='msdynmkt_name'/>   \n     <attribute name='msdynmkt_subject'/>   \n\t <attribute name='msdynmkt_fromemail'/>\n\t <attribute name='msdynmkt_fromname'/> \n\t <attribute name='msdynmkt_previewtext'/> \n\t <attribute name='msdynmkt_replytoemail'/>\n\t <attribute name='msdynmkt_emailbody'/>\n\t <attribute name='msdynmkt_designerhtml'/>\n\t <attribute name='msdynmkt_previewhtml'/>\n\t <attribute name='msdynmkt_placeholders'/> \n\t <attribute name='msdynmkt_textpart'/>\n\t <attribute name='createdon'/>\n\t <attribute name='modifiedon'/> \n<filter type=\"and\">\n<condition attribute='modifiedon' operator=\"olderthan-x-days\" value=\"2\" />\n</filter>    \n   </entity>   \n</fetch>"
 					},
 					"sink": {
