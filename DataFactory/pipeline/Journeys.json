@@ -15,8 +15,23 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"source": {
+						"type": "CommonDataServiceForAppsSource",
+						"additionalColumns": [
+							{
+								"name": "ETL_update_date",
+								"value": "@utcnow()"
+							}
+						]
+					},
 					"enableStaging": false
-				}
+				},
+				"inputs": [
+					{
+						"referenceName": "Dataverse_Journeys",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"folder": {
