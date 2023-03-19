@@ -25,7 +25,8 @@
 									"type": "Expression"
 								}
 							}
-						]
+						],
+						"query": "<fetch>  \n   <entity name='contact'> \n     <all-attributes/>    \n<filter type=\"and\">\n<condition attribute='modifiedon' operator=\"olderthan-x-days\" value=\"1\" />\n</filter>    \n   </entity>   \n</fetch>"
 					},
 					"sink": {
 						"type": "SqlServerSink",
