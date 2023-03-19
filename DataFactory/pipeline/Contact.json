@@ -28,12 +28,87 @@
 						],
 						"query": "<fetch>  \n   <entity name='contact'> \n     <attribute name='contactid'/>  \n     <attribute name='new_scmmcontactid'/>\n\t <attribute name='createdon'/>   \t \n\t <attribute name='modifiedon'/>     \n<filter type=\"and\">\n<condition attribute='modifiedon' operator=\"on-or-after\" value=\"2023-03-18 20:23:10\" />\n</filter>    \n   </entity>   \n</fetch>"
 					},
-					"enableStaging": false
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"Contact_Id"
+							]
+						},
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "contactid",
+									"type": "Guid"
+								},
+								"sink": {
+									"name": "Contact_Id",
+									"type": "Guid"
+								}
+							},
+							{
+								"source": {
+									"name": "modifiedon",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "Modifiedon",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "new_scmmcontactid",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Scmm_Contact_Id",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"name": "createdon",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "Createdon",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "ETL_update_date",
+									"type": "String"
+								},
+								"sink": {
+									"name": "ETL_update_date",
+									"type": "DateTime"
+								}
+							}
+						]
+					}
 				},
 				"inputs": [
 					{
 						"referenceName": "Dataverse_Contact",
 						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "scmm_dev_sink",
+						"type": "DatasetReference",
+						"parameters": {
+							"SQL_Table_name": "_Contact_crm"
+						}
 					}
 				]
 			}
