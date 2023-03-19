@@ -26,7 +26,7 @@
 								}
 							}
 						],
-						"query": "<fetch>  \n   <entity name='contact'> \n     <all-attributes/>    \n<filter type=\"and\">\n<condition attribute='modifiedon' operator=\"last-x-days\" value=\"1\" />\n</filter>    \n   </entity>   \n</fetch>"
+						"query": "<fetch>  \n   <entity name='contact'> \n     <attribute name='contactid'/>  \n     <attribute name='new_scmmcontactid'/>\n\t <attribute name='createdon'/>   \t \n\t <attribute name='modifiedon'/>     \n<filter type=\"and\">\n<condition attribute='modifiedon' operator=\"last-x-days\" value=\"1\" />\n</filter>    \n   </entity>   \n</fetch>"
 					},
 					"sink": {
 						"type": "SqlServerSink",
