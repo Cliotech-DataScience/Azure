@@ -10,7 +10,7 @@
 		"schema": [],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "_ Contact_crm"
+			"table": "_Contact_crm"
 		}
 	}
 }
