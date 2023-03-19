@@ -31,7 +31,7 @@
 						"upsertSettings": {
 							"useTempDB": true,
 							"keys": [
-								"msdynmkt_journeyid"
+								"Journey_Id"
 							]
 						},
 						"sqlWriterUseTableLock": false
