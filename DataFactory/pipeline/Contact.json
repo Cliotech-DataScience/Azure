@@ -15,8 +15,27 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"source": {
+						"type": "CommonDataServiceForAppsSource",
+						"additionalColumns": [
+							{
+								"name": "ETL_update_date",
+								"value": {
+									"value": "@utcnow()",
+									"type": "Expression"
+								}
+							}
+						],
+						"query": "<fetch>  \n   <entity name='contact'> \n     <attribute name='contactid'/>  \n     <attribute name='new_scmmcontactid'/>\n\t <attribute name='createdon'/>   \t \n\t <attribute name='modifiedon'/>     \n<filter type=\"and\">\n<condition attribute='modifiedon' operator=\"on-or-after\" value=\"2023-03-18 20:23:10\" />\n</filter>    \n   </entity>   \n</fetch>"
+					},
 					"enableStaging": false
-				}
+				},
+				"inputs": [
+					{
+						"referenceName": "Dataverse_Contact",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"folder": {
