@@ -6593,7 +6593,8 @@
 											"type": "Expression"
 										}
 									}
-								]
+								],
+								"query": "<fetch>  \n   <entity name='contact'> \n     <all-attributes/>    \n<filter type=\"and\">\n<condition attribute='modifiedon' operator=\"last-x-days\" value=\"1\" />\n</filter>    \n   </entity>   \n</fetch>"
 							},
 							"sink": {
 								"type": "SqlServerSink",
@@ -11760,7 +11761,7 @@
 				"schema": [],
 				"typeProperties": {
 					"schema": "dbo",
-					"table": "_ Journey_crm"
+					"table": "_ Contact_crm"
 				}
 			},
 			"dependsOn": [
