@@ -23,7 +23,7 @@
 								"value": "@utcnow()"
 							}
 						],
-						"query": "<fetch>  \n   <entity name='msdynmkt_journey'> \n     <attribute name='msdynmkt_journeyid'/>  \n     <attribute name='msdynmkt_name'/>   \n\t <attribute name='modifiedon'/> \n<filter type=\"and\">\n<condition attribute='modifiedon' operator=\"last-x-days\" value=\"3\" />\n</filter>    \n   </entity>   \n</fetch>\n"
+						"query": "<fetch>  \n   <entity name='msdynmkt_journey'> \n     <attribute name='msdynmkt_journeyid'/>  \n     <attribute name='msdynmkt_name'/>   \n\t <attribute name='modifiedon'/> \n<filter type=\"and\">\n<condition attribute='modifiedon' operator=\"last-x-days\" value=\"999\" />\n</filter>    \n   </entity>   \n</fetch>\n"
 					},
 					"sink": {
 						"type": "SqlServerSink",
