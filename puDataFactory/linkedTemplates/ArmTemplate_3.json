@@ -75,7 +75,7 @@
 				"type": "CommonDataServiceForAppsEntity",
 				"schema": [],
 				"typeProperties": {
-					"entityName": "msdynmkt_journey"
+					"entityName": "contact"
 				}
 			},
 			"dependsOn": []

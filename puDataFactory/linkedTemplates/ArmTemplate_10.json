@@ -644,7 +644,7 @@
 										"value": "@utcnow()"
 									}
 								],
-								"query": "<fetch>  \n   <entity name='msdynmkt_journey'/>   \n     <attribute name='createdby'/>\n     <attribute name='createdon'/>\n     <attribute name='modifiedby'/>\n\t <attribute name='modifiedon'/>\n\t <attribute name='msdynmkt_automaticallygeneratetextpart'/>\n\t <attribute name='msdynmkt_designerhtml'/>\n\t <attribute name='msdynmkt_emailbody'/>\n\t <attribute name='msdynmkt_emailcontentlanguage'/>\n\t <attribute name='msdynmkt_emailcontenttype'/>\n\t <attribute name='msdynmkt_emailid'/>\n\t <attribute name='msdynmkt_eventtype'/>\n\t <attribute name='msdynmkt_fromemail'/>\n\t <attribute name='msdynmkt_fromname'/>\n\t <attribute name='msdynmkt_isteamswebinaremail'/>\n     <attribute name='msdynmkt_messagedesignation'/>\n     <attribute name='msdynmkt_name'/>\n     <attribute name='msdynmkt_placeholders'/>\n\t <attribute name='msdynmkt_previewhtml'/>\n\t <attribute name='msdynmkt_previewtext'/>\n\t <attribute name='msdynmkt_replytoemail'/>\n\t <attribute name='msdynmkt_subject'/>\n\t <attribute name='msdynmkt_templateid'/>\n\t <attribute name='msdynmkt_textpart'/>\n\t <attribute name='ownerid'/>\n\t <attribute name='owningbusinessunit'/>\n\t <attribute name='owninguser'/>\n\t <attribute name='statecode'/>\n\t <attribute name='statuscode'/>\n\t <filter type=\"and\">\n\t\t<condition attribute='modifiedon' operator=\"olderthan-x-days\" value=\"1\" />\n\t </filter>    \n    </entity>   \n</fetch>\n"
+								"query": "<fetch>  \n   <entity name='msdynmkt_journey'> \n     <attribute name='msdynmkt_journeyid'/>  \n     <attribute name='msdynmkt_name'/>   \n\t <attribute name='modifiedon'/> \n<filter type=\"and\">\n<condition attribute='modifiedon' operator=\"last-x-days\" value=\"999\" />\n</filter>    \n   </entity>   \n</fetch>\n"
 							},
 							"sink": {
 								"type": "SqlServerSink",
@@ -652,7 +652,7 @@
 								"upsertSettings": {
 									"useTempDB": true,
 									"keys": [
-										"msdynmkt_journeyid"
+										"Journey_Id"
 									]
 								},
 								"sqlWriterUseTableLock": false
@@ -663,111 +663,21 @@
 								"mappings": [
 									{
 										"source": {
-											"name": "createdby",
+											"name": "msdynmkt_journeyid",
 											"type": "Guid"
 										},
 										"sink": {
-											"name": "createdby",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "createdbyname",
-											"type": "String"
-										},
-										"sink": {
-											"name": "createdbyname",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "createdbyyominame",
-											"type": "String"
-										},
-										"sink": {
-											"name": "createdbyyominame",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "createdon",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "createdon",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "createdonbehalfby",
-											"type": "Guid"
-										},
-										"sink": {
-											"name": "createdonbehalfby",
+											"name": "Journey_Id",
 											"type": "Guid"
 										}
 									},
 									{
 										"source": {
-											"name": "createdonbehalfbyname",
+											"name": "msdynmkt_name",
 											"type": "String"
 										},
 										"sink": {
-											"name": "createdonbehalfbyname",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "createdonbehalfbyyominame",
-											"type": "String"
-										},
-										"sink": {
-											"name": "createdonbehalfbyyominame",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "importsequencenumber",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "importsequencenumber",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "modifiedby",
-											"type": "Guid"
-										},
-										"sink": {
-											"name": "modifiedby",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "modifiedbyname",
-											"type": "String"
-										},
-										"sink": {
-											"name": "modifiedbyname",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "modifiedbyyominame",
-											"type": "String"
-										},
-										"sink": {
-											"name": "modifiedbyyominame",
+											"name": "Journey_Name",
 											"type": "String"
 										}
 									},
@@ -783,322 +693,12 @@
 									},
 									{
 										"source": {
-											"name": "modifiedonbehalfby",
-											"type": "Guid"
-										},
-										"sink": {
-											"name": "modifiedonbehalfby",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "modifiedonbehalfbyname",
-											"type": "String"
-										},
-										"sink": {
-											"name": "modifiedonbehalfbyname",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "modifiedonbehalfbyyominame",
-											"type": "String"
-										},
-										"sink": {
-											"name": "modifiedonbehalfbyyominame",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_baseversionjourneyid",
-											"type": "Guid"
-										},
-										"sink": {
-											"name": "msdynmkt_baseversionjourneyid",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_errorDetails",
-											"type": "String"
-										},
-										"sink": {
-											"name": "msdynmkt_errorDetails",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_frequencycaptype",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "msdynmkt_frequencycaptype",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_issupersededbylaterversion",
-											"type": "Boolean"
-										},
-										"sink": {
-											"name": "msdynmkt_issupersededbylaterversion",
-											"type": "Boolean"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_journeyendtime",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "msdynmkt_journeyendtime",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_journeyid",
-											"type": "Guid"
-										},
-										"sink": {
-											"name": "msdynmkt_journeyid",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_journeyjson",
-											"type": "String"
-										},
-										"sink": {
-											"name": "msdynmkt_journeyjson",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_journeyjsonbackup",
-											"type": "String"
-										},
-										"sink": {
-											"name": "msdynmkt_journeyjsonbackup",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_journeystarttime",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "msdynmkt_journeystarttime",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_name",
-											"type": "String"
-										},
-										"sink": {
-											"name": "msdynmkt_name",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_readytobetriggeredbysegmentrefresh",
-											"type": "Boolean"
-										},
-										"sink": {
-											"name": "msdynmkt_readytobetriggeredbysegmentrefresh",
-											"type": "Boolean"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_triggertype",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "msdynmkt_triggertype",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_versiondescription",
-											"type": "String"
-										},
-										"sink": {
-											"name": "msdynmkt_versiondescription",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_versionnumber",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "msdynmkt_versionnumber",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "overriddencreatedon",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "overriddencreatedon",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "ownerid",
-											"type": "Guid"
-										},
-										"sink": {
-											"name": "ownerid",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "owneridname",
-											"type": "String"
-										},
-										"sink": {
-											"name": "owneridname",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "owneridtype",
-											"type": "String"
-										},
-										"sink": {
-											"name": "owneridtype",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "owneridyominame",
-											"type": "String"
-										},
-										"sink": {
-											"name": "owneridyominame",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "owningbusinessunit",
-											"type": "Guid"
-										},
-										"sink": {
-											"name": "owningbusinessunit",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "owningbusinessunitname",
-											"type": "String"
-										},
-										"sink": {
-											"name": "owningbusinessunitname",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "owningteam",
-											"type": "Guid"
-										},
-										"sink": {
-											"name": "owningteam",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "owninguser",
-											"type": "Guid"
-										},
-										"sink": {
-											"name": "owninguser",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "statecode",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "statecode",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "statuscode",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "statuscode",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "timezoneruleversionnumber",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "timezoneruleversionnumber",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "utcconversiontimezonecode",
-											"type": "Int32"
-										},
-										"sink": {
-											"name": "utcconversiontimezonecode",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "versionnumber",
-											"type": "Int64"
-										},
-										"sink": {
-											"name": "versionnumber",
-											"type": "Int64"
-										}
-									},
-									{
-										"source": {
 											"name": "ETL_update_date",
 											"type": "String"
 										},
 										"sink": {
 											"name": "ETL_update_date",
-											"type": "String"
+											"type": "DateTime"
 										}
 									}
 								]
