@@ -216,7 +216,8 @@
 		],
 		"parameters": {
 			"Table_name": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "Emails"
 			}
 		},
 		"folder": {
