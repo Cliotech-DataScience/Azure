@@ -4505,7 +4505,14 @@
 					{
 						"name": "email crm to sql",
 						"type": "Copy",
-						"dependsOn": [],
+						"dependsOn": [
+							{
+								"activity": "LK_Last_Id_Mng_azure_ETL",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -4526,7 +4533,10 @@
 										}
 									}
 								],
-								"query": "<fetch>  \n   <entity name='msdynmkt_email'> \n     <attribute name='msdynmkt_emailid'/>  \n     <attribute name='msdynmkt_name'/>   \n     <attribute name='msdynmkt_subject'/>   \n\t <attribute name='msdynmkt_fromemail'/>\n\t <attribute name='msdynmkt_fromname'/> \n\t <attribute name='msdynmkt_previewtext'/> \n\t <attribute name='msdynmkt_replytoemail'/>\n\t <attribute name='msdynmkt_emailbody'/>\n\t <attribute name='msdynmkt_designerhtml'/>\n\t <attribute name='msdynmkt_previewhtml'/>\n\t <attribute name='msdynmkt_placeholders'/> \n\t <attribute name='msdynmkt_textpart'/>\n\t <attribute name='createdon'/>\n\t <attribute name='modifiedon'/> \n<filter type=\"and\">\n<condition attribute='modifiedon' operator=\"last-x-days\" value=\"3\" />\n</filter>    \n   </entity>   \n</fetch>"
+								"query": {
+									"value": "<fetch>  \n   <entity name='msdynmkt_email'> \n     <attribute name='msdynmkt_emailid'/>  \n     <attribute name='msdynmkt_name'/>   \n     <attribute name='msdynmkt_subject'/>   \n\t <attribute name='msdynmkt_fromemail'/>\n\t <attribute name='msdynmkt_fromname'/> \n\t <attribute name='msdynmkt_previewtext'/> \n\t <attribute name='msdynmkt_replytoemail'/>\n\t <attribute name='msdynmkt_emailbody'/>\n\t <attribute name='msdynmkt_designerhtml'/>\n\t <attribute name='msdynmkt_previewhtml'/>\n\t <attribute name='msdynmkt_placeholders'/> \n\t <attribute name='msdynmkt_textpart'/>\n\t <attribute name='createdon'/>\n\t <attribute name='modifiedon'/> \n<filter type=\"and\">\n<condition attribute='modifiedon' operator=\"on-or-after\" value=\"@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}\" />\n</filter>    \n   </entity>   \n</fetch>",
+									"type": "Expression"
+								}
 							},
 							"sink": {
 								"type": "SqlServerSink",
@@ -4713,11 +4723,84 @@
 								}
 							}
 						]
+					},
+					{
+						"name": "LK_Last_Id_Mng_azure_ETL",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,10,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  Mng_data_factory_ETL\n  WHERE TableName='Emails'",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "Mng_data_factory_etl",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "LK_last_Createdon",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "email crm to sql",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": {
+									"value": "@concat('SELECT   last_modifiedon=MAX(modifiedon)  FROM ',pipeline().parameters.Table_name)",
+									"type": "Expression"
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "scmm_dev_sink",
+								"type": "DatasetReference",
+								"parameters": {
+									"SQL_Table_name": {
+										"value": "@pipeline().parameters.Table_name",
+										"type": "Expression"
+									}
+								}
+							}
+						}
 					}
 				],
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
+				},
+				"parameters": {
+					"Table_name": {
+						"type": "string",
+						"defaultValue": "Emails"
+					}
 				},
 				"folder": {
 					"name": "CRM"
@@ -4726,7 +4809,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/dataverse_Email')]",
-				"[concat(variables('factoryId'), '/datasets/scmm_dev_sink')]"
+				"[concat(variables('factoryId'), '/datasets/scmm_dev_sink')]",
+				"[concat(variables('factoryId'), '/datasets/Mng_data_factory_etl')]"
 			]
 		},
 		{
