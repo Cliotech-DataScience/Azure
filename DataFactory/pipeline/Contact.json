@@ -169,7 +169,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "SELECT   last_modifiedon=MAX(modifiedon)  FROM _Contact_crm",
+						"sqlReaderQuery": {
+							"value": "@concat('SELECT   last_modifiedon=MAX(modifiedon)  FROM ',pipeline().parameters.Table_name)",
+							"type": "Expression"
+						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -183,6 +186,12 @@
 				}
 			}
 		],
+		"parameters": {
+			"Table_name": {
+				"type": "string",
+				"defaultValue": "_Contact_crm"
+			}
+		},
 		"folder": {
 			"name": "CRM"
 		},
