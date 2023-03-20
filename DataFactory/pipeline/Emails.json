@@ -214,6 +214,11 @@
 				]
 			}
 		],
+		"parameters": {
+			"Table_name": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "CRM"
 		},
