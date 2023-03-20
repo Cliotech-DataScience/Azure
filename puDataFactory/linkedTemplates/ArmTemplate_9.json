@@ -13,6 +13,365 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/CopyPipeline_Moneytrans')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_4o1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "dbo.Fact_MoneyTrans"
+							},
+							{
+								"name": "Destination",
+								"value": "mirrordatafs/moneytrans/@{formatDateTime(pipeline().parameters.windowStart,'yyyy')}/@{formatDateTime(pipeline().parameters.windowStart,'MM')}/mtrans_@{formatDateTime(pipeline().parameters.windowStart,'yyyy')}@{formatDateTime(pipeline().parameters.windowStart,'MM')}@{formatDateTime(pipeline().parameters.windowStart,'dd')}"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": {
+									"value": "select * from [dbo].[Fact_MoneyTrans] \nwhere [Request_Date] >= '@{formatDateTime(pipeline().parameters.windowStart, 'yyyy-MM-dd HH:mm' )}' \nAND [Request_Date] < '@{formatDateTime(pipeline().parameters.windowEnd, 'yyyy-MM-dd HH:mm' )}'",
+									"type": "Expression"
+								},
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings",
+									"filePattern": "arrayOfObjects"
+								}
+							},
+							"enableStaging": false,
+							"validateDataConsistency": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Moneytrans_Id",
+											"type": "Int32"
+										},
+										"sink": {
+											"path": "$['Moneytrans_Id']"
+										}
+									},
+									{
+										"source": {
+											"name": "Update_Date",
+											"type": "DateTime"
+										},
+										"sink": {
+											"path": "$['Update_Date']"
+										}
+									},
+									{
+										"source": {
+											"name": "Request_Date",
+											"type": "DateTime"
+										},
+										"sink": {
+											"path": "$['Request_Date']"
+										}
+									},
+									{
+										"source": {
+											"name": "AccountNumber",
+											"type": "Int32"
+										},
+										"sink": {
+											"path": "$['AccountNumber']"
+										}
+									},
+									{
+										"source": {
+											"name": "CCY",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['CCY']"
+										}
+									},
+									{
+										"source": {
+											"name": "Amount",
+											"type": "Double"
+										},
+										"sink": {
+											"path": "$['Amount']"
+										}
+									},
+									{
+										"source": {
+											"name": "Moneytrans_Stage_Id",
+											"type": "Int16"
+										},
+										"sink": {
+											"path": "$['Moneytrans_Stage_Id']"
+										}
+									},
+									{
+										"source": {
+											"name": "Moneytrans_Stage",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Moneytrans_Stage']"
+										}
+									},
+									{
+										"source": {
+											"name": "Credit_Card",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Credit_Card']"
+										}
+									},
+									{
+										"source": {
+											"name": "WireTransfer_Bank",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['WireTransfer_Bank']"
+										}
+									},
+									{
+										"source": {
+											"name": "Payment_Provider_Id",
+											"type": "Int16"
+										},
+										"sink": {
+											"path": "$['Payment_Provider_Id']"
+										}
+									},
+									{
+										"source": {
+											"name": "Payment_Provider",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Payment_Provider']"
+										}
+									},
+									{
+										"source": {
+											"name": "Payment_Type_Id",
+											"type": "Int16"
+										},
+										"sink": {
+											"path": "$['Payment_Type_Id']"
+										}
+									},
+									{
+										"source": {
+											"name": "Payment_Type",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Payment_Type']"
+										}
+									},
+									{
+										"source": {
+											"name": "Payment_Provider_Owner_Broker_Id",
+											"type": "Int32"
+										},
+										"sink": {
+											"path": "$['Payment_Provider_Owner_Broker_Id']"
+										}
+									},
+									{
+										"source": {
+											"name": "Sessions_ID",
+											"type": "Int64"
+										},
+										"sink": {
+											"path": "$['Sessions_ID']"
+										}
+									},
+									{
+										"source": {
+											"name": "Amount_USD",
+											"type": "Double"
+										},
+										"sink": {
+											"path": "$['Amount_USD']"
+										}
+									},
+									{
+										"source": {
+											"name": "Is_First_Deposit_Success",
+											"type": "Int16"
+										},
+										"sink": {
+											"path": "$['Is_First_Deposit_Success']"
+										}
+									},
+									{
+										"source": {
+											"name": "Is_First_Deposit_Attempt",
+											"type": "Int16"
+										},
+										"sink": {
+											"path": "$['Is_First_Deposit_Attempt']"
+										}
+									},
+									{
+										"source": {
+											"name": "Payment_Clearer_Id",
+											"type": "Int32"
+										},
+										"sink": {
+											"path": "$['Payment_Clearer_Id']"
+										}
+									},
+									{
+										"source": {
+											"name": "Payment_Clearer_Name",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Payment_Clearer_Name']"
+										}
+									},
+									{
+										"source": {
+											"name": "PaymentAuthenticationModeID",
+											"type": "Byte"
+										},
+										"sink": {
+											"path": "$['PaymentAuthenticationModeID']"
+										}
+									},
+									{
+										"source": {
+											"name": "PaymentAuthenticationMode",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['PaymentAuthenticationMode']"
+										}
+									},
+									{
+										"source": {
+											"name": "ConcretePaymentTypeID",
+											"type": "Int32"
+										},
+										"sink": {
+											"path": "$['ConcretePaymentTypeID']"
+										}
+									},
+									{
+										"source": {
+											"name": "ConcretePaymentType",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['ConcretePaymentType']"
+										}
+									},
+									{
+										"source": {
+											"name": "CCTypeId",
+											"type": "Byte"
+										},
+										"sink": {
+											"path": "$['CCTypeId']"
+										}
+									},
+									{
+										"source": {
+											"name": "CCType",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['CCType']"
+										}
+									},
+									{
+										"source": {
+											"name": "First6",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['First6']"
+										}
+									},
+									{
+										"source": {
+											"name": "CCIssuer",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['CCIssuer']"
+										}
+									},
+									{
+										"source": {
+											"name": "CCCountry",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['CCCountry']"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_4o1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationDataset_4o1",
+								"type": "DatasetReference",
+								"parameters": {
+									"cw_fileName": "mtrans_@{formatDateTime(pipeline().parameters.windowStart,'yyyy')}@{formatDateTime(pipeline().parameters.windowStart,'MM')}@{formatDateTime(pipeline().parameters.windowStart,'dd')}",
+									"cw_folderPath": "moneytrans/@{formatDateTime(pipeline().parameters.windowStart,'yyyy')}/@{formatDateTime(pipeline().parameters.windowStart,'MM')}"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"windowStart": {
+						"type": "String"
+					},
+					"windowEnd": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/CopyPipeline_small_tables')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -2248,6 +2607,125 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Journeys')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Journeys crm to sql",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "CommonDataServiceForAppsSource",
+								"additionalColumns": [
+									{
+										"name": "ETL_update_date",
+										"value": {
+											"value": "@utcnow()",
+											"type": "Expression"
+										}
+									}
+								],
+								"query": "<fetch>  \n   <entity name='msdynmkt_journey'> \n     <attribute name='msdynmkt_journeyid'/>  \n     <attribute name='msdynmkt_name'/>   \n\t <attribute name='modifiedon'/> \n<filter type=\"and\">\n<condition attribute='modifiedon' operator=\"last-x-days\" value=\"999\" />\n</filter>    \n   </entity>   \n</fetch>\n"
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "upsert",
+								"upsertSettings": {
+									"useTempDB": true,
+									"keys": [
+										"Journey_Id"
+									]
+								},
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "msdynmkt_journeyid",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "Journey_Id",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_name",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Journey_Name",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "modifiedon",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "modifiedon",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "ETL_update_date",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ETL_update_date",
+											"type": "DateTime"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Dataverse_Journeys",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "scmm_dev_sink",
+								"type": "DatasetReference",
+								"parameters": {
+									"SQL_Table_name": "_ Journey_crm"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "CRM"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SCMM_Activities')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -3409,338 +3887,6 @@
 				},
 				"folder": {
 					"name": "Data_from_SQL"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/___CopyPipeline_pu_file_AUTO')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy_np9",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "/"
-							},
-							{
-								"name": "Destination",
-								"value": "platformusage/_test_pu_raw_file_sync/@{formatDateTime(pipeline().parameters.windowStart,'yy')}/@{formatDateTime(pipeline().parameters.windowStart,'MM')}/@{formatDateTime(pipeline().parameters.windowStart,'dd')}/"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "FileServerReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*"
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
-							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"enableSkipIncompatibleRow": false,
-							"skipErrorFile": {
-								"fileMissing": true
-							},
-							"validateDataConsistency": false
-						},
-						"inputs": [
-							{
-								"referenceName": "SourceDataset_np9",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DestinationDataset_np9",
-								"type": "DatasetReference",
-								"parameters": {
-									"cw_folderPath": "_test_pu_raw_file_sync/@{formatDateTime(pipeline().parameters.windowStart,'yy')}/@{formatDateTime(pipeline().parameters.windowStart,'MM')}/@{formatDateTime(pipeline().parameters.windowStart,'dd')}"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"windowStart": {
-						"type": "String"
-					}
-				},
-				"variables": {
-					"files_list": {
-						"type": "Array"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/___Scmm_Communication_MessageTemplates_copy1')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "LK_Last_Id_Mng_azure_ETL",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,10,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  Mng_data_factory_ETL\n  WHERE TableName='MessageTemplates'",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "Mng_data_factory_etl",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "LK_new_max_id",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderQuery": "SELECT MAX(ContentUpdateDate) FROM emerp_lm.azure.scmm_Communication_MessageTemplates",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "SCMM_ALL",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "If Condition1",
-						"type": "IfCondition",
-						"dependsOn": [
-							{
-								"activity": "LK_Last_Id_Mng_azure_ETL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "LK_new_max_id",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"expression": {
-								"value": "@equals(activity('LK_Last_Id_Mng_azure_ETL').output.firstRow,activity('LK_new_max_id').output.firstRow)\n",
-								"type": "Expression"
-							},
-							"ifFalseActivities": [
-								{
-									"name": "Copy data1_copy1",
-									"type": "Copy",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "SqlServerSource",
-											"sqlReaderQuery": {
-												"value": "SELECT * from   EmErp_LM.azure.scmm_Communication_MessageTemplates\n where ContentUpdateDate > '@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}'",
-												"type": "Expression"
-											},
-											"queryTimeout": "02:00:00",
-											"partitionOption": "None"
-										},
-										"sink": {
-											"type": "AzureDatabricksDeltaLakeSink",
-											"preCopyScript": "TRUNCATE TABLE prod_raw.mrr_Communication_MessageTemplates",
-											"importSettings": {
-												"type": "AzureDatabricksDeltaLakeImportCommand"
-											}
-										},
-										"enableStaging": true,
-										"stagingSettings": {
-											"linkedServiceName": {
-												"referenceName": "adf_staging_linked_service",
-												"type": "LinkedServiceReference"
-											},
-											"path": "usan-data-lake-fs/adf_staging/Scmm_Communication_MessageTemplates"
-										},
-										"translator": {
-											"type": "TabularTranslator",
-											"mappings": [
-												{
-													"source": {
-														"name": "MessageTemplateID",
-														"type": "Int32"
-													},
-													"sink": {
-														"name": "MessageTemplateID",
-														"type": "Int"
-													}
-												},
-												{
-													"source": {
-														"name": "ContentKey",
-														"type": "String"
-													},
-													"sink": {
-														"name": "ContentKey",
-														"type": "string"
-													}
-												},
-												{
-													"source": {
-														"name": "ChannelID",
-														"type": "Int32"
-													},
-													"sink": {
-														"name": "ChannelID",
-														"type": "Int"
-													}
-												},
-												{
-													"source": {
-														"name": "Created",
-														"type": "DateTime"
-													},
-													"sink": {
-														"name": "Created",
-														"type": "DateTime"
-													}
-												},
-												{
-													"source": {
-														"name": "Weight",
-														"type": "Byte"
-													},
-													"sink": {
-														"name": "Weight",
-														"type": "Int"
-													}
-												},
-												{
-													"source": {
-														"name": "ContentUpdateDate",
-														"type": "DateTime"
-													},
-													"sink": {
-														"name": "ContentUpdateDate",
-														"type": "DateTime"
-													}
-												}
-											]
-										}
-									},
-									"inputs": [
-										{
-											"referenceName": "SCMM_ALL",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									],
-									"outputs": [
-										{
-											"referenceName": "AzureDatabricksDelta_DWH",
-											"type": "DatasetReference",
-											"parameters": {
-												"table": "mrr_communication_messagetemplates"
-											}
-										}
-									]
-								},
-								{
-									"name": "Load_Communication_MessageTemplates_v2_copy1",
-									"type": "DatabricksNotebook",
-									"dependsOn": [
-										{
-											"activity": "Copy data1_copy1",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"notebookPath": "/Load Data/SCMM/Load_Communication_MessageTemplates"
-									},
-									"linkedServiceName": {
-										"referenceName": "Adf_Cluster",
-										"type": "LinkedServiceReference"
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Data_from_SQL/sql_to_azure_delta_table"
 				},
 				"annotations": []
 			},

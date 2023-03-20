@@ -1700,6 +1700,270 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Contact')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Contact crm to sql",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "LK_Last_Id_Mng_azure_ETL",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "CommonDataServiceForAppsSource",
+								"additionalColumns": [
+									{
+										"name": "ETL_update_date",
+										"value": {
+											"value": "@utcnow()",
+											"type": "Expression"
+										}
+									}
+								],
+								"query": {
+									"value": "<fetch>  \n   <entity name='contact'> \n     <attribute name='contactid'/>  \n     <attribute name='new_scmmcontactid'/>\n\t <attribute name='createdon'/>   \t \n\t <attribute name='modifiedon'/>     \n<filter type=\"and\">\n<condition attribute='createdon' operator=\"on-or-after\" value=\"@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}\" />\n</filter>    \n   </entity>   \n</fetch>\n",
+									"type": "Expression"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "upsert",
+								"upsertSettings": {
+									"useTempDB": true,
+									"keys": [
+										"Contact_Id"
+									]
+								},
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "contactid",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "Contact_Id",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "modifiedon",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "Modifiedon",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "new_scmmcontactid",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Scmm_Contact_Id",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "createdon",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "Createdon",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "ETL_update_date",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ETL_update_date",
+											"type": "DateTime"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Dataverse_Contact",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "scmm_dev_sink",
+								"type": "DatasetReference",
+								"parameters": {
+									"SQL_Table_name": {
+										"value": "@pipeline().parameters.Table_name",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "LK_Last_Id_Mng_azure_ETL",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,10,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  Mng_data_factory_ETL\n  WHERE TableName='CRM_Contacts'",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "Mng_data_factory_etl",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "LK_last_Createdon",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "Contact crm to sql",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": {
+									"value": "@concat('SELECT   last_Createdon=MAX(Createdon)  FROM ',pipeline().parameters.Table_name)",
+									"type": "Expression"
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "scmm_dev_sink",
+								"type": "DatasetReference",
+								"parameters": {
+									"SQL_Table_name": {
+										"value": "@pipeline().parameters.Table_name",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					},
+					{
+						"name": "Mng_data_factory_ETL",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "LK_last_Createdon",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[SP_Update_Mng_data_factory_ETL]",
+							"storedProcedureParameters": {
+								"LastId": {
+									"value": "-1",
+									"type": "Int64"
+								},
+								"LastIncrementalDate": {
+									"value": {
+										"value": "@{activity('LK_last_Createdon').output.firstRow.last_Createdon}",
+										"type": "Expression"
+									},
+									"type": "DateTime"
+								},
+								"TableName": {
+									"value": "CRM_Contacts",
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "Azure BI db",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"Table_name": {
+						"type": "string",
+						"defaultValue": "CRM_Contacts"
+					}
+				},
+				"folder": {
+					"name": "CRM"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Dataverse_Contact')]",
+				"[concat(variables('factoryId'), '/datasets/scmm_dev_sink')]",
+				"[concat(variables('factoryId'), '/datasets/Mng_data_factory_etl')]",
+				"[concat(variables('factoryId'), '/linkedServices/Azure BI db')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Contacts')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -4874,6 +5138,128 @@
 				"[concat(variables('factoryId'), '/datasets/fxnet_deals_blob')]",
 				"[concat(variables('factoryId'), '/pipelines/MergeTableStore')]",
 				"[concat(variables('factoryId'), '/linkedServices/Analysis')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Journeys')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Journeys crm to sql",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "CommonDataServiceForAppsSource",
+								"additionalColumns": [
+									{
+										"name": "ETL_update_date",
+										"value": {
+											"value": "@utcnow()",
+											"type": "Expression"
+										}
+									}
+								],
+								"query": "<fetch>  \n   <entity name='msdynmkt_journey'> \n     <attribute name='msdynmkt_journeyid'/>  \n     <attribute name='msdynmkt_name'/>   \n\t <attribute name='modifiedon'/> \n<filter type=\"and\">\n<condition attribute='modifiedon' operator=\"last-x-days\" value=\"999\" />\n</filter>    \n   </entity>   \n</fetch>\n"
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "upsert",
+								"upsertSettings": {
+									"useTempDB": true,
+									"keys": [
+										"Journey_Id"
+									]
+								},
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "msdynmkt_journeyid",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "Journey_Id",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_name",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Journey_Name",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "modifiedon",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "modifiedon",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "ETL_update_date",
+											"type": "String"
+										},
+										"sink": {
+											"name": "ETL_update_date",
+											"type": "DateTime"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Dataverse_Journeys",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "scmm_dev_sink",
+								"type": "DatasetReference",
+								"parameters": {
+									"SQL_Table_name": "_ Journey_crm"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "CRM"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Dataverse_Journeys')]",
+				"[concat(variables('factoryId'), '/datasets/scmm_dev_sink')]"
 			]
 		},
 		{
@@ -9980,6 +10366,52 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Dataverse_Contact')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Dataverse_crm",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "CRM"
+				},
+				"annotations": [],
+				"type": "CommonDataServiceForAppsEntity",
+				"schema": [],
+				"typeProperties": {
+					"entityName": "contact"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Dataverse_crm')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dataverse_Journeys')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Dataverse_crm",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "CRM"
+				},
+				"annotations": [],
+				"type": "CommonDataServiceForAppsEntity",
+				"schema": [],
+				"typeProperties": {
+					"entityName": "msdynmkt_journey"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Dataverse_crm')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DestinationDataset_3oo')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -14792,340 +15224,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Journeys')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Journeys crm to sql",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "CommonDataServiceForAppsSource",
-								"additionalColumns": [
-									{
-										"name": "ETL_update_date",
-										"value": "@utcnow()"
-									}
-								],
-								"query": "<fetch>  \n   <entity name='msdynmkt_journey'> \n     <attribute name='msdynmkt_journeyid'/>  \n     <attribute name='msdynmkt_name'/>   \n\t <attribute name='modifiedon'/> \n<filter type=\"and\">\n<condition attribute='modifiedon' operator=\"last-x-days\" value=\"999\" />\n</filter>    \n   </entity>   \n</fetch>\n"
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"writeBehavior": "upsert",
-								"upsertSettings": {
-									"useTempDB": true,
-									"keys": [
-										"Journey_Id"
-									]
-								},
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "msdynmkt_journeyid",
-											"type": "Guid"
-										},
-										"sink": {
-											"name": "Journey_Id",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_name",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Journey_Name",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "modifiedon",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "modifiedon",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "ETL_update_date",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ETL_update_date",
-											"type": "DateTime"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Dataverse_Journeys",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "scmm_dev_sink",
-								"type": "DatasetReference",
-								"parameters": {
-									"SQL_Table_name": "_ Journey_crm"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "CRM"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Dataverse_Journeys')]",
-				"[concat(variables('factoryId'), '/datasets/scmm_dev_sink')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Dataverse_Journeys')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Dataverse_crm",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "CRM"
-				},
-				"annotations": [],
-				"type": "CommonDataServiceForAppsEntity",
-				"schema": [],
-				"typeProperties": {
-					"entityName": "msdynmkt_journey"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Dataverse_crm')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Contact')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Contact crm to sql",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "LK_Last_Id_Mng_azure_ETL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "CommonDataServiceForAppsSource",
-								"additionalColumns": [
-									{
-										"name": "ETL_update_date",
-										"value": {
-											"value": "@utcnow()",
-											"type": "Expression"
-										}
-									}
-								],
-								"query": {
-									"value": "<fetch>  \n   <entity name='contact'> \n     <attribute name='contactid'/>  \n     <attribute name='new_scmmcontactid'/>\n\t <attribute name='createdon'/>   \t \n\t <attribute name='modifiedon'/>     \n<filter type=\"and\">\n<condition attribute='modifiedon' operator=\"on-or-after\" value=\"@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}\" />\n</filter>    \n   </entity>   \n</fetch>\n",
-									"type": "Expression"
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"writeBehavior": "upsert",
-								"upsertSettings": {
-									"useTempDB": true,
-									"keys": [
-										"Contact_Id"
-									]
-								},
-								"sqlWriterUseTableLock": false
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "contactid",
-											"type": "Guid"
-										},
-										"sink": {
-											"name": "Contact_Id",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "modifiedon",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "Modifiedon",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "new_scmmcontactid",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Scmm_Contact_Id",
-											"type": "Int64"
-										}
-									},
-									{
-										"source": {
-											"name": "createdon",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "Createdon",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "ETL_update_date",
-											"type": "String"
-										},
-										"sink": {
-											"name": "ETL_update_date",
-											"type": "DateTime"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "Dataverse_Contact",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "scmm_dev_sink",
-								"type": "DatasetReference",
-								"parameters": {
-									"SQL_Table_name": "_Contact_crm"
-								}
-							}
-						]
-					},
-					{
-						"name": "LK_Last_Id_Mng_azure_ETL",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,10,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  Mng_data_factory_ETL\n  WHERE TableName='CRM_Contacts'",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "Mng_data_factory_etl",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "CRM"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Dataverse_Contact')]",
-				"[concat(variables('factoryId'), '/datasets/scmm_dev_sink')]",
-				"[concat(variables('factoryId'), '/datasets/Mng_data_factory_etl')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Dataverse_Contact')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Dataverse_crm",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "CRM"
-				},
-				"annotations": [],
-				"type": "CommonDataServiceForAppsEntity",
-				"schema": [],
-				"typeProperties": {
-					"entityName": "contact"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/Dataverse_crm')]"
-			]
 		}
 	]
 }

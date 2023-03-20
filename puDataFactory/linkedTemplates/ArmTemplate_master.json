@@ -886,12 +886,6 @@
 					},
 					"dwh_calls_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('dwh_calls_blob_properties_typeProperties_folderPath')]"
-					},
-					"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_fileName')]"
-					},
-					"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -970,17 +964,11 @@
 					"alldbdwh_password": {
 						"value": "[parameters('alldbdwh_password')]"
 					},
-					"emerp_lm_connectionString": {
-						"value": "[parameters('emerp_lm_connectionString')]"
+					"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_fileName')]"
 					},
-					"emerp_lm_password": {
-						"value": "[parameters('emerp_lm_password')]"
-					},
-					"emerpdbpr_connectionString": {
-						"value": "[parameters('emerpdbpr_connectionString')]"
-					},
-					"emerpdbpr_password": {
-						"value": "[parameters('emerpdbpr_password')]"
+					"dwh_lead_assignments_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_folderPath')]"
 					},
 					"fxnet_accounting_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('fxnet_accounting_blob_properties_typeProperties_fileName')]"
@@ -1044,12 +1032,6 @@
 					},
 					"alldbdwh_properties_typeProperties_userName": {
 						"value": "[parameters('alldbdwh_properties_typeProperties_userName')]"
-					},
-					"emerp_lm_properties_typeProperties_userName": {
-						"value": "[parameters('emerp_lm_properties_typeProperties_userName')]"
-					},
-					"emerpdbpr_properties_typeProperties_userName": {
-						"value": "[parameters('emerpdbpr_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -1071,6 +1053,18 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"emerp_lm_connectionString": {
+						"value": "[parameters('emerp_lm_connectionString')]"
+					},
+					"emerp_lm_password": {
+						"value": "[parameters('emerp_lm_password')]"
+					},
+					"emerpdbpr_connectionString": {
+						"value": "[parameters('emerpdbpr_connectionString')]"
+					},
+					"emerpdbpr_password": {
+						"value": "[parameters('emerpdbpr_password')]"
+					},
 					"fileserver1_password": {
 						"value": "[parameters('fileserver1_password')]"
 					},
@@ -1079,6 +1073,12 @@
 					},
 					"pu_raw_file_LS_password": {
 						"value": "[parameters('pu_raw_file_LS_password')]"
+					},
+					"emerp_lm_properties_typeProperties_userName": {
+						"value": "[parameters('emerp_lm_properties_typeProperties_userName')]"
+					},
+					"emerpdbpr_properties_typeProperties_userName": {
+						"value": "[parameters('emerpdbpr_properties_typeProperties_userName')]"
 					},
 					"fileserver1_properties_typeProperties_host": {
 						"value": "[parameters('fileserver1_properties_typeProperties_host')]"

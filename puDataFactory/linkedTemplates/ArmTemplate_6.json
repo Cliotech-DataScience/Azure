@@ -7,6 +7,24 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "puDataFactory"
 		},
+		"emerp_lm_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'emerp_lm'",
+			"defaultValue": "Integrated Security=True;Data Source=dwh-pr,2555;Initial Catalog=emerp_lm"
+		},
+		"emerp_lm_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'emerp_lm'"
+		},
+		"emerpdbpr_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'emerpdbpr'",
+			"defaultValue": "Integrated Security=True;Data Source=dwh-pr;Initial Catalog=EmErp_CM"
+		},
+		"emerpdbpr_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'emerpdbpr'"
+		},
 		"fileserver1_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'fileserver1'"
@@ -18,6 +36,14 @@
 		"pu_raw_file_LS_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pu_raw_file_LS'"
+		},
+		"emerp_lm_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
+		"emerpdbpr_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
 		},
 		"fileserver1_properties_typeProperties_host": {
 			"type": "string",
@@ -48,6 +74,51 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/emerp_lm')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('emerp_lm_connectionString')]",
+					"userName": "[parameters('emerp_lm_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('emerp_lm_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/emerpdbpr')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "dwh-pr\\emerp",
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('emerpdbpr_connectionString')]",
+					"userName": "[parameters('emerpdbpr_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('emerpdbpr_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/fileserver1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -110,48 +181,6 @@
 				"connectVia": {
 					"referenceName": "alldbgateway",
 					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Dataverse_Journeys')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Dataverse_crm",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "CRM"
-				},
-				"annotations": [],
-				"type": "CommonDataServiceForAppsEntity",
-				"schema": [],
-				"typeProperties": {
-					"entityName": "msdynmkt_journey"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Dataverse_Contact')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "Dataverse_crm",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "CRM"
-				},
-				"annotations": [],
-				"type": "CommonDataServiceForAppsEntity",
-				"schema": [],
-				"typeProperties": {
-					"entityName": "contact"
 				}
 			},
 			"dependsOn": []
