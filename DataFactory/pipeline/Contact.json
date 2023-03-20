@@ -219,16 +219,13 @@
 						},
 						"LastIncrementalDate": {
 							"value": {
-								"value": "@activity('LK_last_modifiedon_date').output.firstRow",
+								"value": "2023-01-01 11:04:54.483",
 								"type": "Expression"
 							},
 							"type": "DateTime"
 						},
 						"TableName": {
-							"value": {
-								"value": "@pipeline().parameters.Table_name",
-								"type": "Expression"
-							},
+							"value": "CRM_Contacts",
 							"type": "String"
 						}
 					}
