@@ -219,7 +219,7 @@
 						},
 						"LastIncrementalDate": {
 							"value": {
-								"value": "@activity('LK_Last_Id_Mng_azure_ETL').output.firstRow",
+								"value": "@activity('LK_last_modifiedon_date').output.firstRow",
 								"type": "Expression"
 							},
 							"type": "DateTime"
