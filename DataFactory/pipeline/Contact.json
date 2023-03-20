@@ -117,7 +117,10 @@
 						"referenceName": "scmm_dev_sink",
 						"type": "DatasetReference",
 						"parameters": {
-							"SQL_Table_name": "CRM_Contacts"
+							"SQL_Table_name": {
+								"value": "@pipeline().parameters.Table_name",
+								"type": "Expression"
+							}
 						}
 					}
 				]
@@ -180,7 +183,10 @@
 						"referenceName": "scmm_dev_sink",
 						"type": "DatasetReference",
 						"parameters": {
-							"SQL_Table_name": "_Contact_crm"
+							"SQL_Table_name": {
+								"value": "@pipeline().parameters.Table_name",
+								"type": "Expression"
+							}
 						}
 					}
 				}
@@ -233,7 +239,7 @@
 		"parameters": {
 			"Table_name": {
 				"type": "string",
-				"defaultValue": "_Contact_crm"
+				"defaultValue": "CRM_Contacts"
 			}
 		},
 		"folder": {
