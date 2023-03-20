@@ -235,6 +235,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,10,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  Mng_data_factory_ETL\n  WHERE TableName='Emails'",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
