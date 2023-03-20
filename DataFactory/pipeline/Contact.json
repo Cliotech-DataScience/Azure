@@ -186,7 +186,7 @@
 				}
 			},
 			{
-				"name": "Stored procedure1",
+				"name": "Mng_data_factory_ETL",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
