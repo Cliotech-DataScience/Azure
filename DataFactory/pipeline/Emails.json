@@ -33,7 +33,10 @@
 								}
 							}
 						],
-						"query": "<fetch>  \n   <entity name='msdynmkt_email'> \n     <attribute name='msdynmkt_emailid'/>  \n     <attribute name='msdynmkt_name'/>   \n     <attribute name='msdynmkt_subject'/>   \n\t <attribute name='msdynmkt_fromemail'/>\n\t <attribute name='msdynmkt_fromname'/> \n\t <attribute name='msdynmkt_previewtext'/> \n\t <attribute name='msdynmkt_replytoemail'/>\n\t <attribute name='msdynmkt_emailbody'/>\n\t <attribute name='msdynmkt_designerhtml'/>\n\t <attribute name='msdynmkt_previewhtml'/>\n\t <attribute name='msdynmkt_placeholders'/> \n\t <attribute name='msdynmkt_textpart'/>\n\t <attribute name='createdon'/>\n\t <attribute name='modifiedon'/> \n<filter type=\"and\">\n<condition attribute='modifiedon' operator=\"last-x-days\" value=\"3\" />\n</filter>    \n   </entity>   \n</fetch>"
+						"query": {
+							"value": "<fetch>  \n   <entity name='msdynmkt_email'> \n     <attribute name='msdynmkt_emailid'/>  \n     <attribute name='msdynmkt_name'/>   \n     <attribute name='msdynmkt_subject'/>   \n\t <attribute name='msdynmkt_fromemail'/>\n\t <attribute name='msdynmkt_fromname'/> \n\t <attribute name='msdynmkt_previewtext'/> \n\t <attribute name='msdynmkt_replytoemail'/>\n\t <attribute name='msdynmkt_emailbody'/>\n\t <attribute name='msdynmkt_designerhtml'/>\n\t <attribute name='msdynmkt_previewhtml'/>\n\t <attribute name='msdynmkt_placeholders'/> \n\t <attribute name='msdynmkt_textpart'/>\n\t <attribute name='createdon'/>\n\t <attribute name='modifiedon'/> \n<filter type=\"and\">\n<condition attribute='modifiedon' operator=\"on-or-after\" value=\"@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}\" />\n</filter>    \n   </entity>   \n</fetch>",
+							"type": "Expression"
+						}
 					},
 					"sink": {
 						"type": "SqlServerSink",
