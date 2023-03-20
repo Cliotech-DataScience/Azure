@@ -151,7 +151,7 @@
 				}
 			},
 			{
-				"name": "LK_last_modifiedon_date",
+				"name": "LK_last_Createdon",
 				"type": "Lookup",
 				"dependsOn": [
 					{
@@ -196,7 +196,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "LK_last_modifiedon_date",
+						"activity": "LK_last_Createdon",
 						"dependencyConditions": [
 							"Succeeded"
 						]
