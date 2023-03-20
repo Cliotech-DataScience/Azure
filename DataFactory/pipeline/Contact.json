@@ -117,7 +117,7 @@
 						"referenceName": "scmm_dev_sink",
 						"type": "DatasetReference",
 						"parameters": {
-							"SQL_Table_name": "_Contact_crm"
+							"SQL_Table_name": "CRM_Contacts"
 						}
 					}
 				]
