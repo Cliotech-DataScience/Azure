@@ -146,6 +146,41 @@
 						"type": "DatasetReference"
 					}
 				}
+			},
+			{
+				"name": "LK_last_modifiedon_date",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Contact crm to sql",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT   last_modifiedon=MAX(modifiedon)  FROM _Contact_crm",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "scmm_dev_sink",
+						"type": "DatasetReference",
+						"parameters": {
+							"SQL_Table_name": "_Contact_crm"
+						}
+					}
+				}
 			}
 		],
 		"folder": {
