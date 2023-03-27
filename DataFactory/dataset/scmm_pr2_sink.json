@@ -5,12 +5,6 @@
 			"referenceName": "scmm_db_pr2",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"SQL_Table_name": {
-				"type": "string",
-				"defaultValue": "Emails"
-			}
-		},
 		"folder": {
 			"name": "CRM"
 		},
