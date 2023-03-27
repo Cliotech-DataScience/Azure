@@ -21,39 +21,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_y59')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SCMM SQL",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"cw_schema": {
-						"type": "String"
-					},
-					"cw_table": {
-						"type": "String"
-					}
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": {
-						"value": "@dataset().cw_schema",
-						"type": "Expression"
-					},
-					"table": {
-						"value": "@dataset().cw_table",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/SourceDataset_zwu')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -459,13 +426,167 @@
 				},
 				"annotations": [],
 				"type": "SqlServerTable",
-				"schema": [],
+				"schema": [
+					{
+						"name": "Email_Id",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "Email_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Subject",
+						"type": "nvarchar"
+					},
+					{
+						"name": "From_Email",
+						"type": "nvarchar"
+					},
+					{
+						"name": "From_Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Preview_Text",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Reply_To_Email",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Email_Body",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Designer_Html",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Preview_Html",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Placeholders",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Textpart",
+						"type": "nvarchar"
+					},
+					{
+						"name": "createdon",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "modifiedon",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "Etl_Update_Date",
+						"type": "datetime2",
+						"scale": 7
+					}
+				],
 				"typeProperties": {
 					"schema": "dbo",
 					"table": {
 						"value": "@dataset().SQL_Table_name",
 						"type": "Expression"
 					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/scmm_pr2_sink')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "scmm_db_pr2",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "CRM"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "Email_Id",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "Email_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Subject",
+						"type": "nvarchar"
+					},
+					{
+						"name": "From_Email",
+						"type": "nvarchar"
+					},
+					{
+						"name": "From_Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Preview_Text",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Json_Data",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Reply_To_Email",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Email_Body",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Designer_Html",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Preview_Html",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Placeholders",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Textpart",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Created_Date",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "Modified_Date",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "Etl_Update_Date",
+						"type": "datetime2",
+						"scale": 7
+					}
+				],
+				"typeProperties": {
+					"schema": "msmkt",
+					"table": "Emails"
 				}
 			},
 			"dependsOn": []

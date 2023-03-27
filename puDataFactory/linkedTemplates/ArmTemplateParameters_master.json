@@ -156,7 +156,7 @@
 			"value": ""
 		},
 		"scmm_db_pr2_connectionString": {
-			"value": "Integrated Security=True;Data Source=scmm-db-pr2,2555;Initial Catalog=MS_CRM"
+			"value": "Integrated Security=True;Data Source=scmm-db-pr2;Initial Catalog=MS_CRM"
 		},
 		"scmm_db_pr2_password": {
 			"value": ""
@@ -408,7 +408,7 @@
 			"value": "efix\\az_etl"
 		},
 		"scmm_db_pr2_properties_typeProperties_userName": {
-			"value": "efix\\MScrm_user"
+			"value": "efix\\avia"
 		},
 		"Trigger_4o1_properties_pipeline_parameters_windowStart": {
 			"value": "@trigger().outputs.windowStartTime"

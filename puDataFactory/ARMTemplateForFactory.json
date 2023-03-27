@@ -221,7 +221,7 @@
 		"scmm_db_pr2_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'scmm_db_pr2'",
-			"defaultValue": "Integrated Security=True;Data Source=scmm-db-pr2,2555;Initial Catalog=MS_CRM"
+			"defaultValue": "Integrated Security=True;Data Source=scmm-db-pr2;Initial Catalog=MS_CRM"
 		},
 		"scmm_db_pr2_password": {
 			"type": "secureString",
@@ -557,7 +557,7 @@
 		},
 		"scmm_db_pr2_properties_typeProperties_userName": {
 			"type": "string",
-			"defaultValue": "efix\\MScrm_user"
+			"defaultValue": "efix\\avia"
 		},
 		"Trigger_4o1_properties_pipeline_parameters_windowStart": {
 			"type": "string",
@@ -4510,323 +4510,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Emails')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "email crm to sql",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "LK_Last_Id_Mng_azure_ETL",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "CommonDataServiceForAppsSource",
-								"additionalColumns": [
-									{
-										"name": "ETL_update_date",
-										"value": {
-											"value": "@utcnow()",
-											"type": "Expression"
-										}
-									}
-								],
-								"query": {
-									"value": "<fetch>  \n   <entity name='msdynmkt_email'> \n     <attribute name='msdynmkt_emailid'/>  \n     <attribute name='msdynmkt_name'/>   \n     <attribute name='msdynmkt_subject'/>   \n\t <attribute name='msdynmkt_fromemail'/>\n\t <attribute name='msdynmkt_fromname'/> \n\t <attribute name='msdynmkt_previewtext'/> \n\t <attribute name='msdynmkt_replytoemail'/>\n\t <attribute name='msdynmkt_emailbody'/>\n\t <attribute name='msdynmkt_designerhtml'/>\n\t <attribute name='msdynmkt_previewhtml'/>\n\t <attribute name='msdynmkt_placeholders'/> \n\t <attribute name='msdynmkt_textpart'/>\n\t <attribute name='createdon'/>\n\t <attribute name='modifiedon'/> \n<filter type=\"and\">\n<condition attribute='modifiedon' operator=\"on-or-after\" value=\"@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}\" />\n</filter>    \n   </entity>   \n</fetch>",
-									"type": "Expression"
-								}
-							},
-							"sink": {
-								"type": "SqlServerSink",
-								"writeBehavior": "upsert",
-								"upsertSettings": {
-									"useTempDB": false,
-									"keys": [
-										"Email_Id"
-									]
-								},
-								"sqlWriterUseTableLock": false,
-								"tableOption": "autoCreate"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "msdynmkt_emailid",
-											"type": "Guid"
-										},
-										"sink": {
-											"name": "Email_Id",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_name",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Email_name",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_subject",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Subject",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_fromemail",
-											"type": "String"
-										},
-										"sink": {
-											"name": "From_Email",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_fromname",
-											"type": "String"
-										},
-										"sink": {
-											"name": "From_Name",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_previewtext",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Preview_Text",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_replytoemail",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Reply_To_Email",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_emailbody",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Email_Body",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_designerhtml",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Designer_Html",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_previewhtml",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Preview_Html",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_placeholders",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Placeholders",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "msdynmkt_textpart",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Textpart",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "createdon",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "createdon",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "modifiedon",
-											"type": "DateTime"
-										},
-										"sink": {
-											"name": "modifiedon",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"name": "ETL_update_date",
-											"type": "String"
-										},
-										"sink": {
-											"name": "Etl_Update_Date",
-											"type": "DateTime"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "dataverse_Email",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "scmm_dev_sink",
-								"type": "DatasetReference",
-								"parameters": {
-									"SQL_Table_name": "Emails"
-								}
-							}
-						]
-					},
-					{
-						"name": "LK_Last_Id_Mng_azure_ETL",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,10,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  Mng_data_factory_ETL\n  WHERE TableName='Emails'",
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "Mng_data_factory_etl",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						}
-					},
-					{
-						"name": "LK_last_Createdon",
-						"type": "Lookup",
-						"dependsOn": [
-							{
-								"activity": "email crm to sql",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "SqlServerSource",
-								"sqlReaderQuery": {
-									"value": "@concat('SELECT   last_modifiedon=MAX(modifiedon)  FROM ',pipeline().parameters.Table_name)",
-									"type": "Expression"
-								},
-								"queryTimeout": "02:00:00",
-								"partitionOption": "None"
-							},
-							"dataset": {
-								"referenceName": "scmm_dev_sink",
-								"type": "DatasetReference",
-								"parameters": {
-									"SQL_Table_name": {
-										"value": "@pipeline().parameters.Table_name",
-										"type": "Expression"
-									}
-								}
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"Table_name": {
-						"type": "string",
-						"defaultValue": "Emails"
-					}
-				},
-				"folder": {
-					"name": "CRM"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/dataverse_Email')]",
-				"[concat(variables('factoryId'), '/datasets/scmm_dev_sink')]",
-				"[concat(variables('factoryId'), '/datasets/Mng_data_factory_etl')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/FXNET_Accounting')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -6778,6 +6461,321 @@
 				"[concat(variables('factoryId'), '/linkedServices/Azure BI db')]",
 				"[concat(variables('factoryId'), '/linkedServices/Analysis')]",
 				"[concat(variables('factoryId'), '/datasets/blob_serials_row_folder')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Sync CRM to SCMM - Emails')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "email crm to sql",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "LK_Last_Id_Mng_azure_ETL",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "CommonDataServiceForAppsSource",
+								"additionalColumns": [
+									{
+										"name": "ETL_update_date",
+										"value": {
+											"value": "@utcnow()",
+											"type": "Expression"
+										}
+									}
+								],
+								"query": {
+									"value": "<fetch>  \n   <entity name='msdynmkt_email'> \n     <attribute name='msdynmkt_emailid'/>  \n     <attribute name='msdynmkt_name'/>   \n     <attribute name='msdynmkt_subject'/>   \n\t <attribute name='msdynmkt_fromemail'/>\n\t <attribute name='msdynmkt_fromname'/> \n\t <attribute name='msdynmkt_previewtext'/> \n\t <attribute name='msdynmkt_replytoemail'/>\n\t <attribute name='msdynmkt_emailbody'/>\n\t <attribute name='msdynmkt_designerhtml'/>\n\t <attribute name='msdynmkt_previewhtml'/>\n\t <attribute name='msdynmkt_placeholders'/> \n\t <attribute name='msdynmkt_textpart'/>\n\t <attribute name='createdon'/>\n\t <attribute name='modifiedon'/> \n<filter type=\"and\">\n<condition attribute='modifiedon' operator=\"on-or-after\" value=\"@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}\" />\n</filter>    \n   </entity>   \n</fetch>",
+									"type": "Expression"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "upsert",
+								"upsertSettings": {
+									"useTempDB": false,
+									"keys": [
+										"Email_Id"
+									]
+								},
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "msdynmkt_emailid",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "Email_Id",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_name",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Email_name",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_subject",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Subject",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_fromemail",
+											"type": "String"
+										},
+										"sink": {
+											"name": "From_Email",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_fromname",
+											"type": "String"
+										},
+										"sink": {
+											"name": "From_Name",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_previewtext",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Preview_Text",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_replytoemail",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Reply_To_Email",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_emailbody",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Email_Body",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_designerhtml",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Designer_Html",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_previewhtml",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Preview_Html",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_placeholders",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Placeholders",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "msdynmkt_textpart",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Textpart",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "createdon",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "Created_Date",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "modifiedon",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "Modified_Date",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"name": "ETL_update_date",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Etl_Update_Date",
+											"type": "DateTime"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "dataverse_Email",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "scmm_pr2_sink",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "LK_Last_Id_Mng_azure_ETL",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,10,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  Mng_data_factory_ETL\n  WHERE TableName='Emails'",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "Mng_data_factory_etl",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "LK_last_Createdon",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "email crm to sql",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": {
+									"value": "@concat('SELECT   last_modifiedon=MAX(modifiedon)  FROM ',pipeline().parameters.Table_name)",
+									"type": "Expression"
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "scmm_dev_sink",
+								"type": "DatasetReference",
+								"parameters": {
+									"SQL_Table_name": {
+										"value": "@pipeline().parameters.Table_name",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"Table_name": {
+						"type": "string",
+						"defaultValue": "Emails"
+					}
+				},
+				"folder": {
+					"name": "CRM"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/dataverse_Email')]",
+				"[concat(variables('factoryId'), '/datasets/scmm_pr2_sink')]",
+				"[concat(variables('factoryId'), '/datasets/Mng_data_factory_etl')]",
+				"[concat(variables('factoryId'), '/datasets/scmm_dev_sink')]"
 			]
 		},
 		{
@@ -13811,7 +13809,71 @@
 				},
 				"annotations": [],
 				"type": "SqlServerTable",
-				"schema": [],
+				"schema": [
+					{
+						"name": "Email_Id",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "Email_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Subject",
+						"type": "nvarchar"
+					},
+					{
+						"name": "From_Email",
+						"type": "nvarchar"
+					},
+					{
+						"name": "From_Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Preview_Text",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Reply_To_Email",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Email_Body",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Designer_Html",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Preview_Html",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Placeholders",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Textpart",
+						"type": "nvarchar"
+					},
+					{
+						"name": "createdon",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "modifiedon",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "Etl_Update_Date",
+						"type": "datetime2",
+						"scale": 7
+					}
+				],
 				"typeProperties": {
 					"schema": "dbo",
 					"table": {
@@ -13833,24 +13895,83 @@
 					"referenceName": "scmm_db_pr2",
 					"type": "LinkedServiceReference"
 				},
-				"parameters": {
-					"SQL_Table_name": {
-						"type": "string",
-						"defaultValue": "Emails"
-					}
-				},
 				"folder": {
 					"name": "CRM"
 				},
 				"annotations": [],
 				"type": "SqlServerTable",
-				"schema": [],
+				"schema": [
+					{
+						"name": "Email_Id",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "Email_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Subject",
+						"type": "nvarchar"
+					},
+					{
+						"name": "From_Email",
+						"type": "nvarchar"
+					},
+					{
+						"name": "From_Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Preview_Text",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Json_Data",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Reply_To_Email",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Email_Body",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Designer_Html",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Preview_Html",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Placeholders",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Textpart",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Created_Date",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "Modified_Date",
+						"type": "datetime2",
+						"scale": 7
+					},
+					{
+						"name": "Etl_Update_Date",
+						"type": "datetime2",
+						"scale": 7
+					}
+				],
 				"typeProperties": {
 					"schema": "msmkt",
-					"table": {
-						"value": "@dataset().SQL_Table_name",
-						"type": "Expression"
-					}
+					"table": "Emails"
 				}
 			},
 			"dependsOn": [
@@ -14843,9 +14964,15 @@
 						"type": "SecureString",
 						"value": "[parameters('scmm_db_pr2_password')]"
 					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/alldbgateway')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Communication Daily')]",
