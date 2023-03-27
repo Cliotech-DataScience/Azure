@@ -20,7 +20,7 @@
 		"typeProperties": {
 			"schema": "msmkt",
 			"table": {
-				"value": "@dataset().SQL_Table_name",
+				"value": "Emails",
 				"type": "Expression"
 			}
 		}
