@@ -47,8 +47,7 @@
 								"Email_Id"
 							]
 						},
-						"sqlWriterUseTableLock": false,
-						"tableOption": "autoCreate"
+						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": false,
 					"translator": {
