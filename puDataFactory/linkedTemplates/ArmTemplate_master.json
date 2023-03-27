@@ -218,6 +218,15 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pu_raw_file_LS'"
 		},
+		"scmm_db_pr2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'scmm_db_pr2'",
+			"defaultValue": "Integrated Security=True;Data Source=scmm-db-pr2,2555;Initial Catalog=MS_CRM"
+		},
+		"scmm_db_pr2_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'scmm_db_pr2'"
+		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "*.parquet"
@@ -546,6 +555,10 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"scmm_db_pr2_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\MScrm_user"
+		},
 		"Trigger_4o1_properties_pipeline_parameters_windowStart": {
 			"type": "string",
 			"defaultValue": "@trigger().outputs.windowStartTime"
@@ -698,11 +711,20 @@
 					"mlwprdwesa_connectionString": {
 						"value": "[parameters('mlwprdwesa_connectionString')]"
 					},
+					"scmm_db_pr2_connectionString": {
+						"value": "[parameters('scmm_db_pr2_connectionString')]"
+					},
+					"scmm_db_pr2_password": {
+						"value": "[parameters('scmm_db_pr2_password')]"
+					},
 					"Dataverse_crm_properties_typeProperties_servicePrincipalId": {
 						"value": "[parameters('Dataverse_crm_properties_typeProperties_servicePrincipalId')]"
 					},
 					"kv_pr_vpn_properties_typeProperties_baseUrl": {
 						"value": "[parameters('kv_pr_vpn_properties_typeProperties_baseUrl')]"
+					},
+					"scmm_db_pr2_properties_typeProperties_userName": {
+						"value": "[parameters('scmm_db_pr2_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -880,12 +902,6 @@
 					},
 					"dwh_Dim_Users_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_folderPath')]"
-					},
-					"dwh_calls_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('dwh_calls_blob_properties_typeProperties_fileName')]"
-					},
-					"dwh_calls_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('dwh_calls_blob_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -952,17 +968,11 @@
 					"SCMM_DEV_password": {
 						"value": "[parameters('SCMM_DEV_password')]"
 					},
-					"STG_connectionString": {
-						"value": "[parameters('STG_connectionString')]"
+					"dwh_calls_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('dwh_calls_blob_properties_typeProperties_fileName')]"
 					},
-					"STG_password": {
-						"value": "[parameters('STG_password')]"
-					},
-					"alldbdwh_connectionString": {
-						"value": "[parameters('alldbdwh_connectionString')]"
-					},
-					"alldbdwh_password": {
-						"value": "[parameters('alldbdwh_password')]"
+					"dwh_calls_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('dwh_calls_blob_properties_typeProperties_folderPath')]"
 					},
 					"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_fileName')]"
@@ -1026,12 +1036,6 @@
 					},
 					"SCMM_DEV_properties_typeProperties_userName": {
 						"value": "[parameters('SCMM_DEV_properties_typeProperties_userName')]"
-					},
-					"STG_properties_typeProperties_userName": {
-						"value": "[parameters('STG_properties_typeProperties_userName')]"
-					},
-					"alldbdwh_properties_typeProperties_userName": {
-						"value": "[parameters('alldbdwh_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -1053,6 +1057,18 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"STG_connectionString": {
+						"value": "[parameters('STG_connectionString')]"
+					},
+					"STG_password": {
+						"value": "[parameters('STG_password')]"
+					},
+					"alldbdwh_connectionString": {
+						"value": "[parameters('alldbdwh_connectionString')]"
+					},
+					"alldbdwh_password": {
+						"value": "[parameters('alldbdwh_password')]"
+					},
 					"emerp_lm_connectionString": {
 						"value": "[parameters('emerp_lm_connectionString')]"
 					},
@@ -1073,6 +1089,12 @@
 					},
 					"pu_raw_file_LS_password": {
 						"value": "[parameters('pu_raw_file_LS_password')]"
+					},
+					"STG_properties_typeProperties_userName": {
+						"value": "[parameters('STG_properties_typeProperties_userName')]"
+					},
+					"alldbdwh_properties_typeProperties_userName": {
+						"value": "[parameters('alldbdwh_properties_typeProperties_userName')]"
 					},
 					"emerp_lm_properties_typeProperties_userName": {
 						"value": "[parameters('emerp_lm_properties_typeProperties_userName')]"
@@ -1186,12 +1208,6 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
-					},
-					"Trigger_4o1_properties_pipeline_parameters_windowStart": {
-						"value": "[parameters('Trigger_4o1_properties_pipeline_parameters_windowStart')]"
-					},
-					"Trigger_4o1_properties_pipeline_parameters_windowEnd": {
-						"value": "[parameters('Trigger_4o1_properties_pipeline_parameters_windowEnd')]"
 					}
 				}
 			},
@@ -1212,6 +1228,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Trigger_4o1_properties_pipeline_parameters_windowStart": {
+						"value": "[parameters('Trigger_4o1_properties_pipeline_parameters_windowStart')]"
+					},
+					"Trigger_4o1_properties_pipeline_parameters_windowEnd": {
+						"value": "[parameters('Trigger_4o1_properties_pipeline_parameters_windowEnd')]"
 					},
 					"Trigger_np9_properties____CopyPipeline_pu_file_AUTO_parameters_windowStart": {
 						"value": "[parameters('Trigger_np9_properties____CopyPipeline_pu_file_AUTO_parameters_windowStart')]"

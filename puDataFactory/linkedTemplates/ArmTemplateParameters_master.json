@@ -155,6 +155,12 @@
 		"pu_raw_file_LS_password": {
 			"value": ""
 		},
+		"scmm_db_pr2_connectionString": {
+			"value": "Integrated Security=True;Data Source=scmm-db-pr2,2555;Initial Catalog=MS_CRM"
+		},
+		"scmm_db_pr2_password": {
+			"value": ""
+		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"value": "*.parquet"
 		},
@@ -400,6 +406,9 @@
 		},
 		"pu_raw_file_LS_properties_typeProperties_userId": {
 			"value": "efix\\az_etl"
+		},
+		"scmm_db_pr2_properties_typeProperties_userName": {
+			"value": "efix\\MScrm_user"
 		},
 		"Trigger_4o1_properties_pipeline_parameters_windowStart": {
 			"value": "@trigger().outputs.windowStartTime"

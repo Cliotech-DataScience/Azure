@@ -218,6 +218,15 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'pu_raw_file_LS'"
 		},
+		"scmm_db_pr2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'scmm_db_pr2'",
+			"defaultValue": "Integrated Security=True;Data Source=scmm-db-pr2,2555;Initial Catalog=MS_CRM"
+		},
+		"scmm_db_pr2_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'scmm_db_pr2'"
+		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "*.parquet"
@@ -545,6 +554,10 @@
 		"pu_raw_file_LS_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
+		},
+		"scmm_db_pr2_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\MScrm_user"
 		},
 		"Trigger_4o1_properties_pipeline_parameters_windowStart": {
 			"type": "string",
@@ -13812,6 +13825,39 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/scmm_pr2_sink')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "scmm_db_pr2",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SQL_Table_name": {
+						"type": "string",
+						"defaultValue": "Emails"
+					}
+				},
+				"folder": {
+					"name": "CRM"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "msmkt",
+					"table": {
+						"value": "@dataset().SQL_Table_name",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/scmm_db_pr2')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/serials')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -14782,6 +14828,24 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/alldbgateway')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/scmm_db_pr2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('scmm_db_pr2_connectionString')]",
+					"userName": "[parameters('scmm_db_pr2_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('scmm_db_pr2_password')]"
+					}
+				}
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Communication Daily')]",

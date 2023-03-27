@@ -31,6 +31,15 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'mlwprdwesa'"
 		},
+		"scmm_db_pr2_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'scmm_db_pr2'",
+			"defaultValue": "Integrated Security=True;Data Source=scmm-db-pr2,2555;Initial Catalog=MS_CRM"
+		},
+		"scmm_db_pr2_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'scmm_db_pr2'"
+		},
 		"Dataverse_crm_properties_typeProperties_servicePrincipalId": {
 			"type": "string",
 			"defaultValue": "542f1539-389f-48a6-831c-0be1eeb19e2a"
@@ -38,6 +47,10 @@
 		"kv_pr_vpn_properties_typeProperties_baseUrl": {
 			"type": "string",
 			"defaultValue": "https://kv-pr-vpn.vault.azure.net/"
+		},
+		"scmm_db_pr2_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\MScrm_user"
 		}
 	},
 	"variables": {
@@ -139,6 +152,24 @@
 				"type": "AzureBlobStorage",
 				"typeProperties": {
 					"connectionString": "[parameters('mlwprdwesa_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/scmm_db_pr2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('scmm_db_pr2_connectionString')]",
+					"userName": "[parameters('scmm_db_pr2_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('scmm_db_pr2_password')]"
+					}
 				}
 			},
 			"dependsOn": []
@@ -645,44 +676,6 @@
 						},
 						"linkedServiceName": {
 							"referenceName": "Analysis_spark_3",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Dm_Models"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/303 Execute Models')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Execute Models",
-						"type": "DatabricksNotebook",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering V2/12. Get cluster for Model 302 307 330"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
 							"type": "LinkedServiceReference"
 						}
 					}
