@@ -11,6 +11,9 @@
 				"defaultValue": "Emails"
 			}
 		},
+		"folder": {
+			"name": "CRM"
+		},
 		"annotations": [],
 		"type": "SqlServerTable",
 		"schema": [],
