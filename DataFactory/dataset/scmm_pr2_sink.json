@@ -81,10 +81,7 @@
 		],
 		"typeProperties": {
 			"schema": "msmkt",
-			"table": {
-				"value": "Emails",
-				"type": "Expression"
-			}
+			"table": "Emails"
 		}
 	}
 }
