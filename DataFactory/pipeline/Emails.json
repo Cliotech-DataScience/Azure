@@ -96,7 +96,7 @@
 							},
 							{
 								"source": {
-									"name": "msdynmkt_fromemail",
+									"name": "msdynmkt_fromname",
 									"type": "String"
 								},
 								"sink": {
@@ -111,12 +111,6 @@
 								},
 								"sink": {
 									"name": "Preview_Text",
-									"type": "String"
-								}
-							},
-							{
-								"sink": {
-									"name": "Json_Data",
 									"type": "String"
 								}
 							},
