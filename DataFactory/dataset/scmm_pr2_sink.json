@@ -18,7 +18,7 @@
 		"type": "SqlServerTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": "msmkt.",
+			"schema": "msmkt",
 			"table": {
 				"value": "@dataset().SQL_Table_name",
 				"type": "Expression"
