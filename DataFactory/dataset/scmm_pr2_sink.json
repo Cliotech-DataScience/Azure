@@ -8,7 +8,7 @@
 		"parameters": {
 			"SQL_Table_name": {
 				"type": "string",
-				"defaultValue": "Emails"
+				"defaultValue": "msmkt.Emails"
 			}
 		},
 		"folder": {
