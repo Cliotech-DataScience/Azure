@@ -1,5 +1,5 @@
 {
-	"name": "scmm_",
+	"name": "scmm_pr2_sink",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "scmm_db_pr2",
