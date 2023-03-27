@@ -8,7 +8,7 @@
 		"parameters": {
 			"SQL_Table_name": {
 				"type": "string",
-				"defaultValue": "msmkt.Emails"
+				"defaultValue": "Emails"
 			}
 		},
 		"folder": {
@@ -18,7 +18,7 @@
 		"type": "SqlServerTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": "dbo",
+			"schema": "msmkt.",
 			"table": {
 				"value": "@dataset().SQL_Table_name",
 				"type": "Expression"
