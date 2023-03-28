@@ -155,7 +155,10 @@
 				"outputs": [
 					{
 						"referenceName": "scmm_pr2_sink",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"Table_name": "Journey"
+						}
 					}
 				]
 			}
