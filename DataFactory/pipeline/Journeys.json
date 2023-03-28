@@ -44,32 +44,92 @@
 						"type": "TabularTranslator",
 						"mappings": [
 							{
-								"source": {
-									"name": "msdynmkt_journeyid",
-									"type": "Guid"
-								},
 								"sink": {
-									"name": "Journey_Id",
+									"name": "Email_Id",
 									"type": "Guid"
 								}
 							},
 							{
-								"source": {
-									"name": "msdynmkt_name",
-									"type": "String"
-								},
 								"sink": {
-									"name": "Journey_Name",
+									"name": "Email_name",
 									"type": "String"
 								}
 							},
 							{
-								"source": {
-									"name": "modifiedon",
+								"sink": {
+									"name": "Subject",
+									"type": "String"
+								}
+							},
+							{
+								"sink": {
+									"name": "From_Email",
+									"type": "String"
+								}
+							},
+							{
+								"sink": {
+									"name": "From_Name",
+									"type": "String"
+								}
+							},
+							{
+								"sink": {
+									"name": "Preview_Text",
+									"type": "String"
+								}
+							},
+							{
+								"sink": {
+									"name": "Json_Data",
+									"type": "String"
+								}
+							},
+							{
+								"sink": {
+									"name": "Reply_To_Email",
+									"type": "String"
+								}
+							},
+							{
+								"sink": {
+									"name": "Email_Body",
+									"type": "String"
+								}
+							},
+							{
+								"sink": {
+									"name": "Designer_Html",
+									"type": "String"
+								}
+							},
+							{
+								"sink": {
+									"name": "Preview_Html",
+									"type": "String"
+								}
+							},
+							{
+								"sink": {
+									"name": "Placeholders",
+									"type": "String"
+								}
+							},
+							{
+								"sink": {
+									"name": "Textpart",
+									"type": "String"
+								}
+							},
+							{
+								"sink": {
+									"name": "Created_Date",
 									"type": "DateTime"
-								},
+								}
+							},
+							{
 								"sink": {
-									"name": "modifiedon",
+									"name": "Modified_Date",
 									"type": "DateTime"
 								}
 							},
@@ -79,7 +139,7 @@
 									"type": "String"
 								},
 								"sink": {
-									"name": "ETL_update_date",
+									"name": "Etl_Update_Date",
 									"type": "DateTime"
 								}
 							}
@@ -94,11 +154,8 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "scmm_dev_sink",
-						"type": "DatasetReference",
-						"parameters": {
-							"SQL_Table_name": "_ Journey_crm"
-						}
+						"referenceName": "scmm_pr2_sink",
+						"type": "DatasetReference"
 					}
 				]
 			}

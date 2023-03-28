@@ -5,6 +5,11 @@
 			"referenceName": "scmm_db_pr2",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"Table_name": {
+				"type": "string"
+			}
+		},
 		"folder": {
 			"name": "CRM"
 		},
@@ -81,7 +86,10 @@
 		],
 		"typeProperties": {
 			"schema": "msmkt",
-			"table": "Emails"
+			"table": {
+				"value": "@dataset().Table_name",
+				"type": "Expression"
+			}
 		}
 	}
 }
