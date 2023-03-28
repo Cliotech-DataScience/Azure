@@ -42,10 +42,7 @@
 						"type": "SqlServerSink",
 						"writeBehavior": "upsert",
 						"upsertSettings": {
-							"useTempDB": true,
-							"keys": [
-								"Contact_Id"
-							]
+							"useTempDB": true
 						},
 						"sqlWriterUseTableLock": false
 					},
@@ -69,7 +66,7 @@
 									"type": "DateTime"
 								},
 								"sink": {
-									"name": "Modifiedon",
+									"name": "Modified_Date",
 									"type": "DateTime"
 								}
 							},
@@ -89,7 +86,7 @@
 									"type": "DateTime"
 								},
 								"sink": {
-									"name": "Createdon",
+									"name": "Created_Date",
 									"type": "DateTime"
 								}
 							},
