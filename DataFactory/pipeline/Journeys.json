@@ -44,90 +44,30 @@
 						"type": "TabularTranslator",
 						"mappings": [
 							{
+								"source": {
+									"name": "msdynmkt_journeyid",
+									"type": "Guid"
+								},
 								"sink": {
-									"name": "Email_Id",
+									"name": "Journey_Id",
 									"type": "Guid"
 								}
 							},
 							{
+								"source": {
+									"name": "msdynmkt_name",
+									"type": "String"
+								},
 								"sink": {
-									"name": "Email_name",
+									"name": "Journey_Name",
 									"type": "String"
 								}
 							},
 							{
-								"sink": {
-									"name": "Subject",
-									"type": "String"
-								}
-							},
-							{
-								"sink": {
-									"name": "From_Email",
-									"type": "String"
-								}
-							},
-							{
-								"sink": {
-									"name": "From_Name",
-									"type": "String"
-								}
-							},
-							{
-								"sink": {
-									"name": "Preview_Text",
-									"type": "String"
-								}
-							},
-							{
-								"sink": {
-									"name": "Json_Data",
-									"type": "String"
-								}
-							},
-							{
-								"sink": {
-									"name": "Reply_To_Email",
-									"type": "String"
-								}
-							},
-							{
-								"sink": {
-									"name": "Email_Body",
-									"type": "String"
-								}
-							},
-							{
-								"sink": {
-									"name": "Designer_Html",
-									"type": "String"
-								}
-							},
-							{
-								"sink": {
-									"name": "Preview_Html",
-									"type": "String"
-								}
-							},
-							{
-								"sink": {
-									"name": "Placeholders",
-									"type": "String"
-								}
-							},
-							{
-								"sink": {
-									"name": "Textpart",
-									"type": "String"
-								}
-							},
-							{
-								"sink": {
-									"name": "Created_Date",
+								"source": {
+									"name": "modifiedon",
 									"type": "DateTime"
-								}
-							},
-							{
+								},
 								"sink": {
 									"name": "Modified_Date",
 									"type": "DateTime"
@@ -139,7 +79,7 @@
 									"type": "String"
 								},
 								"sink": {
-									"name": "Etl_Update_Date",
+									"name": "ETL_update_date",
 									"type": "DateTime"
 								}
 							}
