@@ -42,7 +42,10 @@
 						"type": "SqlServerSink",
 						"writeBehavior": "upsert",
 						"upsertSettings": {
-							"useTempDB": true
+							"useTempDB": true,
+							"keys": [
+								"Contact_Id"
+							]
 						},
 						"sqlWriterUseTableLock": false
 					},
