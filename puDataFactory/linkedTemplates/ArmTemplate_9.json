@@ -2624,7 +2624,7 @@
 											"type": "DateTime"
 										},
 										"sink": {
-											"name": "modifiedon",
+											"name": "Modified_Date",
 											"type": "DateTime"
 										}
 									},
@@ -2650,10 +2650,10 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "scmm_dev_sink",
+								"referenceName": "scmm_pr2_sink",
 								"type": "DatasetReference",
 								"parameters": {
-									"SQL_Table_name": "_ Journey_crm"
+									"Table_name": "Journey"
 								}
 							}
 						]

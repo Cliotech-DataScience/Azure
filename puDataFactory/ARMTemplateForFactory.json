@@ -1785,7 +1785,7 @@
 											"type": "DateTime"
 										},
 										"sink": {
-											"name": "Modifiedon",
+											"name": "Modified_Date",
 											"type": "DateTime"
 										}
 									},
@@ -1805,7 +1805,7 @@
 											"type": "DateTime"
 										},
 										"sink": {
-											"name": "Createdon",
+											"name": "Created_Date",
 											"type": "DateTime"
 										}
 									},
@@ -1831,13 +1831,10 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "scmm_dev_sink",
+								"referenceName": "scmm_pr2_sink",
 								"type": "DatasetReference",
 								"parameters": {
-									"SQL_Table_name": {
-										"value": "@pipeline().parameters.Table_name",
-										"type": "Expression"
-									}
+									"Table_name": "Contacts"
 								}
 							}
 						]
@@ -1971,8 +1968,9 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Dataverse_Contact')]",
-				"[concat(variables('factoryId'), '/datasets/scmm_dev_sink')]",
+				"[concat(variables('factoryId'), '/datasets/scmm_pr2_sink')]",
 				"[concat(variables('factoryId'), '/datasets/Mng_data_factory_etl')]",
+				"[concat(variables('factoryId'), '/datasets/scmm_dev_sink')]",
 				"[concat(variables('factoryId'), '/linkedServices/Azure BI db')]"
 			]
 		},
@@ -4993,7 +4991,7 @@
 											"type": "DateTime"
 										},
 										"sink": {
-											"name": "modifiedon",
+											"name": "Modified_Date",
 											"type": "DateTime"
 										}
 									},
@@ -5019,10 +5017,10 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "scmm_dev_sink",
+								"referenceName": "scmm_pr2_sink",
 								"type": "DatasetReference",
 								"parameters": {
-									"SQL_Table_name": "_ Journey_crm"
+									"Table_name": "Journey"
 								}
 							}
 						]
@@ -5039,7 +5037,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Dataverse_Journeys')]",
-				"[concat(variables('factoryId'), '/datasets/scmm_dev_sink')]"
+				"[concat(variables('factoryId'), '/datasets/scmm_pr2_sink')]"
 			]
 		},
 		{
@@ -13895,6 +13893,12 @@
 					"referenceName": "scmm_db_pr2",
 					"type": "LinkedServiceReference"
 				},
+				"parameters": {
+					"Table_name": {
+						"type": "string",
+						"defaultValue": "Contacts"
+					}
+				},
 				"folder": {
 					"name": "CRM"
 				},
@@ -13902,76 +13906,39 @@
 				"type": "SqlServerTable",
 				"schema": [
 					{
-						"name": "Email_Id",
+						"name": "Contact_Id",
 						"type": "uniqueidentifier"
 					},
 					{
-						"name": "Email_name",
-						"type": "nvarchar"
+						"name": "Modified_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
 					},
 					{
-						"name": "Subject",
-						"type": "nvarchar"
-					},
-					{
-						"name": "From_Email",
-						"type": "nvarchar"
-					},
-					{
-						"name": "From_Name",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Preview_Text",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Json_Data",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Reply_To_Email",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Email_Body",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Designer_Html",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Preview_Html",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Placeholders",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Textpart",
-						"type": "nvarchar"
+						"name": "Scmm_Contact_Id",
+						"type": "bigint",
+						"precision": 19
 					},
 					{
 						"name": "Created_Date",
-						"type": "datetime2",
-						"scale": 7
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
 					},
 					{
-						"name": "Modified_Date",
-						"type": "datetime2",
-						"scale": 7
-					},
-					{
-						"name": "Etl_Update_Date",
-						"type": "datetime2",
-						"scale": 7
+						"name": "ETL_update_date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
 					}
 				],
 				"typeProperties": {
 					"schema": "msmkt",
-					"table": "Emails"
+					"table": {
+						"value": "@dataset().Table_name",
+						"type": "Expression"
+					}
 				}
 			},
 			"dependsOn": [
