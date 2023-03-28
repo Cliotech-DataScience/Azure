@@ -7,7 +7,8 @@
 		},
 		"parameters": {
 			"Table_name": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "Contacts"
 			}
 		},
 		"folder": {
@@ -17,71 +18,31 @@
 		"type": "SqlServerTable",
 		"schema": [
 			{
-				"name": "Email_Id",
+				"name": "Contact_Id",
 				"type": "uniqueidentifier"
 			},
 			{
-				"name": "Email_name",
-				"type": "nvarchar"
+				"name": "Modified_Date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
 			},
 			{
-				"name": "Subject",
-				"type": "nvarchar"
-			},
-			{
-				"name": "From_Email",
-				"type": "nvarchar"
-			},
-			{
-				"name": "From_Name",
-				"type": "nvarchar"
-			},
-			{
-				"name": "Preview_Text",
-				"type": "nvarchar"
-			},
-			{
-				"name": "Json_Data",
-				"type": "nvarchar"
-			},
-			{
-				"name": "Reply_To_Email",
-				"type": "nvarchar"
-			},
-			{
-				"name": "Email_Body",
-				"type": "nvarchar"
-			},
-			{
-				"name": "Designer_Html",
-				"type": "nvarchar"
-			},
-			{
-				"name": "Preview_Html",
-				"type": "nvarchar"
-			},
-			{
-				"name": "Placeholders",
-				"type": "nvarchar"
-			},
-			{
-				"name": "Textpart",
-				"type": "nvarchar"
+				"name": "Scmm_Contact_Id",
+				"type": "bigint",
+				"precision": 19
 			},
 			{
 				"name": "Created_Date",
-				"type": "datetime2",
-				"scale": 7
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
 			},
 			{
-				"name": "Modified_Date",
-				"type": "datetime2",
-				"scale": 7
-			},
-			{
-				"name": "Etl_Update_Date",
-				"type": "datetime2",
-				"scale": 7
+				"name": "ETL_update_date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
 			}
 		],
 		"typeProperties": {
