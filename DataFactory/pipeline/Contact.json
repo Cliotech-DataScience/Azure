@@ -158,7 +158,7 @@
 				}
 			},
 			{
-				"name": "LK_last_Createdon",
+				"name": "LK_last_last_Modified_Date",
 				"type": "Lookup",
 				"dependsOn": [
 					{
@@ -200,7 +200,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "LK_last_Createdon",
+						"activity": "LK_last_last_Modified_Date",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -223,7 +223,7 @@
 						},
 						"LastIncrementalDate": {
 							"value": {
-								"value": "@{activity('LK_last_Createdon').output.firstRow.last_Createdon}",
+								"value": "@{activity('LK_last_last_Modified_Date').output.firstRow.last_Modified_Date}",
 								"type": "Expression"
 							},
 							"type": "DateTime"
