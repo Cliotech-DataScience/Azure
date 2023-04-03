@@ -74,18 +74,30 @@
 								}
 							},
 							{
+								"source": {
+									"name": "cr838_fxnetaccountnumber",
+									"type": "Int32"
+								},
 								"sink": {
 									"name": "Fxnet_Accountnumber",
 									"type": "Int32"
 								}
 							},
 							{
+								"source": {
+									"name": "modifiedon",
+									"type": "DateTime"
+								},
 								"sink": {
 									"name": "Modified_Date",
 									"type": "DateTime"
 								}
 							},
 							{
+								"source": {
+									"name": "createdon",
+									"type": "DateTime"
+								},
 								"sink": {
 									"name": "Created_Date",
 									"type": "DateTime"
