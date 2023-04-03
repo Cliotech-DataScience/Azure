@@ -246,7 +246,7 @@
 		"parameters": {
 			"Table_name": {
 				"type": "string",
-				"defaultValue": "CRM_Contacts"
+				"defaultValue": "Contacts"
 			}
 		},
 		"folder": {
