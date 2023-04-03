@@ -244,6 +244,14 @@
 			"Table_name": {
 				"type": "string",
 				"defaultValue": "Contacts"
+			},
+			"xml_part1": {
+				"type": "string",
+				"defaultValue": "<fetch>    <entity name='contact'>       <attribute name='contactid'/>        <attribute name='new_scmmcontactid'/>      <attribute name='cr838_fxnetaccountnumber'/>  \t <attribute name='createdon'/>   \t  \t <attribute name='modifiedon'/>      <filter type=\"and\"> <condition attribute='modifiedon' operator=\"on-or-after\" value="
+			},
+			"xml_end": {
+				"type": "string",
+				"defaultValue": "\" /> </filter>        </entity>    </fetch>"
 			}
 		},
 		"folder": {
