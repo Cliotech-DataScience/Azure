@@ -31,6 +31,9 @@
 									"value": "@utcnow()",
 									"type": "Expression"
 								}
+							},
+							{
+								"value": "$$COLUMN:"
 							}
 						],
 						"query": {
@@ -145,21 +148,21 @@
 							},
 							{
 								"source": {
-									"name": "msdynmkt_previewhtml",
-									"type": "String"
-								},
-								"sink": {
-									"name": "Preview_Html",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
 									"name": "msdynmkt_placeholders",
 									"type": "String"
 								},
 								"sink": {
 									"name": "Placeholders",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "msdynmkt_previewhtml",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Preview_Html",
 									"type": "String"
 								}
 							},
@@ -215,7 +218,10 @@
 				"outputs": [
 					{
 						"referenceName": "scmm_pr2_sink",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"Table_name": "Contacts"
+						}
 					}
 				]
 			},
