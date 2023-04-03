@@ -180,7 +180,7 @@
 					"source": {
 						"type": "SqlServerSource",
 						"sqlReaderQuery": {
-							"value": "@concat('SELECT   last_Createdon=MAX(Createdon)  FROM ',pipeline().parameters.Table_name)",
+							"value": "@concat('SELECT   Last_Modified_Date=MAX(Modified_Date)  FROM ',pipeline().parameters.Table_name)",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
