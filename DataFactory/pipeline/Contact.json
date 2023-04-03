@@ -34,7 +34,7 @@
 							}
 						],
 						"query": {
-							"value": "<fetch>  \n   <entity name='contact'> \n     <attribute name='contactid'/>  \n     <attribute name='new_scmmcontactid'/>\n\t <attribute name='createdon'/>   \t \n\t <attribute name='modifiedon'/>     \n<filter type=\"and\">\n<condition attribute='createdon' operator=\"on-or-after\" value=\"@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}\" />\n</filter>    \n   </entity>   \n</fetch>\n",
+							"value": "<fetch>  \n   <entity name='contact'> \n     <attribute name='contactid'/>  \n     <attribute name='new_scmmcontactid'/>\n     <attribute name='cr838_fxnetaccountnumber'/> \n\t <attribute name='createdon'/>   \t \n\t <attribute name='modifiedon'/>     \n<filter type=\"and\">\n<condition attribute='createdon' operator=\"on-or-after\" value=\"@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}\" />\n</filter>    \n   </entity>   \n</fetch>\n",
 							"type": "Expression"
 						}
 					},
@@ -59,18 +59,8 @@
 									"type": "Guid"
 								},
 								"sink": {
-									"name": "Contact_Id",
+									"name": "Dynamics_Contact_Id",
 									"type": "Guid"
-								}
-							},
-							{
-								"source": {
-									"name": "modifiedon",
-									"type": "DateTime"
-								},
-								"sink": {
-									"name": "Modified_Date",
-									"type": "DateTime"
 								}
 							},
 							{
@@ -84,10 +74,18 @@
 								}
 							},
 							{
-								"source": {
-									"name": "createdon",
+								"sink": {
+									"name": "Fxnet_Accountnumber",
+									"type": "Int32"
+								}
+							},
+							{
+								"sink": {
+									"name": "Modified_Date",
 									"type": "DateTime"
-								},
+								}
+							},
+							{
 								"sink": {
 									"name": "Created_Date",
 									"type": "DateTime"
