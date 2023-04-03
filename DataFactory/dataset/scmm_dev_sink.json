@@ -2,7 +2,7 @@
 	"name": "scmm_dev_sink",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "alldbdwh",
+			"referenceName": "scmm_db_pr2",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
