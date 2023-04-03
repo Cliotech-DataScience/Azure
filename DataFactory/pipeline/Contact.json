@@ -44,7 +44,7 @@
 						"upsertSettings": {
 							"useTempDB": true,
 							"keys": [
-								"Contact_Id"
+								"Dynamics_Contact_Id"
 							]
 						},
 						"sqlWriterUseTableLock": false
