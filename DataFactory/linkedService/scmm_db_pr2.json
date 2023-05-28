@@ -6,8 +6,8 @@
 		"type": "SqlServer",
 		"typeProperties": {
 			"connectionString": "integrated security=True;data source=scmm-db-pr2;initial catalog=MS_CRM",
-			"userName": "efix\\avia",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJmZTQxMTQxOC1kNzNjLTRkMGYtYTQ2NC0xNTBjMDVhMGNkY2MiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"userName": "efix\\MScrm_user",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJmZjczZDFiYy00MDMxLTRmYzItODI1MC0zYTk1NjkzMTc0NzkiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "alldbgateway",
