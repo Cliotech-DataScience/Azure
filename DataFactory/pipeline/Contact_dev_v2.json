@@ -166,7 +166,7 @@
 				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "Contact crm to sql",
+						"activity": "Merges_Contacts_st_to_Contacts  ",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -240,6 +240,33 @@
 				},
 				"linkedServiceName": {
 					"referenceName": "Azure BI db",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Merges_Contacts_st_to_Contacts",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Contact crm to sql",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[msmkt].[Merges_Contacts_st_to_Contacts]"
+				},
+				"linkedServiceName": {
+					"referenceName": "scmm_db_pr2",
 					"type": "LinkedServiceReference"
 				}
 			}
