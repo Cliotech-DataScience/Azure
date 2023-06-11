@@ -184,7 +184,7 @@
 					"source": {
 						"type": "SqlServerSource",
 						"sqlReaderQuery": {
-							"value": "@concat('SELECT   Last_Modified_Date=MAX(Modified_Date)  FROM msmkt.',pipeline().parameters.Table_name)",
+							"value": "@concat('SELECT   Last_Modified_Date=MAX(Modified_Date)  FROM msmkt.',pipeline().parameters.Etl_mange_table_name)",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
@@ -275,6 +275,10 @@
 			"Table_name": {
 				"type": "string",
 				"defaultValue": "st_Contacts"
+			},
+			"Etl_mange_table_name": {
+				"type": "string",
+				"defaultValue": "Contacts"
 			}
 		},
 		"folder": {
