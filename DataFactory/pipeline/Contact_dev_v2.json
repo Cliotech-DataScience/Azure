@@ -49,7 +49,8 @@
 						"mappings": [
 							{
 								"source": {
-									"name": ""
+									"name": "contactid",
+									"type": "Guid"
 								},
 								"sink": {
 									"name": "Dynamics_Contact_Id",
@@ -58,7 +59,18 @@
 							},
 							{
 								"source": {
-									"name": ""
+									"name": "emailaddress1",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Hashed_Email",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "new_scmmcontactid",
+									"type": "String"
 								},
 								"sink": {
 									"name": "Scmm_Contact_Id",
@@ -67,7 +79,8 @@
 							},
 							{
 								"source": {
-									"name": ""
+									"name": "cr838_fxnetaccountnumber",
+									"type": "Int32"
 								},
 								"sink": {
 									"name": "Fxnet_Accountnumber",
@@ -76,16 +89,8 @@
 							},
 							{
 								"source": {
-									"name": ""
-								},
-								"sink": {
-									"name": "Modified_Date",
+									"name": "createdon",
 									"type": "DateTime"
-								}
-							},
-							{
-								"source": {
-									"name": ""
 								},
 								"sink": {
 									"name": "Created_Date",
@@ -94,7 +99,18 @@
 							},
 							{
 								"source": {
-									"name": ""
+									"name": "modifiedon",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "Modified_Date",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "ETL_update_date",
+									"type": "String"
 								},
 								"sink": {
 									"name": "ETL_update_date",
