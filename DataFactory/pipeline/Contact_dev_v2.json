@@ -166,7 +166,7 @@
 				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "Merges_Contacts_st_to_Contacts  ",
+						"activity": "Merges_Contacts_st_to_Contacts",
 						"dependencyConditions": [
 							"Succeeded"
 						]
