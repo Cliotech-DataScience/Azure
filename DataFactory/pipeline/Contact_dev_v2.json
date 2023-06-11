@@ -274,7 +274,7 @@
 		"parameters": {
 			"Table_name": {
 				"type": "string",
-				"defaultValue": "Contacts"
+				"defaultValue": "st_Contacts"
 			}
 		},
 		"folder": {
