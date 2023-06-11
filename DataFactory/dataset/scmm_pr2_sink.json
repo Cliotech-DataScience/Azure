@@ -18,14 +18,12 @@
 		"type": "SqlServerTable",
 		"schema": [
 			{
-				"name": "Contact_Id",
+				"name": "Dynamics_Contact_Id",
 				"type": "uniqueidentifier"
 			},
 			{
-				"name": "Modified_Date",
-				"type": "datetime",
-				"precision": 23,
-				"scale": 3
+				"name": "Hashed_Email",
+				"type": "varchar"
 			},
 			{
 				"name": "Scmm_Contact_Id",
@@ -33,7 +31,18 @@
 				"precision": 19
 			},
 			{
+				"name": "Fxnet_Accountnumber",
+				"type": "int",
+				"precision": 10
+			},
+			{
 				"name": "Created_Date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "Modified_Date",
 				"type": "datetime",
 				"precision": 23,
 				"scale": 3

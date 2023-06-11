@@ -34,19 +34,13 @@
 							}
 						],
 						"query": {
-							"value": "<fetch>  \n   <entity name='contact'> \n     <attribute name='contactid'/>  \n     <attribute name='new_scmmcontactid'/>\n     <attribute name='cr838_fxnetaccountnumber'/> \n\t <attribute name='createdon'/>   \t \n\t <attribute name='modifiedon'/>     \n<filter type=\"and\">\n<condition attribute='modifiedon' operator='on-or-after' value=\"@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}\" />\n</filter>    \n   </entity>   \n</fetch>\n",
+							"value": "<fetch>  \n   <entity name='contact'> \n     <attribute name='contactid'/>  \n     <attribute name='new_scmmcontactid'/>\n     <attribute name='cr838_fxnetaccountnumber'/> \n     <attribute name='emailaddress1'/> \n\t <attribute name='createdon'/>   \t \n\t <attribute name='modifiedon'/>     \n<filter type=\"and\">\n<condition attribute='modifiedon' operator='on-or-after' value=\"@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}\" />\n</filter>    \n   </entity>   \n</fetch>\n",
 							"type": "Expression"
 						}
 					},
 					"sink": {
 						"type": "SqlServerSink",
-						"writeBehavior": "upsert",
-						"upsertSettings": {
-							"useTempDB": true,
-							"keys": [
-								"Dynamics_Contact_Id"
-							]
-						},
+						"writeBehavior": "insert",
 						"sqlWriterUseTableLock": false
 					},
 					"enableStaging": false,
@@ -55,8 +49,7 @@
 						"mappings": [
 							{
 								"source": {
-									"name": "contactid",
-									"type": "Guid"
+									"name": ""
 								},
 								"sink": {
 									"name": "Dynamics_Contact_Id",
@@ -65,8 +58,7 @@
 							},
 							{
 								"source": {
-									"name": "new_scmmcontactid",
-									"type": "String"
+									"name": ""
 								},
 								"sink": {
 									"name": "Scmm_Contact_Id",
@@ -75,8 +67,7 @@
 							},
 							{
 								"source": {
-									"name": "cr838_fxnetaccountnumber",
-									"type": "Int32"
+									"name": ""
 								},
 								"sink": {
 									"name": "Fxnet_Accountnumber",
@@ -85,8 +76,7 @@
 							},
 							{
 								"source": {
-									"name": "modifiedon",
-									"type": "DateTime"
+									"name": ""
 								},
 								"sink": {
 									"name": "Modified_Date",
@@ -95,8 +85,7 @@
 							},
 							{
 								"source": {
-									"name": "createdon",
-									"type": "DateTime"
+									"name": ""
 								},
 								"sink": {
 									"name": "Created_Date",
@@ -105,8 +94,7 @@
 							},
 							{
 								"source": {
-									"name": "ETL_update_date",
-									"type": "String"
+									"name": ""
 								},
 								"sink": {
 									"name": "ETL_update_date",
@@ -127,7 +115,7 @@
 						"referenceName": "scmm_pr2_sink",
 						"type": "DatasetReference",
 						"parameters": {
-							"Table_name": "Contacts"
+							"Table_name": "st_Contacts"
 						}
 					}
 				]
