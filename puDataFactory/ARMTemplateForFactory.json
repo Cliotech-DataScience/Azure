@@ -2241,7 +2241,7 @@
 					}
 				},
 				"folder": {
-					"name": "CRM"
+					"name": "CRM/old"
 				},
 				"annotations": []
 			},
@@ -2296,6 +2296,7 @@
 							},
 							"sink": {
 								"type": "SqlServerSink",
+								"preCopyScript": "TRUNCATE TABLE  msmkt.st_Contacts ;",
 								"writeBehavior": "insert",
 								"sqlWriterUseTableLock": false
 							},
