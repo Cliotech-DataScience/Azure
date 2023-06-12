@@ -31,9 +31,6 @@
 									"value": "@utcnow()",
 									"type": "Expression"
 								}
-							},
-							{
-								"value": "$$COLUMN:"
 							}
 						],
 						"query": {
