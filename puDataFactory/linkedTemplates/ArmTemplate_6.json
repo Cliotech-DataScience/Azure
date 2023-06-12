@@ -42,10 +42,6 @@
 			"metadata": "Secure string for 'connectionString' of 'scmm_db_pr2'",
 			"defaultValue": "Integrated Security=True;Data Source=scmm-db-pr2;Initial Catalog=MS_CRM"
 		},
-		"scmm_db_pr2_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'scmm_db_pr2'"
-		},
 		"emerp_lm_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -80,7 +76,7 @@
 		},
 		"scmm_db_pr2_properties_typeProperties_userName": {
 			"type": "string",
-			"defaultValue": "efix\\avia"
+			"defaultValue": "efix\\MScrm_user"
 		}
 	},
 	"variables": {
@@ -209,8 +205,12 @@
 					"connectionString": "[parameters('scmm_db_pr2_connectionString')]",
 					"userName": "[parameters('scmm_db_pr2_properties_typeProperties_userName')]",
 					"password": {
-						"type": "SecureString",
-						"value": "[parameters('scmm_db_pr2_password')]"
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "kv_pr_vpn",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "mscrm-user-password"
 					}
 				},
 				"connectVia": {

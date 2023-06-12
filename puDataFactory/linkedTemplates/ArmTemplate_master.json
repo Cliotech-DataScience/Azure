@@ -223,10 +223,6 @@
 			"metadata": "Secure string for 'connectionString' of 'scmm_db_pr2'",
 			"defaultValue": "Integrated Security=True;Data Source=scmm-db-pr2;Initial Catalog=MS_CRM"
 		},
-		"scmm_db_pr2_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'scmm_db_pr2'"
-		},
 		"BI_Events_blob_properties_typeProperties_fileName": {
 			"type": "string",
 			"defaultValue": "*.parquet"
@@ -557,7 +553,7 @@
 		},
 		"scmm_db_pr2_properties_typeProperties_userName": {
 			"type": "string",
-			"defaultValue": "efix\\avia"
+			"defaultValue": "efix\\MScrm_user"
 		},
 		"Trigger_4o1_properties_pipeline_parameters_windowStart": {
 			"type": "string",
@@ -1089,9 +1085,6 @@
 					},
 					"scmm_db_pr2_connectionString": {
 						"value": "[parameters('scmm_db_pr2_connectionString')]"
-					},
-					"scmm_db_pr2_password": {
-						"value": "[parameters('scmm_db_pr2_password')]"
 					},
 					"emerp_lm_properties_typeProperties_userName": {
 						"value": "[parameters('emerp_lm_properties_typeProperties_userName')]"

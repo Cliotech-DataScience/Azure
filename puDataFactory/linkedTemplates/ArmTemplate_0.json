@@ -327,8 +327,8 @@
 					"newClusterNodeType": "Standard_DS3_v2",
 					"newClusterNumOfWorker": "1:2",
 					"newClusterVersion": "10.4.x-cpu-ml-scala2.12",
-					"newClusterInitScripts": [],
-					"clusterOption": "Autoscaling"
+					"clusterOption": "Autoscaling",
+					"newClusterInitScripts": []
 				}
 			},
 			"dependsOn": []
@@ -435,8 +435,8 @@
 						"PYSPARK_PYTHON": "/databricks/python3/bin/python3"
 					},
 					"newClusterVersion": "6.5.x-scala2.11",
-					"newClusterInitScripts": [],
-					"clusterOption": "Fixed"
+					"clusterOption": "Fixed",
+					"newClusterInitScripts": []
 				}
 			},
 			"dependsOn": []
