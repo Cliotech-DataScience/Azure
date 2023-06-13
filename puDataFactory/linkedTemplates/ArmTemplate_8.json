@@ -1053,7 +1053,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Contact')]",
+			"name": "[concat(parameters('factoryName'), '/Contact_old')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1309,7 +1309,7 @@
 					}
 				},
 				"folder": {
-					"name": "CRM"
+					"name": "CRM/old"
 				},
 				"annotations": []
 			},
