@@ -169,7 +169,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(MINUTE,0,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  Mng_data_factory_ETL\n  WHERE TableName='CRM_Contacts'",
+								"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(year,-4,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  Mng_data_factory_ETL\n  WHERE TableName='CRM_Contacts'",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
