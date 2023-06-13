@@ -1,0 +1,28 @@
+{
+	"name": "CRM - Contact",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "CRM - Contact",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"Table_name": "st_Contacts",
+					"Etl_mange_table_name": "Contacts"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 2,
+				"startTime": "2023-06-13T10:37:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}
