@@ -6,6 +6,14 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "puDataFactory"
+		},
+		"CRM - Contact_properties_CRM - Contact_parameters_Table_name": {
+			"type": "string",
+			"defaultValue": "st_Contacts"
+		},
+		"CRM - Contact_properties_CRM - Contact_parameters_Etl_mange_table_name": {
+			"type": "string",
+			"defaultValue": "Contacts"
 		}
 	},
 	"variables": {
@@ -2054,7 +2062,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Communication Daily')]",
+			"name": "[concat(parameters('factoryName'), '/CRM - Contact')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -2063,27 +2071,22 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Communication",
+							"referenceName": "CRM - Contact",
 							"type": "PipelineReference"
 						},
-						"parameters": {}
+						"parameters": {
+							"Table_name": "[parameters('CRM - Contact_properties_CRM - Contact_parameters_Table_name')]",
+							"Etl_mange_table_name": "[parameters('CRM - Contact_properties_CRM - Contact_parameters_Etl_mange_table_name')]"
+						}
 					}
 				],
 				"type": "ScheduleTrigger",
 				"typeProperties": {
 					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-03-07T17:45:00Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								59
-							],
-							"hours": [
-								3
-							]
-						}
+						"frequency": "Hour",
+						"interval": 2,
+						"startTime": "2023-06-13T10:37:00Z",
+						"timeZone": "UTC"
 					}
 				}
 			},

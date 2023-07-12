@@ -555,6 +555,14 @@
 			"type": "string",
 			"defaultValue": "efix\\MScrm_user"
 		},
+		"CRM - Contact_properties_CRM - Contact_parameters_Table_name": {
+			"type": "string",
+			"defaultValue": "st_Contacts"
+		},
+		"CRM - Contact_properties_CRM - Contact_parameters_Etl_mange_table_name": {
+			"type": "string",
+			"defaultValue": "Contacts"
+		},
 		"Trigger_4o1_properties_pipeline_parameters_windowStart": {
 			"type": "string",
 			"defaultValue": "@trigger().outputs.windowStartTime"
@@ -574,14 +582,6 @@
 		"Trigger_zwu_properties__pu_raw_files_sync_parameters_windowEnd": {
 			"type": "string",
 			"defaultValue": "@trigger().scheduledTime"
-		},
-		"CRM - Contact_properties_CRM - Contact_parameters_Table_name": {
-			"type": "string",
-			"defaultValue": "st_Contacts"
-		},
-		"CRM - Contact_properties_CRM - Contact_parameters_Etl_mange_table_name": {
-			"type": "string",
-			"defaultValue": "Contacts"
 		},
 		"containerUri": {
 			"type": "string",
@@ -1209,6 +1209,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"CRM - Contact_properties_CRM - Contact_parameters_Table_name": {
+						"value": "[parameters('CRM - Contact_properties_CRM - Contact_parameters_Table_name')]"
+					},
+					"CRM - Contact_properties_CRM - Contact_parameters_Etl_mange_table_name": {
+						"value": "[parameters('CRM - Contact_properties_CRM - Contact_parameters_Etl_mange_table_name')]"
 					}
 				}
 			},
@@ -1244,12 +1250,6 @@
 					},
 					"Trigger_zwu_properties__pu_raw_files_sync_parameters_windowEnd": {
 						"value": "[parameters('Trigger_zwu_properties__pu_raw_files_sync_parameters_windowEnd')]"
-					},
-					"CRM - Contact_properties_CRM - Contact_parameters_Table_name": {
-						"value": "[parameters('CRM - Contact_properties_CRM - Contact_parameters_Table_name')]"
-					},
-					"CRM - Contact_properties_CRM - Contact_parameters_Etl_mange_table_name": {
-						"value": "[parameters('CRM - Contact_properties_CRM - Contact_parameters_Etl_mange_table_name')]"
 					}
 				}
 			},

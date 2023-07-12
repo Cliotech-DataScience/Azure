@@ -407,6 +407,12 @@
 		"scmm_db_pr2_properties_typeProperties_userName": {
 			"value": "efix\\MScrm_user"
 		},
+		"CRM - Contact_properties_CRM - Contact_parameters_Table_name": {
+			"value": "st_Contacts"
+		},
+		"CRM - Contact_properties_CRM - Contact_parameters_Etl_mange_table_name": {
+			"value": "Contacts"
+		},
 		"Trigger_4o1_properties_pipeline_parameters_windowStart": {
 			"value": "@trigger().outputs.windowStartTime"
 		},
@@ -421,12 +427,6 @@
 		},
 		"Trigger_zwu_properties__pu_raw_files_sync_parameters_windowEnd": {
 			"value": "@trigger().scheduledTime"
-		},
-		"CRM - Contact_properties_CRM - Contact_parameters_Table_name": {
-			"value": "st_Contacts"
-		},
-		"CRM - Contact_properties_CRM - Contact_parameters_Etl_mange_table_name": {
-			"value": "Contacts"
 		}
 	}
 }

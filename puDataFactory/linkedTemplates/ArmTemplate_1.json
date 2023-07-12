@@ -55,12 +55,12 @@
 					"deploymentType": "Online",
 					"serviceUri": "https://orgc06bbec8.crm4.dynamics.com/",
 					"authenticationType": "AADServicePrincipal",
-					"servicePrincipalCredentialType": "ServicePrincipalKey",
 					"servicePrincipalId": "[parameters('Dataverse_crm_properties_typeProperties_servicePrincipalId')]",
 					"servicePrincipalCredential": {
 						"type": "SecureString",
 						"value": "[parameters('Dataverse_crm_servicePrincipalCredential')]"
-					}
+					},
+					"servicePrincipalCredentialType": "ServicePrincipalKey"
 				}
 			},
 			"dependsOn": []
