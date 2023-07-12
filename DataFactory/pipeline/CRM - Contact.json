@@ -34,7 +34,7 @@
 							}
 						],
 						"query": {
-							"value": "<fetch>  \n   <entity name='contact'> \n     <attribute name='contactid'/>  \n     <attribute name='new_scmmcontactid'/>\n     <attribute name='cr838_fxnetaccountnumber'/> \n     <attribute name='emailaddress1'/> \n\t <attribute name='createdon'/>   \t \n\t <attribute name='modifiedon'/>     \n<filter type=\"and\">\n<condition attribute='modifiedon' operator='on-or-after' value=\"@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}\" />\n</filter>    \n   </entity>   \n</fetch>\n",
+							"value": "<fetch>  \n   <entity name='contact'> \n     <attribute name='contactid'/>  \n     <attribute name='new_scmmcontactid'/>\n     <attribute name='cr838_fxnetaccountnumber'/> \n     <attribute name='emailaddress1'/> \n\t <attribute name='createdon'/>   \t \n\t <attribute name='modifiedon'/> \n     <attribute name='donotbulkemail'/>    \n<filter type=\"and\">\n<condition attribute='modifiedon' operator='on-or-after' value=\"@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}\" />\n</filter>    \n   </entity>   \n</fetch>\n",
 							"type": "Expression"
 						}
 					},
@@ -106,6 +106,16 @@
 								"sink": {
 									"name": "Modified_Date",
 									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "donotbulkemail",
+									"type": "Boolean"
+								},
+								"sink": {
+									"name": "Donotbulkemail",
+									"type": "Int16"
 								}
 							},
 							{
