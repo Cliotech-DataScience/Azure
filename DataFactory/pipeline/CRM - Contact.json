@@ -115,7 +115,7 @@
 								},
 								"sink": {
 									"name": "Donotbulkemail",
-									"type": "Int16"
+									"type": "Boolean"
 								}
 							},
 							{
