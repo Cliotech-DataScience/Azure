@@ -1,0 +1,21 @@
+{
+	"name": "DestinationDataset_9gv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "bydatalakqa sa",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "providers",
+				"folderPath": "Assignment",
+				"container": "mirrordatafs"
+			},
+			"compressionCodec": "none"
+		},
+		"schema": []
+	}
+}
