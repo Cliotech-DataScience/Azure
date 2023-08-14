@@ -1,0 +1,35 @@
+{
+	"name": "SourceDataset_9gv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DWH",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "ID",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "Provider",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Provider_Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Pbx_provider_price_list_used",
+				"type": "smallint",
+				"precision": 5
+			}
+		],
+		"typeProperties": {
+			"schema": "Calls",
+			"table": "Dim_Providers"
+		}
+	}
+}
