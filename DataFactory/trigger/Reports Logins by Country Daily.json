@@ -1,7 +1,8 @@
 {
 	"name": "Reports Logins by Country Daily",
 	"properties": {
-		"runtimeState": "Started",
+		"annotations": [],
+		"runtimeState": "Stopped",
 		"pipelines": [
 			{
 				"pipelineReference": {
@@ -15,7 +16,7 @@
 			"recurrence": {
 				"frequency": "Day",
 				"interval": 1,
-				"startTime": "2019-04-10T11:07:00.000Z",
+				"startTime": "2019-04-10T11:07:00Z",
 				"timeZone": "UTC",
 				"schedule": {
 					"minutes": [
