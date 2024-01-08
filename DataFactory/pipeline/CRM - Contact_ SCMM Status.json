@@ -47,23 +47,13 @@
 									"type": "String"
 								},
 								"sink": {
-									"name": "Hashed_Email",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "cr838_fxnetaccountnumber",
-									"type": "Int32"
-								},
-								"sink": {
 									"name": "Scmm_Contact_Id",
 									"type": "Int64"
 								}
 							},
 							{
 								"source": {
-									"name": "cr838_scmmstatus",
+									"name": "cr838_fxnetaccountnumber",
 									"type": "Int32"
 								},
 								"sink": {
@@ -73,23 +63,21 @@
 							},
 							{
 								"source": {
+									"name": "cr838_scmmstatus",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "scmmstatus_id",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
 									"name": "modifiedon",
 									"type": "DateTime"
 								},
 								"sink": {
-									"name": "Created_Date",
-									"type": "DateTime"
-								}
-							},
-							{
-								"sink": {
 									"name": "Modified_Date",
-									"type": "DateTime"
-								}
-							},
-							{
-								"sink": {
-									"name": "ETL_update_date",
 									"type": "DateTime"
 								}
 							}
@@ -147,16 +135,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"Table_name": {
-				"type": "string",
-				"defaultValue": "st_Contacts"
-			},
-			"Etl_mange_table_name": {
-				"type": "string",
-				"defaultValue": "Contacts"
-			}
-		},
 		"folder": {
 			"name": "CRM"
 		},
