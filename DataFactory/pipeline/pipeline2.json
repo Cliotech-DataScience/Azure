@@ -1,0 +1,106 @@
+{
+	"name": "pipeline2",
+	"properties": {
+		"activities": [
+			{
+				"name": "Contact crm to sql",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "CommonDataServiceForAppsSource",
+						"query": {
+							"value": "<fetch>  \n   <entity name='contact'> \n     <attribute name='contactid'/>  \n     <attribute name='new_scmmcontactid'/>\n     <attribute name='cr838_fxnetaccountnumber'/> \n     <attribute name='cr838_scmmstatus'/>      \n     <attribute name='modifiedon'/> \n   </entity>   \n</fetch>\n",
+							"type": "Expression"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "contactid",
+									"type": "Guid"
+								},
+								"sink": {
+									"name": "Dynamics_Contact_Id",
+									"type": "Guid"
+								}
+							},
+							{
+								"source": {
+									"name": "new_scmmcontactid",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Scmm_Contact_Id",
+									"type": "Int64"
+								}
+							},
+							{
+								"source": {
+									"name": "cr838_fxnetaccountnumber",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "Fxnet_Accountnumber",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "cr838_scmmstatus",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "scmmstatus_id",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "modifiedon",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "Modified_Date",
+									"type": "DateTime"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Dataverse_Contact",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "scmm_pr2_datatverse_contact_list_2024_01_08",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "CRM"
+		},
+		"annotations": []
+	}
+}
