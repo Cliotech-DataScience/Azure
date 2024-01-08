@@ -5,14 +5,7 @@
 			{
 				"name": "Contact crm to sql",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "LK_Last_Id_Mng_azure_ETL",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -24,23 +17,13 @@
 				"typeProperties": {
 					"source": {
 						"type": "CommonDataServiceForAppsSource",
-						"additionalColumns": [
-							{
-								"name": "ETL_update_date",
-								"value": {
-									"value": "@utcnow()",
-									"type": "Expression"
-								}
-							}
-						],
 						"query": {
-							"value": "<fetch>  \n   <entity name='contact'> \n     <attribute name='contactid'/>  \n     <attribute name='new_scmmcontactid'/>\n     <attribute name='cr838_fxnetaccountnumber'/> \n     <attribute name='emailaddress1'/> \n\t <attribute name='createdon'/>   \t \n\t <attribute name='modifiedon'/> \n     <attribute name='donotbulkemail'/>    \n<filter type=\"and\">\n<condition attribute='modifiedon' operator='on-or-after' value=\"@{activity('LK_Last_Id_Mng_azure_ETL').output.firstRow.LastIncrementalDate}\" />\n</filter>    \n   </entity>   \n</fetch>\n",
+							"value": "<fetch>  \n   <entity name='contact'> \n     <attribute name='contactid'/>  \n     <attribute name='new_scmmcontactid'/>\n     <attribute name='cr838_fxnetaccountnumber'/> \n     <attribute name='cr838_scmmstatus'/>      \n     <attribute name='modifiedon'/> \n   </entity>   \n</fetch>\n",
 							"type": "Expression"
 						}
 					},
 					"sink": {
 						"type": "SqlServerSink",
-						"preCopyScript": "TRUNCATE TABLE  msmkt.st_Contacts ;",
 						"writeBehavior": "insert",
 						"sqlWriterUseTableLock": false
 					},
@@ -60,7 +43,7 @@
 							},
 							{
 								"source": {
-									"name": "emailaddress1",
+									"name": "new_scmmcontactid",
 									"type": "String"
 								},
 								"sink": {
@@ -70,8 +53,8 @@
 							},
 							{
 								"source": {
-									"name": "new_scmmcontactid",
-									"type": "String"
+									"name": "cr838_fxnetaccountnumber",
+									"type": "Int32"
 								},
 								"sink": {
 									"name": "Scmm_Contact_Id",
@@ -80,7 +63,7 @@
 							},
 							{
 								"source": {
-									"name": "cr838_fxnetaccountnumber",
+									"name": "cr838_scmmstatus",
 									"type": "Int32"
 								},
 								"sink": {
@@ -90,7 +73,7 @@
 							},
 							{
 								"source": {
-									"name": "createdon",
+									"name": "modifiedon",
 									"type": "DateTime"
 								},
 								"sink": {
@@ -99,30 +82,12 @@
 								}
 							},
 							{
-								"source": {
-									"name": "modifiedon",
-									"type": "DateTime"
-								},
 								"sink": {
 									"name": "Modified_Date",
 									"type": "DateTime"
 								}
 							},
 							{
-								"source": {
-									"name": "donotbulkemail",
-									"type": "Boolean"
-								},
-								"sink": {
-									"name": "Donotbulkemail",
-									"type": "Boolean"
-								}
-							},
-							{
-								"source": {
-									"name": "ETL_update_date",
-									"type": "String"
-								},
 								"sink": {
 									"name": "ETL_update_date",
 									"type": "DateTime"
@@ -139,88 +104,15 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "scmm_pr2_sink",
-						"type": "DatasetReference",
-						"parameters": {
-							"Table_name": "st_Contacts"
-						}
+						"referenceName": "scmm_pr2_datatverse_contact_list_2024_01_08",
+						"type": "DatasetReference"
 					}
 				]
 			},
 			{
-				"name": "LK_Last_Id_Mng_azure_ETL",
-				"type": "Lookup",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT  LastIncrementalDate=DATEADD(minute,0,LastIncrementalDate)   \n  ---- remove to use incremental\n FROM  Mng_data_factory_ETL\n  WHERE TableName='CRM_Contacts'",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"dataset": {
-						"referenceName": "Mng_data_factory_etl",
-						"type": "DatasetReference"
-					}
-				}
-			},
-			{
-				"name": "LK_last_last_Modified_Date",
-				"type": "Lookup",
-				"dependsOn": [
-					{
-						"activity": "Merges_Contacts_st_to_Contacts",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "SqlServerSource",
-						"sqlReaderQuery": {
-							"value": "@concat('SELECT   Last_Modified_Date=MAX(Modified_Date)  FROM msmkt.',pipeline().parameters.Etl_mange_table_name)",
-							"type": "Expression"
-						},
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"dataset": {
-						"referenceName": "scmm_pr2_sink",
-						"type": "DatasetReference",
-						"parameters": {
-							"Table_name": "Contacts"
-						}
-					}
-				}
-			},
-			{
 				"name": "Mng_data_factory_ETL",
 				"type": "SqlServerStoredProcedure",
-				"dependsOn": [
-					{
-						"activity": "LK_last_last_Modified_Date",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -251,33 +143,6 @@
 				},
 				"linkedServiceName": {
 					"referenceName": "Azure BI db",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
-				"name": "Merges_Contacts_st_to_Contacts",
-				"type": "SqlServerStoredProcedure",
-				"dependsOn": [
-					{
-						"activity": "Contact crm to sql",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"storedProcedureName": "[msmkt].[Merges_Contacts_st_to_Contacts]"
-				},
-				"linkedServiceName": {
-					"referenceName": "scmm_db_pr2",
 					"type": "LinkedServiceReference"
 				}
 			}

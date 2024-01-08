@@ -1,0 +1,48 @@
+{
+	"name": "scmm_pr2_datatverse_contact_list_2024_01_08",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "scmm_db_pr2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "Dynamics_Contact_Id",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "Scmm_Contact_Id",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "Fxnet_Accountnumber",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "scmmstatus_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Modified_Date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "ETL_update_date",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "datatverse_contact_list_2024_01_08"
+		}
+	}
+}
