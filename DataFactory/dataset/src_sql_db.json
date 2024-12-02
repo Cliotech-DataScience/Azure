@@ -8,12 +8,6 @@
 				"DB": "@dataset().Db_Name"
 			}
 		},
-		"parameters": {
-			"db": {
-				"type": "string",
-				"defaultValue": "EmErp_LM"
-			}
-		},
 		"annotations": [],
 		"type": "SqlServerTable",
 		"schema": []
