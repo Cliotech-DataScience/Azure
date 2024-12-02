@@ -1,0 +1,287 @@
+{
+	"name": "land sql to storage dev",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data sql to storage",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "get query",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": {
+							"value": "@activity('get query').output.firstRow.Query",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"isolationLevel": "ReadUncommitted",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "src_sql_db",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "get query",
+				"description": "generate the query for populate",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "get min max values from source",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[etl].[Mng_Populate_Get_Query]",
+						"storedProcedureParameters": {
+							"Env": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.Env",
+									"type": "Expression"
+								}
+							},
+							"Source_System": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.Source_System",
+									"type": "Expression"
+								}
+							},
+							"Source_Name": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.Source_Name",
+									"type": "Expression"
+								}
+							},
+							"Query_Type": {
+								"type": "String",
+								"value": "Key"
+							},
+							"Max_Value": {
+								"type": "String",
+								"value": {
+									"value": "@activity('get min max values from source').output.firstRow.Max_Key",
+									"type": "Expression"
+								}
+							}
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					}
+				}
+			},
+			{
+				"name": "get min max query",
+				"description": "generate the query for populate",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[etl].[Mng_Populate_Get_Query]",
+						"storedProcedureParameters": {
+							"Env": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.Env",
+									"type": "Expression"
+								}
+							},
+							"Source_System": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.Source_System",
+									"type": "Expression"
+								}
+							},
+							"Source_Name": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.Source_Name",
+									"type": "Expression"
+								}
+							},
+							"Query_Type": {
+								"type": "String",
+								"value": "MinMax"
+							},
+							"Max_Value": {
+								"type": "String",
+								"value": null
+							}
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					}
+				}
+			},
+			{
+				"name": "get min max values from source",
+				"description": "generate the query for populate",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "get min max query",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": {
+							"value": "@activity('get min max query').output.firstRow.Query",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "src_sql_db",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "update increment",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Copy data sql to storage",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[etl].[Mng_Populate_Update_Last_Run]",
+					"storedProcedureParameters": {
+						"Env": {
+							"value": {
+								"value": "@pipeline().parameters.Env",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"Source_System": {
+							"value": {
+								"value": "@pipeline().parameters.Source_System",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"Source_Name": {
+							"value": {
+								"value": "@pipeline().parameters.Source_Name",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"Key_Value": {
+							"value": {
+								"value": "@activity('get min max values from source').output.firstRow.Max_Key",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"Batch_Size": {
+							"value": {
+								"value": "@activity('Copy data sql to storage').output.rowsCopied",
+								"type": "Expression"
+							},
+							"type": "Int32"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"Env": {
+				"type": "string",
+				"defaultValue": "PROD"
+			},
+			"Source_System": {
+				"type": "string",
+				"defaultValue": "SCMM"
+			},
+			"Source_Name": {
+				"type": "string",
+				"defaultValue": "LiveChatHistory"
+			}
+		},
+		"folder": {
+			"name": "land"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-11-11T13:15:09Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
