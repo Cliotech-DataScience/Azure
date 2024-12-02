@@ -5,7 +5,7 @@
 			"referenceName": "SCMM_DBG_PR1",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"DB": "avia@cliotech.com"
+				"DB": "@dataset().Db_Name"
 			}
 		},
 		"parameters": {
