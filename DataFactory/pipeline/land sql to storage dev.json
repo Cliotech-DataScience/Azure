@@ -281,6 +281,10 @@
 							"type": "Int32"
 						}
 					}
+				},
+				"linkedServiceName": {
+					"referenceName": "Azure BI db",
+					"type": "LinkedServiceReference"
 				}
 			}
 		],
