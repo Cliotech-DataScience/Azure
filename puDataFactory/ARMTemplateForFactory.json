@@ -16836,13 +16836,19 @@
 					"referenceName": "SCMM_DBG_PR1",
 					"type": "LinkedServiceReference",
 					"parameters": {
-						"DB": "avia@cliotech.com"
+						"DB": {
+							"value": "@dataset().DB",
+							"type": "Expression"
+						}
 					}
 				},
 				"parameters": {
-					"db": {
+					"DB": {
 						"type": "string"
 					}
+				},
+				"folder": {
+					"name": "rawdata"
 				},
 				"annotations": [],
 				"type": "SqlServerTable",
@@ -16851,6 +16857,481 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/SCMM_DBG_PR1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/land sql to storage dev')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data sql to storage",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "get query",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": {
+									"value": "@activity('get query').output.firstRow.Query",
+									"type": "Expression"
+								},
+								"queryTimeout": "02:00:00",
+								"isolationLevel": "ReadUncommitted",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "src_sql_db",
+								"type": "DatasetReference",
+								"parameters": {
+									"DB": "@activity('get min max query').output.firstRow.Source_Db"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "raw_parquet",
+								"type": "DatasetReference",
+								"parameters": {
+									"System": "@pipeline().parameters.Source_System",
+									"Table": "@pipeline().parameters.Source_Name"
+								}
+							}
+						]
+					},
+					{
+						"name": "get query",
+						"description": "generate the query for populate",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "get min max values from source",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[etl].[Mng_Populate_Get_Query]",
+								"storedProcedureParameters": {
+									"Env": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.Env",
+											"type": "Expression"
+										}
+									},
+									"Source_System": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.Source_System",
+											"type": "Expression"
+										}
+									},
+									"Source_Name": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.Source_Name",
+											"type": "Expression"
+										}
+									},
+									"Query_Type": {
+										"type": "String",
+										"value": "Key"
+									},
+									"Max_Value": {
+										"type": "String",
+										"value": {
+											"value": "@activity('get min max values from source').output.firstRow.Max_Key",
+											"type": "Expression"
+										}
+									}
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "Azure_Sql_bi_db",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "get min max query",
+						"description": "generate the query for populate",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[etl].[Mng_Populate_Get_Query]",
+								"storedProcedureParameters": {
+									"Env": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.Env",
+											"type": "Expression"
+										}
+									},
+									"Source_System": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.Source_System",
+											"type": "Expression"
+										}
+									},
+									"Source_Name": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.Source_Name",
+											"type": "Expression"
+										}
+									},
+									"Query_Type": {
+										"type": "String",
+										"value": "MinMax"
+									},
+									"Max_Value": {
+										"type": "String",
+										"value": null
+									}
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "Azure_Sql_bi_db",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "get min max values from source",
+						"description": "generate the query for populate",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "get min max query",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": {
+									"value": "@activity('get min max query').output.firstRow.Query",
+									"type": "Expression"
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "src_sql_db",
+								"type": "DatasetReference",
+								"parameters": {
+									"DB": "@activity('get min max query').output.firstRow.Source_Db"
+								}
+							}
+						}
+					},
+					{
+						"name": "update increment",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Copy data sql to storage",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[etl].[Mng_Populate_Update_Last_Run]",
+							"storedProcedureParameters": {
+								"Env": {
+									"value": {
+										"value": "@pipeline().parameters.Env",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"Source_System": {
+									"value": {
+										"value": "@pipeline().parameters.Source_System",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"Source_Name": {
+									"value": {
+										"value": "@pipeline().parameters.Source_Name",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"Key_Value": {
+									"value": {
+										"value": "@activity('get min max values from source').output.firstRow.Max_Key",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"Batch_Size": {
+									"value": {
+										"value": "@activity('Copy data sql to storage').output.rowsCopied",
+										"type": "Expression"
+									},
+									"type": "Int32"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "Azure BI db",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"Env": {
+						"type": "string",
+						"defaultValue": "PROD"
+					},
+					"Source_System": {
+						"type": "string",
+						"defaultValue": "SCMM"
+					},
+					"Source_Name": {
+						"type": "string",
+						"defaultValue": "LiveChatHistory"
+					}
+				},
+				"folder": {
+					"name": "land"
+				},
+				"annotations": [],
+				"lastPublishTime": "2024-11-11T13:15:09Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/src_sql_db')]",
+				"[concat(variables('factoryId'), '/datasets/raw_parquet')]",
+				"[concat(variables('factoryId'), '/datasets/Azure_Sql_bi_db')]",
+				"[concat(variables('factoryId'), '/linkedServices/Azure BI db')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/raw_parquet')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLake_gen2_usansa",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"System": {
+						"type": "string"
+					},
+					"Table": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@concat(dataset().Table,'_',pipeline().RunId,'_', pipeline().TriggerTime,'.parquet')",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@concat('land/',toLower(dataset().System),'/',dataset().Table,'/', formatDateTime(utcnow(), 'yyyy-MM-dd'))",
+							"type": "Expression"
+						},
+						"fileSystem": "usan-data-lake-fs"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLake_gen2_usansa')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/run land sql to storage')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach_Table",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lk_table_name",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lk_table_name').output.value",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Execute Pipeline sql to storage",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"policy": {
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "land sql to storage dev",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"Env": {
+												"value": "@item().Env",
+												"type": "Expression"
+											},
+											"Source_System": {
+												"value": "@item().Source_System",
+												"type": "Expression"
+											},
+											"Source_Name": {
+												"value": "@item().Source_Name",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Lk_table_name",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "\t\tSELECT Env\n\t\t\t  ,Source_System\n\t\t\t  ,Source_Name\n\t\t  FROM etl.Mng_Populate_Sources\n\t\t  WHERE 1=1\n\t\t  AND active =1",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "Azure_Sql_bi_db",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "land"
+				},
+				"annotations": [],
+				"lastPublishTime": "2024-11-12T07:14:07Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Azure_Sql_bi_db')]",
+				"[concat(variables('factoryId'), '/pipelines/land sql to storage dev')]"
 			]
 		}
 	]
