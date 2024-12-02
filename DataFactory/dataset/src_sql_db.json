@@ -16,6 +16,9 @@
 				"type": "string"
 			}
 		},
+		"folder": {
+			"name": "rawdata"
+		},
 		"annotations": [],
 		"type": "SqlServerTable",
 		"schema": []
