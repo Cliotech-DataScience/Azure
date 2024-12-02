@@ -10,7 +10,8 @@
 		},
 		"parameters": {
 			"db": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "EmErp_LM"
 			}
 		},
 		"annotations": [],
