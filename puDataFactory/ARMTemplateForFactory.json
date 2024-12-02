@@ -70,7 +70,7 @@
 		"DWH_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'DWH'",
-			"defaultValue": "Integrated Security=True;Data Source=DWH12-PR,2555;Initial Catalog=DWH"
+			"defaultValue": "integrated security=True;Data Source=DWH12-PR,2555;Initial Catalog=DWH"
 		},
 		"DWH_password": {
 			"type": "secureString",
@@ -79,7 +79,7 @@
 		"DWH12_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'DWH12'",
-			"defaultValue": "Integrated Security=True;Data Source=DWH12-PR,2555;Initial Catalog=@{linkedService().DB_Name}"
+			"defaultValue": "integrated security=True;Data Source=DWH12-PR,2555;Initial Catalog=@{linkedService().DB_Name}"
 		},
 		"DWH12_password": {
 			"type": "secureString",
@@ -104,7 +104,7 @@
 		"Dwhpr_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'Dwhpr'",
-			"defaultValue": "Integrated Security=True;Data Source=Dwh-pr,2555;Initial Catalog=@{linkedService().DB}"
+			"defaultValue": "integrated security=True;Data Source=Dwh-pr,2555;Initial Catalog=@{linkedService().DB}"
 		},
 		"Dwhpr_password": {
 			"type": "secureString",
@@ -121,16 +121,20 @@
 		"FXNET_DBG_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'FXNET_DBG'",
-			"defaultValue": "Integrated Security=True;Data Source=FXNET-DBG-PR,2555;Initial Catalog=FXNET;applicationintent=\"ReadOnly \""
+			"defaultValue": "integrated security=True;Data Source=FXNET-DBG-PR,2555;Initial Catalog=FXNET;applicationintent=\"ReadOnly \""
 		},
 		"FXNET_DBG_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'FXNET_DBG'"
 		},
+		"Lakehouse1_servicePrincipalCredential": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalCredential' of 'Lakehouse1'"
+		},
 		"SCMM SQL_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SCMM SQL'",
-			"defaultValue": "Integrated Security=True;Data Source=dwh-pr,2555;Initial Catalog=emerp_lm"
+			"defaultValue": "integrated security=True;Data Source=dwh-pr,2555;Initial Catalog=emerp_lm"
 		},
 		"SCMM SQL_password": {
 			"type": "secureString",
@@ -139,7 +143,7 @@
 		"SCMM_DBG_PR1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SCMM_DBG_PR1'",
-			"defaultValue": "Integrated Security=True;Data Source=SCMM-DBG-PR1,2555;Initial Catalog=@{linkedService().DB};applicationintent=ReadOnly"
+			"defaultValue": "integrated security=True;Data Source=SCMM-DBG-PR1,2555;Initial Catalog=@{linkedService().DB};applicationintent=ReadOnly"
 		},
 		"SCMM_DBG_PR1_password": {
 			"type": "secureString",
@@ -148,7 +152,7 @@
 		"SCMM_DEV_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SCMM_DEV'",
-			"defaultValue": "Integrated Security=True;Data Source=scmm-db-dev;Initial Catalog=MS_CRM"
+			"defaultValue": "integrated security=True;Data Source=scmm-db-dev;Initial Catalog=MS_CRM"
 		},
 		"SCMM_DEV_password": {
 			"type": "secureString",
@@ -157,7 +161,7 @@
 		"STG_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'STG'",
-			"defaultValue": "Integrated Security=True;Data Source=DWH12-PR,2555;Initial Catalog=STG"
+			"defaultValue": "integrated security=True;Data Source=DWH12-PR,2555;Initial Catalog=STG"
 		},
 		"STG_password": {
 			"type": "secureString",
@@ -170,7 +174,7 @@
 		"alldbdwh_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'alldbdwh'",
-			"defaultValue": "Integrated Security=True;Data Source=all-db-pr;Initial Catalog=LocalDB"
+			"defaultValue": "integrated security=True;Data Source=all-db-pr;Initial Catalog=LocalDB"
 		},
 		"alldbdwh_password": {
 			"type": "secureString",
@@ -187,7 +191,7 @@
 		"emerp_lm_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'emerp_lm'",
-			"defaultValue": "Integrated Security=True;Data Source=dwh-pr,2555;Initial Catalog=emerp_lm"
+			"defaultValue": "integrated security=True;Data Source=dwh-pr,2555;Initial Catalog=emerp_lm"
 		},
 		"emerp_lm_password": {
 			"type": "secureString",
@@ -196,7 +200,7 @@
 		"emerpdbpr_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'emerpdbpr'",
-			"defaultValue": "Integrated Security=True;Data Source=dwh-pr;Initial Catalog=EmErp_CM"
+			"defaultValue": "integrated security=True;Data Source=dwh-pr;Initial Catalog=EmErp_CM"
 		},
 		"emerpdbpr_password": {
 			"type": "secureString",
@@ -495,6 +499,14 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"Lakehouse1_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "daf02817-426f-407e-a0c2-ccbd0ffdde9b"
+		},
+		"Lakehouse1_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "542f1539-389f-48a6-831c-0be1eeb19e2a"
+		},
 		"SCMM SQL_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\reportsprod"
@@ -616,8 +628,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Dm_Models"
@@ -761,8 +772,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Platfrom_Usage"
@@ -858,8 +868,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Dm_Models"
@@ -993,8 +1002,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Platfrom_Usage"
@@ -1090,8 +1098,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Dm_Models"
@@ -1211,8 +1218,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Platfrom_Usage/old"
@@ -1307,8 +1313,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Dm_Models"
@@ -1347,8 +1352,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Platfrom_Usage/old"
@@ -1387,8 +1391,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Dm_Models"
@@ -1427,8 +1430,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Dm_Models"
@@ -1467,8 +1469,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Dm_Models"
@@ -1510,8 +1511,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Dm_Models"
@@ -1811,8 +1811,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"Table_name": {
@@ -1969,6 +1968,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -2015,8 +2017,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Data_from_SQL"
@@ -2278,8 +2279,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"Table_name": {
@@ -2554,8 +2554,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"Table_name": {
@@ -2762,8 +2761,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Data_from_SQL"
@@ -2839,8 +2837,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Assignment Score"
@@ -2949,14 +2946,91 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"annotations": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SourceDataset_5qf')]",
 				"[concat(variables('factoryId'), '/datasets/DestinationDataset_5qf')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CopyPipeline_9gv')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_9gv",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "Calls.Dim_Providers"
+							},
+							{
+								"name": "Destination",
+								"value": "mirrordatafs/Assignment/providers"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"validateDataConsistency": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_9gv",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationDataset_9gv",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SourceDataset_9gv')]",
+				"[concat(variables('factoryId'), '/datasets/DestinationDataset_9gv')]"
 			]
 		},
 		{
@@ -3303,8 +3377,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"windowStart": {
@@ -3405,8 +3478,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"annotations": []
 			},
@@ -3506,8 +3578,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"cw_items": {
@@ -3754,6 +3825,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -3831,8 +3905,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"variables": {
 					"Table_Name": {
@@ -4041,8 +4114,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Data_from_SQL"
@@ -4092,8 +4164,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "BI"
@@ -4261,6 +4332,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -4280,8 +4354,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Data_from_SQL"
@@ -4376,8 +4449,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Data_from_SQL"
@@ -4526,6 +4598,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -4575,8 +4650,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"variables": {
 					"Table_Name": {
@@ -4892,8 +4966,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "DC"
@@ -5092,8 +5165,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Data_from_SQL"
@@ -5243,6 +5315,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -5292,8 +5367,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"variables": {
 					"Table_Name": {
@@ -5448,6 +5522,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -5497,8 +5574,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"variables": {
 					"Table_Name": {
@@ -5628,8 +5704,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "CRM"
@@ -5766,8 +5841,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "BI"
@@ -5799,9 +5873,9 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"url": "https://prod-19.westeurope.logic.azure.com:443/workflows/fdc08617ec204e91923afb154eb5e9d3/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=lmpuubOmGI-VjJ9ltwWrti0QZzF4gYY4HHKM_RfQCis",
 							"method": "POST",
 							"headers": {},
+							"url": "https://prod-19.westeurope.logic.azure.com:443/workflows/fdc08617ec204e91923afb154eb5e9d3/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=lmpuubOmGI-VjJ9ltwWrti0QZzF4gYY4HHKM_RfQCis",
 							"body": {
 								"value": "@concat('{ \"PartitionKey\":\"',pipeline().parameters.PartitionKey,'\",   \"RowKey\":\"',pipeline().parameters.RowKey,'\"  , \"PropertyName\":\"',pipeline().parameters.PropertyName,'\", \"PropertyValue\":\"',pipeline().parameters.PropertyValue,'\" }')",
 								"type": "Expression"
@@ -5810,8 +5884,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"PartitionKey": {
@@ -5852,6 +5925,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -5866,6 +5942,9 @@
 						"name": "RUN - 01_platfromusage_files_copy_to_blob",
 						"type": "ExecutePipeline",
 						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -5878,8 +5957,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"annotations": []
 			},
@@ -5905,6 +5983,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -5919,6 +6000,9 @@
 						"name": "RUN - Customers",
 						"type": "ExecutePipeline",
 						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -5940,6 +6024,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -5961,6 +6048,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -5982,6 +6072,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -6003,6 +6096,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -6023,6 +6119,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -6043,6 +6142,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -6055,8 +6157,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"annotations": []
 			},
@@ -6081,6 +6182,9 @@
 						"name": "01 Get Customers",
 						"type": "ExecutePipeline",
 						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -6102,6 +6206,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -6123,6 +6230,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -6135,8 +6245,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Dm_Models"
@@ -6159,6 +6268,9 @@
 						"name": "Communication_MessageTemplates",
 						"type": "ExecutePipeline",
 						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -6171,8 +6283,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"annotations": []
 			},
@@ -6197,6 +6308,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -6211,6 +6325,9 @@
 						"name": "301 Get Customers",
 						"type": "ExecutePipeline",
 						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -6232,6 +6349,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -6253,6 +6373,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -6265,8 +6388,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Dm_Models"
@@ -6412,6 +6534,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -6458,8 +6583,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Data_from_SQL"
@@ -6698,8 +6822,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Data_from_SQL/sql_to_azure_delta_table"
@@ -6794,8 +6917,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "BI"
@@ -7045,8 +7167,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Data_from_SQL"
@@ -7358,8 +7479,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"Table_name": {
@@ -7673,8 +7793,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"Table_name": {
@@ -7813,8 +7932,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "azure"
@@ -7947,8 +8065,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "azure"
@@ -8063,8 +8180,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "CRM"
@@ -8174,8 +8290,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Platfrom_Usage/V3"
@@ -8304,8 +8419,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Data_from_SQL"
@@ -8389,8 +8503,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"windowStart": {
@@ -8643,8 +8756,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Data_from_SQL/sql_to_azure_delta_table"
@@ -8711,8 +8823,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"variables": {
 					"files_lists": {
@@ -8735,6 +8846,9 @@
 						"name": "01 Get Customers",
 						"type": "ExecutePipeline",
 						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -8756,6 +8870,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -8777,6 +8894,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -8798,6 +8918,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -8819,6 +8942,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -8840,6 +8966,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -8861,6 +8990,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -8873,8 +9005,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Dm_Models"
@@ -8968,8 +9099,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"parameters": {
 					"windowStart": {
@@ -9049,8 +9179,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"annotations": []
 			},
@@ -9123,8 +9252,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"annotations": []
 			},
@@ -9196,8 +9324,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"annotations": []
 			},
@@ -9283,8 +9410,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"annotations": []
 			},
@@ -9369,8 +9495,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"annotations": []
 			},
@@ -9489,8 +9614,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Platfrom_Usage/export_data"
@@ -9565,8 +9689,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"annotations": []
 			},
@@ -9603,8 +9726,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Platfrom_Usage/V2"
@@ -9676,8 +9798,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "ML/train_ai"
@@ -9690,6 +9811,123 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/pipeline2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Contact crm to sql",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "CommonDataServiceForAppsSource",
+								"query": {
+									"value": "<fetch>  \n   <entity name='contact'> \n     <attribute name='contactid'/>  \n     <attribute name='new_scmmcontactid'/>\n     <attribute name='cr838_fxnetaccountnumber'/> \n     <attribute name='cr838_scmmstatus'/>      \n     <attribute name='modifiedon'/> \n   </entity>   \n</fetch>\n",
+									"type": "Expression"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "contactid",
+											"type": "Guid"
+										},
+										"sink": {
+											"name": "Dynamics_Contact_Id",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "new_scmmcontactid",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Scmm_Contact_Id",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"name": "cr838_fxnetaccountnumber",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "Fxnet_Accountnumber",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "cr838_scmmstatus",
+											"type": "Int32"
+										},
+										"sink": {
+											"name": "scmmstatus_id",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "modifiedon",
+											"type": "DateTime"
+										},
+										"sink": {
+											"name": "Modified_Date",
+											"type": "DateTime"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Dataverse_Contact",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "scmm_pr2_datatverse_contact_list_2024_01_08",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "CRM"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Dataverse_Contact')]",
+				"[concat(variables('factoryId'), '/datasets/scmm_pr2_datatverse_contact_list_2024_01_08')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/run_only_pu_on_loop')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -9699,6 +9937,9 @@
 						"name": "run pu 01",
 						"type": "ExecutePipeline",
 						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -9720,6 +9961,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -9741,6 +9985,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -9762,6 +10009,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -9783,6 +10033,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -9795,8 +10048,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"annotations": []
 			},
@@ -11556,6 +11808,32 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_9gv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "bydatalakqa sa",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "providers",
+						"folderPath": "Assignment",
+						"container": "mirrordatafs"
+					},
+					"compressionCodec": "none"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/bydatalakqa sa')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DestinationDataset_bve')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -12922,6 +13200,46 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/emerpdbpr')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_9gv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DWH",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "ID",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "Provider",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Provider_Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Pbx_provider_price_list_used",
+						"type": "smallint",
+						"precision": 5
+					}
+				],
+				"typeProperties": {
+					"schema": "Calls",
+					"table": "Dim_Providers"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/DWH')]"
 			]
 		},
 		{
@@ -14803,6 +15121,59 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/scmm_pr2_datatverse_contact_list_2024_01_08')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "scmm_db_pr2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "Dynamics_Contact_Id",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "Scmm_Contact_Id",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "Fxnet_Accountnumber",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "scmmstatus_id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Modified_Date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "ETL_update_date",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "datatverse_contact_list_2024_01_08"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/scmm_db_pr2')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/scmm_pr2_sink')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -15534,6 +15905,27 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Lakehouse1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "Lakehouse",
+				"typeProperties": {
+					"workspaceId": "086cd186-3508-4c7f-8826-586aace1addc",
+					"artifactId": "5be1080a-afd2-4211-b3d7-459c798f0d65",
+					"tenant": "[parameters('Lakehouse1_properties_typeProperties_tenant')]",
+					"servicePrincipalId": "[parameters('Lakehouse1_properties_typeProperties_servicePrincipalId')]",
+					"servicePrincipalCredentialType": "ServicePrincipalKey",
+					"servicePrincipalCredential": {
+						"type": "SecureString",
+						"value": "[parameters('Lakehouse1_servicePrincipalCredential')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SCMM SQL')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -16102,7 +16494,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipelines": [
 					{
 						"pipelineReference": {
@@ -16434,6 +16826,32 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/src_sql_db')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SCMM_DBG_PR1",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DB": "avia@cliotech.com"
+					}
+				},
+				"parameters": {
+					"db": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SCMM_DBG_PR1')]"
+			]
 		}
 	]
 }

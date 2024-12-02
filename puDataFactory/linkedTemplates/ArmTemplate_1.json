@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ETL Manage DB'"
 		},
+		"Lakehouse1_servicePrincipalCredential": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalCredential' of 'Lakehouse1'"
+		},
 		"adf_staging_linked_service_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'adf_staging_linked_service'"
@@ -32,6 +36,14 @@
 			"metadata": "Secure string for 'connectionString' of 'mlwprdwesa'"
 		},
 		"Dataverse_crm_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "542f1539-389f-48a6-831c-0be1eeb19e2a"
+		},
+		"Lakehouse1_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "daf02817-426f-407e-a0c2-ccbd0ffdde9b"
+		},
+		"Lakehouse1_properties_typeProperties_servicePrincipalId": {
 			"type": "string",
 			"defaultValue": "542f1539-389f-48a6-831c-0be1eeb19e2a"
 		},
@@ -74,6 +86,27 @@
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
 					"connectionString": "[parameters('ETL Manage DB_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Lakehouse1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "Lakehouse",
+				"typeProperties": {
+					"workspaceId": "086cd186-3508-4c7f-8826-586aace1addc",
+					"artifactId": "5be1080a-afd2-4211-b3d7-459c798f0d65",
+					"tenant": "[parameters('Lakehouse1_properties_typeProperties_tenant')]",
+					"servicePrincipalId": "[parameters('Lakehouse1_properties_typeProperties_servicePrincipalId')]",
+					"servicePrincipalCredentialType": "ServicePrincipalKey",
+					"servicePrincipalCredential": {
+						"type": "SecureString",
+						"value": "[parameters('Lakehouse1_servicePrincipalCredential')]"
+					}
 				}
 			},
 			"dependsOn": []
@@ -260,8 +293,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Dm_Models"
@@ -352,8 +384,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Dm_Models"
@@ -444,8 +475,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Dm_Models"
@@ -536,8 +566,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Dm_Models"
@@ -574,8 +603,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Platfrom_Usage/old"
@@ -612,8 +640,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Dm_Models"
@@ -650,46 +677,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"folder": {
-					"name": "Dm_Models"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/303 Execute Models')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Execute Models",
-						"type": "DatabricksNotebook",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering V2/12. Get cluster for Model 302 307 330"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Dm_Models"

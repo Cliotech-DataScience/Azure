@@ -70,7 +70,7 @@
 		"DWH_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'DWH'",
-			"defaultValue": "Integrated Security=True;Data Source=DWH12-PR,2555;Initial Catalog=DWH"
+			"defaultValue": "integrated security=True;Data Source=DWH12-PR,2555;Initial Catalog=DWH"
 		},
 		"DWH_password": {
 			"type": "secureString",
@@ -79,7 +79,7 @@
 		"DWH12_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'DWH12'",
-			"defaultValue": "Integrated Security=True;Data Source=DWH12-PR,2555;Initial Catalog=@{linkedService().DB_Name}"
+			"defaultValue": "integrated security=True;Data Source=DWH12-PR,2555;Initial Catalog=@{linkedService().DB_Name}"
 		},
 		"DWH12_password": {
 			"type": "secureString",
@@ -104,7 +104,7 @@
 		"Dwhpr_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'Dwhpr'",
-			"defaultValue": "Integrated Security=True;Data Source=Dwh-pr,2555;Initial Catalog=@{linkedService().DB}"
+			"defaultValue": "integrated security=True;Data Source=Dwh-pr,2555;Initial Catalog=@{linkedService().DB}"
 		},
 		"Dwhpr_password": {
 			"type": "secureString",
@@ -121,16 +121,20 @@
 		"FXNET_DBG_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'FXNET_DBG'",
-			"defaultValue": "Integrated Security=True;Data Source=FXNET-DBG-PR,2555;Initial Catalog=FXNET;applicationintent=\"ReadOnly \""
+			"defaultValue": "integrated security=True;Data Source=FXNET-DBG-PR,2555;Initial Catalog=FXNET;applicationintent=\"ReadOnly \""
 		},
 		"FXNET_DBG_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'FXNET_DBG'"
 		},
+		"Lakehouse1_servicePrincipalCredential": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalCredential' of 'Lakehouse1'"
+		},
 		"SCMM SQL_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SCMM SQL'",
-			"defaultValue": "Integrated Security=True;Data Source=dwh-pr,2555;Initial Catalog=emerp_lm"
+			"defaultValue": "integrated security=True;Data Source=dwh-pr,2555;Initial Catalog=emerp_lm"
 		},
 		"SCMM SQL_password": {
 			"type": "secureString",
@@ -139,7 +143,7 @@
 		"SCMM_DBG_PR1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SCMM_DBG_PR1'",
-			"defaultValue": "Integrated Security=True;Data Source=SCMM-DBG-PR1,2555;Initial Catalog=@{linkedService().DB};applicationintent=ReadOnly"
+			"defaultValue": "integrated security=True;Data Source=SCMM-DBG-PR1,2555;Initial Catalog=@{linkedService().DB};applicationintent=ReadOnly"
 		},
 		"SCMM_DBG_PR1_password": {
 			"type": "secureString",
@@ -148,7 +152,7 @@
 		"SCMM_DEV_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SCMM_DEV'",
-			"defaultValue": "Integrated Security=True;Data Source=scmm-db-dev;Initial Catalog=MS_CRM"
+			"defaultValue": "integrated security=True;Data Source=scmm-db-dev;Initial Catalog=MS_CRM"
 		},
 		"SCMM_DEV_password": {
 			"type": "secureString",
@@ -157,7 +161,7 @@
 		"STG_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'STG'",
-			"defaultValue": "Integrated Security=True;Data Source=DWH12-PR,2555;Initial Catalog=STG"
+			"defaultValue": "integrated security=True;Data Source=DWH12-PR,2555;Initial Catalog=STG"
 		},
 		"STG_password": {
 			"type": "secureString",
@@ -170,7 +174,7 @@
 		"alldbdwh_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'alldbdwh'",
-			"defaultValue": "Integrated Security=True;Data Source=all-db-pr;Initial Catalog=LocalDB"
+			"defaultValue": "integrated security=True;Data Source=all-db-pr;Initial Catalog=LocalDB"
 		},
 		"alldbdwh_password": {
 			"type": "secureString",
@@ -187,7 +191,7 @@
 		"emerp_lm_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'emerp_lm'",
-			"defaultValue": "Integrated Security=True;Data Source=dwh-pr,2555;Initial Catalog=emerp_lm"
+			"defaultValue": "integrated security=True;Data Source=dwh-pr,2555;Initial Catalog=emerp_lm"
 		},
 		"emerp_lm_password": {
 			"type": "secureString",
@@ -196,7 +200,7 @@
 		"emerpdbpr_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'emerpdbpr'",
-			"defaultValue": "Integrated Security=True;Data Source=dwh-pr;Initial Catalog=EmErp_CM"
+			"defaultValue": "integrated security=True;Data Source=dwh-pr;Initial Catalog=EmErp_CM"
 		},
 		"emerpdbpr_password": {
 			"type": "secureString",
@@ -495,6 +499,14 @@
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
 		},
+		"Lakehouse1_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "daf02817-426f-407e-a0c2-ccbd0ffdde9b"
+		},
+		"Lakehouse1_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "542f1539-389f-48a6-831c-0be1eeb19e2a"
+		},
 		"SCMM SQL_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\reportsprod"
@@ -599,7 +611,7 @@
 		{
 			"name": "puDataFactory_ArmTemplate_0",
 			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
+			"apiVersion": "2024-03-01",
 			"properties": {
 				"mode": "incremental",
 				"templateLink": {
@@ -686,7 +698,7 @@
 		{
 			"name": "puDataFactory_ArmTemplate_1",
 			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
+			"apiVersion": "2024-03-01",
 			"properties": {
 				"mode": "incremental",
 				"templateLink": {
@@ -703,6 +715,9 @@
 					"ETL Manage DB_connectionString": {
 						"value": "[parameters('ETL Manage DB_connectionString')]"
 					},
+					"Lakehouse1_servicePrincipalCredential": {
+						"value": "[parameters('Lakehouse1_servicePrincipalCredential')]"
+					},
 					"adf_staging_linked_service_connectionString": {
 						"value": "[parameters('adf_staging_linked_service_connectionString')]"
 					},
@@ -718,6 +733,12 @@
 					"Dataverse_crm_properties_typeProperties_servicePrincipalId": {
 						"value": "[parameters('Dataverse_crm_properties_typeProperties_servicePrincipalId')]"
 					},
+					"Lakehouse1_properties_typeProperties_tenant": {
+						"value": "[parameters('Lakehouse1_properties_typeProperties_tenant')]"
+					},
+					"Lakehouse1_properties_typeProperties_servicePrincipalId": {
+						"value": "[parameters('Lakehouse1_properties_typeProperties_servicePrincipalId')]"
+					},
 					"kv_pr_vpn_properties_typeProperties_baseUrl": {
 						"value": "[parameters('kv_pr_vpn_properties_typeProperties_baseUrl')]"
 					}
@@ -730,7 +751,7 @@
 		{
 			"name": "puDataFactory_ArmTemplate_2",
 			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
+			"apiVersion": "2024-03-01",
 			"properties": {
 				"mode": "incremental",
 				"templateLink": {
@@ -786,7 +807,7 @@
 		{
 			"name": "puDataFactory_ArmTemplate_3",
 			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
+			"apiVersion": "2024-03-01",
 			"properties": {
 				"mode": "incremental",
 				"templateLink": {
@@ -812,7 +833,7 @@
 		{
 			"name": "puDataFactory_ArmTemplate_4",
 			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
+			"apiVersion": "2024-03-01",
 			"properties": {
 				"mode": "incremental",
 				"templateLink": {
@@ -891,18 +912,6 @@
 					},
 					"dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath": {
 						"value": "[parameters('dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath')]"
-					},
-					"dwh_Dim_Users_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_fileName')]"
-					},
-					"dwh_Dim_Users_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_folderPath')]"
-					},
-					"dwh_calls_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('dwh_calls_blob_properties_typeProperties_fileName')]"
-					},
-					"dwh_calls_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('dwh_calls_blob_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -913,7 +922,7 @@
 		{
 			"name": "puDataFactory_ArmTemplate_5",
 			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
+			"apiVersion": "2024-03-01",
 			"properties": {
 				"mode": "incremental",
 				"templateLink": {
@@ -969,17 +978,17 @@
 					"SCMM_DEV_password": {
 						"value": "[parameters('SCMM_DEV_password')]"
 					},
-					"STG_connectionString": {
-						"value": "[parameters('STG_connectionString')]"
+					"dwh_Dim_Users_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_fileName')]"
 					},
-					"STG_password": {
-						"value": "[parameters('STG_password')]"
+					"dwh_Dim_Users_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_folderPath')]"
 					},
-					"alldbdwh_connectionString": {
-						"value": "[parameters('alldbdwh_connectionString')]"
+					"dwh_calls_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('dwh_calls_blob_properties_typeProperties_fileName')]"
 					},
-					"alldbdwh_password": {
-						"value": "[parameters('alldbdwh_password')]"
+					"dwh_calls_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('dwh_calls_blob_properties_typeProperties_folderPath')]"
 					},
 					"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('dwh_lead_assignments_blob_properties_typeProperties_fileName')]"
@@ -1043,12 +1052,6 @@
 					},
 					"SCMM_DEV_properties_typeProperties_userName": {
 						"value": "[parameters('SCMM_DEV_properties_typeProperties_userName')]"
-					},
-					"STG_properties_typeProperties_userName": {
-						"value": "[parameters('STG_properties_typeProperties_userName')]"
-					},
-					"alldbdwh_properties_typeProperties_userName": {
-						"value": "[parameters('alldbdwh_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -1059,7 +1062,7 @@
 		{
 			"name": "puDataFactory_ArmTemplate_6",
 			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
+			"apiVersion": "2024-03-01",
 			"properties": {
 				"mode": "incremental",
 				"templateLink": {
@@ -1069,6 +1072,18 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"STG_connectionString": {
+						"value": "[parameters('STG_connectionString')]"
+					},
+					"STG_password": {
+						"value": "[parameters('STG_password')]"
+					},
+					"alldbdwh_connectionString": {
+						"value": "[parameters('alldbdwh_connectionString')]"
+					},
+					"alldbdwh_password": {
+						"value": "[parameters('alldbdwh_password')]"
 					},
 					"emerp_lm_connectionString": {
 						"value": "[parameters('emerp_lm_connectionString')]"
@@ -1093,6 +1108,12 @@
 					},
 					"scmm_db_pr2_connectionString": {
 						"value": "[parameters('scmm_db_pr2_connectionString')]"
+					},
+					"STG_properties_typeProperties_userName": {
+						"value": "[parameters('STG_properties_typeProperties_userName')]"
+					},
+					"alldbdwh_properties_typeProperties_userName": {
+						"value": "[parameters('alldbdwh_properties_typeProperties_userName')]"
 					},
 					"emerp_lm_properties_typeProperties_userName": {
 						"value": "[parameters('emerp_lm_properties_typeProperties_userName')]"
@@ -1130,7 +1151,7 @@
 		{
 			"name": "puDataFactory_ArmTemplate_7",
 			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
+			"apiVersion": "2024-03-01",
 			"properties": {
 				"mode": "incremental",
 				"templateLink": {
@@ -1153,7 +1174,7 @@
 		{
 			"name": "puDataFactory_ArmTemplate_8",
 			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
+			"apiVersion": "2024-03-01",
 			"properties": {
 				"mode": "incremental",
 				"templateLink": {
@@ -1179,7 +1200,7 @@
 		{
 			"name": "puDataFactory_ArmTemplate_9",
 			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
+			"apiVersion": "2024-03-01",
 			"properties": {
 				"mode": "incremental",
 				"templateLink": {
@@ -1199,11 +1220,31 @@
 		{
 			"name": "puDataFactory_ArmTemplate_10",
 			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
+			"apiVersion": "2024-03-01",
 			"properties": {
 				"mode": "incremental",
 				"templateLink": {
 					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_10.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'puDataFactory_ArmTemplate_9')]"
+			]
+		},
+		{
+			"name": "puDataFactory_ArmTemplate_11",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_11.json', parameters('containerSasToken'))]",
 					"contentVersion": "1.0.0.0"
 				},
 				"parameters": {
@@ -1215,26 +1256,6 @@
 					},
 					"CRM - Contact_properties_CRM - Contact_parameters_Etl_mange_table_name": {
 						"value": "[parameters('CRM - Contact_properties_CRM - Contact_parameters_Etl_mange_table_name')]"
-					}
-				}
-			},
-			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'puDataFactory_ArmTemplate_9')]"
-			]
-		},
-		{
-			"name": "puDataFactory_ArmTemplate_11",
-			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
-			"properties": {
-				"mode": "incremental",
-				"templateLink": {
-					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_11.json', parameters('containerSasToken'))]",
-					"contentVersion": "1.0.0.0"
-				},
-				"parameters": {
-					"factoryName": {
-						"value": "[parameters('factoryName')]"
 					},
 					"Trigger_4o1_properties_pipeline_parameters_windowStart": {
 						"value": "[parameters('Trigger_4o1_properties_pipeline_parameters_windowStart')]"

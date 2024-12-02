@@ -10,7 +10,7 @@
 		"DWH_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'DWH'",
-			"defaultValue": "Integrated Security=True;Data Source=DWH12-PR,2555;Initial Catalog=DWH"
+			"defaultValue": "integrated security=True;Data Source=DWH12-PR,2555;Initial Catalog=DWH"
 		},
 		"DWH_password": {
 			"type": "secureString",
@@ -19,7 +19,7 @@
 		"DWH12_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'DWH12'",
-			"defaultValue": "Integrated Security=True;Data Source=DWH12-PR,2555;Initial Catalog=@{linkedService().DB_Name}"
+			"defaultValue": "integrated security=True;Data Source=DWH12-PR,2555;Initial Catalog=@{linkedService().DB_Name}"
 		},
 		"DWH12_password": {
 			"type": "secureString",
@@ -28,7 +28,7 @@
 		"Dwhpr_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'Dwhpr'",
-			"defaultValue": "Integrated Security=True;Data Source=Dwh-pr,2555;Initial Catalog=@{linkedService().DB}"
+			"defaultValue": "integrated security=True;Data Source=Dwh-pr,2555;Initial Catalog=@{linkedService().DB}"
 		},
 		"Dwhpr_password": {
 			"type": "secureString",
@@ -41,7 +41,7 @@
 		"FXNET_DBG_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'FXNET_DBG'",
-			"defaultValue": "Integrated Security=True;Data Source=FXNET-DBG-PR,2555;Initial Catalog=FXNET;applicationintent=\"ReadOnly \""
+			"defaultValue": "integrated security=True;Data Source=FXNET-DBG-PR,2555;Initial Catalog=FXNET;applicationintent=\"ReadOnly \""
 		},
 		"FXNET_DBG_password": {
 			"type": "secureString",
@@ -50,7 +50,7 @@
 		"SCMM SQL_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SCMM SQL'",
-			"defaultValue": "Integrated Security=True;Data Source=dwh-pr,2555;Initial Catalog=emerp_lm"
+			"defaultValue": "integrated security=True;Data Source=dwh-pr,2555;Initial Catalog=emerp_lm"
 		},
 		"SCMM SQL_password": {
 			"type": "secureString",
@@ -59,7 +59,7 @@
 		"SCMM_DBG_PR1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SCMM_DBG_PR1'",
-			"defaultValue": "Integrated Security=True;Data Source=SCMM-DBG-PR1,2555;Initial Catalog=@{linkedService().DB};applicationintent=ReadOnly"
+			"defaultValue": "integrated security=True;Data Source=SCMM-DBG-PR1,2555;Initial Catalog=@{linkedService().DB};applicationintent=ReadOnly"
 		},
 		"SCMM_DBG_PR1_password": {
 			"type": "secureString",
@@ -68,29 +68,27 @@
 		"SCMM_DEV_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SCMM_DEV'",
-			"defaultValue": "Integrated Security=True;Data Source=scmm-db-dev;Initial Catalog=MS_CRM"
+			"defaultValue": "integrated security=True;Data Source=scmm-db-dev;Initial Catalog=MS_CRM"
 		},
 		"SCMM_DEV_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'SCMM_DEV'"
 		},
-		"STG_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'STG'",
-			"defaultValue": "Integrated Security=True;Data Source=DWH12-PR,2555;Initial Catalog=STG"
+		"dwh_Dim_Users_blob_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "Users.csv"
 		},
-		"STG_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'STG'"
+		"dwh_Dim_Users_blob_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "rawdata/DWH_Users"
 		},
-		"alldbdwh_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'alldbdwh'",
-			"defaultValue": "Integrated Security=True;Data Source=all-db-pr;Initial Catalog=LocalDB"
+		"dwh_calls_blob_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "@CONCAT('Calls_', pipeline().TriggerTime, '.csv.bz2')"
 		},
-		"alldbdwh_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'alldbdwh'"
+		"dwh_calls_blob_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "@concat('rawdata/DWH_Calls/Received=',utcnow('s'))"
 		},
 		"dwh_lead_assignments_blob_properties_typeProperties_fileName": {
 			"type": "string",
@@ -175,20 +173,110 @@
 		"SCMM_DEV_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
-		},
-		"STG_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "efix\\az_etl"
-		},
-		"alldbdwh_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "efix\\az_etl"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/dwh_Dim_Users_blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DataloadStore",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "User_ID",
+						"type": "Int16"
+					},
+					{
+						"name": "details",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": "\u0001",
+						"rowDelimiter": "\n",
+						"nullValue": "\\N",
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"fileName": {
+						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dwh_calls_blob')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DataloadStore",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DWH"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "Call_ID",
+						"type": "Int32"
+					},
+					{
+						"name": "Call_Details",
+						"type": "String"
+					},
+					{
+						"name": "CallDay",
+						"type": "DateTime"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": "\t",
+						"rowDelimiter": "",
+						"quoteChar": "",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": false
+					},
+					"compression": {
+						"type": "BZip2"
+					},
+					"fileName": {
+						"value": "[parameters('dwh_calls_blob_properties_typeProperties_fileName')]",
+						"type": "Expression"
+					},
+					"folderPath": {
+						"value": "[parameters('dwh_calls_blob_properties_typeProperties_folderPath')]",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/dwh_lead_assignments_blob')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
@@ -916,50 +1004,6 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('SCMM_DEV_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "alldbgateway",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/STG')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('STG_connectionString')]",
-					"userName": "[parameters('STG_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('STG_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "alldbgateway",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/alldbdwh')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "SqlServer",
-				"typeProperties": {
-					"connectionString": "[parameters('alldbdwh_connectionString')]",
-					"userName": "[parameters('alldbdwh_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('alldbdwh_password')]"
 					}
 				},
 				"connectVia": {

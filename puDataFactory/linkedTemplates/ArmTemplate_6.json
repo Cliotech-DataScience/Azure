@@ -7,10 +7,28 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "puDataFactory"
 		},
+		"STG_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'STG'",
+			"defaultValue": "integrated security=True;Data Source=DWH12-PR,2555;Initial Catalog=STG"
+		},
+		"STG_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'STG'"
+		},
+		"alldbdwh_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'alldbdwh'",
+			"defaultValue": "integrated security=True;Data Source=all-db-pr;Initial Catalog=LocalDB"
+		},
+		"alldbdwh_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'alldbdwh'"
+		},
 		"emerp_lm_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'emerp_lm'",
-			"defaultValue": "Integrated Security=True;Data Source=dwh-pr,2555;Initial Catalog=emerp_lm"
+			"defaultValue": "integrated security=True;Data Source=dwh-pr,2555;Initial Catalog=emerp_lm"
 		},
 		"emerp_lm_password": {
 			"type": "secureString",
@@ -19,7 +37,7 @@
 		"emerpdbpr_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'emerpdbpr'",
-			"defaultValue": "Integrated Security=True;Data Source=dwh-pr;Initial Catalog=EmErp_CM"
+			"defaultValue": "integrated security=True;Data Source=dwh-pr;Initial Catalog=EmErp_CM"
 		},
 		"emerpdbpr_password": {
 			"type": "secureString",
@@ -41,6 +59,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'scmm_db_pr2'",
 			"defaultValue": "Integrated Security=True;Data Source=scmm-db-pr2;Initial Catalog=MS_CRM"
+		},
+		"STG_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
+		"alldbdwh_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
 		},
 		"emerp_lm_properties_typeProperties_userName": {
 			"type": "string",
@@ -83,6 +109,50 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/STG')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('STG_connectionString')]",
+					"userName": "[parameters('STG_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('STG_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/alldbdwh')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('alldbdwh_connectionString')]",
+					"userName": "[parameters('alldbdwh_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('alldbdwh_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/emerp_lm')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -343,8 +413,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Platfrom_Usage"
@@ -437,8 +506,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"annotations": []
 			},
@@ -569,8 +637,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "BI"
@@ -589,6 +656,9 @@
 						"name": "01 Get Customers",
 						"type": "ExecutePipeline",
 						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -610,6 +680,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -631,6 +704,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -643,8 +719,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Dm_Models"
@@ -670,6 +745,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -684,6 +762,9 @@
 						"name": "301 Get Customers",
 						"type": "ExecutePipeline",
 						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -705,6 +786,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -726,6 +810,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -738,8 +825,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Dm_Models"
@@ -828,8 +914,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "BI"
@@ -936,8 +1021,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Platfrom_Usage/V3"
@@ -956,6 +1040,9 @@
 						"name": "01 Get Customers",
 						"type": "ExecutePipeline",
 						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -977,6 +1064,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -998,6 +1088,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -1019,6 +1112,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -1040,6 +1136,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -1061,6 +1160,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -1082,6 +1184,9 @@
 								]
 							}
 						],
+						"policy": {
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
@@ -1094,8 +1199,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"folder": {
 					"name": "Dm_Models"
@@ -1167,8 +1271,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"annotations": []
 			},
@@ -1237,8 +1340,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"annotations": []
 			},
@@ -1307,8 +1409,7 @@
 					}
 				],
 				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+					"elapsedTimeMetric": {}
 				},
 				"annotations": []
 			},
@@ -1347,412 +1448,6 @@
 				],
 				"typeProperties": {
 					"tableName": "azure.AZ_Communication"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Contacts')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SCMM_DBG_PR1",
-					"type": "LinkedServiceReference",
-					"parameters": {
-						"DB": "emerp_lm"
-					}
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"structure": [
-					{
-						"name": "RAWDB_Id",
-						"type": "Int64"
-					},
-					{
-						"name": "datails",
-						"type": "String"
-					},
-					{
-						"name": "Fixed_Timestamp",
-						"type": "DateTime"
-					}
-				],
-				"typeProperties": {
-					"tableName": "EmErp_LM.azure.scmm_contacts"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DM_Model_Data')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DWH12",
-					"type": "LinkedServiceReference",
-					"parameters": {
-						"DB_Name": "DM"
-					}
-				},
-				"folder": {
-					"name": "Assignment Score"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [
-					{
-						"name": "AssignmentDate",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "Contact_Id",
-						"type": "bigint",
-						"precision": 19
-					},
-					{
-						"name": "Accountnumber",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "BrokerId",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "IsOnline",
-						"type": "smallint",
-						"precision": 5
-					},
-					{
-						"name": "HasAccount",
-						"type": "smallint",
-						"precision": 5
-					},
-					{
-						"name": "First_Lead_Date",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "First_Lead_Local_Date",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "Last_Lead_Date",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "Last_Email_Date",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "Last_Login_Date",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "Last_Action_Date",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "First_Lead_Last_Lead_Minutes",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "First_Lead_To_Assignment_Minutes",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Last_Action_To_Assignment_Minutes",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "First_Lead_Local_Weekday",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "First_Lead_Local_Day",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "First_Lead_Local_Hour",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Language",
-						"type": "varchar"
-					},
-					{
-						"name": "Country",
-						"type": "varchar"
-					},
-					{
-						"name": "SiteTrigger",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Serial",
-						"type": "varchar"
-					},
-					{
-						"name": "Is_Serial_0",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Target_Market",
-						"type": "nvarchar"
-					},
-					{
-						"name": "CampaignName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "ProductName",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Supplier",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Site_Name",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Landing_Page",
-						"type": "varchar"
-					},
-					{
-						"name": "ProductType",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Placement_size",
-						"type": "nvarchar"
-					},
-					{
-						"name": "SupplierChargingUnit",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Creative_format",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Creative",
-						"type": "nvarchar"
-					},
-					{
-						"name": "First_Lead_Os",
-						"type": "nvarchar"
-					},
-					{
-						"name": "First_Lead_Browser",
-						"type": "nvarchar"
-					},
-					{
-						"name": "First_Lead_Content",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Last_Failed_Deposit_Date",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "Last_Failed_Amount_USD",
-						"type": "bigint",
-						"precision": 19
-					},
-					{
-						"name": "Last_Wire_Amount_USD",
-						"type": "bigint",
-						"precision": 19
-					},
-					{
-						"name": "Last_Failed_To_Assignment_Minutes",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Is_Failed_Dep_Last_7",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "number_of_serials",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "total_hphit",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "n_logins_last_30",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "n_emails_last_30",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "SupplierGroup",
-						"type": "varchar"
-					},
-					{
-						"name": "SupplierGroup_SEM",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "SupplierGroup_Others",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "SupplierGroup_Affiliates",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "ContactAction",
-						"type": "varchar"
-					},
-					{
-						"name": "ContactAction_Lead",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "ContactAction_Returning_Lead",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "ContactAction_Returning_Email",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "ContactAction_Returning_Login",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "ContactActionAge",
-						"type": "varchar"
-					},
-					{
-						"name": "ContactActionAge_Till_2H",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "ContactActionAge_2H_24H",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "ContactActionAge_24H_3D",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "ContactActionAge_3D_7D",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "ContactActionAge_7D_14D",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "ContactActionAge_14D_1M",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "ContactActionAge_1M",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "First_Lead_Device",
-						"type": "nvarchar"
-					},
-					{
-						"name": "First_Lead_Device_Tablet",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "First_Lead_Device_Mobile",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "First_Lead_Device_Desktop",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Last_Failed_Method",
-						"type": "nvarchar"
-					},
-					{
-						"name": "Last_Failed_CreditCards",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Last_Failed_eWallet",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Last_Failed_None",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Activation_Date",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "Assignment",
-					"table": "Model_Data"
 				}
 			},
 			"dependsOn": []
