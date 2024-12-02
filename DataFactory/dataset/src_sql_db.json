@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference",
 			"parameters": {
 				"DB": {
-					"value": "@dataset().db",
+					"value": "@dataset().DB",
 					"type": "Expression"
 				}
 			}
