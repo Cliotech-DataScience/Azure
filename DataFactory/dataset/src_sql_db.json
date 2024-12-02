@@ -8,6 +8,11 @@
 				"DB": "@dataset().Db_Name"
 			}
 		},
+		"parameters": {
+			"db": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "SqlServerTable",
 		"schema": []
