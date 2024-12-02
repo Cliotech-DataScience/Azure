@@ -1,0 +1,87 @@
+{
+	"name": "run land sql to storage",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach_Table",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lk_table_name",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lk_table_name').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "Execute Pipeline sql to storage",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "land sql to storage dev",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"Env": {
+										"value": "@item().Env",
+										"type": "Expression"
+									},
+									"Source_System": {
+										"value": "@item().Source_System",
+										"type": "Expression"
+									},
+									"Source_Name": {
+										"value": "@item().Source_Name",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Lk_table_name",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "\t\tSELECT Env\n\t\t\t  ,Source_System\n\t\t\t  ,Source_Name\n\t\t  FROM etl.Mng_Populate_Sources\n\t\t  WHERE 1=1\n\t\t  AND active =1",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"folder": {
+			"name": "land"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-11-12T07:14:07Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
