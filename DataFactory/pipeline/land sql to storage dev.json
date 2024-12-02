@@ -32,7 +32,24 @@
 						"isolationLevel": "ReadUncommitted",
 						"partitionOption": "None"
 					},
-					"enableStaging": false
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
 				"inputs": [
 					{
@@ -40,6 +57,16 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"DB": "@activity('get min max query').output.firstRow.Source_Db"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "raw_parquet",
+						"type": "DatasetReference",
+						"parameters": {
+							"System": "@pipeline().parameters.Source_System",
+							"Table": "@pipeline().parameters.Source_Name"
 						}
 					}
 				]
