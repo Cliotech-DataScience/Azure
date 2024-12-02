@@ -5,7 +5,10 @@
 			"referenceName": "SCMM_DBG_PR1",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"DB": "@dataset().Db_Name"
+				"DB": {
+					"value": "@dataset().db",
+					"type": "Expression"
+				}
 			}
 		},
 		"parameters": {
