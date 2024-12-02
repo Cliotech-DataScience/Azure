@@ -50,7 +50,10 @@
 				"inputs": [
 					{
 						"referenceName": "src_sql_db",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"db": "@activity('get min max query').output.firstRow.Source_Db"
+						}
 					}
 				],
 				"outputs": [
