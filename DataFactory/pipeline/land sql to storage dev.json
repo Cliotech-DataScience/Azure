@@ -52,7 +52,7 @@
 						"referenceName": "src_sql_db",
 						"type": "DatasetReference",
 						"parameters": {
-							"db": "@activity('get min max query').output.firstRow.Source_Db"
+							"DB": "@activity('get min max query').output.firstRow.Source_Db"
 						}
 					}
 				],
@@ -61,7 +61,7 @@
 						"referenceName": "src_sql_db",
 						"type": "DatasetReference",
 						"parameters": {
-							"db": "@activity('get min max query').output.firstRow.Source_Db"
+							"DB": "@activity('get min max query').output.firstRow.Source_Db"
 						}
 					}
 				]
@@ -224,7 +224,7 @@
 						"referenceName": "src_sql_db",
 						"type": "DatasetReference",
 						"parameters": {
-							"db": "@activity('get min max query').output.firstRow.Source_Db"
+							"DB": "@activity('get min max query').output.firstRow.Source_Db"
 						}
 					}
 				}

@@ -12,7 +12,7 @@
 			}
 		},
 		"parameters": {
-			"db": {
+			"DB": {
 				"type": "string"
 			}
 		},
