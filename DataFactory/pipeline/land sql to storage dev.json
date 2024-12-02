@@ -32,31 +32,9 @@
 						"isolationLevel": "ReadUncommitted",
 						"partitionOption": "None"
 					},
-					"sink": {
-						"type": "SqlServerSink",
-						"writeBehavior": "insert",
-						"sqlWriterUseTableLock": false
-					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
+					"enableStaging": false
 				},
 				"inputs": [
-					{
-						"referenceName": "src_sql_db",
-						"type": "DatasetReference",
-						"parameters": {
-							"DB": "@activity('get min max query').output.firstRow.Source_Db"
-						}
-					}
-				],
-				"outputs": [
 					{
 						"referenceName": "src_sql_db",
 						"type": "DatasetReference",
