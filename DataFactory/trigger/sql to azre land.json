@@ -1,0 +1,32 @@
+{
+	"name": "sql to azre land",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "run land sql to storage",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2024-12-03T14:12:00",
+				"timeZone": "Israel Standard Time",
+				"schedule": {
+					"minutes": [
+						30
+					],
+					"hours": [
+						12
+					]
+				}
+			}
+		}
+	}
+}
