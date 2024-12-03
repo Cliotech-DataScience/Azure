@@ -972,12 +972,6 @@
 					"SCMM_DBG_PR1_password": {
 						"value": "[parameters('SCMM_DBG_PR1_password')]"
 					},
-					"SCMM_DEV_connectionString": {
-						"value": "[parameters('SCMM_DEV_connectionString')]"
-					},
-					"SCMM_DEV_password": {
-						"value": "[parameters('SCMM_DEV_password')]"
-					},
 					"dwh_Dim_Users_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_fileName')]"
 					},
@@ -1049,9 +1043,6 @@
 					},
 					"SCMM_DBG_PR1_properties_typeProperties_userName": {
 						"value": "[parameters('SCMM_DBG_PR1_properties_typeProperties_userName')]"
-					},
-					"SCMM_DEV_properties_typeProperties_userName": {
-						"value": "[parameters('SCMM_DEV_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -1072,6 +1063,12 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"SCMM_DEV_connectionString": {
+						"value": "[parameters('SCMM_DEV_connectionString')]"
+					},
+					"SCMM_DEV_password": {
+						"value": "[parameters('SCMM_DEV_password')]"
 					},
 					"STG_connectionString": {
 						"value": "[parameters('STG_connectionString')]"
@@ -1108,6 +1105,9 @@
 					},
 					"scmm_db_pr2_connectionString": {
 						"value": "[parameters('scmm_db_pr2_connectionString')]"
+					},
+					"SCMM_DEV_properties_typeProperties_userName": {
+						"value": "[parameters('SCMM_DEV_properties_typeProperties_userName')]"
 					},
 					"STG_properties_typeProperties_userName": {
 						"value": "[parameters('STG_properties_typeProperties_userName')]"

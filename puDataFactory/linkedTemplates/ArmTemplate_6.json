@@ -7,6 +7,15 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "puDataFactory"
 		},
+		"SCMM_DEV_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SCMM_DEV'",
+			"defaultValue": "integrated security=True;Data Source=scmm-db-dev;Initial Catalog=MS_CRM"
+		},
+		"SCMM_DEV_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SCMM_DEV'"
+		},
 		"STG_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'STG'",
@@ -60,6 +69,10 @@
 			"metadata": "Secure string for 'connectionString' of 'scmm_db_pr2'",
 			"defaultValue": "Integrated Security=True;Data Source=scmm-db-pr2;Initial Catalog=MS_CRM"
 		},
+		"SCMM_DEV_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
 		"STG_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -109,6 +122,28 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/SCMM_DEV')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('SCMM_DEV_connectionString')]",
+					"userName": "[parameters('SCMM_DEV_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('SCMM_DEV_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/STG')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -287,44 +322,6 @@
 					"referenceName": "alldbgateway",
 					"type": "IntegrationRuntimeReference"
 				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/raw_parquet')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureDataLake_gen2_usansa",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"System": {
-						"type": "string"
-					},
-					"Table": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "Parquet",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": {
-							"value": "@concat(dataset().Table,'_',pipeline().RunId,'_', pipeline().TriggerTime,'.parquet')",
-							"type": "Expression"
-						},
-						"folderPath": {
-							"value": "@concat('land/',toLower(dataset().System),'/',dataset().Table,'/', formatDateTime(utcnow(), 'yyyy-MM-dd'))",
-							"type": "Expression"
-						},
-						"fileSystem": "usan-data-lake-fs"
-					},
-					"compressionCodec": "snappy"
-				},
-				"schema": []
 			},
 			"dependsOn": []
 		},
