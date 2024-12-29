@@ -18,8 +18,14 @@
 		"annotations": [],
 		"type": "AzureDatabricksDeltaLakeDataset",
 		"typeProperties": {
-			"database": "prod_raw",
-			"table": "mrr_communication_messagetemplates"
+			"database": {
+				"value": "@dataset().db",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().table",
+				"type": "Expression"
+			}
 		},
 		"schema": []
 	}

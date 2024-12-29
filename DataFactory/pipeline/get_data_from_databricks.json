@@ -28,8 +28,8 @@
 						"referenceName": "AzureDatabricksDelta_DWH",
 						"type": "DatasetReference",
 						"parameters": {
-							"table": "mrr_communication_messagetemplates",
-							"db": "prod_raw"
+							"table": "fact_chats",
+							"db": "dwh"
 						}
 					}
 				]
