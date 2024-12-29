@@ -7,10 +7,12 @@
 		},
 		"parameters": {
 			"db": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "dwh"
 			},
 			"table": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "fact_chats"
 			}
 		},
 		"annotations": [],
