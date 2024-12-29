@@ -25,12 +25,8 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "AzureDatabricksDelta_DWH",
-						"type": "DatasetReference",
-						"parameters": {
-							"table": "fact_chats",
-							"db": "dwh"
-						}
+						"referenceName": "AzureDatabricksDeltaLake_v2",
+						"type": "DatasetReference"
 					}
 				]
 			}
