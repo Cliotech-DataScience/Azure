@@ -19,11 +19,11 @@
 		"type": "AzureDatabricksDeltaLakeDataset",
 		"typeProperties": {
 			"database": {
-				"value": "@dataset().db",
+				"value": "prod_raw",
 				"type": "Expression"
 			},
 			"table": {
-				"value": "@dataset().table",
+				"value": "mrr_communication_messagetemplates",
 				"type": "Expression"
 			}
 		},
