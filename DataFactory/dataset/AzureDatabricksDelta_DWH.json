@@ -9,6 +9,10 @@
 			"table": {
 				"type": "string",
 				"defaultValue": "mrr_communication_messagetemplates"
+			},
+			"db": {
+				"type": "string",
+				"defaultValue": "prod_raw"
 			}
 		},
 		"annotations": [],

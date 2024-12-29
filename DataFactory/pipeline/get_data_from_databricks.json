@@ -1,0 +1,42 @@
+{
+	"name": "get_data_from_databricks",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureDatabricksDeltaLakeSource",
+						"exportSettings": {
+							"type": "AzureDatabricksDeltaLakeExportCommand"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "AzureDatabricksDelta_DWH",
+						"type": "DatasetReference",
+						"parameters": {
+							"table": "mrr_communication_messagetemplates"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "land"
+		},
+		"annotations": []
+	}
+}
