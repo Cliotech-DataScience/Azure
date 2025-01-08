@@ -41,6 +41,207 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/cm to json')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_6v0",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "."
+							},
+							{
+								"name": "Destination",
+								"value": "dwh-qa//campaings"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "\r\nSELECT [value] FROM OPENJSON(\r\n  (SELECT\r\n     c.numerator, c.id, c.name,\r\n    (select product_id = p.id, product_name= p.name, product_numerator = p.numerator ,\r\n\t\t(SELECT Serial_id =pc.id, pc.serial\r\n\t\tFROM product_creative_tab pc \r\n\t\tWHERE pc.product_id = p.id\r\n\t\tFOR JSON AUTO\r\n\t\t) AS Serials\r\n\t FROM product_tab p \r\n\t WHERE p.campaign_id = c.id \r\n\t FOR json auto) as Products\r\n   FROM dbo.campaign_tab\tc  \r\n   WHERE c.numerator BETWEEN 39900 AND 39950\r\n   FOR JSON PATH)\r\n)",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"validateDataConsistency": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "value",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['value']"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_6v0",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationDataset_6v0",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/databricks_to_all_db_pr_pu_2019_2021')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_ihk",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "users/nati/pu_2019_2021_export/"
+							},
+							{
+								"name": "Destination",
+								"value": "dbo._nati_pu_2019_2021"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": "nati/pu_2019_2021_export/",
+									"wildcardFileName": "part-*",
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBatchSize": 1000000,
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": true
+							},
+							"enableStaging": false,
+							"validateDataConsistency": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "accountnumber",
+											"type": "Int64",
+											"physicalType": "INT64"
+										},
+										"sink": {
+											"name": "accountnumber",
+											"type": "Int64",
+											"physicalType": "bigint"
+										}
+									},
+									{
+										"source": {
+											"name": "Event_date",
+											"type": "DateTime",
+											"physicalType": "INT96"
+										},
+										"sink": {
+											"name": "Event_date",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										}
+									},
+									{
+										"source": {
+											"name": "event_name",
+											"type": "String",
+											"physicalType": "UTF8"
+										},
+										"sink": {
+											"name": "event_name",
+											"type": "String",
+											"physicalType": "nchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_ihk",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationDataset_ihk",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Platfrom_Usage/export_data"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/land sql to storage dev')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -285,7 +486,7 @@
 						"type": "SqlServerStoredProcedure",
 						"dependsOn": [
 							{
-								"activity": "Copy data sql to storage",
+								"activity": "rowcount",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -343,6 +544,26 @@
 							"referenceName": "Azure BI db",
 							"type": "LinkedServiceReference"
 						}
+					},
+					{
+						"name": "rowcount",
+						"type": "AppendVariable",
+						"dependsOn": [
+							{
+								"activity": "Copy data sql to storage",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "rowcount",
+							"value": {
+								"value": "@string(activity('Copy data sql to storage').output.rowsCopied)",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"policy": {
@@ -360,6 +581,11 @@
 					"Source_Name": {
 						"type": "string",
 						"defaultValue": "LiveChatHistory"
+					}
+				},
+				"variables": {
+					"rowcount": {
+						"type": "Array"
 					}
 				},
 				"folder": {
@@ -990,6 +1216,11 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"variables": {
+					"rowcount": {
+						"type": "Array"
+					}
+				},
 				"folder": {
 					"name": "land"
 				},
@@ -1318,173 +1549,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/run_only_pu_on_loop')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "run pu 01",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "RUN ONLY PU",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "run pu 02",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "run pu 01",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "RUN ONLY PU",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "run pu 03",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "run pu 02",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "RUN ONLY PU",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "run pu 04",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "run pu 03",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "RUN ONLY PU",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "run pu 05",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "run pu 04",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "RUN ONLY PU",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/RUN ONLY PU')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/every_day_run_all_piplines_to_platfrom_usage')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "RUN_ALL_pip_platfrom_usage",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2019-01-20T15:52:00Z",
-						"timeZone": "UTC",
-						"schedule": {
-							"minutes": [
-								0
-							],
-							"hours": [
-								1
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/RUN_ALL_pip_platfrom_usage')]"
-			]
 		}
 	]
 }

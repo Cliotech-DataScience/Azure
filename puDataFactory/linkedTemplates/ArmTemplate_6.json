@@ -7,6 +7,24 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "puDataFactory"
 		},
+		"SCMM SQL_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SCMM SQL'",
+			"defaultValue": "integrated security=True;Data Source=dwh-pr,2555;Initial Catalog=emerp_lm"
+		},
+		"SCMM SQL_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SCMM SQL'"
+		},
+		"SCMM_DBG_PR1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SCMM_DBG_PR1'",
+			"defaultValue": "integrated security=True;Data Source=SCMM-DBG-PR1,2555;Initial Catalog=@{linkedService().DB};applicationintent=ReadOnly"
+		},
+		"SCMM_DBG_PR1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SCMM_DBG_PR1'"
+		},
 		"SCMM_DEV_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SCMM_DEV'",
@@ -69,6 +87,14 @@
 			"metadata": "Secure string for 'connectionString' of 'scmm_db_pr2'",
 			"defaultValue": "Integrated Security=True;Data Source=scmm-db-pr2;Initial Catalog=MS_CRM"
 		},
+		"SCMM SQL_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\reportsprod"
+		},
+		"SCMM_DBG_PR1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "efix\\az_etl"
+		},
 		"SCMM_DEV_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "efix\\az_etl"
@@ -122,6 +148,55 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/SCMM SQL')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('SCMM SQL_connectionString')]",
+					"userName": "[parameters('SCMM SQL_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('SCMM SQL_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SCMM_DBG_PR1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"DB": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('SCMM_DBG_PR1_connectionString')]",
+					"userName": "[parameters('SCMM_DBG_PR1_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('SCMM_DBG_PR1_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "alldbgateway",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/SCMM_DEV')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -1299,144 +1374,6 @@
 						"outputs": [
 							{
 								"referenceName": "DestinationDataset_5sz",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/cm json to cosmos')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy_bve",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "dwh-qa/sqldata/campaings"
-							},
-							{
-								"name": "Destination",
-								"value": "campaigns"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "JsonSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "JsonReadSettings"
-								}
-							},
-							"sink": {
-								"type": "CosmosDbSqlApiSink",
-								"writeBehavior": "insert"
-							},
-							"enableStaging": false,
-							"validateDataConsistency": false
-						},
-						"inputs": [
-							{
-								"referenceName": "SourceDataset_bve",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DestinationDataset_bve",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/j to cosmos2')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy_e97",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "dwh-qa/sqldata/campaings.json"
-							},
-							{
-								"name": "Destination",
-								"value": "campaigns"
-							}
-						],
-						"typeProperties": {
-							"source": {
-								"type": "JsonSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "JsonReadSettings"
-								}
-							},
-							"sink": {
-								"type": "CosmosDbSqlApiSink",
-								"writeBehavior": "insert"
-							},
-							"enableStaging": false,
-							"validateDataConsistency": false
-						},
-						"inputs": [
-							{
-								"referenceName": "SourceDataset_e97",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DestinationDataset_e97",
 								"type": "DatasetReference",
 								"parameters": {}
 							}

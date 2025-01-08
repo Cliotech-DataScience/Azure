@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "puDataFactory"
 		},
+		"DataloadStore_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'DataloadStore'"
+		},
 		"Dataverse_crm_servicePrincipalCredential": {
 			"type": "secureString",
 			"metadata": "Secure string for 'servicePrincipalCredential' of 'Dataverse_crm'"
@@ -56,6 +60,19 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/DataloadStore')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('DataloadStore_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Dataverse_crm')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -635,43 +652,6 @@
 						},
 						"linkedServiceName": {
 							"referenceName": "Analysis",
-							"type": "LinkedServiceReference"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"folder": {
-					"name": "Dm_Models"
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/302 Get Data For Model')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Get Data For Models",
-						"type": "DatabricksNotebook",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"notebookPath": "/Analysis/Clustering V2/11. Get Data For Model 302 307 330"
-						},
-						"linkedServiceName": {
-							"referenceName": "Analysis_spark_3",
 							"type": "LinkedServiceReference"
 						}
 					}

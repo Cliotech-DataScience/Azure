@@ -38,28 +38,49 @@
 		"Blob_Contacts_properties_typeProperties_folderPath": {
 			"type": "string",
 			"defaultValue": "rawdata/Contacts"
-		},
-		"Blob_Serials_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('Serials', pipeline().RunId, '.csv')"
-		},
-		"Blob_Serials_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "rawdata/Serials"
-		},
-		"Communication_blob_properties_typeProperties_fileName": {
-			"type": "string",
-			"defaultValue": "@CONCAT('Communication_', pipeline().TriggerTime, '.csv.bz2')"
-		},
-		"Communication_blob_properties_typeProperties_folderPath": {
-			"type": "string",
-			"defaultValue": "@concat('rawdata/Communication/Received=',utcnow('s'))"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/302 Get Data For Model')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get Data For Models",
+						"type": "DatabricksNotebook",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Analysis/Clustering V2/11. Get Data For Model 302 307 330"
+						},
+						"linkedServiceName": {
+							"referenceName": "Analysis_spark_3",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"folder": {
+					"name": "Dm_Models"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/303 Execute Models')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -306,6 +327,41 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureDatabricksDeltaLake_v2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricksDeltaLake1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"db": {
+						"type": "string",
+						"defaultValue": "dwh"
+					},
+					"table": {
+						"type": "string",
+						"defaultValue": "fact_chats"
+					}
+				},
+				"annotations": [],
+				"type": "AzureDatabricksDeltaLakeDataset",
+				"typeProperties": {
+					"database": {
+						"value": "@dataset().db",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().table",
+						"type": "Expression"
+					}
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureDatabricksDelta_DWH')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -318,13 +374,23 @@
 					"table": {
 						"type": "string",
 						"defaultValue": "mrr_communication_messagetemplates"
+					},
+					"db": {
+						"type": "string",
+						"defaultValue": "prod_raw"
 					}
 				},
 				"annotations": [],
 				"type": "AzureDatabricksDeltaLakeDataset",
 				"typeProperties": {
-					"database": "prod_raw",
-					"table": "mrr_communication_messagetemplates"
+					"database": {
+						"value": "prod_raw",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "mrr_communication_messagetemplates",
+						"type": "Expression"
+					}
 				},
 				"schema": []
 			},
@@ -802,97 +868,6 @@
 						"type": "Expression"
 					},
 					"folderPath": "[parameters('Blob_Contacts_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Blob_Serials')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureBlobStorage1",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"folder_name": {
-						"type": "String",
-						"defaultValue": "Dim_AccountContacts"
-					}
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": "\u0001",
-						"rowDelimiter": "\n",
-						"nullValue": "\\N",
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": true
-					},
-					"fileName": {
-						"value": "[parameters('Blob_Serials_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": "[parameters('Blob_Serials_properties_typeProperties_folderPath')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Communication_blob')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "DataloadStore",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "DWH"
-				},
-				"annotations": [],
-				"type": "AzureBlob",
-				"structure": [
-					{
-						"name": "MessageID",
-						"type": "Int32"
-					},
-					{
-						"name": "Event_Date",
-						"type": "DateTime"
-					},
-					{
-						"name": "details",
-						"type": "String"
-					}
-				],
-				"typeProperties": {
-					"format": {
-						"type": "TextFormat",
-						"columnDelimiter": "\t",
-						"rowDelimiter": "",
-						"quoteChar": "",
-						"nullValue": "\\N",
-						"encodingName": null,
-						"treatEmptyAsNull": true,
-						"skipLineCount": 0,
-						"firstRowAsHeader": false
-					},
-					"compression": {
-						"type": "BZip2"
-					},
-					"fileName": {
-						"value": "[parameters('Communication_blob_properties_typeProperties_fileName')]",
-						"type": "Expression"
-					},
-					"folderPath": {
-						"value": "[parameters('Communication_blob_properties_typeProperties_folderPath')]",
-						"type": "Expression"
-					}
 				}
 			},
 			"dependsOn": []

@@ -51,6 +51,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'AzureDatabricksDeltaLake'"
 		},
+		"AzureDatabricksDeltaLake1_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'AzureDatabricksDeltaLake1'"
+		},
 		"AzureSql tesdb_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSql tesdb'"
@@ -655,6 +659,9 @@
 					"AzureDatabricksDeltaLake_accessToken": {
 						"value": "[parameters('AzureDatabricksDeltaLake_accessToken')]"
 					},
+					"AzureDatabricksDeltaLake1_accessToken": {
+						"value": "[parameters('AzureDatabricksDeltaLake1_accessToken')]"
+					},
 					"AzureSql tesdb_connectionString": {
 						"value": "[parameters('AzureSql tesdb_connectionString')]"
 					},
@@ -672,9 +679,6 @@
 					},
 					"Databricks Job Cluster_accessToken": {
 						"value": "[parameters('Databricks Job Cluster_accessToken')]"
-					},
-					"DataloadStore_connectionString": {
-						"value": "[parameters('DataloadStore_connectionString')]"
 					},
 					"ADLS Byl_properties_typeProperties_url": {
 						"value": "[parameters('ADLS Byl_properties_typeProperties_url')]"
@@ -708,6 +712,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"DataloadStore_connectionString": {
+						"value": "[parameters('DataloadStore_connectionString')]"
 					},
 					"Dataverse_crm_servicePrincipalCredential": {
 						"value": "[parameters('Dataverse_crm_servicePrincipalCredential')]"
@@ -785,18 +792,6 @@
 					},
 					"Blob_Contacts_properties_typeProperties_folderPath": {
 						"value": "[parameters('Blob_Contacts_properties_typeProperties_folderPath')]"
-					},
-					"Blob_Serials_properties_typeProperties_fileName": {
-						"value": "[parameters('Blob_Serials_properties_typeProperties_fileName')]"
-					},
-					"Blob_Serials_properties_typeProperties_folderPath": {
-						"value": "[parameters('Blob_Serials_properties_typeProperties_folderPath')]"
-					},
-					"Communication_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('Communication_blob_properties_typeProperties_fileName')]"
-					},
-					"Communication_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('Communication_blob_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -817,6 +812,18 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"Blob_Serials_properties_typeProperties_fileName": {
+						"value": "[parameters('Blob_Serials_properties_typeProperties_fileName')]"
+					},
+					"Blob_Serials_properties_typeProperties_folderPath": {
+						"value": "[parameters('Blob_Serials_properties_typeProperties_folderPath')]"
+					},
+					"Communication_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('Communication_blob_properties_typeProperties_fileName')]"
+					},
+					"Communication_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('Communication_blob_properties_typeProperties_folderPath')]"
 					},
 					"DWH_Dim_Customers_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('DWH_Dim_Customers_blob_properties_typeProperties_fileName')]"
@@ -906,12 +913,6 @@
 					},
 					"blob_serials_row_folder_properties_typeProperties_folderPath": {
 						"value": "[parameters('blob_serials_row_folder_properties_typeProperties_folderPath')]"
-					},
-					"dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName": {
-						"value": "[parameters('dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName')]"
-					},
-					"dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath": {
-						"value": "[parameters('dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
@@ -960,17 +961,11 @@
 					"FXNET_DBG_password": {
 						"value": "[parameters('FXNET_DBG_password')]"
 					},
-					"SCMM SQL_connectionString": {
-						"value": "[parameters('SCMM SQL_connectionString')]"
+					"dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName": {
+						"value": "[parameters('dwh_Customer_Questionnaires_blob_properties_typeProperties_fileName')]"
 					},
-					"SCMM SQL_password": {
-						"value": "[parameters('SCMM SQL_password')]"
-					},
-					"SCMM_DBG_PR1_connectionString": {
-						"value": "[parameters('SCMM_DBG_PR1_connectionString')]"
-					},
-					"SCMM_DBG_PR1_password": {
-						"value": "[parameters('SCMM_DBG_PR1_password')]"
+					"dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath": {
+						"value": "[parameters('dwh_Customer_Questionnaires_blob_properties_typeProperties_folderPath')]"
 					},
 					"dwh_Dim_Users_blob_properties_typeProperties_fileName": {
 						"value": "[parameters('dwh_Dim_Users_blob_properties_typeProperties_fileName')]"
@@ -1037,12 +1032,6 @@
 					},
 					"FXNET_DBG_properties_typeProperties_userName": {
 						"value": "[parameters('FXNET_DBG_properties_typeProperties_userName')]"
-					},
-					"SCMM SQL_properties_typeProperties_userName": {
-						"value": "[parameters('SCMM SQL_properties_typeProperties_userName')]"
-					},
-					"SCMM_DBG_PR1_properties_typeProperties_userName": {
-						"value": "[parameters('SCMM_DBG_PR1_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -1063,6 +1052,18 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"SCMM SQL_connectionString": {
+						"value": "[parameters('SCMM SQL_connectionString')]"
+					},
+					"SCMM SQL_password": {
+						"value": "[parameters('SCMM SQL_password')]"
+					},
+					"SCMM_DBG_PR1_connectionString": {
+						"value": "[parameters('SCMM_DBG_PR1_connectionString')]"
+					},
+					"SCMM_DBG_PR1_password": {
+						"value": "[parameters('SCMM_DBG_PR1_password')]"
 					},
 					"SCMM_DEV_connectionString": {
 						"value": "[parameters('SCMM_DEV_connectionString')]"
@@ -1105,6 +1106,12 @@
 					},
 					"scmm_db_pr2_connectionString": {
 						"value": "[parameters('scmm_db_pr2_connectionString')]"
+					},
+					"SCMM SQL_properties_typeProperties_userName": {
+						"value": "[parameters('SCMM SQL_properties_typeProperties_userName')]"
+					},
+					"SCMM_DBG_PR1_properties_typeProperties_userName": {
+						"value": "[parameters('SCMM_DBG_PR1_properties_typeProperties_userName')]"
 					},
 					"SCMM_DEV_properties_typeProperties_userName": {
 						"value": "[parameters('SCMM_DEV_properties_typeProperties_userName')]"

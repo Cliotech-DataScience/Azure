@@ -51,6 +51,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'AzureDatabricksDeltaLake'"
 		},
+		"AzureDatabricksDeltaLake1_accessToken": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accessToken' of 'AzureDatabricksDeltaLake1'"
+		},
 		"AzureSql tesdb_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureSql tesdb'"
@@ -9943,7 +9947,7 @@
 						"type": "SqlServerStoredProcedure",
 						"dependsOn": [
 							{
-								"activity": "Copy data sql to storage",
+								"activity": "rowcount",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -10001,6 +10005,26 @@
 							"referenceName": "Azure BI db",
 							"type": "LinkedServiceReference"
 						}
+					},
+					{
+						"name": "rowcount",
+						"type": "AppendVariable",
+						"dependsOn": [
+							{
+								"activity": "Copy data sql to storage",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "rowcount",
+							"value": {
+								"value": "@string(activity('Copy data sql to storage').output.rowsCopied)",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"policy": {
@@ -10018,6 +10042,11 @@
 					"Source_Name": {
 						"type": "string",
 						"defaultValue": "LiveChatHistory"
+					}
+				},
+				"variables": {
+					"rowcount": {
+						"type": "Array"
 					}
 				},
 				"folder": {
@@ -10351,6 +10380,11 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"variables": {
+					"rowcount": {
+						"type": "Array"
+					}
+				},
 				"folder": {
 					"name": "land"
 				},
@@ -10587,6 +10621,43 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureDatabricksDeltaLake_v2')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricksDeltaLake1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"db": {
+						"type": "string",
+						"defaultValue": "dwh"
+					},
+					"table": {
+						"type": "string",
+						"defaultValue": "fact_chats"
+					}
+				},
+				"annotations": [],
+				"type": "AzureDatabricksDeltaLakeDataset",
+				"typeProperties": {
+					"database": {
+						"value": "@dataset().db",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().table",
+						"type": "Expression"
+					}
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDatabricksDeltaLake1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureDatabricksDelta_DWH')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -10599,13 +10670,23 @@
 					"table": {
 						"type": "string",
 						"defaultValue": "mrr_communication_messagetemplates"
+					},
+					"db": {
+						"type": "string",
+						"defaultValue": "prod_raw"
 					}
 				},
 				"annotations": [],
 				"type": "AzureDatabricksDeltaLakeDataset",
 				"typeProperties": {
-					"database": "prod_raw",
-					"table": "mrr_communication_messagetemplates"
+					"database": {
+						"value": "prod_raw",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "mrr_communication_messagetemplates",
+						"type": "Expression"
+					}
 				},
 				"schema": []
 			},
@@ -16144,6 +16225,24 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/AzureDatabricksDeltaLake1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricksDeltaLake",
+				"typeProperties": {
+					"domain": "https://adb-194285697588541.1.azuredatabricks.net",
+					"clusterId": "1229-135010-n4a1jziy",
+					"accessToken": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDatabricksDeltaLake1_accessToken')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureSql tesdb')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -17264,6 +17363,44 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/sql to azre land')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "run land sql to storage",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2024-12-03T14:12:00",
+						"timeZone": "Israel Standard Time",
+						"schedule": {
+							"minutes": [
+								30
+							],
+							"hours": [
+								2
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/run land sql to storage')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/sql_to_delta_triger')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -17333,44 +17470,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/sql to azre land')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "run land sql to storage",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2024-12-03T14:12:00",
-						"timeZone": "Israel Standard Time",
-						"schedule": {
-							"minutes": [
-								30
-							],
-							"hours": [
-								12
-							]
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/run land sql to storage')]"
-			]
 		}
 	]
 }

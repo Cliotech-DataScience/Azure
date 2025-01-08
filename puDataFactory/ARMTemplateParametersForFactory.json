@@ -38,6 +38,9 @@
 		"AzureDatabricksDeltaLake_accessToken": {
 			"value": ""
 		},
+		"AzureDatabricksDeltaLake1_accessToken": {
+			"value": ""
+		},
 		"AzureSql tesdb_connectionString": {
 			"value": ""
 		},
