@@ -486,7 +486,7 @@
 						"type": "SqlServerStoredProcedure",
 						"dependsOn": [
 							{
-								"activity": "rowcount",
+								"activity": "Copy data sql to storage",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -543,26 +543,6 @@
 						"linkedServiceName": {
 							"referenceName": "Azure BI db",
 							"type": "LinkedServiceReference"
-						}
-					},
-					{
-						"name": "rowcount",
-						"type": "AppendVariable",
-						"dependsOn": [
-							{
-								"activity": "Copy data sql to storage",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "rowcount",
-							"value": {
-								"value": "@string(activity('Copy data sql to storage').output.rowsCopied)",
-								"type": "Expression"
-							}
 						}
 					}
 				],
