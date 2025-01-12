@@ -1196,11 +1196,6 @@
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
-				"variables": {
-					"rowcount": {
-						"type": "Array"
-					}
-				},
 				"folder": {
 					"name": "land"
 				},
